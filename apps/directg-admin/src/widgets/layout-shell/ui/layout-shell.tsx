@@ -11,6 +11,11 @@ type LayoutShellProps = PropsWithChildren;
 export const LayoutShell = ({ children }: LayoutShellProps) => {
   const { pathname } = useLocation();
 
+  // 리뉴얼 어드민(/renewal/*)은 legacy 사이드바/topbar/footer 없이 자체 레이아웃을 쓴다.
+  if (pathname === "/renewal" || pathname.startsWith("/renewal/")) {
+    return <>{children}</>;
+  }
+
   // legacy: 로그인 등 인증 화면(authentication-bg)은 사이드바/topbar 없는 독립 레이아웃.
   if (isPublicPath(pathname)) {
     return <>{children}</>;

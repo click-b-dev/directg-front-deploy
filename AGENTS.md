@@ -50,12 +50,12 @@
 legacy 동작 동일성 이관과 별개로, Figma 기반 리뉴얼 어드민을 `apps/directg-admin` 안에 **별도 경로로 격리해서** 추가한다. (Figma 파일: `다이렉트 게임즈`, 페이지 `[AD] design`, fileKey `DxqbeoDNTxs5WBpqb25APg`)
 
 - 라우트는 `/renewal/*` 접두사 아래에만 추가한다 (`src/routes/renewal/`).
-- 리뉴얼 UI 코드는 `src/renewal/` 안에만 둔다. 기존 `screens`/`widgets`/`features`와 `layout-shell`은 수정하지 않는다.
+- 리뉴얼 UI 코드는 `src/renewal/` 안에만 둔다. 기존 `screens`/`widgets`/`features`는 수정하지 않는다. 단 하나의 예외: `widgets/layout-shell`의 `/renewal` 분기 한 줄(legacy 사이드바/topbar/footer 우회).
 - 기존 코드에서 `src/renewal/`을 import하지 않는다. 리뉴얼에서 기존 `entities`/`shared/api`(API 호출·타입)를 가져다 쓰는 것은 허용한다.
 - 리뉴얼 전용 레이아웃(SNB/GNB)과 스타일/토큰은 `src/renewal/` 안에 둔다. 공유 패키지(`packages/*`)는 리뉴얼 때문에 변경하지 않는다.
 - `src/renewal/**`에 한해 "UI/UX 개선은 범위 밖" 규칙의 예외로, Figma 디자인이 기준이다. 그 외 영역에는 위 Migration 규칙이 그대로 적용된다.
 - 리뉴얼 화면은 MIGRATION-MAP ✅(parity 검증) 대상이 아니다. Figma 프레임 ↔ 화면 매핑은 `docs/renewal/`에 기록한다.
-- 리뉴얼 작업은 `stage`에서 딴 별도 브랜치에서 진행한다. `routeTree.gen.ts` 충돌은 병합 시 재생성으로 해결한다.
+- 리뉴얼 작업은 `stage`에서 딴 별도 브랜치에서 진행한다.
 
 ## Commands
 

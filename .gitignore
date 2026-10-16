@@ -17,3 +17,6 @@ next-env.d.ts
 
 # build caches
 **/*.tsbuildinfo
+# env files
+.env.local
+.env.*.local
