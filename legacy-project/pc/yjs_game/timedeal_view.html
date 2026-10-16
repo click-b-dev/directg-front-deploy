@@ -1,0 +1,502 @@
+<?
+ini_set('display_errors', '1');
+header("Content-Type:text/html; charset=utf-8"); 
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$sku = filter_input(INPUT_GET, "sku", FILTER_SANITIZE_STRING);
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$goods = new Goods($conn);
+	$parsedown= new Parsedown();
+
+	//타임딜 상품 세부정보
+	$timedeal_info = $goods->getGoodsItemDetailSku($sku);
+	
+	//타임딜 진행일정 조회
+	$timedeal_schedule = $goods->getTimedealSchedule($timedeal_info['product_code']);
+	
+	//타임딜 게임설명
+	$goods_description = $goods->getGoodsOptionDescription($timedeal_info["product_code"]);
+	
+	$steam_info = $goods->getSteamAppInfo($timedeal_info["steam_appid"]);
+
+	if($timedeal_info['is_view']=="Y"){
+		//관련 기본게임
+		$title_info = $goods->getTitleDetail($timedeal_info["product_code"]);
+
+		$goods_status = "Y";
+
+		$dlc_genre = explode(",",$timedeal_info['genre']);
+
+		//대표상품 카테고리
+		$dlc_category = explode(",",$timedeal_info['category']);
+
+		$genre_info = "";
+
+		foreach($dlc_genre as $genre){
+			if($genre=="앞서 해보기"){ 
+				//앞서해보기 문구 자동노출
+				$is_early_access ="Y";
+			}
+		}
+		//$tag_data = $goods->getGoodsItemTagList($timedeal_info['product_code']);
+	}else{
+		$goods_status = "N";
+		$goods_status_msg = "판매중인 상품이 아닙니다";
+	}
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+
+$page_title=$timedeal_info['product_name'];
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+
+<!-- 오픈그래프 -->
+<meta property="og:title" content="<?=$page_title?>" />
+<meta property="og:type" content="video.movie" />
+<meta property="og:url" content="/game/game_view.html?product_id=<?=$title_info['sku']?>" />
+<meta property="og:image" content="/upload/product/<?=$dlc_info['product_code']?>/header/header.jpg" />
+<meta property="og:description" content="<?=$goods_description['short_description']?>" />
+<meta property="og:site_name" content="다이렉트게임즈" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<style>
+
+#description_html img{
+	max-width:100%;
+}
+
+</style>
+</head>
+<body >
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<main>
+		<div class="container my-3 pb-5">
+			<?
+				if($goods_status=="N"){
+			?>
+			<div class="row mt-3">
+				<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show" role="alert">
+					<strong>Error - </strong> <?=$goods_status_msg?>
+				</div>
+			</div>
+			<?}else{?>
+			<div class="row g-0">
+				<div class="col-12">
+					<div class="h3 text-white mb-3"><?=$timedeal_info['product_name']?> <small class="eng text-secondary">( <?=$timedeal_info['product_name_en']?> )</small></div>
+				</div>
+			</div>
+				
+			<div class="d-grid gap-3" style="grid-template-columns: auto 460px">
+				<div class="content-left mt-3">
+					<!--
+					<div class="row row-cols-1 g-2">
+						<div class="col-12">
+							<div class="alert alert-warning border-0 fs-5 rounded-0" role="alert">
+								<i class="fa-solid fa-triangle-exclamation"></i> 플레이하려면 <span class="text-danger">[<?=$goods->getPlatform($timedeal_info['product_platform'])?>]</span>버전의 <a href="/game/game_view.html?product_id=<?=$title_info['product_id']?>" class="text-primary">[<?=$timedeal_info['title_name']?>]</a> 기본게임이 필요합니다.
+							</div>
+						</div>
+					</div>
+					-->
+					
+					<div class="row row-cols-1 g-2">
+						<div class="col-12">
+							<div class="card mb-3 rounded-0 bg-card">
+								<div class="card-header p-1">
+									<div class="d-flex flex-row justify-content-between align-items-center">
+										<div class="d-flex flex-row align-items-center">
+											<h5 class="font-16 ms-3"><?=$timedeal_info['product_name']?></h5>
+										</div>
+										<div class="text-center">
+										<? 
+												switch($timedeal_info['product_platform']){
+													case "1":
+											?>
+											<img src="/assets/images/platform/Platform_logo_steam.png" class="w-75 ">
+											<?
+													break;
+													case "34":
+											?>
+											<img src="/assets/images/platform/Platform_logo_epic.png" class="w-75 ">
+											<?
+													break;
+													case "35":
+											?>
+											<img src="/assets/images/platform/Platform_logo_rockstar.png" class="w-75 ">
+											<?
+													break;
+												}
+											?>
+										</div>
+									</div>
+								</div>
+								<div class="card-footer p-0 border-0 px-2">
+									<div class="d-flex flex-row align-items-center justify-content-between">
+										<div class="px-2">
+											<div class="d-flex flew-row align-items-center">
+												<?
+													if($timedeal_schedule['timedeal_price']>0){
+														$discount = round(($timedeal_info['consumer_price']-$timedeal_schedule['timedeal_price'])*100/$timedeal_info['consumer_price'],0);
+												?>
+												<span class="badge bg-primary font-12 px-3 py-2 num me-3"><?=$discount?> %</span>
+												<?	
+													}
+												?>
+												<?if($timedeal_schedule['timedeal_price']>0){?>
+												<s class="font-11 num text-muted me-2"> &#8361; <?=number_format($timedeal_info['consumer_price'])?></s>
+												<?}?>
+												<strong class="font-14 num fw-bold "> &#8361; <?=number_format($timedeal_schedule['timedeal_price'])?></strong>
+											</div>
+										</div>
+										<div class="px-1 py-2">
+											<?if($timedeal_info['soldout']=="N"){?>
+											<div class="d-grid gap-1 d-flex justify-content-end">
+												<button type="button" class="btn btn-sm shadow-none font-14 rounded-0 text-info fw-bold btn_cart" data-sku="<?=$timedeal_info['goods_sku']?>" data-age="<?=$timedeal_info['age_limit']?>">
+												<i class="fa-solid fa-bag-shopping"></i> 장바구니</button>
+											</div>
+											<?}else{?>
+												<span class="badge bg-success fw-bold font-14 py-2 px-2">품절</span>
+											<?}?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row row-cols-1 g-2">
+						<div class="col-12">
+							<section id="game_info" class="mb-4">
+								<div class="card shadow-none rounded-0">
+									<div class="card-header text-white fw-500 font-16">상세설명</div>
+									<div class="card-body p-3">
+										<div id="description_html" class="p-2 font-14">
+											<?
+													$description = str_replace("##","\r\n\r\n###",$goods_description['description']);
+													echo $parsedown->text($description);
+											?>
+										</div>
+									</div>
+								</div>
+							</section>
+							
+							<section id="system_info" class="mb-4">
+								<div class="card shadow-none rounded-0">
+									<div class="card-header text-white fw-500 font-16">시스템 요구사항</div>
+									<div class="card-body p-3">
+										<div id="requirements_html" class="p-2 font-14"><?=$parsedown->text($goods_description['requirements'])?></div>
+									</div>
+								</div>
+							</section>
+							
+							<section id="legal_notice" class="mb-4">
+								<div class="card shadow-none rounded-0">
+									<div class="card-header text-white fw-500 font-16">Copyright</div>
+									<div class="card-body p-3">
+										<div id="legal_text" class="eng font-14"><?=$parsedown->text($goods_description['legal_text'])?></div>
+									</div>
+								</div>
+							</section>
+						
+						</div>
+					</div>
+				</div>
+				<div class="content-right">
+					<section id="title_info" class="mb-4">
+						<div class="card shadow-none mb-3 rounded-0">
+							<img src="/upload/product/<?=$timedeal_info['product_code']?>/header/header.jpg" class="card-img-top" alt="<?=$timedeal_info['product_name']?>">
+							<div class="bg-body">
+								<p class="font-14 p-3 mb-0"><?=$goods_description['short_description']?></p>
+							</div>
+							<hr class="mt-0">
+
+							<div class="d-flex flex-row mb-2">
+								<?
+									if($timedeal_info['age_limit']=="10"){
+								?>
+								<img src="/assets/images/game/age_all.png" class='me-2'>
+								<?
+									}else{
+										if($timedeal_info['age_limit']<>""){
+								?>
+								<img src="/assets/images/game/age_<?=$timedeal_info['age_limit']?>.png?t=<?=time()?>" class='me-2'>
+								<?	}
+									}
+								?>
+							<?
+								$game_rate_array = array();
+								 for ($i = 0; $i < mb_strlen($timedeal_info['game_rate'],"UTF-8"); $i++) {
+									$char = mb_substr($timedeal_info['game_rate'], $i, 1, 'UTF-8');
+									if($char=="1"){
+										echo "<img src='/assets/images/game/grade".($i+1).".png' class='me-2'>";
+									}
+									
+								}
+								?>
+							</div>
+							
+							<hr class="my-0">
+							
+							<div class="card shadow-none mb-0 rounded-0 border-0">
+								<div class="card-body p-3">
+									<dl class="row g-2 mb-0">
+										<dt class="col-sm-3 font-14">출시일</dt> 
+										<dd class="col-sm-9">
+											<span class="num font-14"><?=date("Y년 m월 d일",strtotime($timedeal_info['release_date']))?></span>
+										</dd>
+										<dt class="col-sm-3 font-14">개발사</dt> 
+										<dd class="col-sm-9">
+											<span class="eng font-14"><?=$steam_info['developer']?></span>
+										</dd>
+										<dt class="col-sm-3 font-14">퍼블리셔</dt> 
+										<dd class="col-sm-9"><span class="eng font-14"><?=$steam_info['publisher']?></span></dd>
+
+										<?if($timedeal_info['spoken_korean']=="Y" || $timedeal_info['interface_korean']=="Y"){?>
+										<dt class="col-sm-3 font-14">한국어지원</dt>
+										<dd class="col-sm-9">
+											<span class="badge bg-secondary font-12 fw-400 me-2"><?=($timedeal_info['spoken_korean']=="Y")?"음성 한글":""?></span>
+											<span class="badge bg-secondary font-12 fw-400"><?=($timedeal_info['interface_korean']=="Y")?"인터페이스/자막 한글":""?></span>
+										</dd>
+										<?}?>
+										<dt class="col-sm-3 font-14">장르</dt>
+										<dd class="col-sm-9">
+											<div class="d-flex flex-row flex-wrap mb-2">
+												<?
+													$goods_genre = explode(",",$timedeal_info['genre']);
+													foreach($goods_genre as $genre){
+												?>
+													<div class="me-2"><span class='badge bg-secondary font-12 fw-400 px-2'><?=$goods->getTagName($genre)?></span></div>
+												<?
+													}
+												?>
+											</div>
+										</dd>
+										<dt class="col-sm-3 font-14">카테고리</dt>
+										<dd class="col-sm-9">
+											<div class="d-flex flex-row flex-wrap align-content-around">
+												<?
+													$goods_category = explode(",",$timedeal_info['category']);
+													foreach($goods_category as $category){
+												?>
+													<div class="me-2 mb-3"><span class='badge bg-secondary font-12 fw-400 px-2'><?=$goods->getTagName($category)?></span></div>
+												<?
+													}
+												?>
+											</div>
+										</dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+						<?
+							if($steam_info['drm_notice']){
+						?>
+						<div class="alert alert-light mb-3" role="alert">
+							<strong>타사 DRM: </strong><?=$steam_info['drm_notice']?>
+						</div>
+						<?
+							}
+
+							if($steam_info['ext_user_account_notice']){
+						?>
+						<div class="alert alert-light mb-3" role="alert">
+							<strong>타사 계정 필요:</strong> <?=$steam_info['ext_user_account_notice']?>
+						</div>
+						<?
+							}
+						?>
+					</section>
+					
+					<?
+						switch($goods_dlc_info['product_platform']){
+							case "1":
+								$platform_store_url = "https://store.steampowered.com/";
+								$platform_label="Steam";
+							break;
+							case "34":
+								$platform_store_url = "https://store.epicgames.com/";
+								$platform_label="Epic Games";
+							break;
+							case "35":
+								$platform_store_url = "https://socialclub.rockstargames.com/";
+								$platform_label="Rockstar Games Launcher";
+							break;
+						}
+					?>
+
+					<section id="goods_legal_info">
+						<div class="card shadow-none rounded-0">
+							<div class="card-header text-white fw-500 font-16">
+								상품 정보 제공 고시<br/>
+								<small class="font-12 fw-300">[전자상거래에 관한 상품정보 제공에 관한 고시] 항목에 의거 등록된 정보입니다.</small>
+							</div>
+							<ul class="list-group py-1 font-14 bg-body">
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white pe-2 ">제작자 또는 공급자</span> <span class="text-white text-opacity-50">상품페이지에 개발사/퍼블리셔 정보 참조</span></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white pe-2 ">이용조건/이용기간</span> <span class="text-white text-opacity-50">제품 코드 수신, 등록 후 <a href="<?=$platform_store_url?>" target="_blank"><?=$platform_label?></a>의 서비스 종료까지</span></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white pe-2 ">상품 제공 방식</span> <span class="text-white text-opacity-50">마이페이지를 통한 제품 코드 실시간 발송</span></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white pe-2 ">최소 시스템 사양, 필수 소프트웨어</span> <span class="text-white text-opacity-50 ">상품페이지에 시스템 요구사항 참조</span></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white pe-2 ">청약철회 또는 계약의 해제 해지의 따른 효과</span> <span class="text-white text-opacity-50  "><a href="/service/refund_policy.php" target="_blank">환불정책안내</a> 참조</span></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white pe-2">소비자상담 관련 전화번호</span> <span class="text-white text-opacity-50 ">사이트 하단에 CALL CENTER 정보 참조</span></li>
+							</ul>
+						</div>
+					</section>
+						
+				</div>
+			</div>
+			<?}?>
+		</div>
+	</main>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<div id="cart-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="primary-header-modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" style="max-width:900px">
+		<div class="modal-content border border-3 border-start border-end-0 border-top-0 border-bottom-0 border-primary rounded-2">
+			<div class="modal-header">
+				<h4 class="modal-title" id="topModalLabel">장바구니 안내</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+			</div>
+			<div class="modal-body p-2 rounded-0">
+				<div id="cart_result" class="p-0"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-light shadow-none font-14" id="btn_model_close" data-bs-dismiss="modal">쇼핑 계속하기</button>
+				<button type="button" class="btn btn-primary shadow-none font-14" id="btn_cart_move">장바구니 바로가기</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script type="text/javascript" src="/assets/js/timer_library.js?t=<?=time()?>"></script>
+<script>
+$(document).ready(function(){
+	//유튜브 재상영상 변경
+	$(".media_change").bind("click",function(){
+		var index = $(".media_change").index(this);
+		var youtube_media_id = $(".media_change").eq(index).attr("data-mediaid");
+		var media_type=$(".media_change").eq(index).attr("data-mediatype");
+		if(media_type=="vidio"){
+			var media_url="//youtube.com/embed/"+youtube_media_id;
+			$("#media_frame").attr('src',media_url);
+		}else{
+			var media_url=$(".media_change").eq(index).attr("data-mediaurl");
+			$("#media_block").html('<img src="'+media_url+'" class="w-100 img-fluid">');
+		}
+		
+	});
+
+	$("#btn_buy").bind("click",function(){
+		var goods_code = $("#btn_buy").attr("data-goodscode");
+		var newForm = $('<form></form>');
+		newForm.attr("name","newForm");
+		newForm.attr("method","post");
+		newForm.attr("action","/order/order_pre.html");
+		newForm.attr("target","_blank");
+
+		newForm.append($('<input/>', {type: 'hidden', name: 'goods_code', value:goods_code }));
+		newForm.appendTo('body');
+		newForm.submit();
+	});
+
+	//장바구니 추가
+	$(".btn_cart").bind("click",function(){
+		var index = $(".btn_cart").index(this);
+		var goods_sku = $(".btn_cart").eq(index).attr("data-sku");
+
+		$.ajax({
+			'url': '/order/cart_proc.php',
+			'type': 'POST',
+			'data':{mode:"add_cart",goods_sku:goods_sku},
+			'success': function (data) {
+				$("#cart_result").html(data);
+				$("#cart-modal").modal("show");
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+
+	$("#cart-modal #btn_model_close").bind("click",function(){
+		$("#cart-modal").modal("hide");
+	});
+
+	$("#cart-modal #btn_cart_move").bind("click",function(){
+		location.href="/order/cart.html";
+	});
+
+	var id = "promotion_timer";
+	var end_date = "<?=$goods_product_chk['promotion_end']?>";
+	
+	if(end_date){
+		$.timer_lib.initialize(id,end_date);
+		$.timer_lib.countDownTimer();
+	}
+
+	/*
+	const countDownTimer = function (id, date) {
+		var _vDate = new Date(date); // 전달 받은 일자
+		var _second = 1000;
+		var _minute = _second * 60;
+		var _hour = _minute * 60;
+		var _day = _hour * 24;
+		var timer;
+
+		function showRemaining() {
+			var now = new Date();
+			var distDt = _vDate - now;
+
+			if (distDt < 0) {
+				clearInterval(timer);
+				document.getElementById(id).textContent = '프로모션 종료';
+				//location.reload();
+				return;
+			}
+
+			var days = Math.floor(distDt / _day);
+			var hours = Math.floor((distDt % _day) / _hour);
+			var minutes = Math.floor((distDt % _hour) / _minute);
+			var seconds = Math.floor((distDt % _minute) / _second);
+
+			//document.getElementById(id).textContent = date.toLocaleString() + "까지 : ";
+			//document.getElementById("promotion_timer_second").textContent = days + '일 ';
+			document.getElementById("promotion_timer_hour").textContent = (days*24)+hours;
+			document.getElementById("promotion_timer_minute").textContent = minutes.toString().length<2?'0'+minutes:minutes;
+			document.getElementById("promotion_timer_second").textContent = seconds.toString().length<2?'0'+seconds:seconds;
+		}
+
+		timer = setInterval(showRemaining, 1000);
+	}
+
+	var promotion_end = "<?=$goods_product_chk['promotion_end']?>";
+
+	if(promotion_end){
+		countDownTimer('promotion_timer', promotion_end); // 2024년 4월 1일까지
+	}*/
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+/* legacy dashboard_crm.php inline <style> — 분포 막대 */
+.crm-dist-bar {
+  height: 10px;
+  border-radius: 4px;
+  background: #3b7ddd;
+}

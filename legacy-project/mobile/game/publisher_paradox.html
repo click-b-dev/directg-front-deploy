@@ -1,0 +1,389 @@
+<?
+	ini_set( "display_errors", 0 );
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+	$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+	$sort = filter_input(INPUT_GET, 'sort', FILTER_SANITIZE_STRING);
+
+	$publisher_code = "30";
+	
+	$platform_code = filter_input(INPUT_GET, 'platform', FILTER_SANITIZE_STRING);
+	$category_code = filter_input(INPUT_GET, 'category_code', FILTER_SANITIZE_STRING);
+	$genre_code = filter_input(INPUT_GET, 'genre_code', FILTER_SANITIZE_STRING);
+
+	$is_preorder = filter_input(INPUT_GET, 'is_preorder', FILTER_SANITIZE_STRING);
+	$is_bonus = filter_input(INPUT_GET, 'is_bonus', FILTER_SANITIZE_STRING);
+	$is_repay = filter_input(INPUT_GET, 'is_repay', FILTER_SANITIZE_STRING);
+	$game_type = filter_input(INPUT_GET, 'game_type', FILTER_SANITIZE_STRING);
+
+	$interface_korean = filter_input(INPUT_GET, 'interface_korean', FILTER_SANITIZE_STRING);
+	$spoken_korean = filter_input(INPUT_GET, 'spoken_korean', FILTER_SANITIZE_STRING);
+	$exclusive_korean = filter_input(INPUT_GET, 'exclusive_korean', FILTER_SANITIZE_STRING);
+
+	if(!$page){
+		$page=1;
+	}
+
+	$where = [];
+	$param = "";
+	
+	$where[] = " find_in_set(a.game_type,'game,dlc,music,bundle')";
+	$where[] = "a.supplier_code='".$publisher_code."'";
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$goods = new Goods($conn);
+	$promotion = new Promotion($conn);
+
+	$page_title = "Paradox Interactive";
+
+	//예약구매 필터링
+	if(isset($is_preorder) && $is_preorder<>""){
+		$where[] = " (a.preorder_start-UNIX_TIMESTAMP())<0 and  (a.preorder_end-UNIX_TIMESTAMP())>0";
+		$checked['is_preorder'][$is_preorder] = "checked";
+	}
+
+	//구매특전 필터링
+	if(isset($is_bonus) && $is_bonus<>""){
+		$where[] = " (a.bonus_start_date-UNIX_TIMESTAMP())<0 and  (a.bonus_end_date-UNIX_TIMESTAMP())>0";
+		$checked['is_bonus'][$is_bonus] = "checked";
+	}
+
+	//장르 필터링
+	if(isset($genre_code) && $genre_code<>""){
+		$where[] = " match(a.genre) AGAINST('+".$genre_code."')";
+	}
+
+	//플랫폼 필터링
+	if(isset($platform_code) && $platform_code<>""){
+		$where[] = " a.product_platform='".$platform_code."'";
+	}
+
+	if(isset($category_code) && $category_code<>""){
+		$search_cateogorys = explode(',',$category_code);
+		if(is_array($search_cateogorys)){
+			$tag_filter = "";
+			foreach($search_cateogorys as $search_cateogory){
+				if($search_cateogory){
+					$tag_filter .= $search_cateogory."+ ";
+					$checked['category_code'][$search_cateogory] = "checked";
+				}
+			}
+
+			if(isset($tag_filter) && $tag_filter<>""){
+				$where[] = " match(a.category) AGAINST('".$tag_filter."')";
+			}
+		}else{
+			$where[] = " match(a.category) AGAINST('+".$category_code."')";
+			$checked['category_code'][$category_code] = "checked";
+		}
+	}
+
+	$add_where = "";
+
+	foreach($where as $value){
+		$add_where.= " and ".$value;
+	}
+
+	foreach($_GET as $key=>$value){
+		if($key<>"page" ){
+			if($value<>""){
+				if(is_array($value)){
+					foreach($value as $sub_value){
+						$param.="&".$key."[]=".$sub_value;
+					}
+				}else{
+					$param.="&".$key."=".$value;
+				}
+				
+			}
+		}
+	}
+
+	switch($sort){
+		case "release": //출시일순
+			$orderby = "a.release_date desc";
+		break;
+		case "pricedown": //낮은가격순
+			$orderby = "a.price asc";
+		break;
+		case "priceup": //높은 가격순
+			$orderby = "a.price desc";
+		break;
+		case "discount":
+			$orderby = "c.discount_rate desc";
+		break;
+		default:
+			$orderby = "a.release_date desc";
+			$sort = "discount";
+		break;
+	}
+
+	$goods_list = $goods->getPublisherGoodsSearch($page,$add_where,$orderby,$param,$is_bonus);
+	$selected['sort'][$sort] = "selected";
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="manifest" href="/manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="full-height">
+	<div class="section full">
+		<div class="wide-block pt-2 pb-2 px-0 mx-2">
+			<div id="publisher_info">
+				<a href="https://www.paradoxinteractive.com/" target="_blank"><img src="https://image.directg.net/p82mEwtz5A" class="w-100 rounded-0" alt="Paradox Interactive"></a>
+			</div>
+		</div>
+	</div>
+		
+	<div class="section full">
+		<div class="wide-block pt-1 pb-1 px-2">
+			<div class="d-flex justify-content-between align-items-center">
+				<span>총: <?=number_format($goods_list->total_results)?> 개</span>
+				<!--<a class="btn btn-icon btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-right"><i class="bi bi-funnel-fill"></i></a>-->
+				<div class="boxed align-self-center">
+					<select class="form-control form-select-sm form-select" id="sort" name="sort">
+						<option value="">::::정렬순서:::</option>
+						<option value="release" <?=$selected['sort']['release']?>>출시일순</option>
+						<option value="pricedown" <?=$selected['sort']['pricedown']?>>낮은가격순</option>
+						<option value="priceup" <?=$selected['sort']['priceup']?>>높은가격순</option>
+						<!--<option value="discount" <?=$selected['sort']['discount']?>>높은할인률순</option>-->
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="section full">
+		<div class="wide-block pt-2 pb-2 px-0 mx-2">
+			<div  id="goods_list">
+			<?
+				if($goods_list->success == true){
+				$result = $goods_list->resultset->fetchAll();
+
+				$count = 0;
+				foreach($result as $value){
+					//대표상품정보 
+					$title_info = $goods->getGoodsOptionTitleInfo($value['product_code']);
+					switch($value['game_type']){
+						case "game":
+							$view_url = "/game/game_view.html?product_id=".$title_info['sku']."&sku=".$value['goods_sku'];
+						break;
+						case "dlc":
+							if($value['display_type']=="dlc_bundle"){
+								$view_url = "/game/bundle_view.html?sku=".$value['goods_sku'];
+							}else{
+								$view_url = "/game/dlc_view.html?sku=".$value['goods_sku'];
+							}
+						break;
+						case "music":
+							$view_url = "/game/dlc_view.html?sku=".$value['goods_sku'];
+						break;
+						case "bundle":
+							$view_url = "/game/bundle_view.html?sku=".$value['goods_sku'];
+						break;
+					}
+
+					$promotion_goods=$promotion->getPromotionGoodsPrice($value['product_code']);
+					if($promotion_goods['sale_price']>0){
+						$value['discount'] =$promotion_goods['discount_rate'];
+						$value['price'] =$promotion_goods['sale_price'];
+						$value['is_promotion']="Y";
+						$value['promotion_label']="bg-danger";
+					}else{
+						$value['is_promotion']="N";
+						$value['promotion_label']="bg-primary";
+					}
+			?>
+				<div class="card row-card rounded-1 card-shadow border-0">
+					<div class="card-body d-flex p-0">
+						<div class="img rounded-0 position-relative col-5">
+							<a href="<?=$view_url?>"><img src="<?=$value['domain']?>/upload/product/<?=$value['product_code']?>/header/header.jpg" class="img-fluid"></a>
+							<div class="position-absolute top-0 start-0">
+								<? 
+									switch($value['game_type']){
+										case "game":
+											switch($value['display_type']){
+												case "basic":
+								?>
+								<span class="badge bg-cinfo rounded-0">기본게임</span>
+								<?
+												break;
+												case "edition":
+								?>
+								<span class="badge bg-cprimary rounded-0">에디션</span>
+								<?
+												break;
+												case "multi":
+								?>
+								<span class="badge bg-cwarning rounded-0">멀티팩</span>
+								<?
+												break;
+											}
+										break;
+										case "dlc":
+								?>
+								<span class="badge bg-ccontent rounded-0">DLC</span>
+								<?
+										break;
+										case "music":
+								?>
+								<span class="badge bg-ccontent rounded-0">Music</span>
+								<?
+										break;
+										case "bundle":
+								?>
+								<span class="badge bg-csuccess rounded-0">번들</span>
+								<?
+										break;
+
+									}
+								?>
+							</div>
+
+						</div>
+						<div class="product-info col-7">
+							<div class="card-title d-flex flex-column mb-0 justify-content-evenly w-100 h-100">
+								<div class="d-flex align-items-start flex-wrap align-content-start flex-shrink-0">
+									<?if($value['spoken_korean']=="Y"){?><span class="badge rounded-2 bg-cinfo">음성 한국어</span><?}?>
+									<?if($value['interface_korean']=="Y"){?><span class="badge rounded-2 bg-clight">인터페이스/자막 한글</span><?}?>
+									<?if($value['exclusive_korean']=="Y"){?><span class="badge rounded-2 bg-clight">독점 한국어</span><?}?>
+								</div>
+								<div class="product_name text-truncate">
+									<?=$value['product_name']?>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+
+					<div class="d-flex justify-content-between card-tail">
+						<div class="d-flex flex-row justify-content-start flex-wrap card-badge align-content-center">
+							<?if($value['delivery_type']=="1"){?><span class="badge badge-outline-success rounded-2">코드</span><?}?>
+							<?if($value['delivery_type']=="2"){?><span class="badge badge-outline-post rounded-2">택배</span><?}?>
+							<?if($value['delivery_type']=="3"){?><span class="badge badge-outline-code-post rounded-2">코드+택배</span><?}?>
+							<?if($value['is_promotion']=="Y"){?><span class="badge badge-outline-danger rounded-2">프로모션</span><?}?>
+							<?if($value['is_preorder']=="Y"){?><span class="badge rounded-2 badge-outline-warning">예약</span><?}?>
+							<?if($value['is_bonus']=="Y"){?><span class="badge rounded-2 badge-outline-info">특전</span><?}?>
+						</div>
+						<div>
+							<div class="d-flex flex-row justify-content-between align-items-center card-price">
+								<?if($value['discount']>0){?><div class="rounded-2 <?=$value['promotion_label']?> badge percent"><?=$value['discount']?> %</div><?}else{?><div></div><?}?>
+								<div class="align-content-end d-flex flex-column align-items-end">
+									<?if($value['discount']>0){?><s class="num won old-price"> <?=number_format($value['consumer_price'])?></s><?}?>
+									<span class="current-price text-white num won"> <?=number_format($value['price'])?></span>
+								</div>
+							</div>
+						</div>
+ 					</div>
+
+				</div>
+			<?
+						$count++;
+					}
+				}
+			?>
+			</div>
+		</div>
+		
+		<div class="wide-block pt-2 pb-2 border-0 dg_bg">
+			<button type="button" class="btn btn-secondary btn-block" data-page="1" data-total="<?=$goods_list->total_pages?>" id="btn_paging">( <span class="px-1" id="current_page">1</span> / <span class="px-1" id="total_page"><?=$goods_list->total_pages?></span> ) 더보기</button>
+		</div>
+		
+		<!--
+		<div class="divider bg-secondary mt-5 mb-5">
+			<div class="icon-box bg-secondary">
+				<ion-icon name="arrow-down" role="img" class="md hydrated" aria-label="arrow down"></ion-icon>
+			</div>
+		</div>
+		-->
+	</div>
+
+	<!-- Offcanvas Right -->
+
+	<!-- * Offcanvas Right -->
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+<script>
+$(document).ready(function(){
+	$("#sort").change(function(e){
+		var url = "/game/publisher_paradox.html?sort="+$(this).val();
+		location.href=url;
+	});
+	//더보기 페이징
+	$("#btn_paging").bind("click",function(){
+		var page = $("#btn_paging").attr("data-page");
+		var total_page = $("#btn_paging").attr("data-total");
+		var publisher_code = "<?=$publisher_code?>";
+		var sort = $("#sort").val();
+		if(total_page==page){
+			alert("마지막페이지입니다");
+		}else{
+			$.ajax({
+				'url': '/game/game_publisher_ajax.php',
+				'type': 'POST',
+				'data':{page:page,publisher_code:publisher_code,sort:sort},
+				'success': function (data) {
+					//alert(data);
+					$("#goods_list").append(data);
+					$("#btn_paging").attr("data-page",parseInt(page)+1);
+					$("#current_page").text(parseInt(page)+1);
+				},
+				'error':function(data){
+					alert(data);
+				}
+			});
+		}
+	});
+});
+</script>
+</body>
+</html>

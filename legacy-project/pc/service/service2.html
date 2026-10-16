@@ -1,0 +1,406 @@
+<?
+	include_once($_SERVER["DOCUMENT_ROOT"].'/lib/lib.php');
+	$page_title="다이렉트 게임즈 소개";
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="" name="author" />
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+<link href="/templete/assets/dist/css/custom.css?t=<?=time()?>" rel="stylesheet">
+
+<link href="/assets/css/directg.css?t=<?=time()?>" rel="stylesheet" type="text/css" />
+<link href="/assets/css/styleguide.css?t=<?=time()?>" rel="stylesheet" type="text/css" />
+
+<style>
+
+#pagination .page-link{
+	color:#ffffff;
+}
+
+footer{
+	background-color: #343a40;
+	color:#ced4da;
+}
+
+
+.bg-black{
+	background:#131B26;
+}
+
+.progressbar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 210px;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.progressbar li {
+    list-style-type: none;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 33%;
+    width: 210px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin: 0 auto;
+    position: relative;
+}
+
+.progressbar li:before {
+    width: 210px;
+    height: 210px;
+    content: "";
+    line-height: 100px;
+    border: 8px solid #0C7CEC;
+    display: inline-flex;
+    text-align: center;
+    border-radius: 50%;
+    position: relative;
+	background: #fff no-repeat center center;
+    z-index: 2;
+}
+
+.progressbar li.active:before {
+    background: #0C7CEC no-repeat center center;
+    background-size: 60%;
+    z-index: 10;
+}
+
+.progressbar li img {
+    margin-top: 0;
+    margin-left: -210px;
+    z-index: 10000;
+    position: absolute;
+}
+
+.service-section{
+	padding-top:40px;
+	padding-bottom:40px;
+	height:400px;
+}
+
+.service-section:after{
+    content: ' ';
+    background-image: url('/frontend/assets/images/service/DG_Introbr_pc_object0_1920x400.jpg');
+	background-repeat:no-repeat;
+    position: absolute;
+	top:120px;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    width: 100%;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main>
+		  <div class="container px-4 py-5" id="featured-3">
+			<h2 class="pb-2 border-bottom  text-center">보다 믿을 수 있는 서비스 제공을 약속합니다</h2>
+			<div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+			  <div class="feature col">
+				<div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+				  <svg class="bi" width="1em" height="1em" aria-hidden="true"><use xlink:href="#collection"></use></svg>
+				</div>
+				<h3 class="fs-2 text-body-emphasis">Featured title</h3>
+				<p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+				<a href="#" class="icon-link">
+				  Call to action
+				  <svg class="bi" aria-hidden="true"><use xlink:href="#chevron-right"></use></svg>
+				</a>
+			  </div>
+			  <div class="feature col">
+				<div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+				  <svg class="bi" width="1em" height="1em" aria-hidden="true"><use xlink:href="#people-circle"></use></svg>
+				</div>
+				<h3 class="fs-2 text-body-emphasis">Featured title</h3>
+				<p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+				<a href="#" class="icon-link">
+				  Call to action
+				  <svg class="bi" aria-hidden="true"><use xlink:href="#chevron-right"></use></svg>
+				</a>
+			  </div>
+			  <div class="feature col">
+				<div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+				  <svg class="bi" width="1em" height="1em" aria-hidden="true"><use xlink:href="#toggles2"></use></svg>
+				</div>
+				<h3 class="fs-2 text-body-emphasis">Featured title</h3>
+				<p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+				<a href="#" class="icon-link">
+				  Call to action
+				  <svg class="bi" aria-hidden="true"><use xlink:href="#chevron-right"></use></svg>
+				</a>
+			  </div>
+			</div>
+		  </div>
+
+		  <div class="b-example-divider"></div>
+
+		  <div class="container px-4 py-5" id="hanging-icons">
+			<h2 class="pb-2 border-bottom text-center">다이렉트 게임즈 회원만의 혜택이 기다립니다</h2>
+			<div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+			  <div class="col d-flex align-items-start">
+				<div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+				  <svg class="bi" width="1em" height="1em" aria-hidden="true"><use xlink:href="#toggles2"></use></svg>
+				</div>
+				<div>
+				  <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+				  <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+				  <a href="#" class="btn btn-primary">
+					Primary button
+				  </a>
+				</div>
+			  </div>
+			  <div class="col d-flex align-items-start">
+				<div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+				  <svg class="bi" width="1em" height="1em" aria-hidden="true"><use xlink:href="#cpu-fill"></use></svg>
+				</div>
+				<div>
+				  <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+				  <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+				  <a href="#" class="btn btn-primary">
+					Primary button
+				  </a>
+				</div>
+			  </div>
+			  <div class="col d-flex align-items-start">
+				<div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+				  <svg class="bi" width="1em" height="1em" aria-hidden="true"><use xlink:href="#tools"></use></svg>
+				</div>
+				<div>
+				  <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+				  <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+				  <a href="#" class="btn btn-primary">
+					Primary button
+				  </a>
+				</div>
+			  </div>
+			</div>
+		  </div>
+
+		  <div class="b-example-divider"></div>
+
+		  <div class="container px-4 py-5" id="custom-cards">
+			<h2 class="pb-2 border-bottom text-center">다이렉트 게임즈 및 플랫폼별 이용 방법이 궁금하시다면</h2>
+
+			<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+			  <div class="col">
+				<div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('unsplash-photo-1.jpg');">
+				  <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+					<h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Short title, long jacket</h3>
+					<ul class="d-flex list-unstyled mt-auto">
+					  <li class="me-auto">
+						<img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
+					  </li>
+					  <li class="d-flex align-items-center me-3">
+						<svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
+						<small>Earth</small>
+					  </li>
+					  <li class="d-flex align-items-center">
+						<svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
+						<small>3d</small>
+					  </li>
+					</ul>
+				  </div>
+				</div>
+			  </div>
+
+			  <div class="col">
+				<div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('unsplash-photo-2.jpg');">
+				  <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+					<h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Much longer title that wraps to multiple lines</h3>
+					<ul class="d-flex list-unstyled mt-auto">
+					  <li class="me-auto">
+						<img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
+					  </li>
+					  <li class="d-flex align-items-center me-3">
+						<svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
+						<small>Pakistan</small>
+					  </li>
+					  <li class="d-flex align-items-center">
+						<svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
+						<small>4d</small>
+					  </li>
+					</ul>
+				  </div>
+				</div>
+			  </div>
+
+			  <div class="col">
+				<div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('unsplash-photo-3.jpg');">
+				  <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+					<h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Another longer title belongs here</h3>
+					<ul class="d-flex list-unstyled mt-auto">
+					  <li class="me-auto">
+						<img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
+					  </li>
+					  <li class="d-flex align-items-center me-3">
+						<svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
+						<small>California</small>
+					  </li>
+					  <li class="d-flex align-items-center">
+						<svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
+						<small>5d</small>
+					  </li>
+					</ul>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+
+		  <div class="b-example-divider"></div>
+
+		  <div class="container px-4 py-5" id="icon-grid">
+			<h2 class="pb-2 border-bottom text-center">세계 유수의 파트너들이 함께합니다</h2>
+
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-5">
+			  <div class="col d-flex align-items-start">
+				<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true"><use xlink:href="#bootstrap"></use></svg>
+				<div>
+				  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
+				  <p>Paragraph of text beneath the heading to explain the heading.</p>
+				</div>
+			  </div>
+			  <div class="col d-flex align-items-start">
+				<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true"><use xlink:href="#cpu-fill"></use></svg>
+				<div>
+				  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
+				  <p>Paragraph of text beneath the heading to explain the heading.</p>
+				</div>
+			  </div>
+			  <div class="col d-flex align-items-start">
+				<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true"><use xlink:href="#calendar3"></use></svg>
+				<div>
+				  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
+				  <p>Paragraph of text beneath the heading to explain the heading.</p>
+				</div>
+			  </div>
+			  <div class="col d-flex align-items-start">
+				<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true"><use xlink:href="#home"></use></svg>
+				<div>
+				  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
+				  <p>Paragraph of text beneath the heading to explain the heading.</p>
+				</div>
+			  </div>
+			  <div class="col d-flex align-items-start">
+				<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true"><use xlink:href="#speedometer2"></use></svg>
+				<div>
+				  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
+				  <p>Paragraph of text beneath the heading to explain the heading.</p>
+				</div>
+			  </div>
+			  <div class="col d-flex align-items-start">
+				<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true"><use xlink:href="#toggles2"></use></svg>
+				<div>
+				  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
+				  <p>Paragraph of text beneath the heading to explain the heading.</p>
+				</div>
+			  </div>
+			  <div class="col d-flex align-items-start">
+				<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true"><use xlink:href="#geo-fill"></use></svg>
+				<div>
+				  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
+				  <p>Paragraph of text beneath the heading to explain the heading.</p>
+				</div>
+			  </div>
+			  <div class="col d-flex align-items-start">
+				<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true"><use xlink:href="#tools"></use></svg>
+				<div>
+				  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
+				  <p>Paragraph of text beneath the heading to explain the heading.</p>
+				</div>
+			  </div>
+			</div>
+		  </div>
+
+		  <div class="b-example-divider"></div>
+
+		  <div class="container px-4 py-5">
+			<h2 class="pb-2 border-bottom">Features with title</h2>
+
+			<div class="row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
+			  <div class="col d-flex flex-column align-items-start gap-2">
+				<h2 class="fw-bold text-body-emphasis">Left-aligned title explaining these awesome features</h2>
+				<p class="text-body-secondary">Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+				<a href="#" class="btn btn-primary btn-lg">Primary button</a>
+			  </div>
+
+			  <div class="col">
+				<div class="row row-cols-1 row-cols-sm-2 g-4">
+				  <div class="col d-flex flex-column gap-2">
+					<div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+					  <svg class="bi" width="1em" height="1em" aria-hidden="true">
+						<use xlink:href="#collection"></use>
+					  </svg>
+					</div>
+					<h4 class="fw-semibold mb-0 text-body-emphasis">Featured title</h4>
+					<p class="text-body-secondary">Paragraph of text beneath the heading to explain the heading.</p>
+				  </div>
+
+				  <div class="col d-flex flex-column gap-2">
+					<div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+					  <svg class="bi" width="1em" height="1em" aria-hidden="true">
+						<use xlink:href="#gear-fill"></use>
+					  </svg>
+					</div>
+					<h4 class="fw-semibold mb-0 text-body-emphasis">Featured title</h4>
+					<p class="text-body-secondary">Paragraph of text beneath the heading to explain the heading.</p>
+				  </div>
+
+				  <div class="col d-flex flex-column gap-2">
+					<div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+					  <svg class="bi" width="1em" height="1em" aria-hidden="true">
+						<use xlink:href="#speedometer"></use>
+					  </svg>
+					</div>
+					<h4 class="fw-semibold mb-0 text-body-emphasis">Featured title</h4>
+					<p class="text-body-secondary">Paragraph of text beneath the heading to explain the heading.</p>
+				  </div>
+
+				  <div class="col d-flex flex-column gap-2">
+					<div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+					  <svg class="bi" width="1em" height="1em" aria-hidden="true">
+						<use xlink:href="#table"></use>
+					  </svg>
+					</div>
+					<h4 class="fw-semibold mb-0 text-body-emphasis">Featured title</h4>
+					<p class="text-body-secondary">Paragraph of text beneath the heading to explain the heading.</p>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+
+</body>
+</html>

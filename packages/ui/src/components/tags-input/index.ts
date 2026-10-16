@@ -1,0 +1,26 @@
+export {
+  Root,
+  Label,
+  Control,
+  Input,
+  Item,
+  ItemText,
+  ItemDeleteTrigger,
+  ItemPreview,
+  ItemInput,
+  ClearTrigger,
+  HiddenInput,
+} from "./tags-input";
+export type {
+  TagsInputRootProps,
+  TagsInputLabelProps,
+  TagsInputControlProps,
+  TagsInputInputProps,
+  TagsInputItemProps,
+  TagsInputItemTextProps,
+  TagsInputItemDeleteTriggerProps,
+  TagsInputItemPreviewProps,
+  TagsInputItemInputProps,
+  TagsInputClearTriggerProps,
+  TagsInputHiddenInputProps,
+} from "./tags-input.types";

@@ -1,0 +1,74 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"].'/lib/lib.php');
+
+$page_title="이용약관";
+$old_dates = ['250701']; // 필요할때마다 추가
+$old_date = $_GET['date'] ?? '';
+if($old_date && in_array($old_date, $old_dates)){
+    $agreement_file = "agreement_" . $old_date . ".txt";
+    if(!file_exists($_SERVER['DOCUMENT_ROOT'].'/service/'.$agreement_file)){
+        $agreement_file = "agreement.txt";
+        $is_old = false;
+    } else {
+        $is_old = true;
+    }
+} else {
+    $agreement_file = "agreement.txt";
+}
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<style>
+.container pre{
+	text-wrap: auto;
+	font-family: 'Noto Sans KR', sans-serif;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container">
+		<main class="mb-5">
+			<h3 class="page-title py-3 fw-bold"><?=$page_title?></h3>
+			
+			<div class="card shadow-none rounded-0">
+				<div class="card-body text-body font-14 p-4">
+					<pre class="text-auto font-14"><? include_once($_SERVER['DOCUMENT_ROOT'].'/service/'.$agreement_file);?></pre>
+<?php
+	if($is_old){
+?>
+    <a href="agreement.html">현재 이용약관 보기</a>
+<?php 
+	} else {
+    	foreach(array_reverse($old_dates) as $date){
+?>
+        <a href="agreement.html?date=<?=$date?>">이전 이용약관 보기 (<?=substr($date,0,2)?>년 <?=substr($date,2,2)?>월 <?=substr($date,4,2)?>일)</a><br>
+<?php
+		}
+	}
+?>
+				</div>
+			</div>
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+</body>
+</html>

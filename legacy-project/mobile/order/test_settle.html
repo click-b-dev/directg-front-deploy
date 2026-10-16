@@ -1,0 +1,729 @@
+<?
+	ini_set( "display_errors", 1 );
+	error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
+	header("Cache-Control: no-cache");
+	session_cache_limiter('private_no_expire');
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title="결제하기";
+	
+	$settle_kind = filter_input(INPUT_POST, 'settle_kind', FILTER_SANITIZE_STRING);
+	$use_emoney = filter_input(INPUT_POST, 'use_emoney', FILTER_SANITIZE_STRING);
+	$zipcode = filter_input(INPUT_POST, 'zipcode', FILTER_SANITIZE_STRING);
+	$address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
+	$address2 = filter_input(INPUT_POST, 'address2', FILTER_SANITIZE_STRING);
+	$buyr_name = filter_input(INPUT_POST, 'buyr_name', FILTER_SANITIZE_STRING);
+	$buyr_tel2 = filter_input(INPUT_POST, 'buyr_tel2', FILTER_SANITIZE_STRING);
+	$msg = filter_input(INPUT_POST, 'msg', FILTER_SANITIZE_STRING);
+	
+	if($buyr_name==""){
+		if($_SESSION['member']['name']==""){
+			$buyr_name = $_SESSION['member']['nickname'];
+		} else {
+			$buyr_name = $_SESSION['member']['name'];
+		}
+	}
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	//기존 DB
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$order = new Order($conn);
+	$member = new Member($conn_dgkr);
+	
+	switch($settle_kind){
+		case "naverpay":
+			$settle_kind_label = "네이버페이";
+			$pg_provider = "naverpay";
+			$settle_no = "N".$order->getSettleNo();
+		break;
+		case "payco":
+			$settle_kind_label = "페이코";
+			$pg_provider = "payco";
+			$settle_no = "P".$order->getSettleNo();
+		break;
+		case "SC0010":
+			$settle_kind_label = "신용/체크카드 결제";
+			$pg_provider = "kcp";
+			$pay_method="CARD";
+			$settle_no = "K".$order->getSettleNo();
+			$escw_used = "N";
+			$site_cd="AKPV0";
+			$return_url="kcp";
+			$action_url="/order/kcp/kcp_api_trade_reg.php";
+		break;
+		case "SC0030":
+			$settle_kind_label = "실시간계좌이체 결제";
+			$pg_provider = "kcp";
+			$pay_method="BANK";
+			$settle_no = "K".$order->getSettleNo();
+			$escw_used = "Y";
+			$site_cd="AKPV0";
+			$return_url="kcp";
+			$action_url="/order/kcp/kcp_api_trade_reg.php";
+		break;
+		case "SC0040":
+			$settle_kind_label = "가상계좌(무통장입금) 결제";
+			$pg_provider = "kcp";
+			$pay_method="VCNT";
+			$settle_no = "K".$order->getSettleNo();
+			$escw_used = "N";
+			$site_cd="AKPV0";
+			$return_url="kcp";
+			$action_url="/order/kcp/kcp_api_trade_reg.php";
+		break;
+		case "SC0060":
+			$settle_kind_label = "휴대폰 결제";
+			$pg_provider = "kcp";
+			$pay_method="MOBX";
+			$settle_no = "K".$order->getSettleNo();
+			$escw_used = "N";
+			$site_cd="AKPV0";
+			$return_url="kcp";
+			$action_url="/order/kcp/kcp_api_trade_reg.php";
+		break;
+		case "toss_bank":
+			$settle_kind_label = "퀵계좌이체 결제";
+			$pg_provider = "toss";
+			$pay_method="toss_bank";
+			$settle_no = "T".$order->getSettleNo();
+			$escw_used = "Y";
+			$site_cd="directg";
+			$return_url="toss";
+			$action_url="/order/toss/order_approval_tosspayments.php";
+		break;
+		case "toss":
+			$settle_kind_label = "토스 결제";
+			$pg_provider = "toss";
+			$settle_no = "T".$order->getSettleNo();
+			$site_cd="directg";
+		break;
+	}
+	
+	if($settle_no==""){
+		$settle_no = "DG".time();
+		$settle_kind ="DG0000";
+		$settle_kind_label = "전액할인";
+	}
+	
+	//주문상품목록
+	$order_item_list = $order->getOrderItemList($_SESSION['member']['m_no']);
+	
+	//보유포인트 현황
+	$member_emoney = $member->getMemberEmoney($_SESSION['member']['m_no']);
+	
+	//포인트 유효성 검증
+	if($member_emoney<$use_emoney && $use_emoney>0){
+		echo "보유한 포인트보다 많은 포인트는 사용하실 수 없습니다.";
+		exit;
+	}
+	
+	$is_delivery_address = "false";
+	
+	foreach($order_item_list as $value){
+		if($value['delivery_type']=="2" || $value['delivery_type']=="3"){//실물발송
+			$is_delivery_address = "true";
+		}
+	}
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+
+$shop_user_id = $_SESSION['member']['m_id'];
+$buyr_mail = $_SESSION['member']['m_id'];
+
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="manifest" href="/manifest.json?1">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+
+<style>
+.popover-header{
+	background:#303D4E;
+	font-size:14px;
+}
+.popover-body{
+	font-size:12px;
+}
+</style>
+</head>
+<body class="dark-mode-active">
+    <script type="text/javascript">
+        /****************************************************************/
+        /* m_Completepayment  설명                                      */
+        /****************************************************************/
+        /* 인증완료시 재귀 함수                                         */
+        /* 해당 함수명은 절대 변경하면 안됩니다.                        */
+        /* 해당 함수의 위치는 kcp_spay_hub.js 보다먼저 선언되어여 합니다.    */
+        /* Web 방식의 경우 리턴 값이 form 으로 넘어옴                   */
+        /****************************************************************/
+        function m_Completepayment( FormOrJson, closeEvent ) 
+        {
+	
+			var frm = document.order_info; 
+         
+            /********************************************************************/
+            /* FormOrJson은 가맹점 임의 활용 금지                               */
+            /* frm 값에 FormOrJson 값이 설정 된 frm 값으로 활용 하셔야 됩니다.  */            
+            /********************************************************************/
+            GetField( frm, FormOrJson ); 
+
+            
+            if( frm.res_cd.value == "0000" )
+            {
+             	/* 결제인증 완료 후 결제승인 요청을 위한 비즈니스 로직 구현 */             
+                frm.submit(); 
+            }
+            else
+            {
+				/* 결제인증 실패에 대한 처리 */
+				alert( "[" + frm.res_cd.value + "] " + frm.res_msg.value );
+                closeEvent();
+            }
+        }
+    </script>
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="full-height">
+	<form class="form-horizontal" name="checkoutFrm" id="checkoutFrm" method="POST" >
+		<input type="hidden" name="settlekind" id="settlekind" value="<?=$settle_kind?>">
+		<input type="hidden" name="pg_provider" id="pg_provider" value="<?=$pg_provider?>">
+		<input type="hidden" name="use_emoney" value="<?=$use_emoney?>">
+		<input type="hidden" name="zipcode" value="<?=$zipcode?>">
+		<input type="hidden" name="address" value="<?=$address?>">
+		<input type="hidden" name="address2" value="<?=$address2?>">
+		<input type="hidden" name="buyr_name" value="<?=$buyr_name?>">
+		<input type="hidden" name="buyr_tel2" value="<?=$buyr_tel2?>">
+		<input type="hidden" name="msg" value="<?=$msg?>">
+		
+		
+	<div class="section full px-3 pt-2">
+		<div class="section-title">주문상품정보</div>
+		<?
+			$total_goods_price = 0;
+			$good_info = array();
+			foreach($order_item_list as $key=>$value){
+		?>
+		<div class="card cart-item mb-2 rounded-0">
+			<input type="hidden" name="goods_sku[]" value="<?=$value['goods_sku']?>">
+			<img src="/upload/product/<?=$value['product_code']?>/header/header.jpg?t=<?=time()?>" alt="product" class="card-img-top rounded-0">
+			<div class="card-body">
+				<h5 class="card-title fs-4 mb-2"><?=$value['product_name']?></h5>
+				<p class="card-text">
+					<?if(is_array($value['promotion'])){?>
+					<span class="badge bg-danger align-self-center px-3 py-3 font-16 num fw-bold rounded-2 minus"><?=$value['promotion']['discount_rate']?> %</span>
+					<strong class="ms-1 font-16 num fw-bold price won" data="<?=$value['promotion']['sale_price']?>"> <?=number_format($value['promotion']['sale_price'])?></strong>
+					<s class="ms-1 font-12 num consumer_price won" data="<?=$value['consumer_price']?>"> <?=number_format($value['consumer_price'])?></s>
+					<?}else{?>
+					<?if($value['discount']>0){?><span class="badge bg-primary align-self-center px-3 py-3 font-16 num fw-bold rounded-2 minus"><?=$value['discount']?> %</span><?}?>
+					<strong class="ms-1 font-16 num fw-bold price won" data="<?=$value['price']?>"> <?=number_format($value['price'])?></strong>
+					<?if($value['discount']>0){?><s class="ms-1 font-12 num consumer_price won" data="<?=$value['consumer_price']?>"> <?=number_format($value['consumer_price'])?><?}?></s>
+					<?}?>
+				</p>
+			</div>
+		</div>
+		<?
+				$total_goods_price+=$value['consumer_price'];
+				if($value['promotion']['sale_price']>0){
+					$total_price+=$value['promotion']['sale_price'];
+				}else{
+					$total_price+=$value['price'];
+				}
+				
+				
+				if($key=="0"){
+					$order_goods_name = $value['product_name'];
+					$order_goods_cd = $value['goods_sku'];
+				}
+				
+				$ordno = $settle_no."_".($key+1);
+				
+				array_push($good_info,"seq=".($key+1).chr(31)."ordr_numb=".$ordno.chr(31)."good_name=".$value['product_name'].chr(31)."good_cntx=1".chr(31)."good_amtx=".$value['price']);
+				
+				
+				if(count($order_item_list)>1){
+					$good_name=$order_goods_name." 외 ".(count($order_item_list)-1)."개";
+					$good_cd = $order_goods_cd." 외 ".(count($order_item_list)-1)."개";
+				}else{
+					$good_name=$order_goods_name;
+					$good_cd = $order_goods_cd;
+				}
+			}
+			
+			$good_info=implode(chr(30),$good_info);
+		?>
+		<!-- * item -->
+	</div>
+	<?
+		if($is_delivery_address=="true"){
+	?>
+	<div class="section full px-3 mb-2">
+		<div class="section-title">배송지</div>
+		<div class="wide-block px-0">
+			<ul class="listview flush transparent">
+				<li>우편번호: <?=$zipcode?></li>
+				<li>주소: <?=$address?> <?=$address2?></li>
+				<li>주문자 이름: <?=$buyr_name?></li>
+				<li>휴대폰번호: <?=$buyr_tel2?></li>
+				<li>배송요청 메시지: <?=$msg?></li>
+			</ul>
+		</div>
+	</div>
+	<?
+		}
+	?>
+	
+	<div class="section full px-3 mb-2">
+		<div class="section-title">결제수단</div>
+		<div class="wide-block p-2">
+			<?=$settle_kind_label?>
+		</div>
+	</div>
+
+<?php
+	if($settle_kind=="SC0040"){
+?>
+	<div class="section full px-3 mb-2">
+		<div class="wide-block p-2">
+			<label for="va_name">입금자명</label>
+			<input type="text" class="form-control" name="va_name" value="<?=$buyr_name?>">
+			<label for="va_bankcode">은행</label>
+			<select name="va_bankcode" class="form-select">
+				<option value="BK03">기업은행</option>
+				<option value="BK31">iM뱅크</option>
+				<option value="BK04">국민은행</option>
+				<option value="BK32">부산은행</option>
+				<option value="BK07">수협</option>
+				<option value="BK34">광주은행</option>
+				<option value="BK11">NH농협</option>
+				<option value="BK39">경남은행</option>
+				<option value="BK20">우리은행</option>
+				<option value="BK71">우체국</option>
+				<option value="BK23">SC제일은행</option>
+				<option value="BK81">KEB하나은행</option>
+				<option value="BK26">신한은행</option>
+			</select>
+			<label for="va_receipt_gubn">현금영수증 구분</label>
+			<select name="va_receipt_gubn" class="form-select" id="va_receipt_gubn">
+				<option value="0">소득공제용 (개인)</option>
+				<option value="1">지출증빙용 (사업자)</option>
+			</select>
+			<label for="va_taxno">현금영수증 식별번호</label>
+			<input type="number" class="form-control" name="va_taxno" id="va_taxno" value="">
+		</div>
+	</div>
+<?php
+	}
+?>
+
+	<div class="section full px-3 mb-2">
+		<div class="section-title">최종 결제 금액</div>
+		<div class="card">
+			<ul class="listview flush transparent">
+				<li class="d-flex">총 상품 가격 <span class="num won" id="total_goods_price"> <?=number_format($total_goods_price)?></span></li>
+				<li class="d-flex text-danger">총 할인 <span class="num text-danger m-won" id="total_discount_price"> <?=number_format($total_goods_price-$total_price)?></span></li>
+				<?
+					if($use_emoney>0){
+						$total_price = $total_price-$use_emoney;
+				?>
+				<li class="d-flex text-danger">포인트 할인 <span class="num text-danger m-won" id="total_point"> <?=number_format($use_emoney)?></span></li>
+				<?}?>
+				<li class="d-flex text-primary fw-bold">총 결제 금액 <span class="num fw-bold won" id="total_price" data-total="<?=$total_price?>"> <?=number_format($total_price)?></span></li>
+			</ul>
+		</div>
+	</div>
+	<input type="hidden" name="total_price" value="<?=$total_price?>" maxlength="9" />
+	
+	<div class="section mb-2">
+		<button type="button" class="btn btn-primary btn-lg btn-block" id="btn_checkout">결제하기</button>
+	</div>
+	</form>
+	
+	<!-- 거래등록 -->
+	<form id="form_trade_reg" name="form_trade_reg" method="post" action="<?=$action_url?>">
+		<input type="hidden" name="site_cd"	value="<?=$site_cd?>" />
+		<input type="hidden" name="site_name"		value="direct games" />
+		<input type="hidden" name="Ret_URL"         value="https://m.directg.net/order/<?=$return_url?>/kcp_api_pay.php" />
+		<input type="hidden" name="user_agent"      value="<?=$_SERVER['HTTP_USER_AGENT']?>" /> <!--사용 OS-->
+		<input type="hidden" name="ordr_idxx" value="<?=$settle_no?>" maxlength="40" />
+		<input type="hidden" name="good_mny" value="<?=$total_price?>" maxlength="9" />
+		<input type="hidden" name="good_cd" value="<?=$good_cd?>" />
+		<input type="hidden" name="good_name"      value="<?=$good_name?>" />
+		<input type="hidden" name="use_emoney"      value="<?=$use_emoney?>" />
+		
+		<!-- 배송지 -->
+		<input type="hidden" name="zipcode"      value="<?=$zipcode?>" />
+		<input type="hidden" name="address"      value="<?=$address?>" />
+		<input type="hidden" name="address2"      value="<?=$address2?>" />
+		<input type="hidden" name="buyr_name"      value="<?=$buyr_name?>" />
+		<input type="hidden" name="buyr_tel2"      value="<?=$buyr_tel2?>" />
+		<input type="hidden" name="msg"      value="<?=$msg?>" />
+				
+		<!-- 인증시 필요한 파라미터(변경불가)-->
+		<input type="hidden" name="pay_method"      value="<?=$pay_method?>">
+		<input type="hidden" name="escw_used"      value="<?=$escw_used?>">
+		<?if($escw_used=="Y"){?><input type="hidden" name="deli_term"       value="3"/><?}?>
+		<input type="hidden" name="van_code"        value="">
+		<input type="hidden" name="encoding_trans" value="UTF-8" />
+		
+		<!--  가상계좌 입금 기한 설정하는 파라미터 - 발급일 + 3일 -->
+		<?if($settle_kind=="SC0040"){?>
+			<input type="hidden" name="vcnt_expire_term" value="1"/>
+			<input type="hidden" name="va_bankcode"    value=""/>
+			<input type="hidden" name="va_receipt_gubn"    value=""/>
+			<input type="hidden" name="va_taxno"    value=""/>
+			<input type="hidden" name="va_name"    value=""/>
+		<?}?>
+		
+	</form>
+	
+	<form name="order_info" id="order_info" method="post">
+		<input type="hidden" name="req_tx"          value="pay" />              <!-- 요청 구분 -->
+		<input type="hidden" name="shop_name"       value="direct games" />        <!-- 사이트 이름 --> 
+		<input type="hidden" name="site_cd"         value="<?=$site_cd?>" />    <!-- 사이트 코드 -->
+		<input type="hidden" name="currency"        value="410"/>               <!-- 통화 코드 -->
+		<!-- 주문정보 -->
+		<input type="hidden" name="ordr_idxx" value="<?=$settle_no?>" maxlength="40" />
+		<input type="hidden" name="good_mny" value="<?=$total_price?>" maxlength="9" />
+		<input type="hidden" name="good_cd" value="<?=$good_cd?>" />
+		<input type="hidden" name="good_name" value="<?=$good_name?>" />
+		<input type="hidden" name="shop_user_id" value="<?=$_SESSION['member']['m_id']?>"/>
+		<input type="hidden" name="buyr_name" value="<?=$buyr_name?>" />
+		<input type="hidden" name="buyr_tel2" value="010-0000-0000" />
+		<input type="hidden" name="buyr_mail" value="<?=$_SESSION['member']['m_id']?>" />
+		
+		<input type="hidden" name="res_cd"          value=""/>
+		<input type="hidden" name="res_msg"         value=""/>
+		<input type="hidden" name="enc_info"       value="<?=$enc_info?>" />
+        <input type="hidden" name="enc_data"       value="<?=$enc_data?>" />
+				
+		<!-- 인증시 필요한 파라미터(변경불가)-->
+		<input type="hidden" name="escw_used"       value="<?=$escw_used?>" />
+		<input type="hidden" name="pay_method"      value="" />
+		<input type="hidden" name="ActionResult"    value="<?=$actionResult ?>" />
+		<input type="hidden" name="van_code"        value="<?=$van_code ?>" />
+<?php
+	if($escw_used=="Y"){
+?>
+				<input type="hidden" name="bask_cntx" value="<?=count($order_item_list)?>"/>
+				<input type="hidden" name="good_info" value="<?=$good_info?>"/>
+				<input type="hidden" name="pay_mod"   value="Y"/>
+				<input type="hidden" name="deli_term" value="3" />
+				<input type="hidden" name="rcvr_name" value="<?=$buyr_name?>" />
+				<input type="hidden" name="rcvr_tel1" value="<?=$buyr_tel2?>" />
+				<input type="hidden" name="rcvr_tel2" value="" />
+				<input type="hidden" name="rcvr_mail" value="<?=$_SESSION['member']['m_id']?>" />
+				<input type="hidden" name="rcvr_zipx" value="<?=$zipcode?>" />
+				<input type="hidden" name="rcvr_add1" value="<?=$address?>" />
+				<input type="hidden" name="rcvr_add2" value="<?=$address2?>" />
+<?php
+	}
+?>
+		<!-- 신용카드 설정 -->
+		<input type="hidden" name="quotaopt"        value="12"/> <!-- 최대 할부개월수 -->
+		<!-- 리턴 URL (kcp와 통신후 결제를 요청할 수 있는 암호화 데이터를 전송 받을 가맹점의 주문페이지 URL) -->
+		<input type="hidden" name="Ret_URL"         value="https://<?=$_SERVER['HTTP_HOST']?>/order/<?=$return_url?>/kcp_api_pay.php" />
+		<!-- 화면 크기조정 -->
+		<input type="hidden" name="tablet_size"     value="1.0 " />
+		<!-- 추가 파라미터 ( 가맹점에서 별도의 값전달시 param_opt 를 사용하여 값 전달 ) -->
+		<input type="hidden" name="param_opt_1"        value="<?=$_SESSION['member']['m_no']?>" />
+		<input type="hidden" name="param_opt_2"        value="<?=$use_emoney?>" />
+		<input type="hidden" name="param_opt_3"     value="" />
+		<!-- 거래등록 응답값 -->
+		<input type="hidden" name="approval_key" id="approval" value=""/>
+		<input type="hidden" name="traceNo"                    value="" />
+		<input type="hidden" name="PayUrl"                     value="" />
+		<!-- 인증창 호출 시 한글깨질 경우 encoding 처리 추가 (**인코딩 네임은 대문자) -->
+		<input type="hidden" name="encoding_trans" value="UTF-8" />
+
+		<?if($settle_kind=="SC0040"){?>
+			<input type="hidden" name="va_bankcode"    value=""/>
+			<input type="hidden" name="va_receipt_gubn"    value=""/>
+			<input type="hidden" name="va_taxno"    value=""/>
+			<input type="hidden" name="va_name"    value=""/>
+			<input type="hidden" name="use_pay_method"      value="" />
+		<?}?>
+
+	</form>
+
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.bundle.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+<script type="text/javascript" src="https://static-bill.nhnent.com/payco/checkout/js/payco.js" charset="UTF-8"></script>
+
+<?php
+	if($pg_provider=="kcp"){
+?>
+<!--kcp운영-->
+-<script type="text/javascript" src="https://spay.kcp.co.kr/plugin/kcp_spay_hub.js"></script>
+<!--<script type="text/javascript" src="https://testspay.kcp.co.kr/plugin/kcp_spay_hub.js"></script>-->
+<?php
+	} else if($pg_provider=="toss"){
+?>
+<script type="text/javascript" src="https://js.tosspayments.com/v2/k-adapter"></script>
+<?php
+		
+	}
+?>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.0/dist/loadingoverlay.min.js"></script>
+
+<script>
+	/* kcp web 결제창 호츨 (변경불가) */
+	function call_pay_form(PayUrl){
+		var v_frm = document.order_info;
+		// 인코딩 방식에 따른 변경 -- Start
+		if(v_frm.encoding_trans == undefined)
+		{
+			v_frm.action = PayUrl;
+		}
+		else
+		{
+			// encoding_trans "UTF-8" 인 경우
+			if(v_frm.encoding_trans.value == "UTF-8")
+			{
+				v_frm.action = PayUrl.substring(0,PayUrl.lastIndexOf("/"))  + "/jsp/encodingFilter/encodingFilter.jsp";
+				v_frm.PayUrl.value = PayUrl;
+			}
+			else
+			{
+				v_frm.action = PayUrl;
+			}
+		}
+
+		if (v_frm.Ret_URL.value == "")
+		{
+			/* Ret_URL값은 현 페이지의 URL 입니다. */
+			alert("연동시 Ret_URL을 반드시 설정하셔야 됩니다.");
+			return false;
+		}
+		else
+		{
+			v_frm.submit();
+		}
+	}
+	
+$(document).ready(function(){
+	$("#btn_checkout").bind("click",function(){
+		var pg_provider = $("#pg_provider").val();
+		var total_amount = $("#total_price").attr("data-total");
+
+		$.LoadingOverlay("show");
+		if(total_amount=="0"){
+			$.ajax({
+				type: "POST",
+				url: "/order/dgkr/order_full_discount.php",
+				data:$("#checkoutFrm").serialize(),
+				success:function(data){
+					document.location.href = data;
+					$.LoadingOverlay("hide");
+					//alert(data);
+				}
+			});
+		}else{
+			switch(pg_provider){
+				case "payco":
+					$.LoadingOverlay("hide");
+					callPaycoUrl();
+				break;
+				case "kcp":
+					//jsf__pay(document.order_info);
+						$.ajax({
+						'url': '/order/kcp/kcp_api_trade_reg.php',
+						'type': 'POST',
+						'dataType':'json',
+						'data':$('#form_trade_reg').serialize(),
+						'success': function (data){
+							$.LoadingOverlay("hide");
+							console.log(data);
+							//alert(data);
+							//location.reload();
+							if(data.Code=="0000"){
+								//alert(data.Message);
+								$("#order_info input[name='approval_key']").val(data.approvalKey);
+								$("#order_info input[name='PayUrl']").val(data.PayUrl);
+								$("#order_info input[name='pay_method']").val(data.paymentMethod);
+								$("#order_info input[name='traceNo']").val(data.traceNo);
+								call_pay_form(data.PayUrl);
+							}else if(data.code=="1"){
+								console.log(data.use_pay_method);
+								if(confirm("가상계좌로 주문하시겠습니까?")){
+									$("#order_info input[name='res_cd']").val(data.res_cd);
+									$("#order_info input[name='res_msg']").val(data.res_msg);
+									$("#order_info input[name='pay_method']").val(data.pay_method);
+									$("#order_info input[name='use_pay_method']").val(data.use_pay_method);
+									$("#order_info input[name='va_bankcode']").val($("#checkoutFrm select[name='va_bankcode']").val());
+									$("#order_info input[name='va_name']").val($("#checkoutFrm input[name='va_name']").val());
+									$("#order_info input[name='va_receipt_gubn']").val($("#checkoutFrm input[name='va_receipt_gubn']").val());
+									$("#order_info input[name='va_taxno']").val($("#checkoutFrm input[name='va_taxno']").val());
+									$("#order_info").attr("action", "/order/kcp/kcp_api_pay.php").submit();
+									$.LoadingOverlay("show");
+								}
+							}else{
+								alert(data.Message);
+								location.reload();
+							}
+						},
+						'error':function(data){
+							$.LoadingOverlay("hide");
+							alert(data.Message);
+							location.reload();
+						}
+					});
+				break;
+				case "naverpay":
+					$.ajax({
+						type: "POST",
+						url: "/order/naverpay/naverpay_reserve.php",
+						data:$("#checkoutFrm").serialize(),
+						dataType:"json",
+						success:function(data){
+							$.LoadingOverlay("hide");
+							if(data.code=="Success"){
+								document.location.href = data.payment_url;
+							}else{
+								alert(data.message);
+							}
+						}
+					});
+				break;
+				case "toss":
+					$.ajax({
+						type: "POST",
+						url: "/order/toss_test/toss_reserve.php",
+						data:$("#checkoutFrm").serialize(),
+						dataType:"json",
+						success:function(data){
+							$.LoadingOverlay("hide");
+							if(data.code=="NG"){
+								alert("로그인 해 주세요");
+								location.reload();
+							} else if(data.code=="NG_POINT"){
+								alert("보유한 포인트보다 많은 포인트는 사용하실 수 없습니다.");
+								location.href="/order/order_fail.html?msg=보유한 포인트보다 많은 포인트는 사용하실 수 없습니다.";
+							} else if(data.code=="0"){
+								var settle_no = data.settle_no;
+								var goods_name=encodeURIComponent('<?=$good_name?>');
+								location.href = '/order/toss_test/toss_widget.php?settle_no='+settle_no+'&goods_name='+goods_name;
+							}
+						}
+					});
+				break;
+			}
+		}
+		
+	});
+
+	function callPaycoUrl(){
+		
+		var m_no = "<?=$_SESSION['member']['m_no']?>";                         // 회원고유번호
+		var m_id = "<?=$_SESSION['member']['m_id']?>";                         // 회원고유번호
+			
+		
+		// localhost 로 테스트 시 크로스 도메인 문제로 발생하는 오류 
+		$.support.cors = true;
+
+		/* + "&" + $('order_product_delivery_info').serialize() ); */
+		$.ajax({
+			type: "POST",
+			url: "/order/payco/payco_reserve.php",
+
+			//data: Params,		// JSON 으로 보낼때는 JSON.stringify(customerOrderNumber)
+			data:$("#checkoutFrm").serialize(),
+			
+			contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+			dataType:"json",
+			success:function(data){
+				if(data.code == '0') {
+					//console.log(data.result.reserveOrderNo);	// 주석 해제시, 일부 웹브라우저 에서 PAYCO 결제창이 뜨지 않습니다.	
+					//location.href = data.result.orderSheetUrl;
+					console.log(data.result.orderSheetUrl);
+					payco_open(data.result.orderSheetUrl);
+					//document.location.href = order_Url;
+				} else {				
+					alert("code:"+data.code+"\n"+"message:"+data.message);
+				}
+			},
+			error: function(request,status,error) {
+				//에러코드
+				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				return false;
+			}
+		});
+	}
+	
+	function payco_open(order_Url){
+		if (order_Url == ""){
+			alert("주문예약실행 버튼을 먼저 누르세요.");
+			return false;
+		}	
+
+		var isMobile = '0';
+		
+		if (isMobile == 0){  // MOBILE 
+			document.location.href = order_Url;
+			//location.href = order_Url;
+			
+		}else{               // PC              
+			window.open(order_Url, 'popupPayco', 'top=100, left=300, width=727px, height=512px, resizble=no, scrollbars=yes'); 
+		}	
+	}
+	
+});
+</script>
+</body>
+</html>

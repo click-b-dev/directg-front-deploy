@@ -1,0 +1,565 @@
+<?
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
+header("Content-Type:text/html; charset=utf-8"); 
+ini_set('display_errors', '0');
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$sku = filter_input(INPUT_GET, "sku", FILTER_SANITIZE_STRING);
+
+try{  
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+
+	$goods= new Goods($conn);
+	$parsedown= new Parsedown();
+	$mypage = new Mypage2($conn);
+
+	/*옵션상품 정보*/
+	$goods_item = $goods->getGoodsItemDetailSku($sku);
+
+	/*옵션상품 상세설명정보*/
+	$goods_description = $goods->getGoodsOptionDescription($goods_item['product_code']);
+
+	//echo $goods_item['product_code'];
+	
+	$package_list = $goods->getGoodsOptionPackageList($goods_item['product_code']);
+debug($package_list);
+	foreach($package_list as $package_key=>$package){
+		$package_item[$package_key]['item_img'] = "/upload/apps/".$package['appid']."/header.jpg";
+		$package_item[$package_key]['item_name'] = $package['item_name'];
+		$package_item[$package_key]['item_type'] = $package['item_type'];
+		$package_item[$package_key]['release_date'] = $package['release_date'];
+		$package_item[$package_key]['item_code'] = $package['item_code'];
+		$package_item[$package_key]['appid'] = $package['appid'];
+	}
+
+	if($goods_item['is_view']=="Y"){
+		if($goods_item['status']=="0"){
+			$goods_status = "Y";
+		}else{
+			$goods_status = "N";
+			$goods_status_msg = "판매중인 상품이 아닙니다";
+		}
+	}else{
+		$goods_status = "N";
+		$goods_status_msg = "판매중인 상품이 아닙니다";
+	}
+	
+	if($_SESSION['member']['m_no']){
+		$wishlist = $mypage->getWishlistItem($_SESSION['member']['m_no'],$goods_item['product_code']);
+		if($wishlist['idx']>0){
+			$wishlist_chk="Y";
+		} else {
+			$wishlist_chk="N";
+		}
+	} else {
+		$wishlist_chk="N";
+	}
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+
+<head>
+<meta charset="utf-8" />
+<title><?=$goods_item['product_name']?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="다이렉트 게임즈" name="author" />
+<meta name="amazonbot" content="noarchive">
+
+<link href="https://directg.net/game/bundle_view.html?sku=<?=$goods_item['goods_sku']?>" rel="canonical" />
+<link rel="alternate" media="only screen and (max-width: 640px)"  href="https://m.directg.net/game/bundle_view.html?sku=<?=$goods_item['goods_sku']?>" >
+
+<meta property="og:title" content="<?=$goods_item['product_name']?>" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://directg.net/game/bundle_view.html?sku=<?=$sku?>" />
+<meta property="og:image" content="<?=$goods_item['domain']?>/upload/product/<?=$goods_item['product_code']?>/header/header.jpg" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:alt" content="<?=$goods_item['product_name']?>" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:site_name" content="다이렉트 게임즈" />
+
+<!-- App favicon -->
+<link rel="shortcut icon" href="/favicon.ico">
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<style>
+#description_html img{
+	max-width:100%;
+	height: auto;
+}
+
+</style>
+</head>
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<main>
+		<div class="container my-3 pb-5">
+			<?
+				if($goods_status=="N"){
+			?>
+				<div class="row mt-3">
+					<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show" role="alert">
+						<strong>Error - </strong> <?=$goods_status_msg?>
+					</div>
+				</div>
+			<?}else{?>
+			<div class="row g-0 mb-3">
+				<div class="col-12">
+					<div class="h3 text-white fw-bold mb-0"><?=$goods_item['product_name']?></div>
+					<small class="eng text-secondary font-16">(<?=$goods_item['product_name_en']?>)</small>
+				</div>
+			</div>
+			
+			<div class="d-grid justify-content-between" style="grid-template-columns: 812px 460px">
+				<div class="content-left">
+					<?if($goods_description['region_msg']){?>
+					<div class="row">
+						<div class="col-12">
+							<div class="alert danger bg-danger text-white border-0 font-12 rounded-0" role="alert"><?=$goods_description['region_msg']?></div>
+						</div>
+					</div>
+					<?}?>
+					
+					<div class="card mb-4 rounded-0 bg-card">
+						<div class="card-header p-1">
+							<div class="d-flex flex-row justify-content-between align-items-center">
+								<div class="d-flex flex-row align-items-center">
+									<h5 class="font-16 ms-3"><?=$goods_item['product_name']?></h5>
+								</div>
+								<div class="text-center">
+									<?
+										switch($goods_item['product_platform']){
+											case "1":
+									?>
+									<img src="/assets/images/platform/Platform_logo_steam.png" class="w-75 ">
+									<?
+											break;
+											case "34":
+									?>
+									<img src="/assets/images/platform/Platform_logo_epic.png" class="w-75 ">
+									<?
+											break;
+											case "35":
+									?>
+									<img src="/assets/images/platform/Platform_logo_rockstar.png" class="w-75 ">
+									<?
+											break;
+										}
+									?>
+								</div>
+							</div>
+						</div>
+						<?if($goods_item['promotion']['sale_price']>0){?>
+						<div class="card-body p-3 border-0 border-bottom">
+							<div class="d-flex flex-row g-0 justify-content-between">
+								<div class="ps-2"><span class="text-primary font-14">프로모션 종료일: <?=$goods_item['promotion']['promotion_end']?></span></div>
+							</div>
+						</div>
+						<?}?>
+						<div class="card-footer p-0 border-0 px-2">
+							<div class="d-flex flex-row align-items-center justify-content-between">
+								<div class="flex-fill flew-row align-items-center">
+									<div class="d-flex mb-1">
+										<!--<div class="me-1"><span class="badge text-success border border-success py-1 px-1 font-12">+00% 추가적립</span></div>-->
+										<? if($value['promotion']['sale_price']>0){?>
+										<div class="me-1"><span class="badge text-danger border border-danger py-1 px-1 font-12">프로모션</span></div>
+										<?}?>
+										
+										<? if($goods_item['is_preorder']=="Y"){?>
+										<div class="me-1"><span class="badge text-warning border border-warning py-1 px-1 font-12">예약구매</span></div>
+										<?}?>
+										
+										<? if($goods_item['is_bonus']=="Y"){?>
+										<div class="me-1"><span class="badge text-info border border-info py-1 px-3 font-12">특전</span></div>
+										<?}?>
+									</div>
+								</div>
+								<div class="px-2">
+									<div class="d-flex flew-row align-items-center">
+										<?if($goods_item['promotion']['discount_rate']>0){?>
+											<span class="badge bg-danger font-14 px-3 py-2 num me-3 minus" ><?=$goods_item['promotion']['discount_rate']?> %</span>
+										<?
+											}else{
+												if($goods_item['discount']>0){
+										?>
+										<span class="badge bg-primary font-14 px-3 py-2 num me-3 minus"><?=$goods_item['discount']?> %</span>
+										<?	
+												}
+											}
+										?>
+										<div class="d-flex flex-column align-items-end">
+											<?if($goods_item['discount']>0 || $goods_item['promotion']['discount_rate']>0){?>
+											<s class="font-11 num text-secondary won"> <?=number_format($goods_item['consumer_price'])?></s>
+											<?}?>
+											<?if($goods_item['promotion']['sale_price']>0){?>
+											<strong class="font-14 num fw-bold text-white won"> <?=number_format($goods_item['promotion']['sale_price'])?></strong>
+											<?} else {?>
+											<strong class="font-14 num fw-bold text-white won"> <?=number_format($goods_item['price'])?></strong>
+											<?}?>
+										</div>
+									</div>
+								</div>
+								<div class="px-1 py-2">
+									<div class="d-grid gap-1 d-flex justify-content-end">
+										<button type="button" class="btn btn-sm shadow-none font-14 fw-bold btn_wishlist <?=$wishlist_chk=="Y"?"":"btn_wishlist_off"?>" data-sku="<?=$goods_item['goods_sku']?>">
+											<img src="/assets/images/icon/wishlist-icon_<?=$wishlist_chk=="Y"?"y":"n"?>.svg">
+										</button>
+										<?if($goods_item['soldout']=="N"){?>
+											<button type="button" class="btn btn-sm shadow-none font-14 fw-bold btn_cart text-nowrap" data-sku="<?=$goods_item['goods_sku']?>">
+												<img src="/assets/images/icon/basket-icon-white.svg" class="me-1"> 장바구니
+											</button>
+									<?}else{?>
+										<span class="badge bg-secondary fw-bold font-14 py-2 px-2">품절</span>
+									<?}?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<?
+						if($goods_item['display_type']=="edition" || $goods_item['display_type']=="dlc_bundle" || $goods_item['display_type']=="game_bundle"){
+							if($goods_description['description']){
+					?>
+					<section id="game_info" class="mb-4">
+						<div class="card shadow-none rounded-0">
+							<div class="card-header text-white font-16 fw-bold bg-card py-3">상세설명</div>
+							<div class="card-body p-3 content-wrapper" id="description_html">
+								<div id="" >
+									<?	
+											$description = str_replace("##","\r\n\r\n###",$goods_description['description']);
+											echo $parsedown->text($description);
+									?>
+								</div>
+							</div>
+						</div>
+						<div class="text-end mb-3">
+							<hr>
+							<button class="btn text-primary font-16 toggle-btn" type="button" id="game_info_btn" data-target="#description_html" data-maxheight="800">전체보기 <img src="/assets/images/icon/icon-arrow_down.svg"></button>
+						</div>
+					</section>
+					<?	}
+						}
+					?>
+					<?if($goods_item['display_type']=="game_bundle" || $goods_item['display_type']=="dlc_bundle"  || $goods_item['display_type']=="etc_bundle"){?>
+					<?if(count($package_list)>0){?>
+					<section id="bundle_item" class="mb-4">
+						<div class="card shadow-none rounded-0">
+							<div class="card-header text-white font-16 fw-bold bg-card py-3">번들 상세정보</div>
+							<ul class="list-group list-group-flush">
+								<?
+									foreach($package_list as $package){
+										if($package['coming_soon']=="1"){
+											$json_path =  "/home/dgkrshop/www/upload/apps/apps_".$package['appid']."_coming.json";
+										}else{
+											$json_path =  "/home/dgkrshop/www/upload/apps/apps_".$package['appid'].".json";
+										}
+										
+										$json_string = file_get_contents($json_path);
+										$json_data = json_decode($json_string, true);
+										$header_image = $json_data[$package['appid']]['data']['header_image'];
+										$about_the_game = $json_data[$package['appid']]['data']['about_the_game'];
+										$short_description = $json_data[$package['appid']]['data']['short_description'];
+										$release_date = $json_data[$package['appid']]['data']['release_date']['date'];
+										$developers = $json_data[$package['appid']]['data']['developers'];
+										$publishers = $json_data[$package['appid']]['data']['publishers'];
+										$ratings[] = $json_data[$package['appid']]['data']['ratings']['kgrb'];
+
+										echo "<li class='list-group-item py-3'>";
+										echo "<div class='row'>";
+										if($release_date){
+										echo "<div class='col-3'><img src='".$header_image."' class='img-fluid border-0'><p class='text-center pt-2 mb-0'>출시일: ".$release_date."</p></div>";
+										}else{
+										echo "<div class='col-3'><img src='".$header_image."' class='img-fluid border-0'><p class='text-center pt-2 mb-0'></p></div>";
+										}
+										
+										echo "<div class='col-9'>";
+										echo "<h4 class='font-14'>".$package['item_name']."</h4>";
+										echo "<div class='bundle_description'>".$short_description."</div>";
+										echo "</div>";
+										echo "</div></li>";
+									}
+								?>
+							</ul>
+						</div>
+					</section>
+					<?}?>
+					<?}?>
+				</div>
+				<div class="content-right">
+					<section id="title_info" class="mb-4">
+						<div class="card shadow-none mb-0 rounded-0 border-0">
+							<img src="<?=$goods_item['domain']?>/upload/product/<?=$goods_item['product_code']?>/header/header.jpg" class="card-img-top rounded-0" alt="<?=$goods_item['product_name']?>">
+						</div>
+						
+						<div class="card shadow-none mb-3 rounded-0 border-0 bg-none">
+							<div class="d-flex flex-row flex-wrap mb-2">
+							<?
+								if(in_array("rating",$ratings)){
+									if(implode(",",$ratings)<>""){
+									$rating_age = array_column($ratings, 'rating');
+									$max_rating = max($rating_age);
+									}
+								}else{
+									$max_rating = "";
+								}
+
+									if($max_rating=="10"){
+								?>
+								<img src="/assets/images/game/age_all.png">
+								<?
+									}else{
+										if($max_rating=="18"){
+								?>
+								<img src="/assets/images/game/age_19.png">
+								<?	
+										}else{
+											if($max_rating<>""){
+								?>
+								<img src="/assets/images/game/age_<?=$max_rating?>.png">
+								<?
+											}
+										}
+									}
+								?>
+								<?
+									$game_rate_array = array();
+									 for ($i = 0; $i < mb_strlen($title_info['game_rate'],"UTF-8"); $i++) {
+										$char = mb_substr($title_info['game_rate'], $i, 1, 'UTF-8');
+										if($char=="1"){
+											echo "<img src='/assets/images/game/grade".($i+1).".png'>";
+										}
+										
+									}
+									?>
+							</div>
+						</div>
+
+						<div class="card shadow-none mb-3 rounded-0 border-0 bg-table-dark text-white">
+							<div class="card-body px-3">
+								<dl class="row g-2 mb-0">
+									<dt class="col-sm-3 font-14">출시일</dt> 
+									<dd class="col-sm-9">
+										<?if($goods_item['coming_soon']=="Y"){?>
+										<span class="num font-14"><?=$goods_item['coming_soon_date']?></span>
+										<?}else{?>
+										<span class="num font-14"><?=substr($goods_item['release_date'],0,10)?></span>
+										<?}?>
+										
+									</dd>
+
+									<dt class="col-sm-3 font-14">개발사</dt> 
+									<dd class="col-sm-9">
+										<span class="eng font-14">
+											<?
+												if($goods_item['developer']){
+													echo $goods_item['developer'];
+												}else{
+												
+													foreach($developers as $developer_key=>$developer_text){
+														echo $developer_text;
+													}
+												}
+											?>
+										</span>
+									</dd>
+									<dt class="col-sm-3 font-14">퍼블리셔</dt> 
+									<dd class="col-sm-9">
+										<span class="eng font-14">
+											<?
+												if($goods_item['publisher']){
+													echo $goods_item['publisher'];
+												}else{
+												
+													foreach($publishers as $publisher_key=>$publisher_text){
+														echo $publisher_text;
+													}
+												}
+											?>
+										</span>
+									</dd>
+
+									<?if($title_info['spoken_korean']=="Y" || $title_info['interface_korean']=="Y"){?>
+									<dt class="col-sm-3 font-14">한국어지원</dt>
+									<dd class="col-sm-9">
+										<div class="d-flex flex-row flex-wrap align-items-start">
+											<?if($title_info['spoken_korean']=="Y"){?><div class="me-2"><span class="badge bg-label font-12 fw-400 px-2">음성 한글</span></div><?}?>
+											<?if($title_info['interface_korean']=="Y"){?><div class=""><span class="badge bg-label font-12 fw-400 px-2">인터페이스/자막 한글</span></div><?}?>
+										</div>
+									</dd>
+									<?}?>
+								</dl>
+							</div>
+						</div>
+					</section>
+				</div>
+			</div>
+			<?}?>
+		</div>
+	</main>
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<div id="cart-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="primary-header-modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" style="max-width:900px">
+		<div class="modal-content border border-3 border-start border-end-0 border-top-0 border-bottom-0 border-primary rounded-2">
+			<div class="modal-header">
+				<h4 class="modal-title" id="topModalLabel">장바구니 안내</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+			</div>
+			<div class="modal-body p-2 rounded-0">
+				<div id="cart_result" class="p-0"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-dark shadow-none font-14" id="btn_model_close" data-bs-dismiss="modal">쇼핑 계속하기</button>
+				<button type="button" class="btn btn-primary shadow-none font-14" id="btn_cart_move">장바구니 바로가기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="wishlist-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="primary-header-modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" style="max-width:900px">
+		<div class="modal-content border border-3 border-start border-end-0 border-top-0 border-bottom-0 border-primary">
+			<div class="modal-header">
+				<h4 class="modal-title" id="topModalLabel">위시리스트</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+			</div>
+			<div class="modal-body p-2 rounded-0">
+				<div id="wishlist_result" class="p-0"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-sm btn-dark shadow-none font-14" id="btn_model_close" data-bs-dismiss="modal">쇼핑 계속하기</button>
+				<button type="button" class="btn btn-sm btn-primary shadow-none font-14" id="btn_wishlist_move">위시리스트 바로가기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script>
+$(document).ready(function(){
+	$("#btn_buy").bind("click",function(){
+		var goods_code = $("#btn_buy").attr("data-goodscode");
+		var newForm = $('<form></form>');
+		newForm.attr("name","newForm");
+		newForm.attr("method","post");
+		newForm.attr("action","/order/order_pre.html");
+		newForm.attr("target","_blank");
+
+		newForm.append($('<input/>', {type: 'hidden', name: 'goods_code', value:goods_code }));
+		newForm.appendTo('body');
+		newForm.submit();
+	});
+
+	//장바구니 추가
+	$(".btn_cart").bind("click",function(){
+		var index = $(".btn_cart").index(this);
+		var goods_sku = $(".btn_cart").eq(index).attr("data-sku");
+
+		$.ajax({
+			'url': '/order/cart_proc.php',
+			'type': 'POST',
+			'data':{mode:"add_cart",goods_sku:goods_sku},
+			'success': function (data) {
+				$("#cart_result").html(data);
+				$("#cart-modal").modal("show");
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+	
+	$(".toggle-btn").each(function() {
+		const $btn = $(this);
+		setTimeout(function() {
+			initToggleContent($btn); // 초기화
+		}, 500);
+	});
+	
+	//위시리스트 추가
+	$(document).on("click", ".btn_wishlist", function(){
+		const goods_sku = $(this).data("sku");
+		const $btn = $(this);
+
+		$.ajax({
+			'url': '/order/wishlist_proc.php',
+			'type': 'POST',
+			'data':{mode:"add_wishlist",goods_sku:goods_sku},
+			'success': function (data) {
+				const $response = $(data);
+				if ($response.filter("#fail").length==0) {
+					$btn.removeClass("btn_wishlist_off");
+					$btn.find("img").attr("src", "/assets/images/icon/wishlist-icon_y.svg");
+				}
+			$("#wishlist-modal #topModalLabel").text("위시리스트");
+				$("#wishlist_result").html(data);
+				$("#wishlist-modal").modal("show");
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+	
+	$("#wishlist-modal #btn_wishlist_move").bind("click",function(){
+		location.href="/mypage/mypage_wishlist.html";
+	});
+
+	$("#cart-modal #btn_model_close").bind("click",function(){
+		$("#cart-modal").modal("hide");
+	});
+
+	$("#cart-modal #btn_cart_move").bind("click",function(){
+		location.href="/order/cart.html";
+	});
+});
+
+function initToggleContent($btn) {
+	const targetSelector = $btn.data("target");
+	const maxHeight = parseInt($btn.data("maxheight"), 10);
+	const $target = $(targetSelector);
+
+	// 초기 상태 설정 (최초 실행 시만)
+	if (!$target.data("initialized")) {
+		if ($target[0].scrollHeight > maxHeight) {
+			$target.css("max-height", maxHeight + "px").addClass("content-collapsed");
+		} else {
+			$target.css("max-height", $target[0].scrollHeight + "px").addClass("content-expanded");
+		}
+		$target.data("initialized", true);
+	}
+}
+
+function toggleContent($btn) {
+	const targetSelector = $btn.data("target");
+	const maxHeight = parseInt($btn.data("maxheight"), 10);
+	const $target = $(targetSelector);
+
+	if ($target.hasClass("content-collapsed")) {
+		$target.css("max-height", $target[0].scrollHeight + "px").removeClass("content-collapsed").addClass("content-expanded");
+		$btn.html('닫기 <img class="reverseY" src="/assets/images/icon/icon-arrow_down.svg">');
+	} else {
+		$target.css("max-height", maxHeight + "px").removeClass("content-expanded").addClass("content-collapsed");
+		$btn.html('전체보기 <img src="/assets/images/icon/icon-arrow_down.svg">');
+	}
+}
+
+$(document).on("click", ".toggle-btn", function() {
+	toggleContent($(this));
+});
+</script>
+</body>
+</html>

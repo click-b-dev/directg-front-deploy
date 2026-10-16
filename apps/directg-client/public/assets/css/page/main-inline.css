@@ -1,0 +1,96 @@
+/* legacy pc/index.php head 인라인 <style>(128-225) 파일화 — 메인 그리드/배너 레이아웃. 무수정. */
+.text-shadow{
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px  1px 0 #000, 1px  1px 0 #000;
+}
+#splide .splide{
+	margin-top:16px;
+}
+
+#splide .splide__slide__container{
+	padding:0px 16px 0px 16px;
+}
+#splide .splide__slide__container img {
+	width: 1296px;
+	height: 500px;
+}
+
+#splide .splide__pagination{
+	bottom:-30px;
+	height:30px;
+}
+
+#splide .splide__pagination li{
+	margin-right:10px;
+}
+
+#splide .splide__pagination li .splide__pagination__page{
+	color:#ffffff;
+	width:50px;
+	height:15px;
+	border-radius:5px;
+}
+#splide .splide__pagination__page.is-active{
+	transform:none;
+	color:#0d6efd;
+	background:#0d6efd;
+}
+
+#splide .splide__pagination li.is-active button:before{
+	color:#ffffff;
+	content:"";
+
+}
+
+#splide .splide__pagination__page{
+
+}
+
+#splide .num{
+	line-height: var(--bs-body-line-height);
+}
+
+.badge-lg {
+	padding: 9px 13px !important;
+}
+.card-badge{
+	min-height:42px;
+}
+.font-notosans{
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+#best_game .d-grid{
+	display: grid;
+	border: 0px;
+	background-color: none;
+	grid-template-columns: repeat(6, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+#publisher_area.d-grid{
+	display: grid;
+	border: 0px;
+	background-color: none;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+#platform .d-grid{
+	display: grid;
+	border: 0px;
+	background-color: none;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+#goods_korean .d-grid{
+	display: grid;
+	border: 0px;
+	background-color: none;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+#event_banner{
+	justify-self: center;
+}

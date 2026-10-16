@@ -1,0 +1,4 @@
+/* legacy member_point_form.php inline <style> — 행 hover */
+.member-point-form-table .table-responsive table tr:hover {
+  background-color: #fff0f0;
+}

@@ -1,0 +1,10 @@
+#pagination >.pagination >:not(.active) .page-link{
+	border: none;
+	background-color: #071125;;
+}
+
+#pagination .active .page-link{
+	background-color: var(--bs-primary);
+	border-radius: var(--bs-border-radius) !important;
+}
+

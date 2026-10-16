@@ -1,0 +1,145 @@
+<?
+header("Content-Type:text/html; charset=utf-8"); 
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$idx = filter_input(INPUT_GET, 'idx', FILTER_SANITIZE_NUMBER_INT);
+
+$page_title="공지사항";
+
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$board = new Board($conn);
+	$parsedown= new Parsedown();
+
+	$notice_data = $board->getNoticeView($idx);
+	
+	//공지사항 조회수 업데이트
+	$query = "update tbl_notice set hit=hit+1 where idx=:idx";
+	$stmt = $conn->prepare($query);
+	$params = array(
+		':idx'=>$idx
+	);
+	$stmt->execute($params);
+
+	//이전 게시물
+	
+	//다음 게시물
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="<?=$notice_data['contents']?>" name="description" />
+<meta content="H2interactive" name="author" />
+<link href="https://directg.net/board/notice_view.html?idx=<?=$idx?>" rel="canonical" />
+<link rel="alternate" media="only screen and (max-width: 640px)"  href="https://m.directg.net/board/notice_view.html?idx=<?=$idx?>" hreflang="ko-kr">
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<style>
+.blog-contents img {
+	max-width:90%;
+	padding-bottom:20px;
+}
+
+
+.blog-contents hr{
+	padding-bottom:20px;
+}
+
+.blog-contents iframe{
+	padding-top:20px;
+	padding-bottom:20px;
+}
+
+strong{
+	
+}
+
+</style>
+</iframeead>
+
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container my-3 pb-5">
+		<main>
+			<div class="row">
+				<div class="col-12">
+					<article class="blog-post">
+						<h2 class="h2 mb-3"><?=$notice_data['subject']?></h2>
+						<p class="blog-post-meta font-12"><?=$notice_data['deploy_date']?> by <span>다이렉트 게임즈</span></p>
+						<hr/>
+						<div class="blog-contents font-14"><?=str_replace("&#13;&#10;","<br/>",$parsedown->text($notice_data['contents']))?></div>
+					</article>
+
+					<hr class="mb-3"/>
+					
+					<nav class="blog-pagination" aria-label="Pagination">
+						<!--
+						<a class="btn btn-lg btn-outline-light rounded-0" href="#">이전글</a>
+						<a class="btn btn-lg btn-outline-light rounded-0 disabled" aria-disabled="true">다음글</a>
+						-->
+						<a href="notice.html" class="btn btn-lg btn-outline-light rounded-0 " aria-disabled="true">목록</a>
+					</nav>
+				</div>
+
+				<!--<div class="col-md-3">
+				  <div class="position-sticky" style="top: 2rem;">
+					<div>
+					  <h4 class="fst-italic">추천상품</h4>
+					  <ul class="list-unstyled">
+						<li>
+						  <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+							<svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
+							<div class="col-lg-8">
+							  <h6 class="mb-0">Example blog post title</h6>
+							  <small class="text-body-secondary">January 15, 2023</small>
+							</div>
+						  </a>
+						</li>
+						<li>
+						  <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+							<svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
+							<div class="col-lg-8">
+							  <h6 class="mb-0">This is another blog post title</h6>
+							  <small class="text-body-secondary">January 14, 2023</small>
+							</div>
+						  </a>
+						</li>
+						<li>
+						  <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+							<svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
+							<div class="col-lg-8">
+							  <h6 class="mb-0">Longer blog post title: This one has multiple lines!</h6>
+							  <small class="text-body-secondary">January 13, 2023</small>
+							</div>
+						  </a>
+						</li>
+					  </ul>
+					</div>
+				  </div>
+				</div>-->
+			</div>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+</body>
+</html>

@@ -1,0 +1,223 @@
+<?
+/*
+if($_SERVER['REMOTE_ADDR']<>"112.216.231.146"){
+	header( "HTTP/1.1 301 Moved Permanently" );
+	header( 'Location: https://directg.net/index.php' );
+	exit;
+}
+*/
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+header("Content-Type:text/html; charset=utf-8"); 
+
+$page_title="풋볼 매니저 26 예약구매 이벤트";
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$purchase_event = new PurchaseEvent($conn);
+	
+	if($_SESSION['member']['m_no']=="121876" || $_SESSION['member']['m_no']=="823942" || $_SESSION['member']['m_no']=="895084" || $_SESSION['member']['m_no']=="1023882"  || $_SESSION['member']['m_no']=="1173998"){
+		$event_result1="1";
+		//$event_result1 = $purchase_event->chkEventOrderGoods_v2('38',$_SESSION['member']['m_no']);
+		$chk_event_member1 = $purchase_event->chkEventMemberLog('38',$_SESSION['member']['m_no']);
+	}else{
+		//이벤트 대상자 여부 확인
+		$event_result1 = $purchase_event->chkEventOrderGoods_v2('38',$_SESSION['member']['m_no']);
+		
+		//이벤트 사은품 수령여부 확인
+		$chk_event_member1 = $purchase_event->chkEventMemberLog('38',$_SESSION['member']['m_no']);
+	}
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+<link rel="shortcut icon" href="/favicon.ico">
+
+<link href="https://directg.net/event/event_fm26.html" rel="canonical" />
+<link rel="alternate" media="only screen and (max-width: 640px)"  href="https://m.directg.net/event/event_fm26.html" hreflang="ko-kr">
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+<link href="/templete/assets/dist/css/custom.css" rel="stylesheet">
+
+<link href="/assets/css/directg.css?t=2025091101" rel="stylesheet" type="text/css" />
+<link href="/assets/css/styleguide.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="wrap">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container mt-3">
+		<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+			<ol class="breadcrumb font-14">
+				<li class="breadcrumb-item"><a href="/" class="text-decoration-none" title="다이렉트 게임즈">다이렉트 게임즈</a></li>
+				<li class="breadcrumb-item"><a href="/event/event.html" class="text-decoration-none" title="이벤트">이벤트</a></li>
+				<li class="breadcrumb-item active" aria-current="page"><?=$page_title?></li>
+			</ol>
+		</nav>
+	</div>
+
+	<div class="container my-3 pb-5">
+		<main>
+			<section id="content" class="content rounded-0">
+				<div class="mb-4 border border-1"><a href="/game/game_view.html?product_id=af3cca1a-d3ed-4b2d-ae85-79162db22328" title="풋볼 매니저 26"><img src="https://image.directg.net/k834JLUyrH" class="w-100"></a></div>
+				<p class="text-danger font-14">※ 페이지 하단에 버튼을 통해 사은품 획득 또는 응모하실 수 있습니다. 이벤트 사은품은 자동 지급되지 않습니다.</p>
+				
+				<div class="card mb-4 rounded-0">
+					<div class="card-body">
+						<h4 class="text-primary fw-bold py-1">■ 다이렉트 게임즈 X 풋볼 매니저 26 예약구매 이벤트</h4>
+						<ul>
+							<li class="font-14">
+								이벤트 내용:
+								<ol class="list-unstyled">
+									<li>#01 <풋볼 매니저 2024> 구매 회원 한정 추가 혜택 이벤트</li>
+									<li>#02 <풋볼 매니저 26> 사전 액세스 플레이 인증 이벤트</li>
+								</ol>
+							</li>
+							<li class="font-14">이벤트 기준: 이벤트 기간 내 주문 및 제품코드(키) 수령완료 기준 (이벤트 공지 전 주문건도 인정)</li>
+							<li class="font-14">이벤트 기간: 2025년 11월 5일(수)까지</li>
+							<li class="font-14">당첨자 안내: 2025년 11월 7일(금) 공지와 함께 별도의 이메일로 안내 예정</li>
+						</ul>
+						
+						<div class="alert mb-0">
+							<h5 class="text-warning fw-bold">※ 유의사항</h5>
+							<ul class="mb-0">
+								<li class="font-14 text-danger">사은품 수령은 2025년 11월 10일(월)까지 가능하며, 이후 수령하지 않은 사은품은 소멸됩니다.</li>
+								<li class="font-14 text-warning">해당 이벤트는 다이렉트 게임즈에서 구매한 회원분들을 대상으로 하며, 응모를 위해선 계정 및 로그인이 필요합니다.</li>
+								<li class="font-14 text-warning">해당 이벤트는 계정 당 1회만 참여가 가능하며, 중복 참여는 인정되지 않습니다.</li>
+								<li class="font-14 text-warning">다이렉트 게임즈 포인트는 [마이페이지>포인트]메뉴에서 확인할 수 있습니다.</li>
+								<li class="font-14 text-warning">다이렉트 게임즈 포인트는 현금화가 불가합니다.</li>
+								<li class="font-14 text-warning">보유한 포인트가 1,000원 이상 시 100원 단위로 사용이 가능하며, 일부 상품은 제한이 있을 수 있습니다.</li>
+								<li class="font-14 text-warning">이벤트 기간과 기준, 사은품은 사정에 따라 사전 공지 없이 변경될 수 있습니다.</li>
+								<li class="font-14 text-warning">부적절한 방법을 통한 응모는 모두 취소되며 법적인 처벌을 받을 수 있습니다.</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<?if($_SESSION['member']['m_no']==""){?>
+				<div class="bg-danger text-white font-14 fw-bold p-3 mb-4">이벤트 참여를 위해서는 로그인이 필요합니다.</div>
+				<?}?>
+				
+				<div class="d-flex align-items-center bg-body border mb-4">
+					<div class="flex-shrink-0">
+						<img src="https://image.directg.net/z81ajUl7m0" alt="다이렉트 게임즈 포인트 3,000원">
+					</div>
+					<div class="flex-grow-1 ms-3 p-0">
+						<div class="h-100 d-flex flex-column justify-content-start align-items-start">
+							<div class="p-1">
+								<h5 class="text-primary fw-bold">#01 <풋볼 매니저 2024> 구매 회원 한정 추가 혜택 이벤트</h5>
+							</div>
+							<ul class="mb-3">
+								<li class="mb-1">이벤트 내용: 다이렉트 게임즈에서 <풋볼 매니저 2024> 구매 이력이 있는 경우, <풋볼 매니저 26> 구매 시 사은품 지급 (계정당 1회)</li>
+								<li class="mb-1">이벤트 기준: 다이렉트 게임즈에서 구매한 회원 대상, 이벤트 기간 내 주문 및 제품코드(키) 수령완료 기준 (이벤트 공지 전 주문건도 인정)</li>
+								<li class="mb-1">이벤트 기간: 2025년 11월 5일(수)까지</li>
+								<li class="mb-1">사은품 지급: 이벤트 페이지에서 실시간 수령</li>
+								<li class="text-info">사은품: 다이렉트 게임즈 포인트 3,000원</li>
+							</ul>
+							<?
+								if($_SESSION['member']['m_no']){
+							?>
+							<div class="mt-auto d-flex flex-row">
+							<?
+									if($event_result1=="0"){
+							?>
+								<div class="align-self-center me-3"><span class="badge text-bg-warning font-15 py-3">미달성</span></div>
+							<?
+									}else{
+										if($chk_event_member1=="Y"){
+							?>
+								<div class="align-self-center me-3"><span class="badge text-bg-danger font-15 py-3">수령완료</span></div>
+							<?
+										}else{
+							?>
+								<div class="align-self-center me-3"><button type="button" class="btn btn-primary btn-lg fw-bold btn_event" data-no="38">포인트 수령</button></div>
+							<?
+										}
+									}
+							?>
+							</div>
+							<?}?>
+						</div>
+					</div>
+				</div>
+				
+				<div class="d-flex align-items-center bg-body border mb-4">
+					<div class="flex-shrink-0">
+						<img src="https://image.directg.net/r83UtlUqqN" alt="다이렉트 게임즈 포인트 10,000원">
+					</div>
+					<div class="flex-grow-1 ms-3 p-0">
+						<div class="h-100 d-flex flex-column justify-content-center align-items-start">
+							<h5 class="text-primary fw-bold">#02 <풋볼 매니저 26> 사전 액세스 플레이 인증 이벤트</h5>
+							<ul class="mb-2 flex-grow-1">
+								<li class="mb-1">이벤트 내용: 이벤트 기간 내 <풋볼 매니저 26> 사전 액세스 플레이 인증 시 추첨을 통해 총 300분에게 사은품 지급 (계정당 1회)</li>
+								<li class="mb-1">이벤트 기준: 다이렉트 게임즈에서 구매한 회원 대상, 이벤트 종료 전 안내에 따라 구글폼을 통해 인증 완료 기준</li>
+								<li class="mb-1">이벤트 참여 방법: <풋볼 매니저 26> 사전 액세스 플레이 후, 소셜미디어, 커뮤니티 등에 후기를 작성하고 구글폼을 통해 인증</li>
+								<li class="mb-1">이벤트 기간: 2025년 11월 5일(수)까지</li>
+								<li class="mb-1">사은품 지급: 2025년 11월 7일(금) 공지와 함께 일괄 지급 예정</li>
+								<li class="text-info">사은품: 다이렉트 게임즈 포인트 10,000원</li>
+							</ul>
+							<?if($_SESSION['member']['m_no']){?>
+							<div class="mb-auto"><button type="button" class="btn btn-primary btn-lg fw-bold btn_event" data-no="39">구글폼 바로가기</button></div>
+							<?}?>
+						</div>
+					</div>
+				</div>
+				
+			</section>
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+	$(".btn_event").bind("click",function(){
+		var index = $(".btn_event").index(this);
+		var event_no = $(".btn_event").eq(index).attr("data-no");
+		$.ajax({
+			  url : "event_fm26_ps.php",
+			  dataType:"json",
+			  type: "POST",
+			  data : {event_no:event_no},
+			  success:function(data, textStatus, jqXHR){
+				if(data.result_code=="success"){
+					alert(data.result_msg);
+					location.reload();
+				}else if(data.result_code=="request"){
+					//alert(data.file_url);
+					window.open(data.result_url,"_blank");
+				}else{
+					alert(data.result_msg);
+					location.reload();
+				}
+			  },
+			  error: function(jqXHR, textStatus, errorThrown) {
+					alert(jqXHR);
+			  }
+		});
+	});
+});
+</script>
+</body>
+</html>

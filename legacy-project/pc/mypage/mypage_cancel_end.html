@@ -1,0 +1,224 @@
+<?php
+header("Content-Type:text/html; charset=utf-8"); 
+//ini_set('display_errors', '1');
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+$search_product_name = filter_input(INPUT_GET, 'search_product_name', FILTER_SANITIZE_STRING);
+$search_date = filter_input(INPUT_GET, 'search_date', FILTER_SANITIZE_STRING);
+
+if($search_date==""){
+	$search_start_date = date('Y-m-d',strtotime('-6 month'));
+	$search_end_date = date('Y-m-d');
+	$search_date = "0";
+}else{
+	switch($search_date){
+		case "0":
+			$search_start_date = date('Y-m-d',strtotime('-6 month'));
+			$search_end_date = date('Y-m-d');
+		break;
+		case "1":
+			$tmp_date = date('Y',strtotime('-0 year'));
+			$d = mktime(0,0,0, 1, 1, $tmp_date);
+			$d2 = mktime(0,0,0, 12, 1, $tmp_date);
+			$search_start_date = date('Y-m-01',$d);
+			$search_end_date = date('Y-m-t',$d2);
+		break;
+		case "2":
+			$tmp_date = date('Y',strtotime('-1 year'));
+			$d = mktime(0,0,0, 1, 1, $tmp_date);
+			$d2 = mktime(0,0,0, 12, 1, $tmp_date);
+			$search_start_date = date('Y-m-01',$d);
+			$search_end_date = date('Y-m-t',$d2);
+		break;
+		case "3":
+			$tmp_date = date('Y',strtotime('-2 year'));
+			$d = mktime(0,0,0, 1, 1, $tmp_date);
+			$d2 = mktime(0,0,0, 12, 1, $tmp_date);
+			$search_start_date = date('Y-m-01',$d);
+			$search_end_date = date('Y-m-t',$d2);
+		break;
+		case "4":
+			$tmp_date = date('Y',strtotime('-3 year'));
+			$d = mktime(0,0,0, 1, 1, $tmp_date);
+			$d2 = mktime(0,0,0, 12, 1, $tmp_date);
+			$search_start_date = date('Y-m-01',$d);
+			$search_end_date = date('Y-m-t',$d2);
+		break;
+		case "5":
+			$tmp_date = date('Y',strtotime('-4 year'));
+			$d = mktime(0,0,0, 1, 1, $tmp_date);
+			$d2 = mktime(0,0,0, 12, 1, $tmp_date);
+			$search_start_date = date('Y-m-01',$d);
+			$search_end_date = date('Y-m-t',$d2);
+		break;
+		case "6":
+			$tmp_date = date('Y',strtotime('-5 year'));
+			$d = mktime(0,0,0, date("m"), date("d"), $tmp_date);
+			$d2 = mktime(0,0,0, 12, 1, $tmp_date);
+			$search_start_date = date('Y-m-d',$d);
+			$search_end_date = date('Y-m-t',$d2);
+		break;
+	}
+}
+
+for($i=0;$i<=6;$i++){
+	if($i==$search_date){
+		$active['search_date'][$i] = "btn-primary";
+	}else{
+		$active['search_date'][$i] = "btn-secondary";
+	}
+}
+
+$page_title = "취소완료 내역";
+$aside_menu['cancel_end'] = "text-primary fw-bold";
+
+if(empty($page)){
+	$page="1";
+}
+
+foreach($_GET as $key=>$value){
+	if($key<>"page" ){
+		if($value<>""){
+			$param.="&".$key."=".$value;
+		}
+	}
+}
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$order = new Order($conn);
+	$mypage = new Mypage2($conn);
+
+	$where = array();
+	$where = array();
+	$where[] = " b.status='9' and b.m_no='{$_SESSION['member']['m_no']}'";
+
+	$where_query = implode(" AND ", $where);
+	$orderby = "b.order_item_id DESC";
+
+	$order_list = $mypage->getOrderList_v2($page,$where_query,$orderby,$param);
+	$list = $order_list->resultset->fetchAll();
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body >
+<div class="wrapper overflow-visible">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0 font-14">
+				<div class="row">
+					<div class="col-12">
+						<table class="table table-bordered table-centered mb-0 text-center align-middle text-nowrap">
+							<colgroup>
+								<col width="15%"/>
+								<col width="*"/>
+								<col width="8%"/>
+								<col width="8%"/>
+								<col width="8%"/>
+							</colgroup>
+							<thead class="font-14">
+								<tr>
+									<th class="bg-body-tertiary">주문일자<br/>(주문번호)</th>
+									<th class="bg-body-tertiary align-middle">상품정보</th>
+									<th class="bg-body-tertiary align-middle">주문금액</th>
+									<th class="bg-body-tertiary align-middle">진행상태</th>
+									<th class="bg-body-tertiary align-middle">비고</th>
+								</tr>
+							</thead>
+							<tbody class="bg-dark font-13">
+							<?php
+								foreach($list as $data){
+							?>
+								<tr>
+									<td class="text-center px-0">
+										<span class="d-block"><?=$data['order_date']?></span>
+										<span class="d-block">(<?=$data['ordno']?>)</span>
+									</td>
+									<td class="text-start">
+										<div class="d-block">
+											<?if($data['delivery_type']=='1'){?><span class="badge badge-outline-success">코드발송</span><?}?>
+											<?if($data['delivery_type']=='2'){?><span class="badge badge-outline-post">택배발송</span><?}?>
+											<?if($data['delivery_type']=='3'){?><span class="badge badge-outline-code-post">코드+택배발송</span><?}?>
+										</div>
+										<span class="d-block"><?=$data['product_name']?></span>
+									</td>
+									<td class="text-end"><span class="num"><?=number_format($data['price'])?></span> 원</td>
+									<td>
+										<div class="d-flex flex-column">
+											<!--주문상태-->
+											<div class="mb-1"><span class="badge bg-<?=($data['status']=="8"||$data['status']=="9")?"danger":"secondary"?> font-12"><?=$order->getOrderStatus($data['status'])?></span></div>
+											<!--배송상태-->
+											<?
+												//택배발송상품 배송진행상태 표기
+												if($data['delivery_type']<>"1"){
+													$order_shipment = $order->getOrderShipment($data['settle_no'],$data['ordno']);
+											?>
+											<div class="mb-1"><span class="badge bg-info"><?=$order->getShipmentStatus($order_shipment['shipment_status'])?></span></div>
+											<?
+												}
+											?>
+										</div>
+									</td>
+									<td>
+										<a href="/mypage/mypage_cancel_view.html?settle_no=<?=$data['settle_no']?>" class="btn btn-sm btn-secondary text-white font-14">상세보기</a>
+									</td>
+								</tr>
+							<?php
+								}
+								
+								if($order_list->total_results=="0"){
+							?>
+								<tr>
+									<td colspan="5">취소완료 이력이 존재하지 않습니다.</td>
+								</tr>
+							<?
+								}
+							?>
+						</table>
+					</div>
+					<div id="pagination" class="mt-4"><?echo $order_list->links_html;?></div>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<!-- bundle -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("input[name='search_date']").bind("click",function(){
+		$("#orderFrm").submit();
+	});
+});
+</script>
+</body>
+</html>

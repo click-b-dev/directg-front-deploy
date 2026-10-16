@@ -1,0 +1,20 @@
+/* legacy pc/board/notice_view.html head <style> 블록 무수정 이관 (공지 상세 본문 전용). */
+
+.blog-contents img {
+	max-width:90%;
+	padding-bottom:20px;
+}
+
+
+.blog-contents hr{
+	padding-bottom:20px;
+}
+
+.blog-contents iframe{
+	padding-top:20px;
+	padding-bottom:20px;
+}
+
+strong{
+
+}

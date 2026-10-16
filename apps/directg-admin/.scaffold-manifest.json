@@ -1,0 +1,66 @@
+{
+  "preset": "admin",
+  "specVersion": "0.2.0-si-project-init",
+  "generatedAt": "2026-07-10T07:37:17.527Z",
+  "generatedBy": "@click-b/scripts",
+  "items": [
+    "project:directg-admin",
+    "template:tanstack",
+    "module:env",
+    "module:api-module",
+    "module:auth",
+    "module:permission",
+    "module:route-guard",
+    "module:menu",
+    "module:layout-shell",
+    "module:error-boundary",
+    "package:config",
+    "package:types",
+    "package:utils",
+    "package:ui",
+    "package:hook",
+    "package:domain",
+    "package:api-client",
+    "package:scripts",
+    "domain:identity",
+    "domain:terms-agreement",
+    "domain:verification-code"
+  ],
+  "framework": "tanstack",
+  "modules": [
+    "env",
+    "api-module",
+    "auth",
+    "permission",
+    "route-guard",
+    "menu",
+    "layout-shell",
+    "error-boundary"
+  ],
+  "appliedModules": [
+    "env",
+    "api-module",
+    "auth",
+    "permission",
+    "route-guard",
+    "menu",
+    "layout-shell",
+    "error-boundary"
+  ],
+  "packages": [
+    "config",
+    "types",
+    "utils",
+    "ui",
+    "hook",
+    "domain",
+    "api-client",
+    "scripts"
+  ],
+  "screensLayerName": "screens",
+  "domains": [
+    "identity",
+    "terms-agreement",
+    "verification-code"
+  ]
+}

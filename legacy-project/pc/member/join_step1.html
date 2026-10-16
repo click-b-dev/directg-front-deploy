@@ -1,0 +1,254 @@
+<?
+	header("Content-Type:text/html; charset=utf-8"); 
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+	$page_title="가입방법 선택";
+	
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<style>
+
+
+#btn_join_naver {
+	background: #1EC800;
+	color: #ffffff;
+	font-weight: bold;
+	border-radius: 4px;
+}
+
+#btn_join_kakao {
+	background: #FFE500;
+	border: 1px solid #FA2828;
+	color: #5C5200;
+	font-weight: bold;
+	border-radius: 4px;
+}
+
+#btn_join_payco {
+	background: #FA2828;
+	border: 1px solid #FA2828;
+	color: #FFFFFF;
+	font-weight: bold;
+	border-radius: 4px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main>
+			<div class="row g-0 form-group mb-5">
+				<div class="col-12">
+					<ul class="nav nav-pills nav-fill">
+						<li class="nav-item rounded-0 border-primary border-start border-top border-bottom">
+							<a href="#" class="nav-link active rounded-0">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 1</h4>
+								<p class="list-group-item-text font-16">가입방법 선택</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-start border-top border-bottom">
+							<a href="#" class="nav-link rounded-0 text-white">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 2</h4>
+								<p class="list-group-item-text font-16">약관동의</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-start border-top border-bottom">
+							<a href="#" class="nav-link rounded-0 text-white">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 3</h4>
+								<p class="list-group-item-text font-16">정보입력</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-start border-top border-bottom">
+							<a href="#" class="nav-link rounded-0 text-white">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 4</h4>
+								<p class="list-group-item-text font-16">인증대기</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-start border-end border-top border-bottom">
+							<a href="#" class="nav-link rounded-0 text-white">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 5</h4>
+								<p class="list-group-item-text font-16">가입완료</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="row g-0 mb-3">
+				<div class="offset-md-4 col-lg-4">
+					<div class="card shadow-none rounded-0">
+						<div class="card-header text-center py-3"><span class="text-dark-50 text-center fw-bold fs-4">가입방법 선택</span></div>
+						<div class="card-body p-3">
+							<form action="#">
+								<div class="mb-0">
+									<div class="d-grid gap-4">
+										<button type="button" class="btn btn-block border-0 shadow-none fs-3 fw-bold p-0 d-flex flex-row align-items-center" id="btn_join_naver">
+											<img src="/assets/images/member/icon_naver.png" class="float-start">
+											<span class="flex-fill">NAVER로 간편가입</span>
+										</button>
+										<button type="button" class="btn btn-block border-0 shadow-none fs-3 fw-bold p-0 d-flex flex-row align-items-center" id="btn_join_kakao">
+											<img src="/assets/images/member/icon_kakao.png" class="float-start">
+											<span class="flex-fill">KAKAO로 간편가입</span>
+										</button>
+										<button type="button" class="btn btn-block border-0 shadow-none fs-3 fw-bold p-0 d-flex flex-row align-items-center" id="btn_join_payco">
+											<img src="/assets/images/member/icon_payco.png" class="float-start">
+											<span class="flex-fill">PAYCO로 간편가입</span>
+										</button>
+										<!--<button class="btn btn-primary" type="button">휴대폰번호로 로그인</button>-->
+										<a href="/member/join_step2.html" class="btn btn-block btn-secondary border-0 fw-bold shadow-none fs-3 p-0 py-3 align-items-center"  id="btn_join_email">이메일 주소로 회원가입</a>
+									</div>
+								</div>
+							</form>
+						</div>
+						<!-- end card-body -->
+					</div>
+					<!-- end card -->
+				</div>
+			</div>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script>
+$(document).ready(function(){
+	//네이버 간편로그인
+	$("#btn_join_naver").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/naver/naver_login.php",
+			type: "POST",
+			data : {mode:"naver_login"},
+			success:function(url, textStatus, jqXHR){
+				var loginpop = window.open (url, 'login_naver', 'height=700, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+							loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+
+	//카카오 간편로그인
+	$("#btn_join_kakao").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/kakao/kakao_login.php",
+			type: "POST",
+			data : {mode:"kakao_login"},
+			success:function(url, textStatus, jqXHR){
+				//window.location.href=data;
+				var loginpop = window.open (url, 'login_naver', 'height=700, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+							loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+
+	//간편로그인(페이코)으로 로그인
+	$("#btn_join_payco").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/payco/payco_login.php",
+			type: "POST",
+			data : {mode:"payco_login"},
+			success:function(url, textStatus, jqXHR){
+				//window.location.href=data;
+				var loginpop = window.open (url, 'login_payco', 'height=560, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+							loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+});
+
+function join_naver(memberInfo_idNo){
+		var $form = $('<form></form>');
+		$form.attr('action', 'join_step2.html');
+		$form.attr('method', 'post');
+		//$form.attr('target', 'ifrmProcess');
+		$form.appendTo('body');
+		var sns_id = $('<input type="hidden" name="sns_id" value="'+memberInfo_idNo+'">');
+		var sns_type = $('<input type="hidden" name="sns_type" value="naver">');
+		$form.append(sns_id);
+		$form.append(sns_type);
+		$form.submit();
+	}
+	
+	function join_kakao(memberInfo_idNo){
+		var $form = $('<form></form>');
+		$form.attr('action', 'join_step2.html');
+		$form.attr('method', 'post');
+		//$form.attr('target', 'ifrmProcess');
+		$form.appendTo('body');
+		var sns_id = $('<input type="hidden" name="sns_id" value="'+memberInfo_idNo+'">');
+		var sns_type = $('<input type="hidden" name="sns_type" value="kakao">');
+		$form.append(sns_id);
+		$form.append(sns_type);
+		$form.submit();
+	}
+	
+	function join_payco(sns_id,sns_email,name,access_token){
+		var $form = $('<form></form>');
+		$form.attr('action', 'join_step2.html');
+		$form.attr('method', 'post');
+		//$form.attr('target', 'ifrmProcess');
+		$form.appendTo('body');
+		var sns_id = $('<input type="hidden" name="sns_id" value="'+sns_id+'">');
+		var sns_email = $('<input type="hidden" name="sns_email" value="'+sns_email+'">');
+		var name = $('<input type="hidden" name="name" value="'+name+'">');
+		var access_token = $('<input type="hidden" name="access_token" value="'+access_token+'">');
+		var sns_type = $('<input type="hidden" name="sns_type" value="payco">');
+		$form.append(sns_id);
+		$form.append(sns_email);
+		$form.append(name);
+		$form.append(access_token);
+		$form.append(sns_type);
+		$form.submit();
+	}
+</script>
+</body>
+</html>

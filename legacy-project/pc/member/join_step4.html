@@ -1,0 +1,106 @@
+<?php
+header("Content-Type:text/html; charset=utf-8"); 
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+include_once($_SERVER["DOCUMENT_ROOT"].'/../log4php/vendor/autoload.php');
+require_once($_SERVER["DOCUMENT_ROOT"].'/../log4php/src/main/php/Logger.php');
+Logger::configure($_SERVER["DOCUMENT_ROOT"] .'/../log4php/config_join.xml');
+$logger = Logger::getLogger('join');
+
+$log_post = $_POST;
+unset($log_post['m_pwd'],$log_post['m_pwd_re']);
+$logger->info($log_post);
+
+$page_title="가입완료";
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<style>
+
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container my-3 pb-5">
+		<main>
+			<div class="row g-0 form-group mb-5">
+				<div class="col-12">
+					<ul class="nav nav-pills nav-fill">
+						<li class="nav-item rounded-0  border-start border-top border-bottom">
+							<a href="#" class="nav-link rounded-0 text-white">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 1</h4>
+								<p class="list-group-item-text font-16">가입방법 선택</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-start border-top border-bottom">
+							<a href="/member/join_step2.html" class="nav-link rounded-0 text-white ">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 2</h4>
+								<p class="list-group-item-text font-16">약관동의</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-start border-top border-bottom">
+							<a href="/member/join_step3.html" class="nav-link rounded-0 text-white">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 3</h4>
+								<p class="list-group-item-text font-16">정보입력</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-primary border-start border-top border-bottom">
+							<a href="/member/join_step4.html" class="nav-link active rounded-0">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 4</h4>
+								<p class="list-group-item-text font-16">인증대기</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-start border-end border-top border-bottom">
+							<a href="/member/join_step5.html" class="nav-link rounded-0 text-white">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 5</h4>
+								<p class="list-group-item-text font-16">가입완료</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col-5">
+					<div class="card shadow-none rounded-0">
+						<div class="card-header py-3 font-16 bg-body-secondary"><h5 class="text-center pb-0 fw-bold my-0">승인대기</h5></div>
+						<div class="card-body p-4">
+							<div class="text-center m-auto">
+								<h4 class="text-dark-50 text-center mt-4 fw-bold">가입된 아이디(이메일)로 인증메일이 발송되었습니다.</h4>
+								<p class="text-muted mb-4">수신된 인증메일에서 [인증완료]를 눌러주세요.</p>
+							</div>
+
+							<form action="index.html">
+								<div class="mb-0 text-center">
+									<a href="/member/login.html" class="btn btn-primary btn-lg shadow-none"><i class="mdi mdi-login"></i> 로그인</a>
+								</div>
+							</form>
+						</div> 
+					</div>
+				</div>
+			</div>
+			<!-- container -->
+		</div>
+		<!-- content -->
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+</body>
+</html>

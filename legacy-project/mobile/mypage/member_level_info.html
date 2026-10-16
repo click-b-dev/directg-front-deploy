@@ -1,0 +1,106 @@
+<?
+	ini_set( "display_errors", 0 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title="회원등급 안내";
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="section full pt-2">
+		<div class="section-title">※ 다이렉트 게임즈 회원 등급별 혜택 안내</div>
+			<div class="col-12">
+				<h3></h2>
+				<table class="table table-bordered table-light table-centered text-center align-middle my-3">
+					<thead class="align-middle table-dark">
+					<tr>
+						<th>회원 등급</th>
+						<th>등급 기준</th>
+						<th>포인트 혜택</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>일반</td>
+						<td class="text-start">등급 산정일 기준 최근 6개월간 순수 구매 총액이 5천원 미만</td>
+						<td>0%</td>
+					</tr>
+					<tr>
+						<td>정회원</td>
+						<td class="text-start">등급 산정일 기준 최근 6개월간 순수 구매 총액이 5천원 이상 20만원 미만 회원</td>
+						<td>1%</td>
+					</tr>
+					<tr>
+						<td>VIP</td>
+						<td class="text-start">등급 산정일 기준 최근 6개월간 순수 구매 총액이 20만원 이상</td>
+						<td>3%</td>
+					</tr>
+					</tbody>
+				</table>
+				<p> - 등급 심사일: 매 월 영업일 기준 첫째날</p>
+				<p> - 등급 산정일: 매 월 말일 기준 최근 6개월</p>
+				<p> - 순수 구매 총액은 제품키 활성화가 완료된 주문의 결제 금액에서 포인트로 결제한 금액은 제외됩니다.</p>
+				<p>※ 회원 등급 기준 및 혜택은 당사의 사정에 의해 사전 예고 없이 변경될 수 있으며, 부당한 방법으로 획득한 고객 등급은 사후 심사를 통해 조정될 수 있습니다.</p>
+			</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+    <!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+<!-- Base Js File -->
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/js/base.js"></script>
+
+</body>
+
+</html>

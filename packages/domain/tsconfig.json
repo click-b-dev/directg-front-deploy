@@ -1,0 +1,4 @@
+{
+  "extends": "@click-b/config/tsconfig/react-library",
+  "include": ["src"]
+}

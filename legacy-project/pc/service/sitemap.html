@@ -1,0 +1,369 @@
+<?
+	include_once($_SERVER["DOCUMENT_ROOT"].'/lib/lib.php');
+	$page_title="사이트맵";
+?>
+<!doctype html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<title><?=$page_title?></title>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container">
+		<main class="mb-5">
+			<h3 class="page-title py-3 fw-bold mb-3 border-bottom"><?=$page_title?></h3>
+			<div class="row g-0 mb-2 border">
+				<div class="col-2 bg-primary p-2 font-14">Header</div>
+				<div class="col-10">
+					<div class="d-flex flex-row p-2">
+						<div class=" flex-fill p-2">
+							<h5>로그인</h5>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>회원가입</h5>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>마이페이지</h5>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>장바구니</h5>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>위시리스트</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row g-0 mb-2 border">
+				<div class="col-2 bg-primary p-2 font-14">GNB</div>
+				<div class="col-10">
+					<div class="d-flex flex-row p-2">
+						<div class=" flex-fill p-2">
+							<h5 class="font-16"><a href="/service/service.html" class="nav-link text-white">서비스소개</a></h5>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5 class="font-16">할인프로모션</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/promotion/promotion_ing.html" class="nav-link p-0 font-14 text-body-secondary">- 진행중인 프로모션</a></li>
+								<li class="nav-item mb-2"><a href="/promotion/time_deal.html" class="nav-link p-0 font-14 text-body-secondary">- 타임딜</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5 class="font-16"><a href="/event/event.html" class="nav-link text-white">이벤트</a></h5>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5 class="font-16"><a href="/board/notice.html" class="nav-link text-white">공지사항</a></h5>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>이용안내</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/service/guide.html" class="nav-link p-0 font-14 text-body-secondary">- 다이렉트 게임즈</a></li>
+								<li class="nav-item mb-2"><a href="/service/guide_steam.html" class="nav-link p-0 font-14 text-body-secondary">- 스팀</a></li>
+								<li class="nav-item mb-2"><a href="/service/guide_epic.html" class="nav-link p-0 font-14 text-body-secondary">- 에픽 게임즈</a></li>
+								<li class="nav-item mb-2"><a href="/service/guide_rockstar.html" class="nav-link p-0 font-14 text-body-secondary">- 락스타 게임즈</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>고객지원</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/board/faq.html" class="nav-link p-0 font-14 text-body-secondary">- 자주묻는질문</a></li>
+								<li class="nav-item mb-2"><a href="/board/qna.html" class="nav-link p-0 font-14 text-body-secondary">- 문의하기</a></li>
+								<li class="nav-item mb-2"><a href="/board/dataroom.html" class="nav-link p-0 font-14 text-body-secondary">- 자료실</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row g-0 mb-2 border">
+				<div class="col-2 bg-primary p-2 font-14">네비바</div>
+				<div class="col-10">
+					<div class="d-flex flex-row p-2">
+						<div class=" flex-fill p-2">
+							<h5>플랫폼별</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/game/game_list.html?platform=1" class="nav-link p-0 font-14 text-body-secondary">- 스팀(Steam)</a></li>
+								<li class="nav-item mb-2"><a href="/game/game_list.html?platform=34" class="nav-link p-0 font-14 text-body-secondary">- 에픽 게임즈 (Epic Games)</a></li>
+								<li class="nav-item mb-2"><a href="/game/game_list.html?platform=35" class="nav-link p-0 font-14 text-body-secondary">- 락스타 게임즈 (Rockstar Games)</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>장르별</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="#" class="nav-link p-0 font-14 text-body-secondary">- 액션</a></li>
+								<li class="nav-item mb-2"><a href="#" class="nav-link p-0 font-14 text-body-secondary">- RPG</a></li>
+								<li class="nav-item mb-2"><a href="#" class="nav-link p-0 font-14 text-body-secondary">- 시뮬레이션</a></li>
+								<li class="nav-item mb-2"><a href="#" class="nav-link p-0 font-14 text-body-secondary">- 전략</a></li>
+								<li class="nav-item mb-2"><a href="#" class="nav-link p-0 font-14 text-body-secondary">- 캐쥬얼</a></li>
+								<li class="nav-item mb-2"><a href="#" class="nav-link p-0 font-14 text-body-secondary">- 퍼즐</a></li>
+								<li class="nav-item mb-2"><a href="#" class="nav-link p-0 font-14 text-body-secondary">- 스포츠</a></li>
+								<li class="nav-item mb-2"><a href="#" class="nav-link p-0 font-14 text-body-secondary">- 레이싱</a></li>
+								<li class="nav-item mb-2"><a href="#" class="nav-link p-0 font-14 text-body-secondary">- 인디</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>카테고리별</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/game/game_category.html?group_code=P0101" class="nav-link p-0 font-14 text-body-secondary">- 싱글플레이 지원</a></li>
+								<li class="nav-item mb-2"><a href="/game/game_category.html?group_code=P0201" class="nav-link p-0 font-14 text-body-secondary">- 멀티플레이 지원</a></li>
+								<li class="nav-item mb-2"><a href="/game/game_category.html?group_code=P0202" class="nav-link p-0 font-14 text-body-secondary">- 공유/화면분할 지원</a></li>
+								<li class="nav-item mb-2"><a href="/game/game_category.html?group_code=P0301" class="nav-link p-0 font-14 text-body-secondary">- 컨트롤러 지원</a></li>
+								<li class="nav-item mb-2"><a href="/game/game_category.html?group_code=P0302" class="nav-link p-0 font-14 text-body-secondary">- VR 지원</a></li>
+								<li class="nav-item mb-2"><a href="/game/game_category.html?group_code=P0401" class="nav-link p-0 font-14 text-body-secondary">- 편의/접근성 지원</a></li>
+								<li class="nav-item mb-2"><a href="/game/game_category.html?group_code=P0402" class="nav-link p-0 font-14 text-body-secondary">- 크로스 플레이 지원</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>한국어지원</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/game/game_list.html?interface_korean=Y" class="nav-link p-0 font-14 text-body-secondary">- 인터페이스/자막 한국어</a></li>
+								<li class="nav-item mb-2"><a href="/game/game_list.html?spoken_korean=Y" class="nav-link p-0 font-14 text-body-secondary">- 음성 한국어</a></li>
+								<li class="nav-item mb-2"><a href="/game/game_list.html?exclusive_korean=Y" class="nav-link p-0 font-14 text-body-secondary">- 독점 한국어</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5 class="font-16"><a href="/game/game_preorder.html" class="nav-link text-white">예약구매</a></h5>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--
+			<div class="row g-0 mb-2 border">
+				<div class="col-2 bg-primary p-2">할인 프로모션 - 전용</div>
+				<div class="col-10">
+					<div class="d-flex flex-row p-2">
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/promotion/promotion_spring.html" class="nav-link p-0 text-secondary">봄 프로모션</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/promotion/promotion_summer.html" class="nav-link p-0 text-secondary">여름 프로모션</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/promotion/promotion_thanksgiving.html" class="nav-link p-0 text-secondary">가을 프로모션</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/promotion/promotion_winter.html" class="nav-link p-0 text-secondary">겨울 프로모션</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/promotion/promotion_newyear.html" class="nav-link p-0 text-secondary">설날 프로모션</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/promotion/promotion_halloween.html" class="nav-link p-0 text-secondary">할로윈 프로모션</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/promotion/promotion_black.html" class="nav-link p-0 text-secondary">블랙프라이데이 프로모션</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			-->
+
+			<div class="row g-0 mb-2 border">
+				<div class="col-2 bg-primary p-2 font-14">퍼블리셔 - 전용</div>
+				<div class="col-10">
+					<div class="d-flex flex-row p-2">
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/game/publisher_2k.html" class="nav-link p-0 font-14 text-body-secondary">2k</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/game/publisher_sega.html" class="nav-link p-0 font-14 text-body-secondary">SEGA</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/game/publisher_capcom.html" class="nav-link p-0 font-14 text-body-secondary">CAPCOM</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/game/publisher_paradox.html" class="nav-link p-0 font-14 text-body-secondary">Paradox Interactive</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/game/publisher_playstation.html" class="nav-link p-0 font-14 text-body-secondary">PlayStation PC LLC</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/game/publisher_neowiz.html" class="nav-link p-0 font-14 text-body-secondary">NEOWIZ</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row g-0 mb-2 border">
+				<div class="col-2 bg-primary p-2 font-14">회원</div>
+				<div class="col-10">
+					<div class="d-flex flex-row p-2">
+						<div class=" flex-fill p-2">
+							<h5 class="font-16"><a href="/member/login.html" class="nav-link text-white">로그인</a></h5>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>로그아웃</h5>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>회원가입</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/member/join_step1.html" class="nav-link p-0 font-14 text-body-secondary">- 가입방법 선택</a></li>
+								<li class="nav-item mb-2"><a href="/member/join_step2.html" class="nav-link p-0 font-14 text-body-secondary">- 약관동의</a></li>
+								<li class="nav-item mb-2"><a href="/member/join_step3.html" class="nav-link p-0 font-14 text-body-secondary">- 정보입력</a></li>
+								<li class="nav-item mb-2"><a href="/member/join_step4.html" class="nav-link p-0 font-14 text-body-secondary">- 가입완료</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>비밀번호 재설정</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row g-0 mb-2 border">
+				<div class="col-2 bg-primary p-2 font-14">주문</div>
+				<div class="col-10">
+					<div class="d-flex flex-row p-2">
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/order/cart.html" class="nav-link p-0 font-14 text-body-secondary">장바구니</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/order/order.html" class="nav-link p-0 font-14 text-body-secondary">주문하기</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/order/settle.html" class="nav-link p-0 font-14 text-body-secondary">결제하기</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/order/order_ready.html" class="nav-link p-0 font-14 text-body-secondary">주문완료 - 입금대기</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/order/order_end.html" class="nav-link p-0 font-14 text-body-secondary">주문완료 - 결제완료</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row g-0 mb-2 border">
+				<div class="col-2 bg-primary p-2 font-14">마이페이지</div>
+				<div class="col-10">
+					<div class="d-flex flex-row p-2">
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/mypage/mypage_main.html" class="nav-link p-0 font-14 text-body-secondary">대시보드</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>회원정보</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/mypage/account_update.html" class="nav-link p-0 font-14 text-body-secondary">- 정보수정</a></li>
+								<li class="nav-item mb-2"><a href="/mypage/sns_login_connect.html" class="nav-link p-0 font-14 text-body-secondary">- 간편로그인 연결</a></li>
+								<li class="nav-item mb-2"><a href="/mypage/member_leave.html" class="nav-link p-0 font-14 text-body-secondary">- 회원탈퇴 요청</a></li>
+								<li class="nav-item mb-2"><a href="/mypage/member_level_info.html" class="nav-link p-0 font-14 text-body-secondary">- 회원등급 안내</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>주문정보</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/mypage/mypage_order.html" class="nav-link p-0 font-14 text-body-secondary">- 주문 내역</a></li>
+								<li class="nav-item mb-2"><a href="/mypage/mypage_refund.html" class="nav-link p-0 font-14 text-body-secondary">- 취소 내역</a></li>
+								<!--<li class="nav-item mb-2"><a href="/mypage/mypage_library.html" class="nav-link p-0 font-14 text-body-secondary">- 라이브러리</a></li>-->
+								<li class="nav-item mb-2"><a href="/mypage/mypage_wishlist.html" class="nav-link p-0 font-14 text-body-secondary">- 위시리스트 내역</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>문의정보</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/mypage/mypage_qna.html" class="nav-link p-0 font-14 text-body-secondary">- 문의 내역</a></li>
+								<li class="nav-item mb-2"><a href="/mypage/mypage_qna_register.html" class="nav-link p-0 font-14 text-body-secondary">- 문의 하기</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<h5>혜택정보</h5>
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/mypage/member_point.html" class="nav-link p-0 font-14 text-body-secondary">- 포인트 내역</a></li>
+								<li class="nav-item mb-2"><a href="/mypage/mypage_coupon.html" class="nav-link p-0 font-14 text-body-secondary">- 쿠폰 내역</a></li>
+								<li class="nav-item mb-2"><a href="/mypage/mypage_event_gift.html" class="nav-link p-0 font-14 text-body-secondary">- 사은품 내역</a></li>
+								<!--<li class="nav-item mb-2"><a href="/mypage/mypage_supply_content.html" class="nav-link p-0 font-14 text-body-secondary">- 제공콘텐츠 내역</a></li>-->
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row g-0 mb-2 border">
+				<div class="col-2 bg-primary p-2 font-14">Footer</div>
+				<div class="col-10">
+					<div class="d-flex flex-row p-2">
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/service/private.html" class="nav-link p-0 font-14 text-body-secondary">개인정보처리방침</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/service/agreement.html" class="nav-link p-0 font-14 text-body-secondary">이용약관</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/service/youthpolicy.html" class="nav-link p-0 font-14 text-body-secondary">청소년보호정책</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/service/refund_policy.html" class="nav-link p-0 font-14 text-body-secondary">환불정책</a></li>
+							</ul>
+						</div>
+						<div class=" flex-fill p-2">
+							<ul class="nav flex-column ps-2">
+								<li class="nav-item mb-2"><a href="/service/sitemap.html" class="nav-link p-0 font-14 text-body-secondary">사이트맵</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+</body>
+</html>

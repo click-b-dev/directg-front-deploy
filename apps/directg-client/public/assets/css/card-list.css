@@ -1,0 +1,765 @@
+.num{
+	line-height: 1.2;
+}
+
+.exclusive_korean{
+	background-color: rgba(var(--bs-info-rgb), 0.9) !important;
+	color: #071125 !important;
+}
+
+#card_list .card{
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+#card_list .thumb-area{
+	width: 184px;
+	height: 86px;
+}
+
+#card_list .platform-area{
+	width: 70px;
+	height: 86px;
+}
+
+#card_list .platform-area .platform_icon{
+	width: 60px;
+	height: 60px;
+}
+
+#card_list .content-area{
+	width: 917px;
+	height: 86px;
+	padding-left: 10px;
+}
+
+#card_list .button-area{
+	width: 115px;
+	height: 86px;
+}
+
+#card_list .bg-grey{
+	background-color:rgba(7, 17, 37, 0.4);
+}
+
+#card_list .product_name_area{
+	height: 26px;
+}
+
+#card_list .badge_area{
+	height: 28px;
+}
+
+#card_list .price_area{
+	height: 30px;
+}
+
+#card_list .discount-rate{
+	width: 56px;
+	height: 24px;
+}
+
+#card_list .wishlist-area{
+	height: 43px;
+}
+
+#card_list .cart-area{
+	height: 43px;
+}
+
+#card_list .button-area button{
+	width: 105px;
+	height: 40px;
+	padding: 9px;
+	display: flex;
+	align-items: center;
+}
+
+#card_list .button-area button .icon_area{
+	width: 20px;
+	height: 20px;
+}
+
+#card_list .button-area button .text_area{
+	width: 65px;
+	height: 20px;
+}
+
+#card_list .thumb-area .label_area .label{
+	display: flex;
+	flex-wrap: wrap;
+	width: 53px;
+	height: 21px;
+	align-content: center;
+	justify-content: center;
+}
+
+
+
+
+
+#thumb_list{
+	column-gap: 16px;
+	row-gap: 23px;
+}
+
+#thumb_list .card{
+	width: 312px;
+}
+
+#thumb_list .thumb-area{
+	width: 312px;
+	height: 145px;
+}
+
+#thumb_list .content-area{
+	width: 312px;
+	height: 81px;
+	padding: 5px 7px 7px 7px;
+}
+
+#thumb_list .content-area .title-area{
+	height: 20px;
+}
+
+#thumb_list .content-area .title-area .platform_area{
+	width: 20px;
+	height: 20px;
+}
+
+#thumb_list .content-area .title-area .platform_area .platform_icon{
+	width: 20px;
+	height: 20px;
+}
+
+#thumb_list .content-area .title-area .bar_area{
+/*	width: 14px;*/
+	width: 7px;
+	height: 75%;
+	border-right: 2px solid rgba(var(--bs-secondary-rgb), 0.25);
+}
+
+#thumb_list .content-area .title-area .product_name_area{
+	padding-left: 5px;
+	width: 271px;
+	
+}
+
+#thumb_list .thumb-area .label_area .label{
+	display: flex;
+	flex-wrap: wrap;
+	width: 53px;
+	height: 21px;
+	align-content: center;
+	justify-content: center;
+}
+
+#thumb_list .price-info-area{
+	width: 215px;
+	height: 38px;
+}
+
+#thumb_list .price-info-area .discount_rate_area{
+	width: 67px;
+	height: 38px;
+}
+
+#thumb_list .price-info-area .discount_rate_area .discount-rate{
+	width: 62px;
+	height:38px;
+}
+
+#thumb_list .price-info-area .price-area{
+	padding-left: 1px;
+}
+
+#thumb_list .price-info-area .price-area .consumer_price{
+	height: 18px;
+}
+
+#thumb_list .price-info-area .price-area .discount_price{
+	height: 20px;
+}
+
+#thumb_list .button-area{
+	width: 83px;
+	height: 38px;
+}
+
+#thumb_list .button-area button{
+	width: 38px;
+	height: 38px;
+	padding: 6px;
+	display: flex;
+	align-items: center;
+}
+
+#thumb_list .button-area .wishlist-area, #thumb_list .button-area .cart-area{
+	width: 38px;
+	height: 38px;
+}
+
+#thumb_list .button-area button .icon_area{
+	width: 24px;
+	height: 24px;
+}
+
+#thumb_list .thumb-content-area .promotion_date_area{
+	height: 20px;
+}
+
+#thumb_list .thumb-content-area .title_badge_area{
+	height: 32px;
+}
+
+#thumb_list .thumb-content-area .npay_badge_area{
+	height: 26px;
+}
+
+#thumb_list .thumb-area{
+	position: relative;
+	overflow: hidden;
+}
+
+#thumb_list .thumb-area img{
+	transition: transform 0.3s ease;
+}
+
+#thumb_list .thumb-content-area{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	backdrop-filter: blur(5px) brightness(0.3);
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 36px;
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.3s ease;
+	z-index: 2;
+}
+
+#thumb_list .card:hover .thumb-content-area{
+	opacity: 1;
+	visibility: visible;
+}
+
+#thumb_list .label_area{
+	z-index: 3;
+}
+
+#grid_list{
+	display: grid;
+	border: 0px;
+	background-color: none;
+	grid-template-columns: repeat(6, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+#grid_list .thumb-area{
+	width: 206px;
+	height: 96px;
+}
+
+#grid_list .thumb-area .label_area .label{
+	display: flex;
+	flex-wrap: wrap;
+	width: 53px;
+	height: 21px;
+	align-content: center;
+	justify-content: center;
+}
+
+#grid_list .content-area{
+	width: 206px;
+	height: 61px;
+	padding: 0 5px 5px 5px;
+}
+
+
+#grid_list .content-area .title_area{
+	width: 196px;
+	height: 24px;
+}
+
+#grid_list .content-area .purchase-area{
+	width:196px;
+	height: 32px;
+}
+
+#grid_list .content-area .purchase-area .discount_rate_area{
+	width: 46px;
+	height: 30px;
+}
+
+#grid_list .content-area .purchase-area .discount_rate_area .discount-rate{
+	width: 43px;
+	height: 30px;
+}
+
+#grid_list .content-area .purchase-area .price-area{
+	width: 120px;
+	height: 30px;
+	padding-left: 1px;
+}
+
+#grid_list .content-area .purchase-area .price-area .consumer_price{
+	height: 14px;
+}
+
+#grid_list .content-area .purchase-area .price-area .discount_price{
+	height: 16px;
+}
+
+#grid_list .content-area .purchase-area .button-area{
+	width: 30px;
+	height: 30px;
+}
+
+#grid_list .content-area .purchase-area .button-area .wishlist-area{
+	width: 30px;
+	height: 30px;
+}
+
+#grid_list .button-area button{
+	width: 30px;
+	height: 30px;
+	padding: 5px;
+	display: flex;
+	align-items: center;
+}
+
+
+
+
+.card_list_small .card{
+	width: 640px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.card_list_small .thumb-area{
+	width: 184px;
+	height: 86px;
+}
+
+.card_list_small .title-area{
+	height: 26px;
+}
+
+.card_list_small .platform-area{
+	width: 20px;
+	height: 20px;
+}
+
+.card_list_small .platform-area .platform_icon{
+	width: 20px;
+	height: 20px;
+}
+
+.card_list_small .content-area .title-area .bar_area{
+	width: 7px;
+	height: 75%;
+	border-right: 2px solid rgba(var(--bs-secondary-rgb), 0.25);
+}
+
+.card_list_small .content-area .product_name_area{
+	padding-left: 5px;
+	width: 369px;
+	height: 20px;
+	line-height: 1.3;
+}
+
+.card_list_small .content-area{
+	height: 86px;
+	width: 401px;
+	padding-left: 5px;
+}
+
+.card_list_small .bg-grey{
+	background-color:rgba(7, 17, 37, 0.4);
+}
+
+
+.card_list_small .badge_area{
+	height: 28px;
+}
+
+.card_list_small .price_area{
+	height: 30px;
+}
+
+.card_list_small .discount-rate{
+	width: 56px;
+	height: 24px;
+}
+
+.card_list_small .thumb-area .label_area .label{
+	display: flex;
+	flex-wrap: wrap;
+	width: 53px;
+	height: 21px;
+	align-content: center;
+	justify-content: center;
+}
+
+.card_list_small .button-area{
+	width: 55px;
+	padding-right: 5px;
+}
+
+.card_list_small .button-area button{
+	width: 40px;
+	height: 40px;
+	padding: 6px;
+	display: flex;
+	align-items: center;
+}
+
+
+.card_list_small .button-area button{
+	width: 38px;
+	height: 38px;
+	padding: 6px;
+	display: flex;
+	align-items: center;
+}
+
+.card_list_small .button-area .wishlist-area, .card_list_small .button-area .cart-area{
+	width: 38px;
+	height: 38px;
+}
+
+.card_list_small .button-area button .icon_area{
+	width: 24px;
+	height: 24px;
+}
+
+
+
+
+
+
+#preorder_area div{
+}
+
+.thumb_list{
+	column-gap: 16px;
+	row-gap: 23px;
+}
+
+.thumb_list .card{
+	width: 312px;
+}
+
+.thumb_list .thumb-area{
+	width: 312px;
+	height: 146px;
+}
+
+.thumb_list .content-area{
+	width: 312px;
+	height: 81px;
+	padding: 5px 7px 7px 7px;
+}
+
+.thumb_list .content-area .title-area{
+	height: 20px;
+}
+
+.thumb_list .content-area .title-area .platform_area{
+	width: 20px;
+	height: 20px;
+}
+
+.thumb_list .content-area .title-area .platform_area .platform_icon{
+	width: 20px;
+	height: 20px;
+}
+
+.thumb_list .content-area .title-area .bar_area{
+/*	width: 14px;*/
+	width: 7px;
+	height: 75%;
+	border-right: 2px solid rgba(var(--bs-secondary-rgb), 0.25);
+}
+
+.thumb_list .content-area .title-area .product_name_area{
+	padding-left: 5px;
+	width: 271px;
+	
+}
+
+.thumb_list .thumb-area .label_area .label{
+	display: flex;
+	flex-wrap: wrap;
+	width: 53px;
+	height: 21px;
+	align-content: center;
+	justify-content: center;
+}
+
+.thumb_list .price-info-area{
+	width: 215px;
+	height: 38px;
+}
+
+.thumb_list .price-info-area .discount_rate_area{
+	width: 67px;
+	height: 38px;
+}
+
+.thumb_list .price-info-area .discount_rate_area .discount-rate{
+	width: 62px;
+	height:38px;
+}
+
+.thumb_list .price-info-area .price-area{
+	padding-left: 1px;
+}
+
+.thumb_list .price-info-area .price-area .consumer_price{
+	height: 18px;
+}
+
+.thumb_list .price-info-area .price-area .discount_price{
+	height: 20px;
+}
+
+.thumb_list .button-area{
+	width: 83px;
+	height: 38px;
+}
+
+.thumb_list .button-area button{
+	width: 38px;
+	height: 38px;
+	padding: 6px;
+	display: flex;
+	align-items: center;
+}
+
+.thumb_list .button-area .wishlist-area, .thumb_list .button-area .cart-area{
+	width: 38px;
+	height: 38px;
+}
+
+.thumb_list .button-area button .icon_area{
+	width: 24px;
+	height: 24px;
+}
+
+.thumb_list .thumb-content-area .promotion_date_area{
+	height: 20px;
+}
+
+.thumb_list .thumb-content-area .title_badge_area{
+	height: 32px;
+}
+
+.thumb_list .thumb-content-area .npay_badge_area{
+	height: 26px;
+}
+
+.thumb_list .thumb-area{
+	position: relative;
+	overflow: hidden;
+}
+
+.thumb_list .thumb-area img{
+	transition: transform 0.3s ease;
+}
+
+.thumb_list .thumb-content-area{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	backdrop-filter: blur(5px) brightness(0.3);
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 36px;
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.3s ease;
+	z-index: 2;
+}
+
+.thumb_list .card:hover .thumb-content-area{
+	opacity: 1;
+	visibility: visible;
+}
+
+.thumb_list .label_area{
+	z-index: 3;
+}
+
+
+
+
+.grid_list{
+	display: grid;
+	border: 0px;
+	background-color: none;
+	grid-template-columns: repeat(6, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.grid_list .thumb-area{
+	width: 206px;
+	height: 96px;
+}
+
+.grid_list .thumb-area .label_area .label{
+	display: flex;
+	flex-wrap: wrap;
+	width: 53px;
+	height: 21px;
+	align-content: center;
+	justify-content: center;
+}
+
+.grid_list .content-area{
+	width: 206px;
+	height: 61px;
+	padding: 0 5px 5px 5px;
+}
+
+
+.grid_list .content-area .title_area{
+	width: 196px;
+	height: 24px;
+}
+
+.grid_list .content-area .purchase-area{
+	width:196px;
+	height: 32px;
+}
+
+.grid_list .content-area .purchase-area .discount_rate_area{
+	width: 46px;
+	height: 30px;
+}
+
+.grid_list .content-area .purchase-area .discount_rate_area .discount-rate{
+	width: 43px;
+	height: 30px;
+}
+
+.grid_list .content-area .purchase-area .price-area{
+	width: 120px;
+	height: 30px;
+	padding-left: 1px;
+}
+
+.grid_list .content-area .purchase-area .price-area .consumer_price{
+	height: 14px;
+}
+
+.grid_list .content-area .purchase-area .price-area .discount_price{
+	height: 16px;
+}
+
+.grid_list .content-area .purchase-area .button-area{
+	width: 30px;
+	height: 30px;
+}
+
+.grid_list .content-area .purchase-area .button-area .wishlist-area{
+	width: 30px;
+	height: 30px;
+}
+
+.grid_list .button-area button{
+	width: 30px;
+	height: 30px;
+	padding: 5px;
+	display: flex;
+	align-items: center;
+}
+
+
+
+
+
+
+
+
+
+
+.thumb_data{
+	column-gap: 16px;
+	row-gap: 23px;
+}
+
+.thumb_data{
+	display: grid;
+	border: 0px;
+	background-color: none;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.thumb_data .card{
+	width: 312px;
+}
+
+.thumb_data .thumb-area{
+	width: 312px;
+	height: 146px;
+}
+
+.thumb_data .thumb-area .label_area .label{
+	display: flex;
+	flex-wrap: wrap;
+	width: 53px;
+	height: 21px;
+	align-content: center;
+	justify-content: center;
+}
+
+.thumb_data .content-area{
+	width: 312px;
+	height: 95px;
+}
+
+.thumb_data .content-area .title-area{
+	height: 34px;
+	padding-left: 10px;
+}
+
+
+.thumb_data .content-area .info-area{
+	height: 61px;
+	padding: 10px 10px 10px 0;
+}
+
+.thumb_data .content-area .deploy_date{
+
+}
+
+.thumb_data .content-area .button-area{
+	width: 40px;
+	height: 40px;
+	margin-left: 5px;
+}
+
+.thumb_data .button-area button{
+	width: 40px;
+	height: 40px;
+	padding: 0px;
+	display: flex;
+	align-items: center;
+}
+
+.thumb_data .button-area button .icon_area{
+	width: 15px;
+	height: 15px;
+}

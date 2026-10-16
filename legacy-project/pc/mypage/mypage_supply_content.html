@@ -1,0 +1,151 @@
+<?
+	header("Content-Type:text/html; charset=utf-8"); 
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title = "제공컨텐츠";
+	$aside_menu['supply_content'] = "text-primary fw-bold";
+	
+	try{
+		$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+		$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+		$mypage = new Mypage($conn_dgkr);
+		
+		$m_no = $_SESSION['member']["m_no"];
+		$m_id = $_SESSION['member']["m_id"];
+		
+		if($m_no>0){
+			//제공 컨텐츠 내역
+			$query= "call sp_supply_goods_chk3(:m_no,@Result)";
+			$stmt = $conn_dgkr->prepare($query);
+			$params = array(
+				":m_no" => $m_no,
+			);
+			$stmt->execute($params);
+			$supply_content_list = $stmt->fetchAll();
+		}
+	}catch (PDOException $e){
+		echo 'Error!: '.$e->getMessage();
+		die();
+	}
+	$patch_auth = array(
+		"1"=> array(
+			"encode_type"=>"base64",
+			"prefix_text"=>"DO2_H2->"
+		),
+		"14"=> array(
+			"encode_type"=>"md5",
+			"prefix_text"=>"PREY-H2-PROJECT:"
+		),
+		"3"=> array(
+			"encode_type"=>"md5",
+			"prefix_text"=>"DO2_DLC_1-H2-PROJECT:"
+		),
+		"9"=> array(
+			"encode_type"=>"md5",
+			"prefix_text"=>"Wolfen2-H2-PROJECT:"
+		),
+		"13"=> array(
+			"encode_type"=>"md5",
+			"prefix_text"=>"PREY-DLC1-H2-PROJECT:"
+		),
+		"15"=> array(
+			"encode_type"=>"md5",
+			"prefix_text"=>"PREY-DELUXE-H2-PROJECT:"
+		),
+	);
+?>
+<!DOCTYPE HTML>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="max-age=604800" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+
+<title><?=$page_title?></title>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<!-- Begin page -->
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0">
+				<div class="col-12">
+					<table class="table table-bordered table-dark">
+						<thead class="font-14">
+						<tr>
+							<th class="text-center">제공컨텐츠 유형</th>
+							<th class="text-center">제공컨텐츠명</th>
+							<th class="text-center">한글패치 인증정보</th>
+							<th class="text-center">다운로드</th>
+						</tr>
+						</thead>
+						<tbody>
+						<?php
+							foreach ($supply_content_list as $supply_content){
+						?>
+							<tr>
+								<td class="text-center">
+									<?
+										switch($supply_content['supply_content_type']){
+											case "P":
+												echo "한글패치";
+											break;
+											case "C":
+												echo "컨텐츠";
+											break;
+										}
+									?>
+								</td>
+								<td class="text-start"><?=$supply_content['supply_content']?></td>
+								<td class="text-start">
+									<?if($supply_content['is_encode']=="Y"){?>
+									<div class="d-flex flex-column">
+										<div><strong>아이디</strong>: <?=$m_id?></div>
+										<div><strong>비밀번호</strong>: <span class="enc_data<?=$loop?>"><?=$mypage->patchEncDataMember($m_id,$patch_auth[$supply_content['idx']]['prefix_text'],$supply_content['encode_type'])?></span></div>
+									</div>
+									<?}?>
+								</td>
+								<td class="text-center"><button class="btn btn-sm btn-danger btn_download" data-url="<?=$supply_content['supply_content_url']?>">다운로드</button></td>
+							</tr>
+						<?php
+							}
+						?>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".btn_download").bind("click",function(){
+		var index = $(".btn_download").index(this);
+		var file_url = $(".btn_download").eq(index).attr("data-url");
+		window.open(file_url,"_blank");
+	});
+});
+</script>
+
+
+</body>
+</html>

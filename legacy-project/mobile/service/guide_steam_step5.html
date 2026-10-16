@@ -1,0 +1,117 @@
+<?
+	$page_title="이용안내(Steam)";
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="Mobilekit HTML Mobile UI Kit">
+<meta name="keywords" content="bootstrap 5, mobile template, cordova, phonegap, mobile, html" />
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+<body class="dark-mode-active">
+
+<!-- App Header -->
+<div class="appHeader no-border transparent mt-0">
+	<div class="left">
+	</div>
+	<div class="pageTitle">
+		코드 중복 입력 대처법
+	</div>
+	<div class="right">
+		<a href="/index.html" class="headerButton text-secondary">
+			<ion-icon name="close"></ion-icon>
+		</a>
+	</div>
+</div>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsule" class="mt-0">
+	<!-- carousel slider -->
+	<div class="carousel-slider splide" id="carousel-slider">
+		<div class="splide__track">
+			<ul class="splide__list">
+				<li class="splide__slide p-2">
+					<img src="https://directg.diskn.com/upload/ezwel/guide/mobile/M_KR_Guide_steam_D_01.jpg" alt="가입 및 로그인" title="가입 및 로그인" class="imaged w-100 square mb-4">
+					<h3>1.Steam 메인 화면</h3>
+					<p class="fs-6">타 계정에 이미 등록된 Steam 코드를 중복 입력할 경우입니다. 최초 제품 등록 순서와 동일하게 Steam 어플리케이션 메인 화면 좌측 상단의 ‘게임’을 선택한 후 ‘Steam에 제품 등록’을 선택합니다.</p>
+				</li>
+				<li class="splide__slide p-2">
+					<img src="https://directg.diskn.com/upload/ezwel/guide/mobile/M_KR_Guide_steam_D_02.jpg" alt="가입양식 기입" title="가입양식 기입" class="imaged w-100 square mb-4">
+					<h3>2. 제품 등록 팝업창</h3>
+					<p class="fs-6">“제품 등록“ 팝업창이 나타나면 ‘다음’을 선택합니다.</p>
+				</li>
+				<li class="splide__slide p-2">
+					<img src="https://directg.diskn.com/upload/ezwel/guide/mobile/M_KR_Guide_steam_D_03.jpg" alt="이메일 주소 인증 대기" title="이메일 주소 인증 대기" class="imaged w-100 square mb-4">
+					<h3>3. 이용 약관 동의 팝업창</h3>
+					<p class="fs-6">“이용 약관 동의“ 팝업창의 모든 이용 약관을 확인하신 후 ‘동의’를 선택합니다.</p>
+				</li>
+				<li class="splide__slide p-2">
+					<img src="https://directg.diskn.com/upload/ezwel/guide/mobile/M_KR_Guide_steam_D_04.jpg" alt="받은 편지함 확인 후 이메일 주소 인증" title="받은 편지함 확인 후 이메일 주소 인증" class="imaged w-100 square mb-4">
+					<h3>4. 제품 코드 입력 팝업창</h3>
+					<p class="fs-6">‘제품 코드’에 설치를 원하는 게임의 Steam 코드를 입력한 후 ‘다음’을 선택합니다.</p>
+				</li>
+				<li class="splide__slide p-2">
+					<img src="https://directg.diskn.com/upload/ezwel/guide/mobile/M_KR_Guide_steam_D_05.jpg" alt="이메일 인증 완료 확인 페이지" title="이메일 인증 완료 확인 페이지" class="imaged w-100 square mb-4">
+					<h3>5. 제품 코드 중복 안내 팝업창</h3>
+					<p class="fs-6">이미 다른 Steam 계정에 의해 등록된 코드이기에 다시 사용할 수 없다는 안내 문장이 표시됩니다. 이하의 팝업창이 나타날 경우, 다이렉트 게임즈 고객센터에 문의하여 주시면 확인 후 신속히 조치할 수 있도록 하겠습니다.</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- * carousel slider -->
+
+	<div class="carousel-button-footer">
+		<div class="row">
+			<div class="col-6">
+				<a href="#" class="btn btn-secondary btn-block goBack">뒤로 가기</a>
+			</div>
+			<div class="col-6">
+				<a href="/game/game_platform_list.html?platform=1" class="btn btn-primary btn-block">Steam 게임목록</a>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+<!-- * App Capsule -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<script src="/assets/js/dg_default.js?t=<?=date('YmdHis')?>"></script>
+
+<script>
+var splide = new Splide( '#carousel-slider', {
+	grid: {
+		gap : {
+			row: '1rem',
+			col: '1rem',
+		},
+   },
+	type       : 'loop',
+	perPage    : 1,
+	arrows: false,
+} );
+
+splide.mount(window.splide.Extensions);
+</script>
+</body>
+</html>

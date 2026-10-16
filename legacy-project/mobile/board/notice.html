@@ -1,0 +1,158 @@
+<?
+	ini_set( "display_errors", 0 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	
+	$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+
+	$page_title="공지사항";
+	
+	if(empty($page)){
+	$page="1";
+	}
+
+	$add_where = "";
+
+	$where = array();
+
+	foreach($where as $value){
+		$add_where.= " and ".$value;
+	}
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$board = new Board($conn);
+
+	$orderby = " is_notice desc,deploy_date desc";
+
+	$notice_list = $board->getNoticeList($page,$add_where,$orderby,$param);
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/favicon/favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css?t=20260107">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/dg_style.css?t=20260107">
+<link rel="stylesheet" href="/assets/css/styleguide.css?t=20250929">
+
+</head>
+
+<body class="dark-mode-active">
+<!-- App Header -->
+	<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="section full mt-2">
+		<ul class="listview image-listview text" id="notice_list">
+			<?
+				if($notice_list->success == true){
+					$result = $notice_list->resultset->fetchAll();
+
+					$count = 0;
+					if($notice_list->total_results=="0"){
+					}else{
+						foreach($result as $value){
+							if($isApp<>"Y"){
+								$link_url = "/board/notice_view.html?idx=".$value['idx'];
+							}else{
+								$link_url = "/board/notice_view.html?isApp=Y&idx=".$value['idx'];
+							}
+			?>
+			 <li>
+				<a href="<?=$link_url?>" class="item">
+					<div class="in">
+						<div>
+							<?=$value['subject']?>
+							<footer><?=substr($value['deploy_date'],0,10)?></footer>
+						</div>
+					</div>
+				 </a>
+			</li>
+			<?
+						}
+					}
+				}
+			?>
+		</ul>
+	</div>
+	
+	<div class="wide-block pt-2 pb-2 border-0 dg_bg">
+		<button type="button" class="btn btn-secondary btn-block" data-page="1" data-total="<?=$notice_list->total_pages?>" id="btn_paging">( <span class="px-1" id="current_page">1</span> / <span class="px-1" id="total_page"><?=$notice_list->total_pages?></span> ) 더보기</button>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+    <!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+
+<script>
+$(document).ready(function(){
+	//더보기 페이징
+	$("#btn_paging").bind("click",function(){
+		var page = $("#btn_paging").attr("data-page");
+		var total_page = $("#btn_paging").attr("data-total");
+		if(total_page==page){
+			alert("마지막페이지입니다");
+		}else{
+			$.ajax({
+				'url': '/board/notice_ajax.php',
+				'type': 'POST',
+				'data':{page:page},
+				'success': function (data) {
+					//alert(data);
+					$("#notice_list").append(data);
+					$("#btn_paging").attr("data-page",parseInt(page)+1);
+					$("#current_page").text(parseInt(page)+1);
+				},
+				'error':function(data){
+					alert(data);
+				}
+			});
+		}
+	});
+});
+</script>
+
+</body>
+
+</html>

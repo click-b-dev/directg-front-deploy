@@ -1,0 +1,364 @@
+<?
+	ini_set( "display_errors", 0 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title="간편로그인 연결";
+
+try{
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$member = new Member($conn_dgkr);
+	
+	$m_no = $_SESSION['member']["m_no"];
+	
+	//간편 로그인 연결정보 
+	$data = $member->getMemberSnsLogin($m_no);
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+
+<style>
+#appCapsuleSub{
+	padding-top:56px;
+}
+</style>
+</head>
+
+<body class="bg-white dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="mt-0">
+	<div class="section full mt-2">
+		<div class="wide-block">
+		<?
+			$sns_array = Array();
+
+			$sns_array['PAYCO']['sns_type'] = "PAYCO";
+			$sns_array['PAYCO']['is'] = false;
+			$sns_array['PAYCO']['sns_connect_date'] = "";
+
+			$sns_array['KAKAO']['sns_type'] = "KAKAO";
+			$sns_array['KAKAO']['is'] = false;
+			$sns_array['KAKAO']['sns_connect_date'] = "";
+
+			$sns_array['NAVER']['sns_type'] = "NAVER";
+			$sns_array['NAVER']['is'] = false;
+			$sns_array['NAVER']['sns_connect_date'] = "";
+
+			foreach($data as $value){
+				$sns_array[strtoupper($value['sns_type'])]['sns_type']=strtoupper($value['sns_type']);
+				$sns_array[strtoupper($value['sns_type'])]['is']=true;
+				$sns_array[strtoupper($value['sns_type'])]['sns_connect_date']=$value['sns_connect_date'];
+			}
+		?>
+		<div class="table-responsive mb-3">
+			<table class="table table-dark table-bordered font-14">
+				<thead class="">
+					<tr class="border-secondary-subtle border-1 border-opacity-25">
+						<th colspan="2" scope="col" class="text-center"><?=$sns_array['PAYCO']['sns_type']?> 간편로그인</th>
+					</tr>
+				</thead>
+				<tbody class="font-14">
+				<?if($sns_array['PAYCO']['is']==true){?>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>계정연결</th>
+						<td>
+							<button class="btn btn-sm btn-light" id="btn_payco_disconnect">X 연결해제</button>
+						</td>
+					</tr>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>연결상태</th>
+						<td>연결됨.</td>
+					</tr>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>연결일자</th>
+						<td><?=$sns_array['PAYCO']['sns_connect_date']?></td>
+					</tr>
+				<?
+					}else{
+				?>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>계정연결</th>
+						<td>
+							<button class="btn btn-sm btn-light" id="btn_payco_connect">+ 계정연결</button>
+						</td>
+					</tr>
+				<?}?>
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="table-responsive mb-3">
+			<table class="table table-dark table-bordered font-14">
+				<thead class="">
+					<tr class="border-secondary-subtle border-1 border-opacity-25">
+						<th colspan="2" scope="col" class="text-center"><?=$sns_array['KAKAO']['sns_type']?> 간편로그인</th>
+					</tr>
+				</thead>
+				<tbody class="font-14">
+				<?if($sns_array['KAKAO']['is']==true){?>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>계정연결</th>
+						<td>
+							<button class="btn btn-sm btn-light" id="btn_kakao_disconnect">X 연결해제</button>
+						</td>
+					</tr>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>연결상태</th>
+						<td>연결됨.</td>
+					</tr>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>연결일자</th>
+						<td><?=$sns_array['KAKAO']['sns_connect_date']?></td>
+					</tr>
+				<?
+					}else{
+				?>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>계정연결</th>
+						<td>
+							<button class="btn btn-sm btn-light" id="btn_kakao_connect">+ 계정연결</button>
+						</td>
+					</tr>
+				<?}?>
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="table-responsive mb-3">
+			<table class="table table-dark table-bordered font-14">
+				<thead class="">
+					<tr class="border-secondary-subtle border-1 border-opacity-25">
+						<th colspan="2" scope="col" class="text-center"><?=$sns_array['NAVER']['sns_type']?> 간편로그인</th>
+					</tr>
+				</thead>
+				<tbody class="font-14">
+				<?if($sns_array['NAVER']['is']==true){?>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>계정연결</th>
+						<td>
+							<button class="btn btn-sm btn-light" id="btn_naver_disconnect">X 연결해제</button>
+						</td>
+					</tr>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>연결상태</th>
+						<td>연결됨.</td>
+					</tr>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>연결일자</th>
+						<td><?=$sns_array['NAVER']['sns_connect_date']?></td>
+					</tr>
+				<?
+					}else{
+				?>
+					<tr class="table-active border-secondary-subtle border-1 border-opacity-25">
+						<th>계정연결</th>
+						<td>
+							<button class="btn btn-sm btn-light" id="btn_naver_connect">+ 계정연결</button>
+						</td>
+					</tr>
+				<?}?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	//페이코계정 연결해제
+	$("#btn_payco_disconnect").bind("click",function(){
+		$.ajax({
+			'url': '/api/payco/payco_disconnect.php',
+			'type': 'POST',
+			'data':{sns_type:"PAYCO"},
+			'success': function (data) {
+				//alert(data);
+				if(data=="0"){
+					location.reload();
+				}else{
+					alert(data);
+				}
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+
+	//페이코 계정연결	
+	$("#btn_payco_connect").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/payco/payco_login.php",
+			type: "POST",
+			data : {mode:"payco_connect"},
+			success:function(url, textStatus, jqXHR){
+				//window.location.href=data;
+				var loginpop = window.open (url, 'login_payco', 'height=560, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+//							loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+
+	//카카오 계정연결
+	$("#btn_kakao_connect").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/kakao/kakao_login.php",
+			type: "POST",
+			data : {mode:"kakao_connect"},
+			success:function(url, textStatus, jqXHR){
+				//window.location.href=data;
+				var loginpop = window.open (url, 'login_kakao', 'height=700, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+							//loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+
+	//카카오 계정연결해제
+	$("#btn_kakao_disconnect").bind("click",function(){
+		$.ajax({
+			'url': '/api/kakao/kakao_disconnect.php',
+			'type': 'POST',
+			'dataType':'json',
+			'data':{sns_type:"KAKAO"},
+			'success': function (data) {
+				//alert(data);
+				if(data.code=="0"){
+					alert(data.msg);
+					document.location.reload();
+				}else{
+					alert(data.msg);
+				}
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+
+	//네이버 계정연결
+	$("#btn_naver_connect").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/naver/naver_login.php",
+			type: "POST",
+			data : {mode:"naver_connect"},
+			success:function(url, textStatus, jqXHR){
+				var loginpop = window.open (url, 'login_naver', 'height=700, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+//							loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+
+	//네이버 계정연결해제
+	$("#btn_naver_disconnect").bind("click",function(){
+		$.ajax({
+			'url': '/api/naver/naver_disconnect.php',
+			'type': 'POST',
+			'dataType':'json',
+			'data':{sns_type:"NAVER"},
+			'success': function (data) {
+				console.log(data);
+				if(data.code=="0"){
+					alert(data.msg);
+					document.location.reload();
+				}else{
+					alert(data.msg);
+					console.log(data);
+				}
+			},
+			'error':function(data){
+				console.log(data);
+				alert(data);
+			}
+		});
+	});
+});
+</script>
+</body>
+</html>

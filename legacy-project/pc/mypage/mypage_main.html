@@ -1,0 +1,311 @@
+<?php
+	header("Content-Type:text/html; charset=utf-8"); 
+	ini_set('display_errors', '1');
+	
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title = "마이페이지";
+	$page="1";
+
+	try{
+		//리뉴얼DB
+		$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		
+		//리뉴얼
+		$order = new Order($conn);
+		$mypage2 = new Mypage2($conn);
+
+		$end_date = date("Y-m-d H:i:s");
+		$start_date = date("Y-m-d H:i:s", strtotime($end_date.' -1month'));
+
+		$member_emoney = $mypage2->getMemberEmoney($_SESSION['member']['m_no']);
+		$mypage_order_info =$mypage2->getOrderItemCount($_SESSION['member']['m_no'],'2');
+		$mypage_cancel_info = $mypage2->getOrderItemCount($_SESSION['member']['m_no'],'9');
+		
+		//최근 주문완료 내역 (1개월)
+		$order_list = $mypage2->getOrderListMain($_SESSION['member']['m_no'],'2',$start_date,$end_date);
+		
+		//최근 취소완료내역 (1개월)
+		$cancel_list = $mypage2->getOrderListMain($_SESSION['member']['m_no'],'9',$start_date,$end_date);
+		
+		//최근 포인트 내역(1개월)
+		$point_list=$mypage2->getPointListMain($_SESSION['member']['m_no'],$start_date,$end_date);
+		
+		
+		$mem_type = array(
+			1=>"일반",
+			2=>"정회원",
+			3=>"VIP"
+		);
+	}catch (PDOException $e){
+		echo 'Error!: '.$e->getMessage();
+		die();
+	}
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0">
+				<div class="row g-0 mb-3">
+					<div class="col-12">
+						<div class="card widget-inline shadow-none rounded-0">
+							<div class="card-header"><strong class="font-16"><?=$_SESSION['member']['name']?></strong> 님 환영합니다.</div>
+							<div class="card-body p-0  rounded-1">
+								<div class="row g-0">
+									<div class="col-offset-2 col-sm-2">
+										<div class="card shadow-none m-0 ">
+											<div class="card-body text-center">
+												<h3><?=$mem_type[$_SESSION['member']['mem_level']]?></h3>
+												<p class="text-muted font-15 mb-0 mt-1">회원등급</p>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="card shadow-none m-0 ">
+											<div class="card-body text-center">
+												<h3><?=number_format($member_emoney)?></h3>
+												<p class="text-muted font-15 mb-0 mt-1">보유 포인트</p>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="card shadow-none m-0 border-start">
+											<div class="card-body text-center">
+												<h3><span><?=number_format($mypage_order_info['cc'])?></span></h3>
+												<p class="text-muted font-15 mb-0 mt-1">총 주문건수</p>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="card shadow-none m-0 border-start">
+											<div class="card-body text-center">
+												<h3><span class="won"> <?=number_format($mypage_order_info['ss'])?></span></h3>
+												<p class="text-muted font-15 mb-0 mt-1">총 주문금액</p>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="card shadow-none m-0 border-start">
+											<div class="card-body text-center">
+												<h3><span><?=number_format($mypage_cancel_info['cc'])?></span></h3>
+												<p class="text-muted font-15 mb-0 mt-1">총 취소건수</p>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="card shadow-none m-0 border-start">
+											<div class="card-body text-center">
+												<h3><span class="won"> <?=number_format($mypage_cancel_info['ss'])?></span></h3>
+												<p class="text-muted font-15 mb-0 mt-1">총 취소금액</p>
+											</div>
+										</div>
+									</div>
+
+								</div> 
+								<!-- end row -->
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row g-0 mb-3">
+					<div class="col-12">
+						<div class="card shadow-none rounded-0">
+							<div class="card-header text-white font-16 table-sm fw-bold border-bottom-0">최근 주문완료 내역 (1개월) <small class="font-14 float-end"><a href="/mypage/mypage_order.html">전체보기</a></small></div>
+							<table class="table table-bordered table-centered mb-0 align-middle">
+								<thead class="table-dark font-14">
+									<tr>
+										<th class="text-center fw-500 p-2">주문일자<br/>(주문번호)</th>
+										<th class="text-center fw-500 p-2">상품정보</th>
+										<th class="text-center fw-500 p-2">주문금액</th>
+										<th class="text-center fw-500 p-2">진행상태</th>
+										<th class="text-center fw-500 p-2">비고</th>
+									</tr>
+								</thead>
+								<tbody class="font-14">
+									<?
+										if(empty($order_list)){
+									?>
+									<tr>
+										<td colspan="6" class="text-center">주문완료 내역이 없습니다.</td>
+									</tr>
+									<?
+										}else{
+											foreach($order_list as $value){
+									?>
+									<tr>
+										<td class="text-center px-0">
+											<span class="d-block"><?=$value['order_date']?></span>
+											<span class="d-block">(<?=$value['ordno']?>)</span>
+										</td>
+										<td class="text-start">
+											<div class="d-block">
+												<?if($value['delivery_type']=='1'){?><span class="badge badge-outline-success">코드발송</span><?}?>
+												<?if($value['delivery_type']=='2'){?><span class="badge badge-outline-post">택배발송</span><?}?>
+												<?if($value['delivery_type']=='3'){?><span class="badge badge-outline-code-post">코드+택배발송</span><?}?>
+											</div>
+											<span class="d-block"><?=$value['product_name']?></span>
+										</td>
+										<td class="text-end"><span class="num"><?=number_format($value['price'])?></span> 원</td>
+										<td class="text-center">
+											<div class="d-flex flex-column">
+												<!--주문상태-->
+												<!--
+												<div class="mb-1">
+													<span class="badge text-bg-secondary"><?=$order->getOrderStatus($value['status'])?></span>
+												</div>
+												-->
+												
+												<!--코드발송상태-->
+												<?if($value['delivery_type']=="1"){?>
+												<div class="mb-1"><span class="badge bg-label py-2 font-12"><?=($value['is_actv']=="1")?"구매확정":"수령대기"?></span></div>
+												<?}?>
+												
+												<!--배송상태-->
+												<?
+													//택배발송상품 배송진행상태 표기
+													if($value['delivery_type']<>"1"){
+														$order_shipment = $order->getOrderShipment($value['settle_no'],$value['ordno']);
+												?>
+												<div class="mb-1"><span class="badge text-bg-info py-2 font-12"><?=$order->getShipmentStatus($order_shipment['shipment_status'])?></span></div>
+												<?
+													}
+												?>
+											</div>
+										</td>
+										<td class="text-center"><a href="/mypage/mypage_order_view.html?settle_no=<?=$value['settle_no']?>" class="btn btn-sm btn-info text-white font-14">상세보기</a></td>
+									</tr>
+									<?
+										}
+									}
+									?>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row g-0 mb-3">
+					<div class="col-12">
+						<div class="card shadow-none rounded-0">
+							<div class="card-header text-white font-16 fw-bold border-bottom-0">
+								최근 취소완료 내역 (1개월) <small class="font-14 float-end"><a href="/mypage/mypage_cancel_end.html">전체보기</a></small>
+							</div>
+							<table class="table table-bordered table-centered table-sm mb-0 align-middle">
+							<thead class="table-dark font-14">
+								<tr>
+									<th class="text-center fw-500 p-2">취소일자</th>
+									<th class="text-center fw-500 p-2">주문번호</th>
+									<th class="text-center fw-500 p-2 w-50">상품명</th>
+									<th class="text-center fw-500 p-2">취소금액</th>
+									<th class="text-center fw-500 p-2">비고</th>
+								</tr>
+							</thead>
+							<tbody class="font-14">
+							<?
+									if(empty($cancel_list)){
+							?>
+							<tr>
+								<td colspan="6" class="text-center">취소완료 내역이 없습니다.</td>
+							</tr>
+							<?
+									}else{
+										foreach($cancel_list as $value){
+								?>
+								<tr>
+									<td class="text-center p-2"><?=$value['cancel_date']?></td>
+									<td class="text-center p-2"><?=$value['ordno']?></td>
+									<td class="text-start p-2 w-50"><?=$value['product_name']?></td>
+									<td class="text-end p-2 won">  <?=number_format($value['price'])?></td>
+									<td class="text-center p-2"><a href="/mypage/mypage_cancel_view.html?settle_no=<?=$value['settle_no']?>" class="btn btn-sm btn-info font-14">상세보기</a></td>
+								</tr>
+								<?
+										}
+									}
+								?>
+							</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row g-0 mb-3">
+					<div class="col-12">
+						<div class="card shadow-none rounded-0">
+							<div class="card-header text-white font-16 table-sm fw-bold border-bottom-0">최근 포인트 내역 (1개월) <small class="font-14 float-end"><a href="/mypage/mypage_point.html">전체보기</a></small></div>
+							<table class="table table-bordered table-centered mb-0 align-middle">
+								<thead class="table-dark font-14">
+									<tr>
+										<th class="text-center fw-500 p-2">날짜</th>
+										<th class="text-center fw-500 p-2">적립/사용</th>
+										<th class="text-center fw-500 p-2 w-50">사유</th>
+										<th class="text-center fw-500 p-2">포인트</th>
+									</tr>
+								</thead>
+								<tbody class="font-14">
+									<?
+										if(empty($point_list)){
+									?>
+									<tr>
+										<td colspan="6" class="text-center">적립금 내역이 없습니다.</td>
+									</tr>
+									<?
+										}else{
+											foreach($point_list as $value){
+									?>
+									<tr>
+										<td class="text-center font-14 p-2"><?=$value['regdt']?></td>
+										<td class="text-center font-14 p-2"><?=($value['emoney_type']=="+"?"적립":($value['emoney_type']=="-"?"사용":""))?></td>
+										<td class="text-start w-50 font-14 p-2"><?=$value['memo']?></td>
+										<td class="text-end price font-14 p-2 won"> <?=number_format($value['amt_delta'])?></td>
+									</tr>
+									<?
+										}
+									}
+									?>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+			</section>
+		</main>
+		<!--기획 고정 배너2-->
+		<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_banner.html');?>
+		<!--End 기획 고정 배너 배너2-->
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+
+</div>
+<!-- END wrapper -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+</body>
+</html>

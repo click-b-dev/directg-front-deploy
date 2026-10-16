@@ -1,0 +1,449 @@
+<?php
+	ini_set('display_errors', '1');
+	header("Content-Type:text/html; charset=utf-8"); 
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+function get_rand_number($len = 10) {
+	$len = max(1, min(18, (int)$len));
+	return random_int(10**($len - 1), (10**$len) - 1);
+}
+/*
+echo get_rand_number();
+echo "<br>";
+echo time();
+echo "<br>";
+echo round(microtime(true) * 1000);
+*/
+	$page_title = "계정 설정";
+	$aside_menu['profile'] = "text-primary fw-bold";
+	
+	try{
+		$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+		$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		$mypage = new Mypage($conn_dgkr);
+		$data = $mypage->getMemberInfo($_SESSION['member']['m_no']);
+		$sns_data = $mypage->getMemberSnsInfo($_SESSION['member']['m_no']);
+	}catch (PDOException $e){
+		echo 'Error!: '.$e->getMessage();
+		die();
+	}
+
+
+?>
+<!DOCTYPE HTML>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="max-age=604800" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<meta name="description" content="Bootstrap e-commerce html template similar to Alibaba">
+<meta name="keywords" content="Online template, shop, theme, template, html, css, bootstrap 4">
+
+<title><?=$page_title?></title>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0">
+				<div class="p-2">
+					<div class="mb-3">
+						<h2 class="mb-0">계정 설정</h2>
+					</div>
+					<hr class="my-4">
+					<div>
+						<h5 class="mb-4">회원 계정 상세정보</h5>
+						<div class="row">
+							<div class="col-lg-6">
+								<form method="post" class="" id="form_auth" name="form_auth">
+									<div class="row mb-3">
+										<label for="m_id" class="col-sm-4 col-form-label font-14">아이디 (이메일주소)</label>
+										<div class="col-sm-8">
+											<input type="text" readonly class="form-control-plaintext form-control-lg"  value="<?=$_SESSION['member']['m_id']?>">
+										</div>
+									</div>
+									<div class="row mb-3">
+										<label for="name" class="col-sm-4 col-form-label font-14">이름</label>
+										<div class="col-sm-8">
+											<input class="form-control-plaintext form-control-lg" type="text" name="name" value="<?=$data['name']?>" readonly>
+										</div>
+									</div>
+									<div class="row mb-3">
+										<label for="hp" class="col-sm-4 col-form-label font-14">휴대폰번호</label>
+										<div class="col-sm-8">
+											<input class="form-control-plaintext form-control-lg" type="text" name="hp" value="<?=$data['hp']?>" readonly>
+										</div>
+									</div>
+									<div class="row mb-3">
+										<label for="birth_day" class="col-sm-4 col-form-label font-14">생년월일</label>
+										<div class="col-sm-8">
+											<input type="text" readonly class="form-control-plaintext form-control-lg" id="birth_day" name="birth_day"  value="<?=$data['birth_day']?>">
+										</div>
+									</div>
+									<div class="row mb-3">
+										<label for="birth_day" class="col-sm-4 col-form-label font-14">본인인증</label>
+										<div class="col-sm-8 align-content-center">
+										<?php
+											if($data['is_auth']=="Y"){
+										?>
+												<span class="font-14">인증완료</span>
+										<?php
+											} else {
+										?>
+												<input type="button" class="form-control btn btn-primary font-14" id="btn_auth" name="btn_auth" value="휴대폰본인인증" onclick="startCert(); return false;">
+										<?php
+											}
+										?>
+										</div>
+									</div>
+								</form>
+								<form name="form_cert" method="post" style="display:none;">
+									<input type="hidden" name="call_url"           value="">
+									<input type="hidden" name="reg_cert_key"       value="">
+									<input type="hidden" name="kcp_page_submit_yn" value="N">
+								</form>
+							</div>
+						</div>
+					</div>
+					<form>
+					<div class="row col-lg-6">
+						<label class="col-sm-4 col-form-label font-14">메일수신</label>
+						<div class="col-sm-8 align-content-center">
+							<div class="form-check form-switch">
+								<input type="checkbox" class="form-check-input" id="mailling" name="mailling" value="Y" <?=$data['mailling']=="Y"?"checked":""?>>
+								<label for="mailling" class="form-check-label font-14"> 뉴스레터 발송 동의</label>
+							</div>
+						</div>
+					</div>
+					</form>
+					<form name="emailFrm" id="emailFrm" method="post" action="account_proc.php">
+					<div class="row col-lg-6">
+						<label class="col-sm-4 col-form-label font-14">수신 메일주소</label>
+						<div class="col-sm-8 align-content-center">
+								<input type="text" readonly class="form-control-plaintext form-control-lg" value="<?=$data['email']?$data['email']:$data['m_id']?>" id="email-input" name="email-input">
+								<button type="button" class="btn btn-primary" id="btn-edit">메일주소수정</button>
+
+								<button type="submit" class="btn btn-primary d-none me-3" id="btn-confirm">확인</button>
+								<button type="button" class="btn btn-secondary d-none" id="btn-cancel">취소</button>
+						</div>
+					</div>
+					</form>
+					<hr class="my-4">
+					<div class="pe-lg-14">
+						<h5 class="mb-4">비밀번호 설정</h5>
+						<div class="row row-cols-lg-2 row-cols-1">
+							<form class="" id="password_form" name="password_form">
+								<input type="hidden" id="m_id" name="m_id" value="<?=$_SESSION['member']['m_id']?>">
+								<input type="hidden" id="mode" name="mode" value="change_password">
+								<!--
+								<div class="mb-3 col">
+									<label class="form-label">현재 비밀번호</label>
+									<input placeholder="**********" class="form-control form-control-lg" type="password" name="current_password" id="current_password">
+								</div>
+								-->
+								<div class="mb-3 col">
+									<label class="form-label">새로운 비밀번호</label>
+									<input placeholder="**********" class="form-control form-control-lg" type="password" name="new_password" id="new_password">
+									<span id="passwordHelpInline" class="form-text">영문소문자, 숫자, 특수문자를 포함하여 8자이상 16이하로 사용이 가능합니다. (@는 포함하실수 없습니다.)</span>
+								</div>
+								<div class="mb-3 col">
+									<label class="form-label">새로운 비밀번호 확인</label>
+									<input placeholder="**********" class="form-control form-control-lg" type="password" name="new_password_re" id="new_password_re">
+								</div>
+								<div class="col-12">
+									<!--<p class="mb-4">현재 비밀번호가 기억나지 않나요?<a href="#"> Reset your password.</a></p>-->
+									<!--<a role="button" tabindex="0" href="#" class="btn btn-primary btn-lg">비밀번호 저장</a>-->
+									<button type="submit" class="btn btn-primary btn-lg" id="pwd_save" name="pwd_save">비밀번호 저장</button>
+									<!--<a role="button" tabindex="0" href="#" class="btn btn-primary btn-lg" id="pwd_save" name="pwd_save">비밀번호 저장</a>-->
+								</div>
+							</form>
+						</div>
+					</div>
+					
+					<hr class="my-4">
+					
+					<div>
+						<h5 class="mb-4">회원 탈퇴</h5>
+						<p class="mb-2">※ 유의사항: 회원탈퇴 전 다음의 내용을 반드시 확인 후 신중하게 진행해주시기 바랍니다.</p>
+						<p class="mb-2 ms-2">- 회원탈퇴 즉시 계정의 정보는 파기되며, 제품코드, 주문내역, 제공콘텐츠(한글패치 등)와 같은 정보 조회가 불가합니다.</p>
+						<p class="mb-5 ms-2">- 회원탈퇴 즉시 계정이 소유한 포인트는 소멸하며, 복구가 불가합니다.</p>
+						<button type="button" class="btn btn-danger btn-lg" name="leave" id="leave" data-bs-toggle="modal" data-bs-target="#leave-modal">회원탈퇴 요청</a>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<!--회원탈퇴 modal-->
+<div id="leave-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="leave-modal-modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-lg modal-dialog-centered" style="max-width:650px">
+		<div class="modal-content border border-3 border-start border-end-0 border-top-0 border-bottom-0 border-danger">
+			<div class="modal-header">
+				<h4 class="modal-title" id="leave-modallLabel">회원탈퇴</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+			</div>
+			<div class="modal-body p-3 rounded-0">
+				<div class="alert text-warning rounded-0 px-1 py-0">
+					<h5 class="alert-heading"><i class="uil uil-exclamation-triangle"></i>유의사항: 회원탈퇴 전 다음의 내용을 반드시 확인 후 신중하게 진행해주시기 바랍니다.</h5>
+					<p class="font-13 lh-sm mb-2 ps-2"><i class="mdi mdi-circle-medium"></i>회원탈퇴 즉시 계정의 정보는 파기되며, 제품코드, 주문내역, 제공콘텐츠(한글패치 등)와 같은 정보 조회가 불가합니다.</p>
+					<p class="font-13 lh-sm mb-2 ps-2"><i class="mdi mdi-circle-medium"></i>회원탈퇴 즉시 계정이 소유한 포인트는 소멸하며, 복구가 불가합니다.</p>
+				</div>
+				<p class="ps-3 text-danger fw-bold">위 내용을 인지하였으며, 회원탈퇴를 진행하시겠습니까?</p>
+			</div>
+			<div class="modal-footer justify-content-md-center">
+				<div class="w-50 text-center">
+					<button type="button" class="btn btn-danger shadow-none w-25 me-2" id="btn_member_leave">네</button>
+					<button type="button" class="btn btn-dark shadow-none w-25" id="btn_model_close" data-bs-dismiss="modal">아니오</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$(function(){
+	$("#btn-edit").on("click", function(){
+		$("#email-input").removeClass("form-control-plaintext").addClass("form-control").prop("readonly", false);
+		$("#btn-edit").addClass("d-none");
+		$("#btn-confirm, #btn-cancel").removeClass("d-none");
+	});
+
+	$("#btn-cancel").on("click", function(){
+		$("#email-input").removeClass("form-control").addClass("form-control-plaintext").prop("readonly", true);
+		$("#btn-edit").removeClass("d-none");
+		$("#btn-confirm, #btn-cancel").addClass("d-none");
+	});
+
+	$("#emailFrm").on("submit", function(e){
+		e.preventDefault();
+		$.LoadingOverlay("show");
+		
+		if(emailCheck($("#email-input").val())){
+			var postData = {
+				m_id: "<?=$_SESSION['member']['m_id']?>",
+				mode: "email_change",
+				email: $("#email-input").val()
+			};
+
+			$.ajax({
+				url: 'account_proc.php',
+				type: "POST",
+				data : postData,
+				dataType: "json",
+				success: function (data){
+					alert(data.error_msg);
+					$.LoadingOverlay("hide");
+					location.reload();
+				},
+				error:function(data){
+					alert(data);
+					$.LoadingOverlay("hide");
+				}
+			});
+		} else {
+			alert("유효하지 않은 이메일 주소입니다.");
+			$.LoadingOverlay("hide");
+		}
+	});
+});
+
+$(document).ready(function(){
+	$("#mailling").change(function() {
+		$.LoadingOverlay("show");
+		var postData = {
+			m_id: "<?=$_SESSION['member']['m_id']?>",
+			mode: "mailling_change",
+			mailling: $(this).is(":checked")?"Y":""
+		};
+
+		$.ajax({
+			url: 'account_proc.php',
+			type: "POST",
+			data : postData,
+			dataType: "json",
+			success: function (data){
+				alert(data.error_msg);
+				$.LoadingOverlay("hide");
+				location.reload();
+			},
+			error:function(data){
+				alert(data);
+				$.LoadingOverlay("hide");
+			}
+		});
+	});
+});
+
+$('#password_form').on('submit', function(e) {
+	e.preventDefault();
+	/*
+	if($("#current_password").val().trim()==""){
+		alert("현재 비밀번호를 입력해 주세요.");
+		e.preventDefault();
+		$("#current_password").focus();
+		return false;
+	}
+*/
+
+	const pwd = $("#new_password").val().trim();
+	const num = pwd.search(/[0-9]/g);
+	const eng = pwd.search(/[a-z]/ig);
+	const spe = pwd.search(/[`~!#$%^&*()|\\\'\_";:\/?]/gi);
+	const spe2 = pwd.match(/[^0-9a-z`~!#$%\^&*\(\)|\\\'\_\";:\/?]/gi);
+	const spa = checkSpace(pwd);
+	const form = this;
+
+	if(pwd.length<8 || pwd.length>16){
+		alert("비밀번호는 영문소문자, 숫자, 특수문자를 포함 8자리 이상 ~ 16이하로 입력해주세요.");
+		return false;
+	}
+
+	if(num < 0 || eng <0 || spe <0){
+		alert("비밀번호는 영문소문자, 숫자, 특수문자를 포함 8자리 이상 ~ 16이하로 입력해주세요.");
+		return false;
+	}
+
+	if(spa){
+		alert("비밀번호는 공백없이 입력해주세요.");
+		return false;
+	}
+
+	if(spe2){
+		alert("비밀번호에 사용할 수 없는 문자가 포함되어 있습니다.");
+		return false;
+	}
+
+	if($("#new_password").val() != $("#new_password_re").val()){
+		alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+		return false;
+	}
+
+	if($("#new_password_re").val().trim()==""){
+		alert("새로운 비밀번호 확인을 입력해 주세요.");
+		$("#new_password_re").focus();
+		return false;
+	}
+
+	var postData = $("#password_form").serializeArray();
+	$.LoadingOverlay("show");
+
+	$.ajax({
+		url : "account_proc.php",
+		type: "POST",
+		data : postData,
+		dataType: "json",
+		success:function(data){
+			alert(data.error_msg);
+			$.LoadingOverlay("hide");
+			location.reload();
+		},
+	error: function(data) {
+			alert("비밀번호 변경 중 오류가 발생했습니다.");
+			$.LoadingOverlay("hide");
+		}
+	});
+});
+
+	function checkSpace(str){
+		if(str.search(/\s/)!=-1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+document.getElementById('btn_member_leave').addEventListener('click', function(e) {
+	e.preventDefault();
+	if(confirm("정말로 탈퇴하시겠습니까?")){
+		document.getElementById('mode').value = 'leave';
+
+		var postData = $("#password_form").serializeArray();
+		$.LoadingOverlay("show");
+		$.ajax({
+			url: "account_proc.php",
+			type: "POST",
+			dataType: "json",
+			data: postData,
+			success: function(data) {
+				//alert(data.error_msg);
+				$.LoadingOverlay("hide");
+				location.href="/index.php";
+			},
+			error: function(data) {
+				alert("회원 탈퇴 중 오류가 발생했습니다.");
+				$.LoadingOverlay("hide");
+			}
+		});
+	}
+});
+
+
+	// KCP 본인확인 - 거래등록 AJAX
+	function startCert() {
+		var btn = document.getElementById("btn_auth");
+		if(btn){ btn.disabled = true; }
+		$.ajax({
+			url: "/mypage/KCP_VERIFICATION/cert_reg.php",
+			type: "POST",
+			dataType: "json",
+			success: function(res){
+				if(btn){ btn.disabled = false; }
+				if( !res || res.res_cd !== "0000" || !res.call_url || !res.reg_cert_key ) {
+					alert("본인인증 거래등록에 실패하였습니다.\n" + ((res && res.res_msg) ? res.res_msg : ""));
+					return;
+				}
+				openCertPopup(res.call_url, res.reg_cert_key);
+			},
+			error: function(){
+				if(btn){ btn.disabled = false; }
+				alert("본인인증 요청 중 오류가 발생했습니다.");
+			}
+		});
+	}
+
+	// KCP 본인확인 - 팝업 + call_url 폼 submit
+	function openCertPopup(call_url, reg_cert_key) {
+		var width=410, height=500;
+		var leftpos = screen.width/2 - width/2;
+		var toppos  = screen.height/2 - height/2;
+		var winopts = "width=" + width + ", height=" + height + ", toolbar=no,status=no,statusbar=no,menubar=no,scrollbars=no,resizable=no";
+		var position = ",left=" + leftpos + ", top=" + toppos;
+		window.open('', 'auth_popup', winopts + position);
+		var frm = document.form_cert;
+		frm.call_url.value = call_url;
+		frm.reg_cert_key.value = reg_cert_key;
+		frm.kcp_page_submit_yn.value = "N";
+		frm.action = call_url;
+		frm.method = "post";
+		frm.target = "auth_popup";
+		frm.submit();
+	}
+
+function emailCheck(email_address){
+	email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+	if(!email_regex.test(email_address)){ 
+		return false; 
+	}else{
+		return true;
+	}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<?
+	ini_set( "display_errors", 0 );
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+	$page_title="회원가입";
+
+	if(strpos($_SERVER['HTTP_REFERER'],"https://m.directg.net")!==false){
+		$return_url = "/";
+	} else{
+		$return_url = "/";
+	}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+<style>
+#btn_login_naver {
+	background: #1EC800;
+	color: #ffffff;
+	font-weight: bold;
+	border-radius: 4px;
+}
+
+#btn_login_naver img{
+	position:relative;
+	float:left;
+	height:100%;
+}
+
+#btn_login_kakao {
+	background: #FFE500;
+	border: 1px solid #FA2828;
+	color: #5C5200;
+	font-weight: bold;
+	border-radius: 4px;
+}
+
+#btn_login_kakao img{
+	position:relative;
+	float:left;
+	height:100%;
+}
+
+#btn_login_payco {
+	background: #FF2233;
+	border: 1px solid #FF2233;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+#btn_login_payco img{
+	position:relative;
+	float:left;
+	height:100%;
+}
+</style>
+
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<div class="appHeader mt-0 bg-primary text-light">
+	<div class="left">
+		<a href="#" class="headerButton goBack">
+			<ion-icon name="chevron-back-outline"></ion-icon>
+		</a>
+	</div>
+	<div class="pageTitle">회원가입</div>
+	<div class="right">
+	</div>
+</div>
+<!-- * App Header -->
+<div class="extraHeader p-0">
+	<div class="form-wizard-section">
+		<a href="#" class="button-item active text-primary">
+			<ion-icon name="checkmark-outline" role="img" class="md hydrated bg-primary rounded-3" aria-label="checkmark outline"></ion-icon>
+			<p class="font-12">가입방법 선택</p>
+		</a>
+		<a href="#" class="button-item font-12">
+			<strong>2</strong>
+			<p class="font-12">약관동의</p>
+		</a>
+		<a href="#" class="button-item font-12">
+			<strong>3</strong>
+			<p class="font-12">정보입력</p>
+		</a>
+		<a href="#" class="button-item font-12">
+			<strong>4</strong>
+			<p class="font-12">가입완료</p>
+		</a>
+	</div>
+</div>
+
+<!-- App Capsule -->
+<div id="appCapsule" class="extra-header-active mt-0">
+	<div class="section full mt-2 mb-2">
+		<div class="section-title2 mb-2 text-center">가입방법 선택</div>
+		<div class="wide-block pt-2 pb-2">
+			<div class="d-grid gap-3">
+				<button type="button" class="btn btn-block btn-lg border-0 shadow-none fs-3 fw-bold p-0 d-flex flex-row align-items-center" id="btn_login_naver">
+					<img src="/assets/images/member/icon_naver.png" class="float-start">
+					<span class="flex-fill">NAVER로 회원가입</span>
+				</button>
+				<button type="button" class="btn btn-block btn-lg border-0 shadow-none fs-3 fw-bold p-0 d-flex flex-row align-items-center" id="btn_login_kakao">
+					<img src="/assets/images/member/icon_kakao.png" class="float-start">
+					<span class="flex-fill">KAKAO로 회원가입</span>
+				</button>
+				<button type="button" class="btn btn-block btn-lg border-0 shadow-none fs-3 fw-bold p-0 d-flex flex-row align-items-center" id="btn_login_payco">
+					<img src="/assets/images/member/icon_payco.png" class="float-start">
+					<span class="flex-fill">PAYCO로 회원가입</span>
+				</button>
+				<!--<button class="btn btn-primary" type="button">휴대폰번호로 로그인</button>-->
+				<a href="/member/join_step2.html" class="btn btn-secondary btn-block btn-lg" id="btn_email">이메일주소로 회원가입</a>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+<script>
+$(document).ready(function(){
+	$("#btn_login").bind("click",function(){
+		var m_id = $("input[name='m_id']").val();
+		var m_pwd = $("input[name='m_pwd']").val();
+		
+		if(m_id==""){
+			alert("아이디를 입력해주세요.");
+			return false;
+		}
+		
+		if(m_pwd==""){
+			alert("비밀번호를 입력해주세요.");
+			return false;
+		}
+
+		$.ajax({
+			'url': 'login_proc.php',
+			'type': 'POST',
+			'dataType': 'json',
+			'data':{m_id:m_id,m_pwd:m_pwd},
+			'success': function (data) {
+				console.log(data);
+				alert(data.error_msg);
+			},
+			'error':function(data){
+				alert(data);
+				console.log(data);
+			}
+		});
+	});
+	
+	//네이버 간편로그인
+	$("#btn_login_naver").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/naver/naver_login.php",
+			type: "POST",
+			data : {mode:"naver_login"},
+			success:function(url, textStatus, jqXHR){
+				var loginpop = window.open (url, 'login_naver', 'height=700, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+							//loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+
+	//카카오 간편로그인
+	$("#btn_login_kakao").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/kakao/kakao_login.php",
+			type: "POST",
+			data : {mode:"kakao_login"},
+			success:function(url, textStatus, jqXHR){
+				//window.location.href=data;
+				var loginpop = window.open (url, 'login_kakao', 'height=700, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+							//loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+
+	//간편로그인(페이코)으로 로그인
+	$("#btn_login_payco").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/payco/payco_login.php",
+			type: "POST",
+			data : {mode:"payco_login"},
+			success:function(url, textStatus, jqXHR){
+				//window.location.href=data;
+				var loginpop = window.open (url, 'login_payco', 'height=560, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+							//loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+});
+
+function join_naver(memberInfo_idNo){
+		var $form = $('<form></form>');
+		$form.attr('action', 'join_step2.html');
+		$form.attr('method', 'post');
+		//$form.attr('target', 'ifrmProcess');
+		$form.appendTo('body');
+		var sns_id = $('<input type="hidden" name="sns_id" value="'+memberInfo_idNo+'">');
+		var sns_type = $('<input type="hidden" name="sns_type" value="naver">');
+		$form.append(sns_id);
+		$form.append(sns_type);
+		$form.submit();
+	}
+	
+	function join_kakao(memberInfo_idNo){
+		var $form = $('<form></form>');
+		$form.attr('action', 'join_step2.html');
+		$form.attr('method', 'post');
+		//$form.attr('target', 'ifrmProcess');
+		$form.appendTo('body');
+		var sns_id = $('<input type="hidden" name="sns_id" value="'+memberInfo_idNo+'">');
+		var sns_type = $('<input type="hidden" name="sns_type" value="kakao">');
+		$form.append(sns_id);
+		$form.append(sns_type);
+		$form.submit();
+	}
+	
+	function join_payco(sns_id,sns_email,name,access_token){
+		var $form = $('<form></form>');
+		$form.attr('action', 'join_step2.html');
+		$form.attr('method', 'post');
+		//$form.attr('target', 'ifrmProcess');
+		$form.appendTo('body');
+		var sns_id = $('<input type="hidden" name="sns_id" value="'+sns_id+'">');
+		var sns_email = $('<input type="hidden" name="sns_email" value="'+sns_email+'">');
+		var name = $('<input type="hidden" name="name" value="'+name+'">');
+		var access_token = $('<input type="hidden" name="access_token" value="'+access_token+'">');
+		var sns_type = $('<input type="hidden" name="sns_type" value="payco">');
+		$form.append(sns_id);
+		$form.append(sns_email);
+		$form.append(name);
+		$form.append(access_token);
+		$form.append(sns_type);
+		$form.submit();
+	}
+
+
+	const lastUrl = sessionStorage.getItem('LastUrl');
+	if(!lastUrl){
+		sessionStorage.setItem('LastUrl', "/");
+	}
+	
+</script>
+</body>
+
+</html>

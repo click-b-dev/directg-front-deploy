@@ -1,0 +1,450 @@
+<?
+	ini_set( "display_errors", 0 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title="사은품 내역";
+
+	$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+	$search_goods_name = filter_input(INPUT_GET, 'search_goods_name', FILTER_SANITIZE_STRING);
+
+	if(empty($page)){
+		$page="1";
+	}
+
+	foreach($_GET as $key=>$value){
+		if($key<>"page" ){
+			if($value<>""){
+				$param.="&".$key."=".$value;
+			}
+		}
+	}
+
+try{
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$mypage = new Mypage($conn_dgkr);
+
+	$where = array();
+	$where[] = "b.m_id='{$_SESSION['member']['m_id']}'";
+	//$where[] = "b.m_id='wjdcldms01@naver.com'";
+	//$where[] = "b.m_id='nohman2008@naver.com'";
+	
+	$where_query = implode(" AND ", $where);
+	$orderby = "b.idx DESC";
+
+	$gift_list = $mypage->getGiftList($page,$where_query,$orderby,$param);
+	$list = $gift_list->resultset->fetchAll();
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+$status_array = array(
+	"0"=>"당첨완료",
+	"1"=>"발송요청",
+	"2"=>"배송중",
+	"3"=>"수령완료"
+);
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="section pt-2">
+		<?php
+			foreach($list as $data){
+		?>
+		<div class="card mb-1">
+			<div class="card-header">
+				<?=$data["title"]?>
+			</div>
+			<div class="card-body">
+				<h6 class="card-subtitle"><?=$status_array[$data['status']]?></h6>
+			<?php
+				if ($data['address_enddt'] != "") {
+			?>
+				<p class="d-flex justify-content-between"><span><?=($data['is_delivery']=="Y")?"입력기한":"수령기한"?></span> <span>~<?=$data['address_enddt']?></span></p>
+			<?php
+				}
+			?>
+				<p class="card-text"><?=$data["gift_nm"]?></p>
+			<?php
+				if($data['is_delivery']=="Y"){
+					if($data['status']=="0"){
+			?>
+						<button type="button" class="btn btn-info btn-block btn_event_gift_choice" data-idx="<?=$data['idx']?>" data-delivery="<?=$data['is_delivery']?>" data-bs-toggle="modal" data-bs-target="#giftModal">배송주소입력</button>
+			<?php
+					} else if($data['status']=="2"){
+						if($data['tracking_no']){
+			?>
+					<button type="button" class="btn btn-success btn-block btn_delivery_search" data-trackingno="<?=$data['tracking_no']?>" data-deliverycode="<?=$data['delivery_code']?>">배송조회</button>
+			<?php
+						}
+					}
+				} else {
+					if($data['status']=="0"){
+			?>
+						<button type="button" class="btn btn-primary btn-block btn_event_gift_confirm" data-idx="<?=$data['idx']?>" data-delivery="<?=$data['is_delivery']?>" data-parent="<?=$data['parent_idx']?>">키수령</button>
+			<?php
+					} else {
+			?>
+						<button type="button" class="btn btn-primary btn-block btn_event_gift_licence" data-idx="<?=$data['idx']?>" data-reserveid="<?=$data['reserve_id']?>" data-bs-toggle="modal" data-bs-target="#licenceModal" data-ordno="<?=$data['ordno']?>" data-suppcd="1">키확인</button>
+			<?php
+					}
+				}
+			?>
+			</div>
+		</div>
+		<?php
+			}
+		?>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+
+
+	<div class="modal fade dialogbox" id="giftModal" tabindex="-1" role="dialog" aria-labelledby="giftModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content border border-3 border-start border-end-0 border-top-0 border-bottom-0 border-primary mw-100">
+				<div class="modal-header justify-content-between">
+					<h4 class="modal-title" id="activateModalLabel">사은품 배송지 입력</h4>
+				</div>
+				<form class="form-horizontal"  name="giftFrm" id="giftFrm">
+					<div class="modal-body text-start">
+						<input type="hidden" name="is_delivery"  value="">
+						<input type="hidden" name="idx"  value="">
+							
+						<div id="gift_result">
+							<div id="gift_add" class="mb-3">
+								<div class="form-group">
+									<div class="col-sm-12">
+									<h4>* 배송지 정보 <small>사은품을 배송받을 정보를 입력해 주세요.</small></h4>
+									</div>
+								</div>
+								<div class="form-group mb-1">
+									<div class="input-wrapper">
+										<label for="name" class="form-label">이름</label>
+										<div class="">
+											<input type="text" class="form-control" name="name" id="name">
+										</div>
+									</div>
+								</div>
+								<div class="form-group mb-1">
+									<div class="input-wrapper">
+										<label for="address" class="form-label">주소</label>
+										<div class="">
+											<div class="input-group mb-1">
+												<input type="text" class="form-control" name="zipcode" id="zipcode" placeholder="우편번호" maxlength="5" readonly>
+												<button class="btn btn-secondary" type="button" id="btn_zipcode">우편번호 찾기</button>
+											</div>
+											<input type="text" class="form-control mb-1" name="address" id="address" placeholder="주소" readonly>
+											<input type="text" class="form-control" name="address_detail" id="address_detail" placeholder="상세주소">
+										</div>
+									</div>
+								</div>
+								<div class="form-group mb-1">
+									<div class="input-wrapper">
+										<label for="tel" class="form-label">연락처</label>
+										<div class="">
+											<input type="text" class="form-control" name="tel" id="tel">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer text-start">
+						<div class="btn-inline">
+							<button type="button" class="btn btn-text-secondary" data-bs-dismiss="modal">취소</button>
+							<button type="submit" class="btn btn-primary" id="btn_order_gift_confirm">등록</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade dialogbox" id="licenceModal" tabindex="-1" role="dialog" aria-labelledby="licenceModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content border border-3 border-start border-end-0 border-top-0 border-bottom-0 border-primary mw-100">
+				<div class="modal-header justify-content-between">
+					<h4 class="modal-title" id="activateModalLabel">주문번호 <span id="ordno"></span>의 제품키</h4>
+				</div>
+				<div class="modal-body">
+					<div id="licence_result"></div>
+				</div>
+				<div class="modal-footer text-start">
+					<div class="btn-inline">
+						<button type="button" class="btn btn-text-secondary" data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+<!-- Base Js File -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="/assets/js/base.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#btn_more').on('click', function(e) {
+		e.preventDefault();
+		const page = parseInt($(this).data('page')) + 1;
+		$.get('./ajax_coupon.php', {'page' : page,page_num:"10"}, function (data) {
+			if (page >= <?=$gift_list->total_pages?>) {
+				$('#coupon_table_body').append(data);
+				$('#btn_more').data('page', page);
+				$('#btn_more').val("마지막 페이지");
+				$('#btn_more').removeClass("btn-primary")
+				$('#btn_more').addClass("btn-secondary")
+			} else {
+				$('#coupon_table_body').append(data);
+				$('#btn_more').data('page', page);
+			}
+		});
+	});
+
+});
+
+	$(document).on("click","#giftModal #btn_zipcode",function(){
+		DaumPostcode();
+	});
+	
+	$('#giftModal').on('show.bs.modal', function (event) {
+		const actv = $(event.relatedTarget);
+		const idx = actv.data('idx');
+		const is_delivery = actv.data('delivery');
+
+		$('#giftFrm input[name="idx"]').val(idx);
+		$('#giftFrm input[name="is_delivery"]').val(is_delivery);
+	});
+
+	$('#giftFrm').on('submit', function(e) {
+		e.preventDefault();
+
+		var is_delivery = $('#giftModal input[name="is_delivery"]').val();
+		var postData = $("#giftModal #giftFrm").serializeArray();
+
+		if($('#giftModal input[name="name"]').val()==""){
+			alert("이름을 입력해주세요.");
+			return;
+		}
+
+		if($('#giftModal input[name="zipcode"]').val()==""){
+			alert("우편번호를 입력해주세요.");
+			return;
+		}
+
+		if($('#giftModal input[name="address"]').val()==""){
+			alert("주소를 입력해주세요.");
+			return;
+		}
+
+		if($('#giftModal input[name="address_detail"]').val()==""){
+			alert("상세주소를 입력해주세요.");
+			return;
+		}
+
+		if($('#giftModal input[name="tel"]').val()==""){
+			alert("연락처를 입력해주세요.");
+			return;
+		}
+
+		$.ajax({
+			url : "mypage_gift_proc.php",
+			type: "POST",
+			dataType: 'json',
+			data : postData,
+			success:function(data){
+				alert(data.error_msg);
+				location.reload();
+			},
+			error: function(data) {
+				console.log(data);
+				alert(data);
+			}
+		});
+	});
+
+
+	$(document).on("click", ".btn_event_gift_confirm", function(){
+		const idx = $(this).data("idx");
+		const parent_idx = $(this).data("parent");
+
+		$.ajax({
+			url : "mypage_gift_proc.php",
+			type: "POST",
+			dataType: 'json',
+			data : {mode:"setGiftChoice",idx:idx},
+			success:function(data){
+				alert(data.error_msg);
+				location.reload();
+			},
+			error: function(data) {
+				alert(data);
+			}
+		});
+	});
+
+	$(document).on("click", ".btn_event_gift_licence", function(){
+		const ordno = $(this).data("ordno");
+		const reserve_id = $(this).data("reserveid");
+		const supp_cd = $(this).data("suppcd");
+
+		$.ajax({
+			url : "licence_activate.php",
+			type: "POST",
+			data : {mode:"getGiftView",ordno:ordno,reserve_id:reserve_id},
+			success:function(data){
+				$("#licenceModal #licence_result").html(data);
+				console.log(data);
+			},
+			error: function(data) {
+				alert(data);
+			}
+		});
+	});
+
+	//키확인 버튼은 data-bs-toggle 로 모달이 즉시 열리고, 내용은 위 ajax가 나중에 채운다.
+	//비우지 않으면 다른 선물의 키확인을 눌렀을 때 열리는 순간 이전 키가 그대로 보이고,
+	//ajax가 실패하면 계속 남는다. 열리는 시점에 비워서 항상 빈 상태로 시작하게 한다.
+	$('#licenceModal').on('show.bs.modal', function(){
+		$("#licenceModal #licence_result").html("");
+	});
+
+	$('.btn_delivery_search').bind("click",function(){
+		var index = $('.btn_delivery_search').index(this);
+		var tracking_no = $('.btn_delivery_search').eq(index).attr("data-trackingno");
+		var delivery_code = $('.btn_delivery_search').eq(index).attr("data-deliverycode");
+		var $form = $('<form></form>');
+
+		if(delivery_code=="002"){
+			$form.attr('action', 'https://service.epost.go.kr/trace.RetrieveDomRigiTraceList.comm');
+			$form.attr('method', 'post');
+			$form.attr('target', '_blank');
+			$form.appendTo('body');
+
+			var sid1 = $('<input type="hidden" value="'+tracking_no+'" name="sid1">');
+			$form.append(sid1);
+		}else{
+			$form.attr('action', 'https://trace.cjlogistics.com/web/detail.jsp');
+			$form.attr('method', 'post');
+			$form.attr('target', '_blank');
+			$form.appendTo('body');
+
+			//var fsp_action = $('<input type="hidden" value="PARC_ACT_002" name="fsp_action">');
+			//var fsp_cmd = $('<input type="hidden" value="retrieveInvNoACT2" name="fsp_cmd">');
+			var invc_no = $('<input type="hidden" value="'+tracking_no+'" name="slipno">');
+			$form.append(invc_no);
+		}
+		$form.submit();
+	});
+
+</script>
+
+<script src="https://t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript">
+	//본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+	function DaumPostcode() {
+		new daum.Postcode({
+			oncomplete: function(data) {
+				 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+				// 각 주소의 노출 규칙에 따라 주소를 조합한다.
+				// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+				var fullAddr = ''; // 최종 주소 변수
+				var extraAddr = ''; // 조합형 주소 변수
+
+				// 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+				if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+					fullAddr = data.roadAddress;
+
+				} else { // 사용자가 지번 주소를 선택했을 경우(J)
+					fullAddr = data.jibunAddress;
+				}
+
+				// 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+				if(data.userSelectedType === 'R'){
+					//법정동명이 있을 경우 추가한다.
+					if(data.bname !== ''){
+						extraAddr += data.bname;
+					}
+					// 건물명이 있을 경우 추가한다.
+					if(data.buildingName !== ''){
+						extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+					}
+					// 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+					fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+				}
+
+				// 우편번호와 주소 정보를 해당 필드에 넣는다.
+				document.getElementById('zipcode').value = data.zonecode; //5자리 새우편번호 사용
+				document.getElementById('address').value = fullAddr;
+
+				// 커서를 상세주소 필드로 이동한다.
+				document.getElementById('address_detail').focus();
+			},
+			 onclose: function(state) {
+					//state는 우편번호 찾기 화면이 어떻게 닫혔는지에 대한 상태 변수 이며, 상세 설명은 아래 목록에서 확인하실 수 있습니다.
+					if(state === 'FORCE_CLOSE'){
+						//사용자가 브라우저 닫기 버튼을 통해 팝업창을 닫았을 경우, 실행될 코드를 작성하는 부분입니다.
+
+					} else if(state === 'COMPLETE_CLOSE'){
+						//사용자가 검색결과를 선택하여 팝업창이 닫혔을 경우, 실행될 코드를 작성하는 부분입니다.
+						//oncomplete 콜백 함수가 실행 완료된 후에 실행됩니다.
+						//self.close();
+					}
+				}
+
+		}).open();
+	}
+</script>
+
+</body>
+
+</html>

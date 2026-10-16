@@ -1,0 +1,62 @@
+import type { WishlistItem } from "@entities/mypage-wishlist";
+
+/**
+ * 개발용 fixture — 백엔드(`GET /api/mypage/wishlist`) 준비 전 주입.
+ * legacy getWishlist + enrich(프로모션가·title_sku) 결과 형태. 분기 커버: 프로모션/일반/판매종료.
+ */
+export const mypageWishlistFixture: WishlistItem[] = [
+  {
+    idx: 7001,
+    reg_date: "2026-08-22 11:00:00",
+    product_code: "PC-GAME-1001",
+    product_name: "사이버펑크 2077: 얼티밋 에디션",
+    consumer_price: 71800,
+    price: 35900,
+    discount: 50,
+    is_promotion: "Y",
+    status: "0",
+    soldout: "N",
+    goods_sku: "SKU-1001",
+    game_type: "game",
+    display_type: "game",
+    product_platform: "steam",
+    title_sku: "TITLE-1001",
+    age_limit: 19,
+  },
+  {
+    idx: 7002,
+    reg_date: "2026-08-15 09:30:00",
+    product_code: "PC-DLC-2002",
+    product_name: "발더스 게이트 3 디지털 딜럭스 DLC",
+    consumer_price: 15000,
+    price: 15000,
+    discount: 0,
+    is_promotion: "N",
+    status: "0",
+    soldout: "N",
+    goods_sku: "SKU-2002",
+    game_type: "dlc",
+    display_type: "dlc",
+    product_platform: "",
+    title_sku: "TITLE-2002",
+    age_limit: 15,
+  },
+  {
+    idx: 7003,
+    reg_date: "2026-07-30 16:45:00",
+    product_code: "PC-BUNDLE-3003",
+    product_name: "더 위쳐 3 GOTY 번들",
+    consumer_price: 44000,
+    price: 44000,
+    discount: 0,
+    is_promotion: "N",
+    status: "3",
+    soldout: "N",
+    goods_sku: "SKU-3003",
+    game_type: "bundle",
+    display_type: "bundle",
+    product_platform: "",
+    title_sku: "TITLE-3003",
+    age_limit: 0,
+  },
+];

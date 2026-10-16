@@ -1,0 +1,102 @@
+<?
+	$page_title="이용안내(Steam)";
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="Mobilekit HTML Mobile UI Kit">
+<meta name="keywords" content="bootstrap 5, mobile template, cordova, phonegap, mobile, html" />
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+<body class="dark-mode-active">
+
+<!-- App Header -->
+<div class="appHeader no-border transparent mt-0">
+	<div class="left">
+	</div>
+	<div class="pageTitle">
+		스팀(Steam) 클라이언트 설치하기
+	</div>
+	<div class="right">
+		<a href="/index.html" class="headerButton text-secondary">
+			<ion-icon name="close"></ion-icon>
+		</a>
+	</div>
+</div>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsule" class="mt-0">
+	<!-- carousel slider -->
+	<div class="carousel-slider splide" id="carousel-slider">
+		<div class="splide__track">
+			<ul class="splide__list">
+				<li class="splide__slide p-2">
+					<img src="https://directg.diskn.com/upload/ezwel/guide/mobile/M_KR_Guide_steam_B_01.jpg" alt="Steam 접속" title="Steam 접속" class="imaged w-100 square mb-2">
+					<h3>1. Steam 접속</h3>
+					<p class="fs-6">스팀(https://store.steampowered.com/)접속 후 우측 상단의 ‘Steam 설치’ 버튼을 클릭합니다.</p>
+				</li>
+				<li class="splide__slide p-2">
+					<img src="https://directg.diskn.com/upload/ezwel/guide/mobile/M_KR_Guide_steam_B_02.jpg" alt="Steam 설치" title="Steam 설치" class="imaged w-100 square mb-2">
+					<h3>2. Steam 설치</h3>
+					<p class="fs-6">파란색 버튼의 ‘Steam 설치하기’를 클릭하면 자동으로 스팀 클라이언트의 다운로드가 실행되며 다운로드 완료 후 설치를 하는 것으로 Steam 클라이언트 설치는 끝이 납니다.</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- * carousel slider -->
+
+	<div class="carousel-button-footer">
+		<div class="row">
+			<div class="col-6">
+				<a href="#" class="btn btn-secondary btn-block goBack">뒤로 가기</a>
+			</div>
+			<div class="col-6">
+				<a href="/game/game_platform_list.html?platform=1" class="btn btn-primary btn-block">Steam 게임목록</a>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+<!-- * App Capsule -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<script src="/assets/js/dg_default.js?t=<?=date('YmdHis')?>"></script>
+
+<script>
+var splide = new Splide( '#carousel-slider', {
+	grid: {
+		gap : {
+			row: '1rem',
+			col: '1rem',
+		},
+   },
+	type       : 'loop',
+	perPage    : 1,
+	arrows: false,
+} );
+
+splide.mount(window.splide.Extensions);
+</script>
+</body>
+</html>

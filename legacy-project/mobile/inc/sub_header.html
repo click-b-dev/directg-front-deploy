@@ -1,0 +1,148 @@
+<?
+//메인(index.php)은 main_header.html 에서 $is_main_header 를 세우고 이 파일을 include 한다.
+//메인/서브 차이는 아래 4곳(헤더클래스·좌측버튼·가운데·검색input) 뿐이고 나머지는 공통.
+//GA 는 index.php 가 자체 블록을 갖고 있으므로 메인에서는 출력하지 않는다(2중 집계 방지).
+$is_main_header = !empty($is_main_header);
+
+if(!$is_main_header){
+?>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S69YNEJF27"></script>
+<?if($_SESSION['member']["m_id"]){?>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+ var user_id = "<?=$_SESSION['member']['m_no']?>";
+  gtag('config', 'G-S69YNEJF27', {'user_id': user_id});
+</script>
+<?}else{?>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-S69YNEJF27');
+</script>
+<?}?>
+<?
+	}
+?>
+
+<?
+// 1. User-Agent 가져오기
+$userAgent = $_SERVER['HTTP_USER_AGENT'];
+
+// 2. 앱 식별자 확인 (예: 'directgames'이라는 문자열이 포함되어 있는지 체크)
+// strpos는 특정 문자열의 위치를 찾는 가장 빠른 방법 중 하나입니다.
+$isApp = (strpos($userAgent, 'directgames') !== false);
+
+if(!$isApp){
+?>
+<?
+	//헤더 배지 — 장바구니 수 + 장바구니·위시리스트 진행중 프로모션 보유 여부(빨간점). 쿼리는 클래스 내부 캐시로 요청당 1회
+	if(!isset($conn)){
+		$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	}
+	if(!isset($goods)){
+		$goods = new Goods($conn);
+	}
+	$header_badge = $goods->getHeaderBadge($_SESSION['member']['m_no']);
+?>
+<?
+	//배지 CSS는 dg_style.css 에 두지 않고 여기서 출력한다.
+	//모바일은 페이지마다 dg_style.css 를 직접 link(166개, 버전쿼리 제각각)해서 캐시 갱신을 강제할 방법이 없다.
+	//PHP 출력은 캐시되지 않으므로 이 방식이 확실하다. sidebar.html 에도 같은 블록이 있고, 먼저 렌더된 쪽만 출력한다.
+	if(empty($badge_css_printed)){
+		$badge_css_printed = true;
+?>
+<style>
+/* 헤더/사이드바 배지 — 장바구니 갯수(circle.svg) + 프로모션 진행중 빨간점(reddot.svg) */
+.badge-wrap{ position:relative; display:inline-block; }
+/* 배지 교체 슬롯 — AJAX로 innerHTML만 갈아끼운다. display:contents 로 기존 배치/인접선택자에 영향 없음 */
+.badge-slot{ display:contents; }
+.badge-count{ display:inline-flex; justify-content:center; align-items:center; background:url('/assets/images/icon/circle.svg') no-repeat center / contain; font-size:11px; width:1rem; height:1rem;}
+/* 헤더 — 갯수는 장바구니 아이콘 우하단에 겹치고, 빨간점은 갯수의 우상단(갯수가 없으면 아이콘 우상단)
+   .headerButton 이 56px 높이라 라인박스 기준이 안 맞으므로, 아이콘 크기로 감싼 .badge-wrap 기준 절대배치 */
+.badge-reddot{ height: unset !important; }
+.appHeader .badge-wrap{ line-height:0; }
+.appHeader .badge-count{ position:absolute; right:-0.6875rem; bottom:0px; }
+.appHeader .badge-count + .badge-reddot{ position:absolute; right:-0.875rem; bottom:0.6875rem; }
+/* 사이드바는 버튼 배경색이 달라 흰 원 사용(글자색은 마크업에서 text-cinfo 등으로 지정) */
+.side-button .badge-count{ background-image:url('/assets/images/icon/circle_white.svg'); }
+.side-button .badge-reddot{ position:relative; vertical-align:top; top:-5px; left:-2px;}
+</style>
+<?
+	}
+?>
+<div class="appHeader<?if(!$is_main_header){?> bg-primary text-light mt-0<?}?>">
+	<div class="left">
+	<?if($is_main_header){?>
+		<a href="#" class="headerButton" data-bs-toggle="modal" data-bs-target="#sidebarPanel">
+			<img src="/assets/images/icon/menu_icon_white.svg">
+		</a>
+	<?}else{?>
+		<a href="#" class="headerButton goBack" data-rel="back">
+			<ion-icon name="chevron-back-outline"></ion-icon>
+		</a>
+	<?}?>
+	</div>
+	<?if($is_main_header){?>
+	<div class="pageTitle">
+		<img src="/assets/img/logo_v2.png" alt="logo" class="logo">
+	</div>
+	<?}else{?>
+	<div class="pageTitle"><?=$page_title?></div>
+	<?}?>
+	<div class="right">
+		<a href="#" class="headerButton toggle-searchbox" >
+			<div class="col">
+				<img src="/assets/images/icon/search_icon_white.svg">
+			</div>
+		</a>
+		<a href="/order/cart.html" class="headerButton" title="장바구니">
+			<div class="badge-wrap">
+				<img src="/assets/images/icon/basket_icon_white.svg">
+				<span class="badge-slot" data-badge="header_cart"><?if(!empty($_SESSION['member']['m_no'])){?><span class="badge-count text-black"><?=$header_badge['cart_cnt']?></span><?}?><?if($header_badge['cart_promo']){?><img src="/assets/images/icon/reddot.svg" class="badge-reddot" alt="프로모션 진행중"><?}?></span>
+			</div>
+		</a>
+	</div>
+</div>
+
+<!-- Search Component -->
+<div id="search" class="appHeader">
+	<form class="search-form" method="GET" action="/game/game_search_thumb.html">
+		<div class="form-group searchbox bg-black">
+		<?if($is_main_header){?>
+			<input type="text" class="form-control" id="q" name="q" placeholder="Search..." minLength="2" required>
+		<?}else{?>
+			<input type="text" class="form-control" id="q" name="q"  value="<?=$q?>" minLength="2" placeholder="Search...">
+		<?}?>
+			<i class="input-icon">
+				<ion-icon name="search-outline"></ion-icon>
+			</i>
+			<a href="#" class="ms-1 close toggle-searchbox">
+				<ion-icon name="close-circle"></ion-icon>
+			</a>
+		</div>
+	</form>
+</div>
+<!-- * Search Component -->
+
+<script>
+//헤더 배지 갱신 — 값만 받아서(cart_proc.php mode=header_badge) 이 파일이 직접 그린다.
+//마크업은 위 슬롯(data-badge="header_cart")과 아래 코드가 짝을 이룬다.
+(window.headerBadgeDrawers = window.headerBadgeDrawers || []).push(function(badge){
+	var slot = document.querySelector('[data-badge="header_cart"]');
+	if(!slot){ return; }
+
+	var is_login = <?=!empty($_SESSION['member']['m_no'])?"true":"false"?>;
+
+	slot.innerHTML = (is_login ? '<span class="badge-count text-black">' + badge.cart_cnt + '</span>' : '')
+		+ (badge.cart_promo ? '<img src="/assets/images/icon/reddot.svg" class="badge-reddot" alt="프로모션 진행중">' : '');
+});
+</script>
+<?
+	}
+?>

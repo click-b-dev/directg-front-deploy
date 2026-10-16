@@ -1,0 +1,19 @@
+<div class="offcanvas offcanvas-bottom action-sheet" tabindex="-1" id="sort_offcanvas">
+	<input type="hidden" name="idx" value="<?=$idx?>">
+	<div class="offcanvas-header bg-modal-header border-opacity-25">
+		<h5 class="offcanvas-title">정렬순서</h5>
+	</div>
+	<div class="offcanvas-body p-0">
+		<ul class="listview link-listview">
+			<li >
+				<a href="<?=$_SERVER['PHP_SELF']?>?sort=open_date&idx=<?=$idx?>" class="btn btn-list" data-bs-dismiss="offcanvas">출시일순</a>
+			</li>
+			<li>
+				<a href="<?=$_SERVER['PHP_SELF']?>?sort=pricedown&idx=<?=$idx?>" class="btn btn-list" data-bs-dismiss="offcanvas">낮은가격순</a>
+			</li>
+			<li>
+				<a href="<?=$_SERVER['PHP_SELF']?>?sort=priceup&idx=<?=$idx?>" class="btn btn-list" data-bs-dismiss="offcanvas">높은가격순</a>
+			</li>
+		</ul>
+	</div>
+</div>

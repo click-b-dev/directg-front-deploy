@@ -1,0 +1,120 @@
+<?
+/*
+if($_SERVER['REMOTE_ADDR']<>"112.216.231.146"){
+	header( "HTTP/1.1 301 Moved Permanently" );
+	header( 'Location: https://m.directg.net/index.php' );
+	exit;
+}
+*/
+
+ini_set( "display_errors", 0 );
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$page_title="이벤트";
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$board = new Board($conn);
+	$parsedown= new Parsedown();
+	
+	$event_list = $board->getEvenBoardtList();
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/dg_style.css?t=20250929">
+<link rel="stylesheet" href="/assets/css/styleguide.css?t=20250929">
+
+<style>
+.event_contents ul{
+	padding-left:1rem;
+	margin-bottom:0;
+}
+
+.event_contents li{
+	font-size:12px;
+}
+
+.event_contents strong{
+	font-size:12px;
+	margin-top:10px;
+}
+
+.event_contents p{
+	font-size:12px;
+	margin-bottom:0;
+}
+
+</style>
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="full-height">
+	<div class="section mt-2 pt-2">
+		<?
+			foreach($event_list as $value){
+		?>
+		<div class="card mb-3">
+			<a href="<?=$value['event_link_url']?>" target="<?=$value['event_link_target']?>"><img src="<?=$value['event_banner']?>" class="card-img-top rounded-0" alt="<?=$value['subject']?>"></a>
+			<div class="card-body p-2">
+				<h5 class="card-title font-16">■ <?=$value['subject']?></h5>
+				<div class="event_contents"><?=$parsedown->text(htmlspecialchars_decode($value['contents'],ENT_NOQUOTES))?></div>
+			</div>
+		</div>
+		<?}?>
+	</div>
+	<!--
+	<div class="section full mt-2">
+		<div class="text-center pt-5">진행중인 이벤트가 없습니다.</div>
+	</div>
+	-->
+</div>
+<!-- * App Capsule -->
+
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<script src="/assets/js/base.js"></script>
+
+</body>
+
+</html>

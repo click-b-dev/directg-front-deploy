@@ -1,0 +1,261 @@
+<div class="aside border" id="game_filter">
+	<form id="goods_filter_frm" class="p-2 align-items-center" method="GET" action="<?=$_SERVER['PHP_SELF']?>">
+	<input type="hidden" name="filter_sort" value="">
+	<input type="hidden" name="searchValue" value="<?=$searchValue?>">
+	<h4 class="text-white">게임 필터</h4>
+	<hr class="text-secondary opacity-50">
+
+	<div class="mb-0">
+		<legend class="font-14 fw-500 text-white opacity-75">플랫폼</legend>
+
+		<div class="ms-2 form-check pb-1">
+			<input type="radio" class="form-check-input" id="search_platform1" name="search_platform" value="1" <?=$checked['search_platform']['1']?>>
+			<label class="form-check-label font-14" for="search_platform1">Steam</label>
+		</div>
+
+		<div class="ms-2 form-check pb-1">
+			<input type="radio" class="form-check-input" id="search_platform34" name="search_platform" value="34" <?=$checked['search_platform']['34']?>>
+			<label class="form-check-label font-14" for="search_platform34">Epic Games</label>
+		</div>
+
+		<div class="ms-2 form-check pb-1">
+			<input type="radio" class="form-check-input" id="search_platform35" name="search_platform" value="35" <?=$checked['search_platform']['35']?>>
+			<label class="form-check-label font-14" for="search_platform35">Rockstar Games Launcher</label>
+		</div>
+	</div>
+
+	<hr class="text-secondary opacity-50">
+
+	<div class="mb-0">
+		<legend class="font-14 fw-500 text-white opacity-75">게임유형</legend>
+
+		<div class="ms-2 form-check pb-1">
+			<input type="radio" class="form-check-input" id="search_product_type1" name="search_product_type" value="1" <?=$checked['search_product_type']['1']?>>
+			<label class="form-check-label font-14" for="search_product_type1">기본게임</label>
+		</div>
+
+		<div class="ms-2 form-check pb-1">
+			<input type="radio" class="form-check-input" id="search_product_type3" name="search_product_type" value="3" <?=$checked['search_product_type']['3']?>>
+			<label class="form-check-label font-14" for="search_product_type3">DLC</label>
+		</div>
+
+		<!--<div class="ms-2 form-check pb-1">
+			<input type="radio" class="form-check-input" id="search_product_type4" name="search_product_type" value="4" <?=$checked['search_product_type']['4']?>>
+			<label class="form-check-label font-14" for="search_product_type4">DLC번들</label>
+		</div>
+
+		<div class="ms-2 form-check pb-1">
+			<input type="radio" class="form-check-input" id="search_product_type5" name="search_product_type" value="5" <?=$checked['search_product_type']['5']?>>
+			<label class="form-check-label font-14" for="search_product_type5">기본게임번들</label>
+		</div>-->
+	</div>
+
+	<hr class="text-secondary opacity-50">
+
+	<div class="mb-0">
+		<legend class="font-14 fw-500 text-white opacity-75">한국어지원</legend>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_interface_korean" name="search_interface_korean" value="Y" <?=$checked['search_interface_korean']['Y']?>>
+			<label class="form-check-label font-14" for="search_interface_korean">인터페이스/자막 한글</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_spoken_korean" name="search_spoken_korean" value="Y" <?=$checked['search_spoken_korean']['Y']?>>
+			<label class="form-check-label font-14" for="search_spoken_korean">음성 한글</label>
+		</div>
+	</div>
+
+	<hr class="text-secondary opacity-50">
+
+	<div class="mb-0">
+		<legend class="font-14 fw-500 text-white opacity-75">대표장르</legend>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_genres_G1002" name="search_genres" value="G1002" <?=$checked['search_genres']['G1002']?>>
+			<label class="form-check-label font-14" for="search_genres_G1002">액션</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_genres_G1001" name="search_genres" value="G1001" <?=$checked['search_genres']['G1001']?>>
+			<label class="form-check-label font-14" for="search_genres_G1001">어드벤처</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_genres_G1009" name="search_genres" value="G1009" <?=$checked['search_genres']['G1009']?>>
+			<label class="form-check-label font-14" for="search_genres_G1009">RPG</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_genres_G1012" name="search_genres" value="G1012" <?=$checked['search_genres']['G1012']?>>
+			<label class="form-check-label font-14" for="search_genres_G1012">시뮬레이션</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_genres_G1008" name="search_genres" value="G1008" <?=$checked['search_genres']['G1008']?>>
+			<label class="form-check-label font-14" for="search_genres_G1008">전략</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_genres_G1003" name="search_genres" value="G1003" <?=$checked['search_genres']['G1003']?>>
+			<label class="form-check-label font-14" for="search_genres_G1003">캐주얼</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_genres_G1004" name="search_genres" value="G1004" <?=$checked['search_genres']['G1004']?>>
+			<label class="form-check-label font-14" for="search_genres_G1004">퍼즐</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_genres_G1007" name="search_genres" value="G1007" <?=$checked['search_genres']['G1007']?>>
+			<label class="form-check-label font-14" for="search_genres_G1007">스포츠</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_genres_G1005" name="search_genres" value="G1005" <?=$checked['search_genres']['G1005']?>>
+			<label class="form-check-label font-14" for="search_genres_G1005">레이싱</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_genres_G1010" name="search_genres" value="G1010" <?=$checked['search_genres']['G1010']?>>
+			<label class="form-check-label font-14" for="search_genres_G1010">인디</label>
+		</div>
+	</div>
+
+	<hr class="text-secondary opacity-50">
+
+	<div class="mb-0">
+		<legend class="font-14 fw-500 text-white opacity-75">플레이어 지원</legend>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_category_P1001" name="search_category" value="P1001" <?=$checked['search_category']['P1001']?>>
+			<label class="form-check-label font-14" for="search_category_P1001">싱글 플레이어</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_category_P1003" name="search_category" value="P1003" <?=$checked['search_category']['P1003']?>>
+			<label class="form-check-label font-14" for="search_category_P1003">멀티 플레이어</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_category_P1005" name="search_category" value="P1005" <?=$checked['search_category']['P1005']?>>
+			<label class="form-check-label font-14" for="search_category_P1005">로컬 멀티플레이어</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_category_P1004" name="search_category" value="P1004" <?=$checked['search_category']['P1004']?>>
+			<label class="form-check-label font-14" for="search_category_P1004">대규모 멀티플레이어</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_category_P1008" name="search_category" value="P1008" <?=$checked['search_category']['P1008']?>>
+			<label class="form-check-label font-14" for="search_category_P1008">협동</label>
+		</div>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_category_P1006" name="search_category" value="P1006" <?=$checked['search_category']['P1006']?>>
+			<label class="form-check-label font-14" for="search_category_P1006">로컬 협동</label>
+		</div>
+	</div>
+
+	<?if($publisher_code==""){?>
+	<hr class="text-secondary opacity-50">
+
+	<div class="mb-0">
+		<legend class="font-14 fw-500 text-white opacity-75">퍼블리셔</legend>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_publisher" name="search_publisher" value="Y" <?=$checked['search_publisher']['Y']?>>
+			<label class="form-check-label font-14" for="search_publisher">[퍼블리셔명]</label>
+		</div>
+	</div>
+	<?}?>
+
+	<hr class="text-secondary opacity-50">
+
+	<div class="mb-0">
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="is_promotion" name="is_promotion" value="Y" <?=$checked['is_promotion']['Y']?>>
+			<label class="form-check-label font-14" for="is_promotion">할인 프로모션</label>
+		</div>
+	</div>
+
+	<? if(is_array($tag_list['G2']) || is_array($tag_list['G3'])){?>
+	<hr class="text-secondary opacity-50">
+
+	<div class="mb-0">
+		<legend class="font-14 fw-500 text-white opacity-75">하위장르</legend>
+		<?
+			foreach($tag_list['G3'] as $sub_key=>$sub_value){
+		?>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_sub_genres_<?=$sub_key?>" name="search_sub_genres" value="<?=$sub_value['tag_code']?>" <?=$checked['search_sub_genres'][$sub_value['tag_code']]?>>
+			<label class="form-check-label font-14" for="search_sub_genres_<?=$sub_key?>"><?=$sub_value['tag_name']?></label>
+		</div>
+		<?
+			}
+		?>
+		<?
+			foreach($tag_list['G2'] as $sub_key=>$sub_value){
+		?>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_sub_genres_<?=$sub_key?>" name="search_sub_genres" value="<?=$sub_value['tag_code']?>" <?=$checked['search_sub_genres'][$sub_value['tag_code']]?>>
+			<label class="form-check-label font-14" for="search_sub_genres_<?=$sub_key?>"><?=$sub_value['tag_name']?></label>
+		</div>
+		<?
+			}
+		?>
+	</div>
+	<?}?>
+
+	<? if(is_array($tag_list['P1'])){?>
+	<hr class="text-secondary opacity-50">
+
+	<div class="mb-0">
+		<legend class="font-14 fw-500 text-white opacity-75">플레이어 지원</legend>
+		<?
+			foreach($tag_list['P1'] as $sub_key=>$sub_value){
+		?>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_player_<?=$sub_key?>" name="search_player" value="<?=$sub_value['tag_code']?>" <?=$checked['search_player'][$sub_value['tag_code']]?>>
+			<label class="form-check-label font-14" for="search_player_<?=$sub_key?>"><?=$sub_value['tag_name']?></label>
+		</div>
+		<?
+			}
+		?>
+	</div>
+	<?}?>
+
+	<? if(is_array($tag_list['V1'])){?>
+	<hr class="text-secondary opacity-50">
+
+	<div class="mb-0">
+		<legend class="font-14 fw-500 text-white opacity-75">비주얼 및 관점</legend>
+		<?
+			foreach($tag_list['V1'] as $sub_key=>$sub_value){
+		?>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_viewpoint_<?=$sub_key?>" name="search_viewpoint" value="<?=$sub_value['tag_code']?>" <?=$checked['search_viewpoint'][$sub_value['tag_code']]?>>
+			<label class="form-check-label font-14" for="search_viewpoint_<?=$sub_key?>"><?=$sub_value['tag_name']?></label>
+		</div>
+		<?
+			}
+		?>
+	</div>
+	<?}?>
+
+	<? if(is_array($tag_list['T1'])){?>
+	<hr class="text-secondary opacity-50">
+
+	<div class="mb-0">
+		<legend class="font-14 fw-500 text-white opacity-75">테마 및 분위기</legend>
+		<?
+			foreach($tag_list['T1'] as $sub_key=>$sub_value){
+		?>
+		<div class="ms-2 form-check pb-1">
+			<input type="checkbox" class="form-check-input" id="search_themes_<?=$sub_key?>" name="search_themes" value="<?=$sub_value['tag_code']?>" <?=$checked['search_themes'][$sub_value['tag_code']]?>>
+			<label class="form-check-label font-14" for="search_themes_<?=$sub_key?>"><?=$sub_value['tag_name']?></label>
+		</div>
+		<?
+			}
+		?>
+	</div>
+	<?}?>
+
+	<hr class="text-secondary opacity-50">
+	
+	<div class="mb-2">
+		<legend class="font-14 fw-500 text-white opacity-75">가격</legend>
+		<input type="text" id="range_03" data-plugin="range-slider" data-type="single" data-max="100000" data-min="5000" data-step="10000" data-step="5000" data-prefix="&#x20A9; " data-postfix=" 이하" data-decorate_both="true" />
+	</div>
+
+	<div class="mb-0">
+		<div class="d-grid">
+			<button type="submit" class="btn btn-info">검색하기</button>
+		</div>
+	</div>
+
+	</form>
+</div>
+<!--//end of aside-->

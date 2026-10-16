@@ -1,0 +1,422 @@
+<?
+ini_set( "display_errors", 1);
+header("Content-Type:text/html; charset=utf-8"); 
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+include $_SERVER['DOCUMENT_ROOT']."/../kcpcert/cert_conf.php";
+
+include_once($_SERVER["DOCUMENT_ROOT"].'/../log4php/vendor/autoload.php');
+require_once($_SERVER["DOCUMENT_ROOT"].'/../log4php/src/main/php/Logger.php');
+Logger::configure($_SERVER["DOCUMENT_ROOT"] .'/../log4php/config_join.xml');
+$logger = Logger::getLogger('join');
+
+$is_private = filter_input(INPUT_POST, 'is_private', FILTER_SANITIZE_STRING);
+$is_agreement = filter_input(INPUT_POST, 'is_agreement', FILTER_SANITIZE_STRING);
+
+$is_mailling = filter_input(INPUT_POST, 'is_mailling', FILTER_SANITIZE_STRING);
+$is_event = filter_input(INPUT_POST, 'is_event', FILTER_SANITIZE_STRING);
+
+$page_title="정보입력";
+
+$log_post = $_POST;
+unset($log_post['m_pwd'],$log_post['m_pwd_re']);
+$logger->info($log_post);
+
+if($is_private<>"Y" && $is_agreement<>"Y"){
+	echo "잘못된 접근입니다.";
+	exit;
+}
+
+$ip = get_client_ip_env();
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main>
+			<div class="row g-0 form-group mb-5">
+				<div class="col-12">
+					<ul class="nav nav-pills nav-fill">
+						<li class="nav-item rounded-0  border-start border-top border-bottom">
+							<a href="#" class="nav-link rounded-0 text-white">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 1</h4>
+								<p class="list-group-item-text font-16">가입방법 선택</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-start border-top border-bottom">
+							<a href="/member/join_step2.html" class="nav-link rounded-0 text-white ">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 2</h4>
+								<p class="list-group-item-text font-16">약관동의</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-primary border-start border-top border-bottom">
+							<a href="#" class="nav-link active rounded-0">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 3</h4>
+								<p class="list-group-item-text font-16">정보입력</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-start border-top border-bottom">
+							<a href="#" class="nav-link rounded-0 text-white">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 4</h4>
+								<p class="list-group-item-text font-16">인증대기</p>
+							</a>
+						</li>
+						<li class="nav-item rounded-0 border-start border-end border-top border-bottom">
+							<a href="#" class="nav-link rounded-0 text-white">
+								<h4 class="list-group-item-heading my-2 fw-bold">Step 5</h4>
+								<p class="list-group-item-text font-16">가입완료</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="offset-1 col-10">
+					<div class="card shadow-none mb-5 border rounded-0">
+						<div class="card-header py-3 font-16 bg-body-secondary"><h5 class="text-center pb-0 fw-bold my-0">기본정보 입력</h5></div>
+						<div class="card-body p-2">
+							<form name="form_auth" id="form_auth" method="post" class="p-3 shadow-none border-0">
+								<input type="hidden" id="mode" name="mode" value="join">
+								<input type="hidden" id="is_mailling" name="is_mailling" value="<?=$is_mailling?>">
+								<input type="hidden" id="is_event" name="is_event" value="<?=$is_event?>">
+								<input type="hidden" id="id_chk" name="id_chk" value="">
+								<input type="hidden" id="visitorId" name="visitorId" value="">
+								<div class="mb-3 row align-items-center">
+									<label for="m_id" class="col-sm-2 col-form-label font-14">아이디(이메일주소)</label>
+									<div class="col-sm-4">
+										<input class="form-control form-control-lg shadow-none" type="email" id="m_id" name="m_id" placeholder="아이디(이메일주소)를 입력해주세요" required>
+									</div>
+									<div class="col-auto">
+										<button type="button" class="btn btn-dark shadow-none" id="btn_id_chk" name="btn_id_chk">아이디 중복확인</button>
+									</div>
+								</div>
+								<div class="mb-3 row">
+									<label for="m_pwd" class="col-sm-2 col-form-label font-14">비밀번호</label>
+									<div class="col-sm-4">
+										<input class="form-control form-control-lg" type="password" id="m_pwd" name="m_pwd" required placeholder="비밀번호를 입력해 주세요">
+									</div>
+									<div class="col-sm-6">
+										<span id="passwordHelpInline" class="form-text">영문소문자, 숫자, 특수문자를 포함하여 8자이상 16이하로 사용이 가능합니다. (@는 포함하실수 없습니다.)</span>
+									</div>
+								</div>
+								<div class="mb-3 row">
+									<label for="m_pwd_re" class="col-sm-2 col-form-label font-14">비밀번호확인</label>
+									<div class="col-sm-4">
+										<input class="form-control form-control-lg" type="password" id="m_pwd_re" name="m_pwd_re" required placeholder="비밀번호확인을 입력해주세요">
+									</div>
+									<div class="col-sm-6">
+										<span id="passwordHelpInline" class="form-text">영문소문자, 숫자, 특수문자를 포함하여 8자이상 16이하로 사용이 가능합니다. (@는 포함하실수 없습니다.)</span>
+									</div>
+								</div>
+								<!--
+								<div class="mb-3 row">
+									<label for="name" class="col-sm-2 col-form-label font-14">이름</label>
+									<div class="col-sm-3">
+										<input type="text" readonly="" class="form-control form-control-lg bg-body-tertiary" id="name" name="name" value="<?=$_SESSION['kcert']['name']?>" required>
+									</div>
+									<div class="col-auto">
+										<button type="button" class="btn btn-lg btn-info shadow-none" id="btn_cert" onclick="return auth_type_check();">휴대폰 본인확인</button>
+									</div>
+								</div>
+								<div class="mb-3 row">
+									<label for="birthday" class="col-sm-2 col-form-label font-14">생년월일</label>
+									<div class="col-sm-3">
+										<input type="text" readonly="" class="form-control form-control-lg bg-body-tertiary" id="birthday" name="birthday" value="<?=$_SESSION['kcert']['birthday']?>" required>
+									</div>
+								</div>
+								-->
+								
+								<div class="d-grid gap-2 col-6 mx-auto mt-5">
+									<button class="btn btn-primary btn-lg shadow-none" type="submit">가입완료</button>
+								</div>
+						
+								<input type="hidden" name="ordr_idxx" value="" size="40" />
+								<!-- 요청종류 -->
+								<input type="hidden" name="req_tx"       value="cert"/>
+								<!-- 요청구분 -->
+								<input type="hidden" name="cert_method"  value="01"/>
+								<!-- 웹사이트아이디 : ../cfg/cert_conf.php 파일에서 설정해주세요 -->
+								<input type="hidden" name="web_siteid"   value="J17112401947"/> 
+								<!-- 노출 통신사 default 처리시 아래의 주석을 해제하고 사용하십시요
+									 SKT : SKT , KT : KTF , LGU+ : LGT
+								<input type="hidden" name="fix_commid"      value="KTF"/>
+								-->
+								<!-- 사이트코드 : ../cfg/cert_conf.php 파일에서 설정해주세요 -->
+								<input type="hidden" name="site_cd"      value="A7SQ2" />
+								<!-- Ret_URL : ../cfg/cert_conf.php 파일에서 설정해주세요 -->
+								<input type="hidden" name="Ret_URL" value="https://<?=$_SERVER['HTTP_HOST']?>/member/kcpcert/kcpcert_proc_req.php" />
+								<!-- cert_otp_use 필수 ( 메뉴얼 참고)
+									 Y : 실명 확인 + OTP 점유 확인 , N : 실명 확인 only
+								-->
+								<input type="hidden" name="cert_otp_use" value="Y"/>
+								<!-- 리턴 암호화 고도화 -->
+								<input type="hidden" name="cert_enc_use_ext" value="Y"/>
+
+								<input type="hidden" name="res_cd"       value=""/>
+								<input type="hidden" name="res_msg"      value=""/>
+
+								<!-- up_hash 검증 을 위한 필드 -->
+								<input type="hidden" name="veri_up_hash" value=""/>
+
+								<!-- 본인확인 input 비활성화 -->
+								<input type="hidden" name="cert_able_yn" value=""/>
+
+								<!-- web_siteid 을 위한 필드 -->
+								<input type="hidden" name="web_siteid_hashYN" value="Y"/>
+
+								<!-- 가맹점 사용 필드 (인증완료시 리턴)-->
+								<input type="hidden" name="param_opt_1"  value=""/>
+								<input type="hidden" name="param_opt_2"  value=""/>
+								<input type="hidden" name="param_opt_3"  value=""/>
+								
+								<input type="hidden" name="auth_enc" value="">
+								<div id="hcaptcha-container"></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script type="text/javascript" src="/assets/js/fingerprint2.js"></script>
+<script src="/assets/js/hcaptcha_common.js"></script>
+<script src='https://js.hcaptcha.com/1/api.js?onload=onHcaptchaLoad&render=explicit' async defer></script>
+
+<script type="text/javascript">
+	$("#btn_id_chk").bind("click",function(){
+		const id = $("#m_id").val();
+
+		if($("#m_id").val()==""){
+			alert("아이디를 입력하세요.");
+			return;
+		}else{
+			$.ajax({
+				'url': 'join_proc.php',
+				'type': 'POST',
+				'dataType':'json',
+				'data':{mode:"idChk",m_id:id},
+				'success': function(data){
+					console.log(data);
+					if(data.error_code=="1"){
+						alert(data.msg);
+						$("#id_chk").val("");
+						$("#m_id").val("");
+						return;
+					}else{
+						$("#id_chk").val("1");
+						alert("등록이 가능한 아이디입니다.");
+						return;
+					}
+				},
+				'error':function(data){
+					console.log(data);
+					alert("에러입니다.");
+				}
+			});
+		}
+	});
+	
+	window.name="opener_name";
+	// 인증창 종료후 인증데이터 리턴 함수
+	function auth_data( frm )
+	{
+		var auth_form     = document.form_auth;
+		var nField        = frm.elements.length;
+		var response_data = "";
+
+		// up_hash 검증 
+		if( frm.up_hash.value != auth_form.veri_up_hash.value )
+		{
+			alert("up_hash 변조 위험있음");
+		}
+		
+		auth_form.auth_enc.value = frm.auth_enc.value;
+		auth_form.name.value = frm.name.value;
+		auth_form.birthday.value = frm.birthday.value;
+	}
+	
+	// 인증창 호출 함수
+	function auth_type_check()
+	{
+		//document.domain="directgames.co.kr";
+		var auth_form = document.form_auth;
+
+		if( auth_form.ordr_idxx.value == "" )
+		{
+			alert( "요청번호는 필수 입니다." );
+
+			return false;
+		}
+		else
+		{
+			if( ( navigator.userAgent.indexOf("Android") > - 1 || navigator.userAgent.indexOf("iPhone") > - 1 ) == false ) // 스마트폰이 아닌경우
+			{
+				var return_gubun;
+				var width  = 410;
+				var height = 500;
+
+				var leftpos = screen.width  / 2 - ( width  / 2 );
+				var toppos  = screen.height / 2 - ( height / 2 );
+
+				var winopts  = "width=" + width   + ", height=" + height + ", toolbar=no,status=no,statusbar=no,menubar=no,scrollbars=no,resizable=no";
+				var position = ",left=" + leftpos + ", top="    + toppos;
+				
+				
+				var AUTH_POP = window.open('','auth_popup', winopts + position);
+				AUTH_POP.focus();
+			}
+			
+			auth_form.action = "./kcpcert/kcpcert_proc_req.php";
+			auth_form.method = "post";
+			auth_form.target ="auth_popup";
+			auth_form.submit();
+			
+			//auth_form.method = "post";
+			//auth_form.target ="auth_popup"; // !!주의 고정값 ( 리턴받을때 사용되는 타겟명입니다.)
+			//auth_form.action = "./kcpcert/kcpcert_proc_req.php"; // 인증창 호출 및 결과값 리턴 페이지 주소
+			
+			return true;
+		}
+	}
+
+	/* 예제 */
+	window.onload=function()
+	{
+		init_orderid(); // 요청번호 샘플 생성
+		Fingerprint2.get(function(components) {
+			var murmur = Fingerprint2.x64hash128(components.map(function (pair) { return pair.value }).join(), 31);
+			$("#visitorId").val(murmur);
+		});
+	}
+
+	// 요청번호 생성 예제 ( up_hash 생성시 필요 ) 
+	function init_orderid()
+	{
+		var today = new Date();
+		var year  = today.getFullYear();
+		var month = today.getMonth()+ 1;
+		var date  = today.getDate();
+		var time  = today.getTime();
+
+		if(parseInt(month) < 10)
+		{
+			month = "0" + month;
+		}
+
+		var vOrderID = year + "" + month + "" + date + "" + time;
+
+		document.form_auth.ordr_idxx.value = vOrderID;
+	}
+
+
+	$(document).ready(function() {
+		$('#form_auth').on('submit', function(e) {
+			e.preventDefault();
+
+			const pwd = $("#m_pwd").val();
+			const num = pwd.search(/[0-9]/g);
+			const eng = pwd.search(/[a-z]/ig);
+			const spe = pwd.search(/[`~!#$%^&*()|\\\'\_";:\/?]/gi);
+			const spe2 = pwd.match(/[^0-9a-z`~!#$%\^&*\(\)|\\\'\_\";:\/?]/gi);
+			const spa = checkSpace(pwd);
+			const form = this;
+
+			if($("#id_chk").val()==""){
+				alert("아이디 중복확인을 하세요.");
+				return false;
+			}
+
+			if(pwd.length<8 || pwd.length>16){
+				alert("비밀번호는 영문소문자, 숫자, 특수문자를 포함 8자리 이상 ~ 16이하로 입력해주세요.");
+				return false;
+			}
+
+			if(num < 0 || eng <0 || spe <0){
+				alert("비밀번호는 영문소문자, 숫자, 특수문자를 포함 8자리 이상 ~ 16이하로 입력해주세요.");
+				return false;
+			}
+
+			if(spa){
+				alert("비밀번호는 공백없이 입력해주세요.");
+				return false;
+			}
+
+			if(spe2){
+				alert("비밀번호에 사용할 수 없는 문자가 포함되어 있습니다.");
+				return false;
+			}
+
+			if($("#m_pwd").val() != $("#m_pwd_re").val()){
+				alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+				return false;
+			}
+			runCaptcha();
+		});
+	});
+	
+	function checkSpace(str){
+		if(str.search(/\s/)!=-1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+</script>
+
+<script>
+function onCaptchaSuccess(token) {
+	var form = document.form_auth;
+	var postData = $('#form_auth').serializeArray();
+	postData.push({ name: 'h-captcha-response', value: token });
+
+	$.ajax({
+		url: '/member/join_proc.php',
+		type: 'POST',
+		data: postData,
+		dataType: 'json',
+		success: function(data) {
+			if (data.error_code == "0") {
+				form.action = '/member/join_step4.html';
+				form.submit();
+			} else {
+				$.LoadingOverlay("hide", true);
+				alert(data.msg);
+				hcaptcha.reset(hcaptchaWidgetID);
+			}
+		},
+		error: function() {
+			$.LoadingOverlay("hide", true);
+			alert("회원가입 중 오류가 발생했습니다.");
+			hcaptcha.reset(hcaptchaWidgetID);
+		}
+	});
+}
+</script>
+</body>
+</html>

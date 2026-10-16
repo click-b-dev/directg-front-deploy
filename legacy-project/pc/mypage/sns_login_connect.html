@@ -1,0 +1,267 @@
+<?
+	header("Content-Type:text/html; charset=utf-8"); 
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title = "간편로그인 연결";
+	$aside_menu['sns_login'] = "text-primary fw-bold";
+	
+	try{
+		$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+		$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		
+		$member = new Member($conn_dgkr);
+		
+		$m_no = $_SESSION['member']["m_no"];
+		
+		//간편 로그인 연결정보 
+		$data = $member->getMemberSnsLogin($m_no);
+		
+	}catch (PDOException $e){
+		echo 'Error!: '.$e->getMessage();
+		die();
+	}
+?>
+<!DOCTYPE HTML>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="max-age=604800" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+
+<title><?=$page_title?></title>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<!-- Begin page -->
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0">
+				<div class="col-12">
+					<?php
+						$sns_types = array('PAYCO', 'KAKAO', 'NAVER');
+
+						$sns_array = array();
+						foreach ($sns_types as $type) {
+							$sns_array[$type] = array(
+								'sns_type' => $type,
+								'is' => false,
+								'sns_connect_date' => '',
+								'email' => ''
+							);
+						}
+
+						foreach ($data as $value) {
+							$type = strtoupper($value['sns_type']);
+							$sns_array[$type]['is'] = true;
+							$sns_array[$type]['sns_connect_date'] = $value['sns_connect_date'];
+							$sns_array[$type]['email'] = $value['email'];
+						}
+						
+					?>
+					<table class="table table-bordered table-dark">
+						<thead class="font-14">
+						<tr>
+							<th class="text-center">간편로그인 종류</th>
+							<th class="text-center">연결된 이메일</th>
+							<th class="text-center">연결상태</th>
+							<th class="text-center">연결일자</th>
+							<th class="text-center">비고</th>
+						</tr>
+						</thead>
+						<tbody>
+						<?php
+							foreach ($sns_types as $type){
+						?>
+							<tr>
+								<td class="text-center"><?=$type?> 간편로그인</td>
+								<td class="text-center"><?=$sns_array[$type]['email'] ?></td>
+								<td class="text-center"><?=$sns_array[$type]['is']?'연결됨':'연결안됨'?></td>
+								<td class="text-center"><?=$sns_array[$type]['sns_connect_date'] ?></td>
+								<td class="text-center">
+								<?php
+									if($sns_array[$type]['is']){
+								?>
+										<button class="btn btn-sm btn-danger" id="btn_<?= strtolower($type) ?>_disconnect">X 연결해제</button>
+								<?php
+									} else {
+								?>
+										<button class="btn btn-sm btn-info" id="btn_<?= strtolower($type) ?>_connect">+ 계정연결</button>
+								<?php
+									}
+								?>
+								</td>
+							</tr>
+						<?php
+							}
+						?>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	//페이코 계정연결해제
+	$("#btn_payco_disconnect").bind("click",function(){
+		$.ajax({
+			'url': '/api/payco/payco_disconnect.php',
+			'type': 'POST',
+			'data':{sns_type:"PAYCO"},
+			'success': function (data) {
+				//alert(data);
+				if(data=="0"){
+					location.reload();
+				}else{
+					alert(data);
+				}
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+	
+	//페이코 계정연결
+	$("#btn_payco_connect").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/payco/payco_login.php",
+			type: "POST",
+			data : {mode:"payco_connect"},
+			success:function(url, textStatus, jqXHR){
+				//window.location.href=data;
+				var loginpop = window.open (url, 'connect_payco', 'height=560, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+							loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+
+	//카카오 계정연결
+	$("#btn_kakao_connect").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/kakao/kakao_login.php",
+			type: "POST",
+			data : {mode:"kakao_connect"},
+			success:function(url, textStatus, jqXHR){
+				//window.location.href=data;
+				var loginpop = window.open (url, 'connect_kakao', 'height=560, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+							loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+
+	//카카오 계정연결해제
+	$("#btn_kakao_disconnect").bind("click",function(){
+		$.ajax({
+			'url': '/api/kakao/kakao_disconnect.php',
+			'type': 'POST',
+			'dataType':'json',
+			'data':{sns_type:"KAKAO"},
+			'success': function (data) {
+				//alert(data);
+				if(data.code=="0"){
+					alert(data.msg);
+					document.location.reload();
+				}else{
+					alert(data.msg);
+				}
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+
+	//네이버 계정연결
+	$("#btn_naver_connect").bind("click",function(){
+		var top = (screen.availHeight - 600)/2;
+		var left = (screen.availWidth - 455)/2;
+		$.ajax({
+			url : "/api/naver/naver_login.php",
+			type: "POST",
+			data : {mode:"naver_connect"},
+			success:function(url, textStatus, jqXHR){
+				//window.location.href=data;
+				var loginpop = window.open (url, 'connect_kakao', 'height=700, width=500, top='+ top +', left='+ left +', toolbar=no, menubar=no, scrollbars=no,resizable=yes,location=no, status=no');
+				if (loginpop == null || typeof(loginpop) == "undefined" || (loginpop == null && loginpop.outerWidth == 0) || (loginpop != null && loginpop.outerHeight == 0) || loginpop.test == "undefined"){
+						alert("팝업이 차단되어있습니다.\n로그인 하시려면 팝업 차단을 해제해주시기 바랍니다.");
+						//빈창 닫기
+						if(loginpop){
+							loginpop.close();
+						}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR);
+			}
+		 });
+	});
+
+	//네이버 계정연결해제
+	$("#btn_naver_disconnect").bind("click",function(){
+		$.ajax({
+			'url': '/api/naver/naver_disconnect.php',
+			'type': 'POST',
+			'dataType':'json',
+			'data':{sns_type:"NAVER"},
+			'success': function (data) {
+				//alert(data);
+				if(data.code=="0"){
+					alert(data.msg);
+					document.location.reload();
+				}else{
+					alert(data.msg);
+				}
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+});
+</script>
+
+
+</body>
+</html>

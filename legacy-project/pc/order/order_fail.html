@@ -1,0 +1,77 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"].'/lib/lib.php');
+
+$aspOrderNum= filter_input(INPUT_GET, 'aspOrderNum', FILTER_SANITIZE_STRING);
+
+$page_title = "주문실패";
+
+//주문확인
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$order = new Order($conn);
+
+	$msg = filter_input(INPUT_GET, 'msg', FILTER_SANITIZE_STRING);
+	$message = filter_input(INPUT_GET, 'message', FILTER_SANITIZE_STRING);
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container">
+		<main class="mb-5">
+			<div class="row g-0 my-3">
+				<div class="col-12">
+					<div class="row justify-content-center g-3">
+						<div class="col-lg-6 pb-3">
+							<div class="text-center">
+								<h1 class="text-error mt-4"><i class="mdi mdi-alert-circle-outline"></i></h1>
+								<h4 class="text-uppercase text-danger mt-3 mb-3">고객님께 불편을 드려서 대단히 죄송합니다.</h4>
+								<ul class="list-group list-group-flush">
+									<li class="list-group-item text-start">* 주문과 결제가 실패하였습니다.</li>
+									<li class="list-group-item text-start">* 다시 주문/결제 과정을 진행하여 주십시오.</li>
+									<?php
+										if($msg){
+									?>
+									<li class="list-group-item text-start"><?=$msg?><?=$message?></li>
+									<?php
+										}
+									?>
+								</ul>
+
+								<a class="btn btn-info mt-3" href="/index.html">홈으로 이동</a>
+							</div> <!-- end /.text-center-->
+						</div> <!-- end col-->
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<!-- bundle -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+</body>
+</html>

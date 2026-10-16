@@ -1,0 +1,408 @@
+<?
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+header("Content-Type:text/html; charset=utf-8"); 
+
+$page_title="주말특가 프로모션";
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$goods = new Goods($conn);
+	$promotion = new Promotion($conn);
+	$parsedown= new Parsedown();
+	
+	//노출여부가 Y인 주말특가 프로모션을 가져온다.
+	$promotion_weekend = $promotion->getPromotionWeekend();
+	
+	$promotion_week_start = date('Y-m-d H:i:s',$promotion_weekend['promotion_week_start']);
+	$promotion_week_end = date('Y-m-d H:i:s',$promotion_weekend['promotion_week_end']);
+	
+	$promotion_recommand_goods = explode("|",$promotion_weekend['promotion_week_recommand']);
+	$promotion_best_goods = explode("|",$promotion_weekend['promotion_week_best']);
+	
+	//페이지 접근제한확인
+	if(date('Y-m-d H:i:s')>=$promotion_week_start && date('Y-m-d H:i:s')<$promotion_week_end){
+		$is_view = "Y";
+	}else{
+		$is_view = "N";
+	}
+
+	if($is_view=="N"){
+		if($_SERVER['REMOTE_ADDR']<>"112.216.231.146"){
+			echo '<script>alert("프로모션 기간이 아닙니다. \n주말특가 프로모션은 금요일 16시 ~ 월요일 16시에 진행됩니다. \n(단, 대규모 프로모션 기간은 제외)");location.href="https://directg.net/index.php";</script>';
+			//header( "HTTP/1.1 301 Moved Permanently" );
+			//header( 'Location: https://directg.net/index.php' );
+			exit;
+		}else{
+			echo '<script>alert("프로모션 기간이 아닙니다. \n주말특가 프로모션은 금요일 16시 ~ 월요일 16시에 진행됩니다. \n(단, 대규모 프로모션 기간은 제외)");</script>';
+		}
+	}
+	
+	$promotion_recommand = array();
+	$promotion_best = array();
+	$promotion_best_small = array();
+	
+	//DG 추천게임
+	foreach($promotion_recommand_goods as $key=>$value){
+		$promotion_recommand[$key] = array(
+			"title_info"=>$goods->getGoodsOptionTitleInfo($value),
+			"option_info"=>$goods->getGoodsItemDetail($value),
+		);
+	}
+	
+	foreach($promotion_best_goods as $key=>$value){
+		if($key<4){
+			$promotion_best[$key] = array(
+				"title_info"=>$goods->getGoodsOptionTitleInfo($value),
+				"option_info"=>$goods->getGoodsItemDetail($value),
+			);
+		}else{
+			$promotion_best_small[$key] = array(
+				"title_info"=>$goods->getGoodsOptionTitleInfo($value),
+				"option_info"=>$goods->getGoodsItemDetail($value),
+			);
+		}
+	}
+
+	//진행중인 이벤트 노출 지정
+	$event_add_where = " and idx in ('16','27','28','29')";
+	$event_list = $promotion->getPromotionEventList($event_add_where);
+	
+	$where = [];
+	
+	$where[] = " a.game_type='game' and a.display_type='basic' and c.promotion_start<='".$promotion_week_start."' and c.promotion_end>='".$promotion_week_end."'";
+	
+	foreach($where as $value){
+		$add_where.= " and ".$value;
+	}
+	
+	$orderby = "a.release_date desc";
+	$promotion_list = $promotion->getPromotionIng("1",$add_where,$orderby,$param,'30');
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+
+<link href="https://directg.net/promotion/promotion_weekend.html" rel="canonical" />
+<link rel="alternate" media="only screen and (max-width: 640px)"  href="https://m.directg.net/promotion/promotion_weekend.html" hreflang="ko-kr">
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<style>
+.b-example-divider {
+    width: 100%;
+    height: 50px;
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container mt-3 breadcrumb">
+		<div class="font-14">
+			<a href="/" class="text-decoration-none">다이렉트 게임즈</a> &gt; 
+			<a href="/promotion/promotion_ing_thumb.html" class="text-decoration-none" title="할인프로모션">할인프로모션</a> &gt; 
+			주말특가 프로모션
+		</div>
+	</div>
+	
+	<div class="container my-3 pb-5 px-0">
+		<main  id="content" class="content rounded-0">
+			<section class="mb-3">
+				<div class="container">
+					<a href="<?=$promotion_weekend['promotion_week_banner_link']?>" title="<?=$promotion_weekend['promotion_week_name']?>"><img src="https://image.directg.net/U84s2DngyK" class="w-100" alt="<?=$promotion_weekend['promotion_week_name']?>"></a>
+				</div>
+				<div class="b-example-divider"></div>
+			</section>
+			
+			<!--프로모션 추천게임-->
+			<section class="mb-3">
+				<div class="container">
+					<h2 class="fw-bold">DG 추천게임</h2>
+					
+					<div class="row row-col-1 row-cols-md-4 g-3 justify-content-center">
+						<?
+							foreach($promotion_recommand as $recommand){
+								if($recommand['option_info']['promotion']['sale_price']>0){
+									$recommand['option_info']['discount'] =$recommand['option_info']['promotion']['discount_rate'];
+									$recommand['option_info']['price'] =$recommand['option_info']['promotion']['sale_price'];
+									$recommand['option_info']['is_promotion']="Y";
+									$recommand['option_info']['promotion_label']="bg-danger";
+								}else{
+									$recommand['option_info']['is_promotion']="N";
+									$recommand['option_info']['promotion_label']="bg-primary";
+								}
+								
+						?>
+						<div class="col-3">
+							<div class="card mb-0 rounded-1 card-shadow bg-card border-0">
+								<a href="/game/game_view.html?product_id=<?=$recommand['title_info']['sku']?>" title="<?=$recommand['option_info']['product_name']?>"><img src="<?=$recommand['title_info']['domain']?>/upload/title/<?=$recommand['title_info']['title_id']?>/hero/hero_capsule.jpg" class="card-img-top rounded-1" alt="<?=$recommand['option_info']['product_name']?>" onerror="this.src='/assets/images/logo/H2_DG_BI_VERTICAL.svg'"></a>
+								<div class="card-footer px-2 py-0 border-0">
+									<div class="d-flex flex-row justify-content-between align-items-center" style="min-height:48px">
+										<div><span class="badge <?=$recommand['option_info']['promotion_label']?> num font-14 px-3 py-2">-<?=$recommand['option_info']['discount']?>%</span></div>
+										<div class="ms-auto text-end align-text-bottom">
+											<div class="d-block fw-normal p-0 m-0"><small class="text-decoration-line-through text-secondary font-11 num won"> <?=number_format($recommand['option_info']['consumer_price'])?></small></div>
+											<div class="d-block"><span class="d-block p-0 m-0 num text-white font-14 fw-bold won"> <?=number_format($recommand['option_info']['price'])?></span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?
+							}
+						?>
+					</div>
+				</div>
+				<div class="b-example-divider"></div>
+			</section>
+			
+			<!--프로모션 인기게임-->
+			<section class="mb-3">
+				<div class="container">
+					<h2 class="fw-bold">프로모션 인기게임</h2>
+					
+					<div class="row row-col-1 row-cols-md-4 g-3 justify-content-center mb-3">
+						<?
+							$ranking = 1;
+							foreach($promotion_best as $best){
+								if($best['option_info']['promotion']['sale_price']>0){
+									$best['option_info']['discount'] =$best['option_info']['promotion']['discount_rate'];
+									$best['option_info']['price'] =$best['option_info']['promotion']['sale_price'];
+									$best['option_info']['is_promotion']="Y";
+									$best['option_info']['promotion_label']="bg-danger";
+								}else{
+									$best['option_info']['is_promotion']="N";
+									$best['option_info']['promotion_label']="bg-primary";
+								}
+								
+								switch($best['option_info']['display_type']){
+									case "basic":
+										$best['option_info']['option_gubun'] = "<span class='badge bg-info rounded-0 font-12 py-1'>기본게임</span>";
+									break;
+									case "edition":
+										$best['option_info']['option_gubun'] = "<span class='badge bg-primary rounded-0 font-12 py-1'>에디션</span>";
+									break;
+								}
+								
+								switch($best['option_info']['game_type']){
+									case "game":
+										$best['option_info']['view_url'] = "/game/game_view.html?product_id=".$best['title_info']['sku'];
+									break;
+									case "dlc":
+										$best['option_info']['view_url'] = "/game/dlc_view.html?sku=".$best['option_info']['goods_sku'];
+									break;
+									case "bundle":
+										$best['option_info']['view_url'] = "/game/bundle_view.html?sku=".$best['option_info']['goods_sku'];
+										$best['option_info']['option_gubun'] = "<span class='badge bg-success rounded-0 font-12 py-1'>번들</span>";
+									break;
+								}
+						?>
+						<div class="col-3">
+							<div class="card mb-0 rounded-1 card-shadow bg-card border-0">
+								<div class="card-header mb-0 p-2 border-0 rounded-0"><a href="<?=$best['option_info']['view_url']?>" title="<?=$best['option_info']['product_name']?>"><h5 class="card-title fw-400 font-14 text-secondary mb-0 py-2 align-content-center text-truncate"><?=$best['option_info']['product_name']?></h5></a></div>
+								<div class="card-body p-0 bg-grey rounded-0">
+									<div class="position-relative">
+										<div class="position-absolute top-0 start-0">
+											<div class="ratio ratio-1x1" style="width:32px;height:32px">
+												<span class="badge bg-darkblue text-white rounded-0 font-14 num px-1 py-2"><?=$ranking?></span>
+											</div>
+										</div>
+										<a href="<?=$best['option_info']['view_url']?>" title="<?=$best['option_info']['product_name']?>"><img src="<?=$best['option_info']['domain']?>/upload/product/<?=$best['option_info']['product_code']?>/header/header.jpg?t=20251027" class="card-img-top rounded-0" alt="<?=$best['option_info']['product_name']?>" onerror="this.src='/assets/images/logo/H2_DG_BI_VERTICAL.svg'"></a>
+										<div class="position-absolute bottom-0 start-0"><?=$best['option_info']['option_gubun']?></div>
+									</div>
+									<div class="p-2">
+										<span class="badge badge-outline-success rounded-2 font-12 p-2 ms-1 mb-1">코드발송</span>
+										<?if($best['option_info']['is_promotion']=="Y"){?><span class="badge badge-outline-danger rounded-2 font-12 p-2 ms-2">프로모션</span><?}?>
+										<?if($best['option_info']['is_preorder']=="Y"){?><span class="badge rounded-2 badge-outline-warning font-12 p-2 ms-2">예약구매</span><?}?>
+										<?if($best['option_info']['is_bonus']=="Y"){?><span class="badge rounded-2 badge-outline-info font-12 p-2 ms-2">특전</span><?}?>
+									</div>
+								</div>
+								<div class="card-footer px-2 py-0 border-0">
+									<div class="d-flex flex-row justify-content-between align-items-center" style="min-height:48px">
+										<?if($best['option_info']['discount']>0){?>
+										<div><span class="badge <?=$best['option_info']['promotion_label']?> num font-14 px-3 py-2">-<?=$best['option_info']['discount']?>%</span></div>
+										<?}?>
+										<div class="ms-auto text-end align-text-bottom">
+											<?if($best['option_info']['discount']>0){?>
+											<div class="d-block fw-normal p-0 m-0"><small class="text-decoration-line-through text-secondary font-11 num won"> <?=number_format($best['option_info']['consumer_price'])?></small></div>
+											<?}?>
+											<div class="d-block"><span class="d-block p-0 m-0 num text-white font-14 fw-bold won"> <?=number_format($best['option_info']['price'])?></span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?
+								$ranking++;
+							}
+						?>
+					</div>
+					
+					<div class="row row-col-1 row-cols-md-6 g-3 justify-content-center">
+						<?
+							foreach($promotion_best_small as $best_small){
+								if($best_small['option_info']['promotion']['sale_price']>0){
+									$best_small['option_info']['discount'] =$best_small['option_info']['promotion']['discount_rate'];
+									$best_small['option_info']['price'] =$best_small['option_info']['promotion']['sale_price'];
+									$best_small['option_info']['is_promotion']="Y";
+									$best_small['option_info']['promotion_label']="bg-danger";
+								}else{
+									$best_small['option_info']['is_promotion']="N";
+									$best_small['option_info']['promotion_label']="bg-primary";
+								}
+								
+								switch($best_small['option_info']['display_type']){
+									case "basic":
+										$best_small['option_info']['option_gubun'] = "<span class='badge bg-info rounded-0 font-12 py-1'>기본게임</span>";
+									break;
+									case "edition":
+										$best_small['option_info']['option_gubun'] = "<span class='badge bg-primary rounded-0 font-12 py-1'>에디션</span>";
+									break;
+								}
+								
+								switch($best_small['option_info']['game_type']){
+									case "game":
+										$best_small['option_info']['view_url'] = "/game/game_view.html?product_id=".$best_small['title_info']['sku'];
+									break;
+									case "dlc":
+										$best_small['option_info']['view_url'] = "/game/dlc_view.html?sku=".$best_small['option_info']['goods_sku'];
+									break;
+									case "bundle":
+										$best_small['option_info']['view_url'] = "/game/bundle_view.html?sku=".$best_small['option_info']['goods_sku'];
+										$best_small['option_info']['option_gubun'] = "<span class='badge bg-success rounded-0 font-12 py-1'>번들</span>";
+									break;
+								}
+						?>
+						<div class="col-2">
+							<div class="card mb-0 rounded-1 card-shadow bg-card border-0">
+								<div class="card-header mb-0 p-2 border-0 rounded-0"><a href="<?=$best_small['option_info']['view_url']?>" title="<?=$best_small['option_info']['product_name']?>"><h5 class="card-title fw-400 font-14 text-secondary mb-0 py-2 align-content-center text-truncate"><?=$best_small['option_info']['product_name']?></h5></a></div>
+								<div class="position-relative">
+									<div class="position-absolute top-0 start-0">
+										<div class="ratio ratio-1x1" style="width:32px;height:32px">
+											<span class="badge bg-darkblue text-white rounded-0 font-14 num px-1 py-2"><?=$ranking?></span>
+										</div>
+									</div>
+									<a href="<?=$best_small['option_info']['view_url']?>" title="<?=$best_small['option_info']['product_name']?>"><img src="<?=$best_small['option_info']['domain']?>/upload/product/<?=$best_small['option_info']['product_code']?>/header/header.jpg" class="card-img-top rounded-0" alt="<?=$best_small['option_info']['product_name']?>" onerror="this.src='/assets/images/logo/H2_DG_BI_VERTICAL.svg'"></a>
+									<div class="position-absolute bottom-0 start-0"><?=$best_small['option_info']['option_gubun']?></div>
+								</div>
+								<div class="card-footer px-2 py-0 border-0">
+									<div class="d-flex flex-row justify-content-between align-items-center" style="min-height:48px">
+										<?if($best_small['option_info']['discount']>0){?>
+										<div><span class="badge <?=$best_small['option_info']['promotion_label']?> num font-14 px-3 py-2">-<?=$best_small['option_info']['discount']?>%</span></div>
+										<?}?>
+										<div class="ms-auto text-end align-text-bottom">
+											<div class="d-block fw-normal p-0 m-0"><small class="text-decoration-line-through text-secondary font-11 num won"> <?=number_format($best_small['option_info']['consumer_price'])?></small></div>
+											<div class="d-block"><span class="d-block p-0 m-0 num text-white font-14 fw-bold won"> <?=number_format($best_small['option_info']['price'])?></span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?
+								$ranking++;
+							}
+						?>
+					</div>
+				</div>
+				<div class="b-example-divider"></div>
+			</section>
+			
+			<section class="mb-3">
+				<div class="container">
+					<div class="d-flex flex-row align-items-start">
+						<h2 class="fw-bold">진행중인 이벤트</h2>
+						<a href="/event/event.html" class="ms-3 text-decoration-none font-14 bg-primary rounded-2 px-3 py-1">전체보기</a>
+					</div>
+					<?
+						foreach($event_list as $value){
+					?>
+						<div class="card mb-3 rounded-0">
+							<div class="row g-0">
+								<div class="col-md-5">
+									<a href="<?=$value['event_link_url']?>" target="<?=$value['event_link_target']?>"><img src="<?=$value['event_banner']?>" class="img-fluid rounded-0 h-100" alt="<?=$value['subject']?>"></a>
+								</div>
+								<div class="col-md-7">
+									<div class="card-body">
+										<h4 class="card-title mb-3">■ <?=$value['subject']?></h4>
+										<div class="event_contents"><?=$parsedown->text(htmlspecialchars_decode($value['contents'],ENT_NOQUOTES))?></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					<?
+						}
+					?>
+				</div>
+				<div class="b-example-divider"></div>
+			</section>
+			
+			<section class="mb-3">
+				<div class="container">
+					<div class="d-flex flex-row align-items-start">
+						<h2 class="fw-bold">프로모션 게임 목록</h2>
+						<a href="/promotion/promotion_ing_thumb.html" class="ms-3 text-decoration-none font-14 bg-primary rounded-2 px-3 py-1">전체보기</a>
+					</div>
+							
+					<div class="row row-col-5 row-cols-md-6 g-3 justify-content-center">
+						<?
+							if($promotion_list->success == true){
+								$result = $promotion_list->resultset->fetchAll();
+
+								$count = 0;
+								foreach($result as $value){
+									//대표상품정보 
+									$title_info = $goods->getGoodsOptionTitleInfo($value['product_code']);
+						?>
+						<div class="col-2">
+							<div class="card mb-0 rounded-1 card-shadow bg-card border-0">
+								<div class="card-header mb-0 p-2 border-0 rounded-0"><a href="/game/game_view.html?product_id=<?=$title_info['sku']?>" title="<?=$value['product_name']?>"><h5 class="card-title fw-400 font-14 text-secondary mb-0 py-2 align-content-center text-truncate"><?=$value['product_name']?></h5></a></div>
+								<div class="card-body p-0 position-relative">
+									<a href="/game/game_view.html?product_id=<?=$title_info['sku']?>" title="<?=$value['product_name']?>"><img src="<?=$value['domain']?>/upload/product/<?=$value['product_code']?>/header/header.jpg" class="card-img-top rounded-0" alt="<?=$value['product_name']?>" onerror="this.src='/assets/images/logo/H2_DG_BI_VERTICAL.svg'"></a>
+									<div class="position-absolute bottom-0 start-0"><span class='badge bg-info rounded-0 font-12 py-1'>기본게임</span></div>
+								</div>
+								<div class="card-footer px-2 py-0 border-0">
+									<div class="d-flex flex-row justify-content-between align-items-center" style="min-height:48px">
+										<div><span class="badge bg-danger num font-14 px-3 py-2">-<?=$value['discount_rate']?>%</span></div>
+										<div class="ms-auto text-end align-text-bottom">
+											<div class="d-block fw-normal p-0 m-0"><small class="text-decoration-line-through text-secondary font-11 num won"> <?=number_format($value['consumer_price'])?></small></div>
+											<div class="d-block"><span class="d-block p-0 m-0 num text-white font-14 fw-bold won"> <?=number_format($value['price'])?></span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?
+								}
+							}
+						?>
+					</div>
+					
+					<div class="mt-4 pt-2"><a href="/promotion/promotion_ing_thumb.html"><img src="https://image.directg.net/k843QVx2Jq"></a></div>
+				</div>
+			</section>
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+</body>
+</html>

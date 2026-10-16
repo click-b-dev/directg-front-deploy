@@ -1,0 +1,30 @@
+{
+  "name": "@click-b/directg-client",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@click-b/api-client": "workspace:*",
+    "@click-b/hook": "workspace:*",
+    "@click-b/types": "workspace:*",
+    "@click-b/ui": "workspace:*",
+    "@click-b/utils": "workspace:*",
+    "msw": "2.15.0",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@click-b/config": "workspace:*",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "typescript": "^5.9.3"
+  }
+}

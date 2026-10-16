@@ -1,0 +1,613 @@
+<?
+	ini_set( "display_errors", 0 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+	
+	$settle_no = filter_input(INPUT_GET, 'settle_no', FILTER_SANITIZE_STRING);
+
+	$page_title="주문 내역 상세보기";
+
+try{
+	//리뉴얼DB
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	//기존DB
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$goods = new Goods($conn);
+	$order = new Order($conn);
+	$mypage = new Mypage($conn);
+
+	//주문결제정보
+	$order_data = $mypage->getOrderV2($_SESSION['member']['m_no'],$settle_no);
+	
+	//주문상품정보
+	$item_data = $mypage->getOrderItemV2($settle_no);
+	
+	//배송지정보
+	$order_address_data = $order->getOrderAddress($settle_no);
+	
+	//결제로그
+	switch($order_data['version']){
+		case "1": //기존주문
+			$is_bill_url = "N";
+		break;
+		case "2": //기존주문
+			$is_bill_url = "N";
+		break;
+		case "3": //리뉴얼 주문
+			$is_bill_url = "Y";
+		break;
+	}
+	
+	//PG사별 구매 영수증 주소
+	
+	
+	if($is_bill_url=="Y"){
+	
+		switch($order_data['pg_provider']){
+			case "kcp":
+				$settle_log = $order->getOrderKcpLog($settle_no);
+				switch($order_data['payment_method']){
+					case "SC0010"://신용카드
+						$bill_url = "https://partner.kcp.co.kr/bill/card?cmd=card_bill&tno=".$settle_log['tno']."&order_no=".$settle_no."&trade_mony=".$settle_log['amount'];
+					break;
+					case "SC0030": //계좌이체
+						$bill_url = "https://partner.kcp.co.kr/bill/acnt?cmd=acnt_bill&tno=".$settle_log['tno']."&order_no=".$settle_no."&trade_mony=".$settle_log['amount'];
+					break;
+					case "SC0040": //가상계좌
+						$bill_url = "https://partner.kcp.co.kr/bill/vcnt?cmd=vcnt_bill&tno=".$settle_log['tno']."&order_no=".$settle_no."&trade_mony=".$settle_log['amount'];
+					break;
+					case "SC0060": //휴대폰
+						$bill_url = "https://partner.kcp.co.kr/bill/mcash?cmd=mcash_bill&tno=".$settle_log['tno']."&order_no=".$settle_no."&trade_mony=".$settle_log['amount'];
+					break;
+				}
+			break;
+			case "payco":
+				$settle_log = $order->getOrderPaycoLog($settle_no);
+				$bill_url ="https://bill.payco.com/outseller/receipt/".$settle_log['orderNo'];
+			break;
+			case "toss":
+				$settle_log = $order->getOrderTossAdapterLog($settle_no);
+			
+				if(!$settle_log['idx']){
+					$settle_log = $order->getOrderTossLog($settle_no);
+					$bill_url ="https://dashboard.tosspayments.com/receipt/redirection?transactionId=".$settle_log['payment_key'];
+				} else {
+					$bill_url ="https://dashboard.tosspayments.com/receipt/redirection?transactionId=".$settle_log['tno'];
+				}
+			break;
+		}
+		
+	}
+	
+	
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="section full">
+		<div class="section-title">주문 상품 정보</div>
+		<div class="wide-block">
+			<?
+				foreach($item_data as $value){
+			?>
+			<div class="card">
+				<div class="card-header">
+					<div class="d-flex justify-content-between">
+						<div><?=$value['ordno']?> <small>(<?=$value['order_date']?>)</small></div>
+					</div>
+				</div>
+				<div class="card-body p-2" style="background:#191919">
+					<?
+						switch($value['status']){
+							case "2":
+					?>
+					<?if($value['delivery_type']=="1"){?><span class="badge bg-secondary"><?=($value['is_actv']=="1")?"수령완료":"수령대기"?></span><?}?>
+					<?
+						//택배발송상품 배송진행상태 표기
+						if($value['delivery_type']<>"1"){
+							$order_shipment = $order->getOrderShipment($value['settle_no'],$value['ordno']);
+					?>
+					<span class="badge bg-secondary"><?=$order->getShipmentStatus($order_shipment['shipment_status']);?></span>
+					<?}?>
+					<?
+							break;
+							case "8":
+					?>
+					<div class="mb-1"><span class="badge bg-danger">취소요청</span></div>
+					<?
+							break;
+							case "9":
+					?>
+					<div class="mb-1"><span class="badge bg-danger">취소완료</span></div>
+					<?
+							break;
+						}
+					?>
+					<p class="mt-2 card-text font-16  text-white"><?=$value['product_name']?></p>
+					<p class="card-text"><span class="num"><?=number_format($value['price'])?></span> 원 </p>
+				</div>
+				<div class="card-footer">
+					<? if($value['is_actv']=="1"){?>
+					<button type="button" class="btn btn-success btn-block btn_license" data-ordno="<?=$value['ordno']?>" data-settleno="<?=$settle_no?>" data-ordersystem="<?=$value['order_system']?>" data-productname="<?=$value['product_name']?>">키 확인</button>
+					<?}else{?>
+						<?
+							if($value['status']=="2"){
+								if($value['delivery_type']<>"2"){
+						?>
+						<button type="button" class="btn btn-primary btn-block btn_activate" data-ordno="<?=$value['ordno']?>" data-settleno="<?=$settle_no?>" data-ordersystem="<?=$value['order_system']?>" data-productname="<?=$value['product_name']?>">키 활성화</button>
+						<?}?>
+						
+						<div class="mt-2"><button type="button" class="btn btn-danger btn-block btn_cancel" data-ordno="<?=$value['ordno']?>" data-settleno="<?=$settle_no?>" data-ordersystem="<?=$value['order_system']?>" data-productname="<?=$value['product_name']?>">취소요청 </button></div>
+					<?
+							}
+						}
+					?>
+					
+					<?if($order_shipment['shipment_status']=="4" || $order_shipment['shipment_status']=="5" || $order_shipment['shipment_status']=="6"){?>
+					<button type="button" class="mt-1 btn btn-primary btn-block btn_delivery_search" data-trackingno="<?=$order_shipment['tracking_number']?>" data-deliverycode="<?=$order_shipment['delivery_code']?>">배송조회</button>
+					<?}?>
+					
+				</div>
+			</div>
+			<?
+					$total_price+=$value['price'];
+				}
+			?>
+		</div>
+	</div>
+	
+	<div class="section full mb-3">
+		<div class="section-title">주문 정보</div>
+		<div class="wide-block">
+			<ul class="list-group">
+				<li class="list-group-item  bg-transparent px-0 border-0 border-white border-bottom border-opacity-10">
+					<div class="d-flex flex-row justify-content-start">
+						<strong class="text-secondary me-2 font-14">결제번호</strong>
+						<span class="font-14 text-white"><?=$order_data['settle_no']?></span>
+					</div>
+				</li>
+				<li class="list-group-item bg-transparent px-0 border-0 border-white border-bottom border-opacity-10">
+					<div class="d-flex flex-row justify-content-start">
+						<strong class="text-secondary me-2 font-14">총 주문금액</strong>
+						<span class="font-14 text-white"><?=number_format($total_price)?> 원</span>
+					</div>
+				</li>
+				<li class="list-group-item bg-transparent px-0 border-0 border-white border-bottom border-opacity-10">
+					<div class="d-flex flex-row justify-content-start">
+						<div class="align-self-center me-2"><strong class="text-secondary font-14 text-break ">총 할인금액</strong></div>
+						<div class="p-0">
+							<span class="d-block font-14 text-white"><?=number_format($order_data['use_emoney']+$order_data['use_cash']+$order_data['member_dc'])?> 원</span>
+							<span class="d-block font-12 text-white">
+							(포인트 할인 <?=number_format($order_data['use_emoney'])?> 원 <?if($order_data['use_cash']>0){?>+ 캐시할인 <?=number_format($order_data['use_cash'])?> 원 <?}?> <?if($order_data['member_dc']>0){?>+ 회원 즉시할인 <?=number_format($order_data['member_dc'])?> 원<?}?>)</span>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item bg-transparent px-0 border-0 border-white border-bottom border-opacity-10">
+					<div class="d-flex flex-row justify-content-start">
+						<strong class="text-secondary me-2 font-14">총 결제금액</strong>
+						<span class="font-14 text-white"><?=number_format($order_data['total_price'])?> 원</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div class="section full mb-3">
+		<div class="section-title">결제정보</div>
+		<div class="wide-block">
+			<ul class="list-group">
+				<li class="list-group-item  bg-transparent px-0 border-0 border-white border-bottom border-opacity-10">
+					<div class="d-flex flex-row justify-content-start">
+						<strong class="text-secondary me-2 font-14">결제PG</strong>
+						<span class="font-14 text-white"><?=$order_data['pg_provider']?></span>
+					</div>
+				</li>
+				<li class="list-group-item  bg-transparent px-0 border-0 border-white border-bottom border-opacity-10">
+					<div class="d-flex flex-row justify-content-start">
+						<strong class="text-secondary me-2 font-14">결제수단</strong>
+						<span class="font-14 text-white"><?=$order->getPaymentMethod($order_data['payment_method'])?></span>
+					</div>
+				</li>
+				<li class="list-group-item  bg-transparent px-0 border-0 border-white border-bottom border-opacity-10">
+					<div class="d-flex flex-row justify-content-start">
+						<strong class="text-secondary me-2 font-14">결제상태</strong>
+						<span class="font-14 text-white"><?=$order->getCheckoutStatus($order_data['step'])?></span>
+					</div>
+				</li>
+				<li class="list-group-item  bg-transparent px-0 border-0 border-white border-bottom border-opacity-10">
+					<div class="d-flex flex-row justify-content-start">
+						<strong class="text-secondary me-2 font-14">결제일자</strong>
+						<span class="font-14 text-white"><?=$order_data['payment_date']?></span>
+					</div>
+				</li>
+				<li class="list-group-item  bg-transparent px-0 border-0 border-white border-bottom border-opacity-10">
+					<div class="d-flex flex-row justify-content-start">
+						<strong class="text-secondary me-2 font-14">구매영수증</strong>
+						<span class="font-14 text-white"><?if($order_data['step']=="2"){?><a class="btn btn-secondary shadow-none btn-sm" href="<?=$bill_url?>" target="_blank">고객용 영수증 보기</a><?}?></span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- 키 활성화 안내팝업 시작-->
+<div class="modal fade modalbox" id="activateModal" data-bs-backdrop="static" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">제품 코드(키) 활성화 안내</h5>
+				<a href="#" data-bs-dismiss="modal" class="modal-close text-white"><ion-icon name="close-outline"></ion-icon></a>
+			</div>
+			<div class="modal-body">
+				<form name="activateFrm" id="activateFrm" method="post" >
+				<input type="hidden" name="mode" id="mode" value="" >
+				<input type="hidden" name="settle_no" id="settle_no" value="">
+				<input type="hidden" name="ordno" id="ordno" value="">
+
+				<p class="text font-14">※ 제품코드 활성화 전, 아래의 내용을 다시 한 번 확인 후 신중하게 진행해주시기 바랍니다.</p>
+				<p class="text font-14">- 제품코드를 활성화하신 경우 수령완료 처리되며, 이후 특별한 사유 없이 환불이 불가합니다.</p>
+				<p class="text font-14">- 단순변심, 구매실수, 중복주문, 프로모션을 포함한 가격변동 등은 환불사유가 될 수 없습니다.</p>
+				<p class="text font-14">- 주문하신 상품의 이름, 플랫폼, 가격, 중복 여부를 다시 한 번 확인해주시기 바랍니다.</p>
+				<p class="text font-14">주문하신 상품의 제품코드를 활성화하시겠습니까?</p>
+				<div class="form-group mb-3">
+					<label for="ordno" class="control-label mb-1">제품명</label>
+					<div class="col-sm-4">
+						<input type="text" name="product_name" id="product_name" class="form-control input-sm" readonly>
+					</div>
+				</div>
+				</form>
+			</div>
+			<div class="modal-footer justify-content-center">
+				<div class="row w-100">
+					<div class="col-6">
+						<button type="button" class="btn btn-secondary btn-block" data-bs-dismiss="modal">취소</button>
+					</div>
+					<div class="col-6">
+						<button type="button" class="btn btn-primary btn-block" id="btn_activate">수취확인</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- * 키 활성화 안내팝업 끝 -->
+
+<div class="modal fade modalbox" id="preorderModal" tabindex="-1" role="dialog" aria-labelledby="preorderModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content border border-3 border-start border-end-0 border-top-0 border-bottom-0 border-primary">
+			<div class="modal-header justify-content-between">
+				<h4 class="modal-title" id="preorderModal">제품키 활성화</h4>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body font-14">
+				<div id="preorder_msg" class="alert alert-warning" role="alert">※ 해당 상품은 예약 판매 중으로 실제 제품 코드(키) 발송은 추후 공지사항을 통해 안내할 예정입니다.</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 키 확인 시작-->
+<div class="modal fade modalbox" id="licenceModal" data-bs-backdrop="static" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">제품 코드(키) 확인</h5>
+				<a href="#" data-bs-dismiss="modal" class="modal-close text-white"><ion-icon name="close-outline"></ion-icon></a>
+			</div>
+			<div class="modal-body">
+				<div id="license_result" class="text-dark"></div>
+			</div>
+			<div class="modal-footer justify-content-center">
+				<div class="row w-100">
+					<div class="col">
+						<button type="button" class="btn btn-secondary btn-block" data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- * 키 활성화 확인 끝 -->
+
+<!--주문취소요청-->
+<div class="modal fade modalbox" id="orderCancelModal" tabindex="-1" data-bs-backdrop="static" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="orderCancelModalLabel">주문취소요청</h4>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" name="cancelFrm" id="cancelFrm" method="post">
+					<input type="hidden" name="mode" id="mode" value="order_cancel">
+					<input type="hidden" name="settle_no" id="settle_no" value="<?=$settle_no?>" >
+					<input type="hidden" class="form-control input-sm" id="order_status" name="order_status" readonly>
+
+					<div class="form-group mb-3">
+						<label for="ordno" class="control-label mb-1">제품명</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control input-sm" name="product_name" readonly>
+						</div>
+					</div>
+
+					<div class="form-group mb-3">
+						<label for="ordno" class="control-label mb-1">주문번호</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control input-sm" id="ordno" name="ordno" readonly>
+						</div>
+					</div>
+
+			<?php
+				if($order_data['payment_method']=="SC0040"||$order_data['payment_method']=="SC0030"||$order_data['payment_method']=="toss_bank"){
+			?>
+					<div class="form-group py-3">
+						<label class="control-label mb-2">환불 받으실 계좌 정보</label><br>
+						<label for="message3" class="control-label mb-1">은행명</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control input-sm" id="message3" name="message3">
+						</div>
+						<label for="message4" class="control-label mb-1">계좌번호</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control input-sm" id="message4" name="message4">
+						</div>
+						<label for="message5" class="control-label mb-1">예금주</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control input-sm" id="message5" name="message5">
+						</div>
+					</div>
+			<?php
+				}
+			?>
+
+				</form>
+				<div>
+					<p>※ 결제 방식에 따라 결제 취소로 환불 진행을 원칙으로 하며, 결제 취소가 되지 않는 일부 주문 건의 환불 지연과 회원님의 수고를 미연에 방지하고자 계좌 정보를 미리 요청하는 점 양해 부탁드립니다.</p>
+					<p>※ 주문취소 요청 건은 영업일 기준 요청한 다음 날 고객센터 운영 시간에 순차적으로 처리되며, PG사 승인 절차로 인해 환불 완료 시까지 공휴일을 제외한 영업일 기준 3~5일 정도의 기간이 소요될 수 있습니다.</p>
+					<p>※ 주문 취소 요청 후에는 제품 키 활성화 및 확인이 불가능합니다.</p>
+				</div>
+				<div class="overlay" style="display:none">
+					<i class="fa fa-refresh fa-spin"></i>
+				</div>
+			</div>
+			<div class="modal-footer text-center">
+				<button type="button" class="btn btn-danger mx-3 font-14" id="btn_order_cancel" >취소요청</button>
+				<button type="button" class="btn btn-secondary mx-3 font-14" data-bs-dismiss="modal">취소</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+    <!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.0/dist/loadingoverlay.min.js"></script>
+
+<script>
+$(document).ready(function(){
+	$('.btn_delivery_search').bind("click",function(){
+		var index = $('.btn_delivery_search').index(this);
+		var tracking_no = $('.btn_delivery_search').eq(index).attr("data-trackingno");
+		var delivery_code = $('.btn_delivery_search').eq(index).attr("data-deliverycode");
+		var $form = $('<form></form>');
+
+		if(delivery_code=="002"){
+			$form.attr('action', 'https://service.epost.go.kr/trace.RetrieveDomRigiTraceList.comm');
+			$form.attr('method', 'post');
+			$form.attr('target', '_blank');
+			$form.appendTo('body');
+
+			var sid1 = $('<input type="hidden" value="'+tracking_no+'" name="sid1">');
+			$form.append(sid1);
+		}else{
+			$form.attr('action', 'https://trace.cjlogistics.com/web/detail.jsp');
+			$form.attr('method', 'post');
+			$form.attr('target', '_blank');
+			$form.appendTo('body');
+
+			//var fsp_action = $('<input type="hidden" value="PARC_ACT_002" name="fsp_action">');
+			//var fsp_cmd = $('<input type="hidden" value="retrieveInvNoACT2" name="fsp_cmd">');
+			var invc_no = $('<input type="hidden" value="'+tracking_no+'" name="slipno">');
+			$form.append(invc_no);
+		}
+		$form.submit();
+	});
+	
+	$(".btn_activate").bind("click",function(){
+		var index = $(".btn_license").index(this);
+		var settle_no = $(this).data("settleno");
+		var ordno = $(this).data("ordno");
+		var pre_order = $(this).data("preorder");
+		var order_system = $(this).data("ordersystem");
+		var product_name = $(this).data("productname");
+		var mode = "";
+		
+		switch(order_system){
+			case "Asset":
+				mode = "setAssetActivate";
+			break;
+			case "Ztorm":
+				mode = "setZtormActivate";
+			break;
+			case "Genba":
+				mode = "setGenbaActivate";
+			break;
+			case "Vaultn":
+				mode = "setVaultnActivate";
+			break;
+		}
+
+		if(pre_order=="Y"){
+			//$('#activateFrm input[name="mode"]').val("setPreorderActivate");
+			$('#preorderModal').modal('show');
+		}else{
+			$('#activateFrm input[name="settle_no"]').val(settle_no);
+			$('#activateFrm input[name="ordno"]').val(ordno);
+			$('#activateFrm input[name="mode"]').val(mode);
+			$('#activateFrm input[name="product_name"]').val(product_name);
+			$('#activateModal').modal('show');
+		}
+	});
+
+	$("#activateModal #btn_activate").bind("click",function(){
+		var formURL = "licence_activate.php";
+		var postData = $("#activateFrm").serializeArray();
+		$.LoadingOverlay("show");
+		$.ajax({
+			url : formURL,
+			type: "POST",
+			dataType: "json",
+			data : postData,
+			success:function(data){
+				//alert(data.error_code);
+				if(data.error_code=="99"){
+					alert(data.error_msg);
+					$.LoadingOverlay("hide");
+				}else{
+					$.LoadingOverlay("hide");
+					location.reload();
+				}
+			},
+			error: function(data) {
+				alert(data);
+			}
+		});
+	});
+
+	$(".btn_license").bind("click",function(){
+		var index = $(".btn_license").index(this);
+		
+		var ordno = $(this).data("ordno");
+		var settle_no = $(this).data("settleno");
+		var order_system = $(this).data("ordersystem");
+		var formURL = "licence_activate.php";
+		var mode = "";
+		
+		switch(order_system){
+			case "Asset":
+				mode = "getAssetLicence";
+			break;
+			case "Ztorm":
+				mode = "getZtormLicence";
+			break;
+			case "Genba":
+				mode = "getGenbaLicence";
+			break;
+			case "Vaultn":
+				mode = "getVaultnLicence";
+			break;
+		}
+		$.LoadingOverlay("show");
+		$.ajax({
+			url : formURL,
+			type: "POST",
+			data : {mode:mode,ordno:ordno,settle_no:settle_no},
+			success:function(data){
+				$('#licenceModal #licenceModalHeader').text('제품 코드(키) 확인');
+				$('#licenceModal #license_result').html(data);
+				$('#licenceModal').modal('show');
+				$.LoadingOverlay("hide");
+			},
+			error: function(data) {
+				alert(data);
+				$.LoadingOverlay("hide");
+			}
+		});
+	});
+	
+	//주문취소요청 모달
+	$(".btn_cancel").bind("click",function(){
+		var index = $(".btn_cancel").index(this);
+		var ordno = $(".btn_cancel").eq(index).attr('data-ordno');
+		var settle_no = $(".btn_cancel").eq(index).attr("data-settleno");
+		var order_system = $(".btn_cancel").eq(index).attr("data-ordersystem");
+		var product_name = $(".btn_cancel").eq(index).attr("data-productname");
+		
+		$('#cancelFrm input[name="settle_no"]').val(settle_no);
+		$('#cancelFrm input[name="ordno"]').val(ordno);
+		$('#cancelFrm input[name="product_name"]').val(product_name);
+		$('#orderCancelModal').modal('show');
+	});
+	
+	//주문취소요청 처리
+	$(document).on("click","#orderCancelModal #btn_order_cancel",function(){
+		//$.LoadingOverlay("show");
+		var postData = $("#cancelFrm").serializeArray();
+		$.LoadingOverlay("show");
+		$.ajax({
+			url : "order_cancel_proc.php",
+			type: "POST",
+			dataType: "json",
+			data : postData,
+			success:function(data){
+				$.LoadingOverlay("hide");
+				if(data.error_code=="OK"){
+					alert(data.error_msg);
+					location.reload();
+				}
+			},
+			error: function(data) {
+				alert(data);
+			}
+		});
+	});
+});
+</script>
+</body>
+</html>

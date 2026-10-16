@@ -1,0 +1,206 @@
+<?php
+	ini_set( "display_errors", 0 );
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+	$platform = filter_input(INPUT_GET, 'platform', FILTER_SANITIZE_STRING);
+	$genre_code = filter_input(INPUT_GET, 'genre_code', FILTER_SANITIZE_STRING);
+	$category_code = filter_input(INPUT_GET, 'category_code', FILTER_SANITIZE_STRING);
+
+	$publisher_code = "34";
+	
+	//정렬순서
+	$sort = filter_input(INPUT_GET, 'sort', FILTER_SANITIZE_STRING);
+	
+	$is_preorder = filter_input(INPUT_GET, 'is_preorder', FILTER_SANITIZE_STRING);
+	$is_bonus = filter_input(INPUT_GET, 'is_bonus', FILTER_SANITIZE_STRING);
+	$is_repay = filter_input(INPUT_GET, 'is_repay', FILTER_SANITIZE_STRING);
+	$is_promotion = filter_input(INPUT_GET, 'is_promotion', FILTER_SANITIZE_STRING);
+	$is_soldout = filter_input(INPUT_GET, 'is_soldout', FILTER_SANITIZE_STRING);
+
+	$game_type = filter_input(INPUT_GET, 'game_type', FILTER_SANITIZE_STRING);
+	$game_type_basic = filter_input(INPUT_GET, 'game_type_basic', FILTER_SANITIZE_STRING);
+	$game_type_edition = filter_input(INPUT_GET, 'game_type_edition', FILTER_SANITIZE_STRING);
+	$game_type_dlc = filter_input(INPUT_GET, 'game_type_dlc', FILTER_SANITIZE_STRING);
+	$game_type_music = filter_input(INPUT_GET, 'game_type_music', FILTER_SANITIZE_STRING);
+	$game_type_bundle = filter_input(INPUT_GET, 'game_type_bundle', FILTER_SANITIZE_STRING);
+	
+	$platform_1 = filter_input(INPUT_GET, 'platform_1', FILTER_SANITIZE_STRING);
+	$platform_34 = filter_input(INPUT_GET, 'platform_34', FILTER_SANITIZE_STRING);
+	$platform_35 = filter_input(INPUT_GET, 'platform_35', FILTER_SANITIZE_STRING);
+
+	$interface_korean = filter_input(INPUT_GET, 'interface_korean', FILTER_SANITIZE_STRING);
+	$spoken_korean = filter_input(INPUT_GET, 'spoken_korean', FILTER_SANITIZE_STRING);
+	$exclusive_korean = filter_input(INPUT_GET, 'exclusive_korean', FILTER_SANITIZE_STRING);
+	
+	$genre_code_arr = [];
+	$search_label = array(
+		1 => [], // 검색필터
+		2 => [], // 상품유형
+		3 => [], // 플랫폼
+		4 => [], // 한국어지원
+		5 => [], // 장르
+	);
+	for($i=1; $i<=10; $i++){
+		$genre_code_arr[$i] = filter_input(INPUT_GET, 'genre_code_'.$i, FILTER_SANITIZE_STRING);
+		$genre = filter_input(INPUT_GET, 'genre_code_'.$i, FILTER_SANITIZE_STRING);
+
+		if($genre){
+			$search_label[5]['genre_code_'.$i] = $genre; // 키를 input ID로
+		}
+	}
+
+	$min_price = filter_input(INPUT_GET, 'min_price', FILTER_SANITIZE_STRING);
+	$max_price = filter_input(INPUT_GET, 'max_price', FILTER_SANITIZE_STRING);
+
+	$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+
+	if(!$page){
+		$page=1;
+	}
+	
+	$page_name="publisher_capcom";
+	$page_type="thumb";
+
+	$where = [];
+	$filter_where = [];
+	$type_where = [];
+	$platform_where = [];
+	$korean_where = [];
+	$genre_where = [];
+	$price_where = [];
+	
+	$param = "";
+	$add_where = "";
+
+	$filter_str = " ( ";
+	$filter_chk = false;
+
+	$type_str = " ( ";
+	$type_chk = false;
+
+	$platform_str = " ( ";
+	$platform_chk = false;
+
+	$korean_str = " ( ";
+	$korean_chk = false;
+
+	$genre_str = " ( match(a.genre) AGAINST(";
+	$genre_chk = false;
+
+	$price_str = " ( ";
+	$price_chk = false;
+
+	$where[] = " find_in_set(a.game_type,'game,dlc,music,bundle')";
+	$where[] = "a.supplier_code='".$publisher_code."'";
+
+	try{
+		$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+
+		$goods= new Goods($conn);
+		$promotion = new Promotion($conn);
+		$mypage = new Mypage2($conn);
+
+		$page_title = $goods->getPublisher($publisher_code);
+		
+		include_once('./new_game_common.php');
+
+		$goods_list = $goods->getGoodsList2($page, $add_where, $orderby, $param, 60);
+
+		parse_str($_SERVER['QUERY_STRING'], $params);
+		unset($params['page']);
+		$query_without_page = http_build_query($params);
+
+	}catch (PDOException $e){
+		echo 'Error!: '.$e->getMessage();
+		die();
+	}
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="manifest" href="/manifest.json?2">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css?t=20251023">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css?t=20251023">
+<link rel="stylesheet" href="/assets/css/styleguide.css?t=20251023">
+
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="full-height">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/game_filter.html');?>
+
+	<div class="section full">
+		<div class="wide-block pt-2 pb-2 px-0 mx-2">
+			<div id="publisher_info">
+				<a href="https://www.capcom-games.com/en-asia/" target="_blank"><img src="https://image.directg.net/C82mEwprAr" alt="CAPCOM" class="w-100 rounded-0"></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="section full">
+		<div class="wide-block pt-2 pb-2 px-2">
+			<div id="goods_thumb">
+				<? include_once('thumb_inc.php');?>
+			</div>
+		</div>
+		
+		<div class="wide-block pt-2 pb-2 border-0 dg_bg">
+			<button type="button" class="btn btn-secondary btn-block" data-page="1" data-total="<?=$goods_list->total_pages?>" id="btn_paging">( <span class="px-1" id="current_page"><?=$page?></span> / <span class="px-1" id="total_page"><?=$goods_list->total_pages?></span> ) 더보기</button>
+		</div>
+		
+		<!--
+		<div class="divider bg-secondary mt-5 mb-5">
+			<div class="icon-box bg-secondary">
+				<ion-icon name="arrow-down" role="img" class="md hydrated" aria-label="arrow down"></ion-icon>
+			</div>
+		</div>
+		-->
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- App 장바구니 알림 -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/dialog_cart.html'); ?>
+<!-- * App 장바구니 알림 -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+</body>
+</html>

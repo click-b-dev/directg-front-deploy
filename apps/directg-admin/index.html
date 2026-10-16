@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!-- legacy _Admin_/index.html: $page_title -->
+    <title>다이렉트 게임즈 관리자시스템</title>
+    <!-- legacy admin_head.php: 데스크톱 고정 뷰포트 (모바일 미지원) -->
+    <meta name="viewport" content="width=1630" />
+    <meta content="" name="description" />
+    <meta content="H2interactive" name="author" />
+
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" />
+
+    <!--
+      자산층(docs/design-system/admin.md): legacy admin_head.php의 로드 순서/구조를 그대로 재현.
+      light-style 활성 / dark-style disabled = legacy 테마 JS가 darkMode:false 설정을 읽어 만든
+      런타임 상태(#dark-style에 disabled 부여)를 정적으로 재현한 것. 이 앱은 전 페이지 darkMode:false.
+    -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- legacy sidebar_goods.php가 CDN으로 로드하는 bootstrap-icons(bi bi-steam 등). 동일 폰트 pinned. -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="/assets/css/app.min.css" rel="stylesheet" type="text/css" id="light-style" />
+    <link href="/assets/css/app-dark.min.css" rel="stylesheet" type="text/css" id="dark-style" disabled />
+
+    <!-- legacy admin_head.php 인라인 <style>: 테마 기본(Nunito/0.9rem)을 Noto Sans KR/16px로 덮어씀 -->
+    <style>
+      html {
+        font-family: "Noto Sans KR", sans-serif;
+        font-size: 16px;
+      }
+      table {
+        font-size: 0.875rem;
+      }
+      thead th {
+        font-weight: 500;
+      }
+      .eng {
+        font-family: "arial";
+        font-size: 12px;
+      }
+      .num {
+        font-family: "tahoma";
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <!--
+    Hyper CSS-only 방식: 테마 JS(vendor/app.min.js)는 로드하지 않는다.
+    Hyper CSS는 body data-* 속성으로 구동되는데, legacy는 app.min.js가 data-layout-config에서
+    이 속성을 설정한다. JS 없이 그 결과 속성을 정적으로 부여한다 —
+    이 앱 config(leftSideBarTheme:dark, boxed/condensed/scrollable:false)에서 실효 속성은
+    data-leftbar-theme="dark" 하나(→ .leftside-menu·topbar #313a46). 나머지는 기본값.
+    dropdown/collapse/active 등 동작은 React로 재현한다.
+  -->
+  <body data-leftbar-theme="dark">
+    <div id="root"></div>
+    <script type="module" src="/src/app/main.tsx"></script>
+  </body>
+</html>

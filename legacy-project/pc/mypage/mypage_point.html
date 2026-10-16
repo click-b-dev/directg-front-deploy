@@ -1,0 +1,121 @@
+<?php
+header("Content-Type:text/html; charset=utf-8"); 
+//ini_set('display_errors', '1');
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+
+$page_title = "포인트 내역";
+$aside_menu['point'] = "text-primary fw-bold";
+
+if(empty($page)){
+	$page="1";
+}
+
+foreach($_GET as $key=>$value){
+	if($key<>"page" ){
+		if($value<>""){
+			$param.="&".$key."=".$value;
+		}
+	}
+}
+
+try{
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$mypage = new Mypage($conn_dgkr);
+	
+	$where = array();
+	$where[]="m_no='{$_SESSION['member']['m_no']}'";
+	$where_query = implode(" AND ", $where);
+	$orderby = "regdt DESC";
+
+	$point_list = $mypage->getPointList($page,$where_query,$orderby,$param);
+	$list = $point_list->resultset->fetchAll();
+	$member_emoney = $mypage->getMemberEmoney($_SESSION['member']['m_no']);
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<div class="wrapper overflow-visible">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0 font-14">
+				<div class="col-12 mb-5">
+					<div class="card shadow-none rounded-0">
+						<div class="card-body p-3 overflow-auto">
+							고객님께서 보유하신 포인트는 <span class="text-danger fw-bold"><?=number_format($member_emoney)?></span>원 입니다.
+						</div>
+					</div>
+				</div>
+
+				<div class="col-12">
+					<table class="table table-bordered table-centered mb-0 text-center align-middle text-nowrap">
+						<thead class="align-middle">
+							<tr>
+								<th>날짜</th>
+								<th>적립/사용</th>
+								<th class="w-50">사유</th>
+								<th>포인트</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?
+								if(!is_array($list)){
+							?>
+							<tr>
+								<td colspan="4" class="text-center">포인트 내역이 없습니다.</td>
+							</tr>
+							<?
+								}else{
+									foreach($list as $value){
+							?>
+							<tr>
+								<td><?=$value['regdt']?></td>
+								<td class=" <?=($value['emoney_type']=="+"?"text-danger":($value['emoney_type']=="-"?"text-primary":""))?>"><?=($value['emoney_type']=="+"?"적립":($value['emoney_type']=="-"?"사용":""))?></td>
+								<td class="text-start"><?=$value['memo']?></td>
+								<td class="text-end <?=($value['emoney_type']=="+"?"text-danger":($value['emoney_type']=="-"?"text-primary":""))?> won"> <?=number_format($value['amt_delta'])?></td>
+							</tr>
+							<?
+								}
+							}
+							?>
+						</tbody>
+					</table>
+				</div>
+				<div id="pagination" class="mt-4"><?echo $point_list->links_html;?></div>
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<!-- bundle -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+</body>
+</html>

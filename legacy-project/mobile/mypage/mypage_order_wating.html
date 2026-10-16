@@ -1,0 +1,206 @@
+<?
+ini_set( "display_errors", 0 );
+header("Content-Type:text/html; charset=utf-8");
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+$search_goods_name = filter_input(INPUT_GET, 'search_goods_name', FILTER_SANITIZE_STRING);
+$search_start_date = filter_input(INPUT_GET, 'search_start_date', FILTER_SANITIZE_STRING);
+$search_end_date = filter_input(INPUT_GET, 'search_end_date', FILTER_SANITIZE_STRING);
+
+if($search_start_date==""){
+	$d = mktime(0,0,0, date("m"), 1, date("Y"));
+	$search_start_date = date('Y-m-d',strtotime('-1 month'));
+}
+
+if($search_end_date==""){
+	$d = mktime(0,0,0, date("m"), 1, date("Y"));
+	$search_end_date = date('Y-m-d');
+}
+
+	$page_title="주문완료 내역";
+	
+if(empty($page)){
+	$page="1";
+}
+
+foreach($_GET as $key=>$value){
+	if($key<>"page" ){
+		if($value<>""){
+			$param.="&".$key."=".$value;
+		}
+	}
+}
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$order = new Order($conn);
+	$mypage = new Mypage2($conn);
+	
+	$where = array();
+	//입금대기(status=3) + 발급실패(status=1/fail)까지 표시 — 가상계좌(SC0040/PAYCO) step=1 주문만 (발급실패 주문이 목록에서 사라지지 않도록)
+	$where[] = " a.step='1' and (b.status='3' or (b.status='1' and b.send_status='fail')) and a.payment_method in ('SC0040','PAYCO') and b.m_no='{$_SESSION['member']['m_no']}'";
+	
+	if($search_goods_name){
+		$where[] = "b.product_name like '%".$search_goods_name."%'";
+	}
+
+	if($search_start_date){
+	//	$where[] = "a.ord_ymd >='".$search_start_date."'";
+	}
+
+	if($search_end_date){
+	//	$where[] = "a.ord_ymd <='".$search_end_date."'";
+	}
+
+	$where_query = implode(" AND ", $where);
+	$orderby = "b.order_item_id DESC";
+
+	$order_list = $mypage->getOrderList_vbank($page,$where_query,$orderby,$param);
+	$list = $order_list->resultset->fetchAll();
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+
+<style>
+body.dark-mode-active .searchbox .form-control{
+	color:#dee2e6;
+}
+</style>
+</head>
+
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="section mt-2" id="order_list">
+		<?
+			foreach($list as $data){
+				if(DATE("YmdHis")>$data['va_date']){
+					$order_status="입금마감";
+					$status_color="bg-danger";
+				} else {
+					$order_status="입금대기";
+					$status_color="bg-warning";
+				}
+
+		?>
+		<div class="card mb-2">
+			<div class="card-header">
+				<div class="d-flex justify-content-between">
+					<div><?=substr($data['order_date'],0,10)?></div>
+					<div class='in'>
+						<a href="/mypage/mypage_order_wating_view.html?settle_no=<?=$data['settle_no']?>" class="item">상세보기</a>
+					</div>
+				</div>
+			</div>
+			<div class="card-body p-2" style="background:#191919">
+				<?if($data['delivery_type']=="1"){?><span class="badge <?=$status_color?>"><?=$order_status?></span><?}?>
+				<?
+					//택배발송상품 배송진행상태 표기
+					if($data['delivery_type']<>"1"){
+						$order_shipment = $order->getOrderShipment($data['settle_no'],$data['ordno']);
+				?>
+				<span class="badge bg-secondary"><?=$order->getShipmentStatus($order_shipment['shipment_status']);?></span>
+				<?}?>
+				<?if($data['status']=='1' && $data['send_status']=='fail'){?><span class="badge bg-danger">발송오류</span><?}?>
+				<p class="mt-2 card-text"><?=$data['product_name']?></p>
+				<p class="card-text"><span class="num"><?=number_format($data['price'])?></span> 원 </p>
+			</div>
+			<?if($order_shipment['shipment_status']=="4" || $order_shipment['shipment_status']=="5" || $order_shipment['shipment_status']=="6"){?>
+			<div class="card-footer">
+				<button type="button" class="btn btn-primary btn-block">배송조회</button>
+			</div>
+			<?}?>
+		</div>
+		<?
+			}
+		?>
+	</div>
+	<div class="wide-block pt-2 pb-2 border-0 dg_bg">
+		<button type="button" class="btn btn-secondary btn-block" data-page="1" data-total="<?=$order_list->total_pages?>" id="btn_paging">( <span class="px-1" id="current_page">1</span> / <span class="px-1" id="total_page"><?=$order_list->total_pages?></span> ) 더보기</button>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+    <!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+
+<script>
+$(document).ready(function(){
+	//더보기 페이징
+	$("#btn_paging").bind("click",function(){
+		var page = $("#btn_paging").attr("data-page");
+		var total_page = $("#btn_paging").attr("data-total");
+		var search_product_name = "<?=$search_product_name?>";
+		if(total_page==page){
+			alert("마지막페이지입니다");
+		}else{
+			$.ajax({
+				'url': '/mypage/mypage_order_wating_ajax.php',
+				'type': 'POST',
+				'data':{page:page,search_product_name:search_product_name},
+				'success': function (data) {
+					//alert(data);
+					$("#order_list").append(data);
+					$("#btn_paging").attr("data-page",parseInt(page)+1);
+					$("#current_page").text(parseInt(page)+1);
+				},
+				'error':function(data){
+					alert(data);
+				}
+			});
+		}
+	});
+});
+</script>
+</body>
+
+</html>

@@ -1,0 +1,452 @@
+<?
+	ini_set( "display_errors", 0 );
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$sku = filter_input(INPUT_GET, "sku", FILTER_SANITIZE_STRING);
+$product_id = filter_input(INPUT_GET, "product_id", FILTER_SANITIZE_STRING);
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$goods = new Goods($conn);
+	$parsedown= new Parsedown();
+	
+	//DLC 세부정보
+	$dlc_info = $goods->getGoodsItemDetailSku($sku);
+
+	if($dlc_info['is_view']=="Y"){
+		//관련 기본게임
+		$title_info = $goods->getTitleDetail($dlc_info["product_code"]);
+
+		//DLC 게임설명
+		$goods_description = $goods->getGoodsOptionDescription($dlc_info["product_code"]);
+
+		$steam_info = $goods->getSteamAppInfo($dlc_info["steam_appid"]);
+
+		if($dlc_info["status"]=="0"){
+			$goods_status = "Y";
+		}else{
+			$goods_status = "N";
+			$goods_status_msg = "판매중인 상품이 아닙니다";
+		}
+
+		$dlc_genre = explode(",",$dlc_info['genre']);
+
+		//대표상품 카테고리
+		$dlc_category = explode(",",$dlc_info['category']);
+
+		$genre_info = "";
+
+		foreach($dlc_genre as $genre){
+			if($genre=="앞서 해보기"){ 
+				//앞서해보기 문구 자동노출
+				$is_early_access ="Y";
+			}
+
+			if($genre=="무료"){ //무료
+				$is_free ="Y";
+			}
+		}
+		
+	//옵션상품 구성정보 상세
+	$package_info = $goods->getGoodsOptionPackageInfo($dlc_info['product_code']);
+
+	}else{
+		$goods_status = "N";
+		$goods_status_msg = "판매중인 상품이 아닙니다";
+	}
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+
+$page_title=$dlc_info['product_name'];
+
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="<?=$goods_description['short_description']?>">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/favicon/favicon-32x32.png" sizes="32x32">
+<link href="https://directg.net/game/dlc_view.html?sku=<?=$dlc_info['goods_sku']?>" rel="canonical" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+<style>
+
+.nav-pills .nav-link.active{
+	background:#464f5b;
+}
+
+.btn_wishlist{
+}
+
+.goods_detail_info{
+	font-size:12px;
+}
+
+.goods_detail_info p{
+	font-size:12px;
+}
+
+.goods_detail_info img{
+	max-width:100%;
+	height:auto;
+}}
+
+.goods_detail_info video{
+	max-width:100%;
+	height:auto;
+}	text-align:center;
+}
+
+.goods_detail_info .bb_paragraph{
+	margin-bottom:0px;
+}
+
+.goods_detail_info ul{
+	margin-bottom:0.5rem;
+}
+
+.goods_detail_info h1, .goods_detail_info h2, .goods_detail_info h3, .goods_detail_info h4, .goods_detail_info h5, .goods_detail_info h6{
+	color: #0dcaf0;
+}
+
+#appCapsuleSub{
+	padding-top:56px;
+}
+
+</style>
+</head>
+<body class="dark-mode-active">
+	<!-- App Header -->
+	<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+	<!-- * App Header -->
+
+	<!-- App Capsule -->
+	<?
+		if($goods_status=="N"){
+	?>
+	<div id="appCapsuleSub" class="full-height mt-0">
+		<div class="error-page">
+			<div class="icon-box text-danger">
+				<ion-icon name="alert-circle" role="img" class="md hydrated" aria-label="alert circle"></ion-icon>
+			</div>
+			<h1 class="title">ERROR</h1>
+			<div class="text mb-5">
+				<?=$goods_status_msg?>
+			</div>
+		</div>
+	</div>
+	<?}else{?>
+	<div id="appCapsuleSub" class="full-height mt-0">
+		<div class="card">
+			<img src="<?=$dlc_info['domain']?>/upload/product/<?=$dlc_info['product_code']?>/header/header.jpg" class="card-img-top rounded-0" alt="<?=$dlc_info['product_name']?>">
+			<div class="p-2 text-white font-14"><?=nl2br($goods_description['short_description'])?></div>
+		</div>
+		<div class="divider"></div>
+		
+		<div class="section full">
+			<div class="wide-block px-2 mt-2">
+				<div class="alert alert-warning border-0 font-14 rounded-0" role="alert">
+					<i class="fa-solid fa-triangle-exclamation"></i> 확장 애니메이션(DLC)에 대한 안내 페이지입니다.
+				</div>
+			</div>
+		</div>
+			
+		<div class="section full mb-2">
+			<div class="wide-block px-2 mt-2">
+				<div class="alert alert-warning border-0 font-14 rounded-0" role="alert">
+					<i class="bi bi-info-circle"></i> 플레이하려면 <a href="/game/holomodels_view.html?product_id=<?=$title_info['product_id']?>" class="alert-link"><?=$title_info['title_name']?></a> 홀로 모델 본체가 필요합니다.
+				</div>
+			</div>
+		</div>
+		
+		<?
+			//기타 안내문구(지역제한 등등)
+			if($goods_description['region_msg']){
+		?>
+		<div class="section full mb-2">
+			<div class="wide-block px-2 mt-2">
+				<div class="alert alert-danger rounded-0" role="alert"><p class="text-break text-wrap font-14 mb-0"><?=$goods_description['region_msg']?></p></div>
+			</div>
+		</div>
+		<?
+			}
+		?>
+		
+		<div class="divider"></div>
+		
+		<div class="card shadow-none p-1">
+			<div class="card-body text-white p-1">
+				<h2 class="mb-1 pb-0"><?=$dlc_info['product_name']?> </h2>
+				<div class="mb-1"><small class="font-12">[<?=$dlc_info['product_name_en']?>]</small></div>
+				<div class="d-flex justify-content-between align-items-center">
+					<?if($dlc_info['promotion']['sale_price']>0){?>
+						<div class=" p-0 text-center">
+							<span class="font-14 badge bg-danger rounded-2 px-3 py-2 fw-bold minus"><?=$dlc_info['promotion']['discount_rate']?> %</span>
+						</div>
+						<div class="price text-end">
+							<s class="old-price font-12 text-secondary pe-1 won"> <?=number_format($dlc_info['consumer_price'])?></s> 
+							<span class="font-14 current-price text-white won"> <?=number_format($dlc_info['promotion']['sale_price'])?></span> 
+						</div>
+					<?}else{?>
+						<div class=" p-0 text-center">
+							<? if($dlc_info['discount']>0){?>
+							<span class="font-14 badge bg-primary rounded-2 px-3 py-2 fw-bold minus"><?=$dlc_info['discount']?> %</span>
+							<?}?>
+						</div>
+						
+						<div class="price text-end">
+							<? if($dlc_info['discount']>0){?>
+							<s class="old-price font-12 text-secondary pe-1 won"> <?=number_format($dlc_info['consumer_price'])?></s> 
+							<?}?>
+							<span class="font-14 current-price text-white won"> <?=number_format($dlc_info['price'])?></span> 
+						</div>
+					<?}?>
+				</div>
+			</div>
+			<div class="card-footer px-3">
+				<div class="d-flex d-row justify-content-between">
+					<button type="button" class="btn btn-sm shadow-none font-14 rounded-0 bg-danger btn_wishlist" data-sku="<?=$dlc_info['goods_sku']?>" data-agelimit="<?=$title_info['age_limit']?>"><ion-icon name="heart-outline"></ion-icon> 위시리스트</button>
+					<?if($dlc_info['soldout']=="N"){?>
+						<button type="button" class="btn btn-sm shadow-none font-14 rounded-0 bg-primary btn_cart" data-sku="<?=$dlc_info['goods_sku']?>" data-agelimit="<?=$title_info['age_limit']?>"><ion-icon name="cart-outline"></ion-icon> 장바구니</button>
+					<?}else{?>
+						<span class="badge bg-secondary font-16 rounded-1">품절</span>
+					<?}?>
+				</div>
+			</div>
+		</div>
+		
+		<div class="section full">
+			<div class="wide-block pt-1 pb-1">
+				<div class="d-flex flex-row">
+					<?
+						if($title_info['age_limit']=="10"){
+					?>
+					<img src="/assets/images/game/age_all.png" class='me-1'>
+					<?
+						}else{
+							if($title_info['age_limit']<>""){
+					?>
+					<img src="/assets/images/game/age_<?=$title_info['age_limit']?>.png?t=<?=time()?>" class='me-1'>
+					<?	}
+						}
+					?>
+				<?
+					$game_rate_array = array();
+					 for ($i = 0; $i < mb_strlen($title_info['game_rate'],"UTF-8"); $i++) {
+						$char = mb_substr($title_info['game_rate'], $i, 1, 'UTF-8');
+						if($char=="1"){
+							echo "<img src='/assets/images/game/grade".($i+1).".png' class='me-1'>";
+						}
+						
+					}
+					?>
+				</div>
+			</div>
+		</div>
+		
+		<div class="section full mb-2">
+			<div class="section-title">상품 정보 제공 고시 (디지털 콘텐츠)</div>
+			<div class="wide-block p-0">
+				<ul class="list-unstyled mb-0">
+					<li class="ps-2 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">이용조건/이용기간</span>
+							<p class="font-12 mb-0">제품 코드 수령, 등록 후의 서비스 종료까지</p>
+						</div>
+					</li>
+					<li class="ps-2 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">상품 제공 방식</span> 
+							<p class="font-12 mb-0">마이페이지를 통한 제품 코드 실시간 발송</p>
+						</div>
+					</li>
+					<li class="ps-2 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">필수 소프트웨어</span> 
+							<p class="font-12 mb-0">스마트폰・태블릿 iOS/Android App 또는 HoloModeLink</p>
+						</div>
+					</li>
+					<li class="ps-2 py-2 border-bottom border- 1 border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">청약철회 또는 계약의 해제 해지의 따른 효과</span> 
+							<p class="font-12 mb-0"><a href="/service/refund_policy.html" target="_blank">환불정책안내</a> 참조</p>
+						</div>
+					</li>
+					<li class="ps-2 py-2 border-bottom border- 1 border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">소비자상담 관련 전화번호</span>
+							<p class="font-12 mb-0">1544-2367</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="section full mb-2">
+			<div class="section-title">상세정보</div>
+			<div class="wide-block p-0">
+				<ul class="list-unstyled mb-0">
+					<li class="ps-2 py-2 border-bottom border-opacity-25">
+						<div class="mb-0">
+							<span class="text-secondary me-1 font-14">출시일</span> 
+							<span class="font-14"><?=date("Y년 m월 d일",strtotime($dlc_info['release_date']))?></span>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<?
+			if(count($package_info)>0){
+		?>
+		<div class="section full mb-2">
+			<div class="section-title">구성정보 상세</div>
+			<div class="wide-block p-0">
+				<ul class="listview simple-listview border-0">
+					<?
+						foreach($package_info as $sub_value){
+							echo "<li class='border-1 border-bottom border-opacity-25'>";
+							echo "<h4 class='font-12'>".$sub_value['unit_name']."</h4>";
+							echo "</li>";
+						}
+					?>
+				</ul>
+			</div>
+		</div>
+		<?
+			}
+		?>
+
+		<div class="section full">
+			<div class="section-title">상세설명</div>
+			<div class="wide-block pt-2 pb-2">
+				<div class="goods_detail_info" >
+					<?
+						if($goods_description['version']=="2"){
+							echo htmlspecialchars_decode($goods_description['description_v2']);
+						}else{
+							$description = str_replace("##","\r\n\r\n###",$goods_description['description']);
+							echo $parsedown->text($description);
+						}
+					?>
+				</div>
+			</div>
+		</div>
+		
+		<div class="section full">
+			<div class="section-title">홀로 모델 다운로드</div>
+			<div class="wide-block pt-2 pb-2 row">
+				<a href="https://play.google.com/store/apps/details?id=jp.gugenka.holomodels3&hl=ko&gl=KR&utm_source=apac_med" target="_blank" class="col-6"><img src="https://image.directg.net/x87niyypzY" class="w-100"></a>
+				<a href="https://apps.apple.com/kr/app/holomodels-%E3%83%9B%E3%83%AD%E3%83%A2%E3%83%87%E3%83%AB/id6744629360" target="_blank" class="col-6"><img src="https://image.directg.net/X87niyl2MK" class="w-100"></a>
+			</div>
+		</div>
+		
+		<a name="copyright"></a>
+		<div class="section full">
+			<div class="section-title">권리표기</div>
+			<div class="wide-block pt-2 pb-2">
+				<div class="goods_detail_info">
+					<?=strip_tags($parsedown->text($goods_description['legal_text']))?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- * App Capsule -->
+	<?}?>
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- App 장바구니 알림 -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/dialog_cart.html'); ?>
+<!-- * App 장바구니 알림 -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<script src="/assets/js/base.js"></script>
+
+<script>
+$(document).ready(function(){
+	sessionStorage.setItem('LastUrl', "<?=$_SERVER['REQUEST_URI']?>");
+	//장바구니 담기(동기)
+	$(".btn_cart").bind("click",function(){
+		var index = $(".btn_cart").index(this);
+		var goods_sku = $(".btn_cart").eq(index).attr("data-sku");
+		$.ajax({
+			'url': '/order/cart_proc.php',
+			'dataType': 'json',
+			'type': 'POST',
+			'data':{mode:"add_cart",goods_sku:goods_sku},
+			'success': function (data) {
+				if(data.error_code=="0"){
+					$("#dialog_cart").modal("show");
+				}else{
+					$("#dialog_cart #msg").html(data.error_msg);
+					$("#dialog_cart").modal("show");
+				}
+				
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+	
+	//위시리스트 담기
+	$(".btn_wishlist").bind("click",function(){
+		var index = $(".btn_wishlist").index(this);
+		var goods_sku = $(".btn_wishlist").eq(index).attr("data-sku");
+
+		$.ajax({
+			'url': '/order/wishlist_proc.php',
+			'dataType': 'json',
+			'type': 'POST',
+			'data':{mode:"add_wishlist",goods_sku:goods_sku},
+			'success': function (data) {
+				if(data.error_code=="0"){
+					$("#dialog_wishlist").modal("show");
+				}else{
+					$("#dialog_wishlist #msg").html(data.error_msg);
+					$("#dialog_wishlist").modal("show");
+				}
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+});
+</script>
+</body>
+</html>

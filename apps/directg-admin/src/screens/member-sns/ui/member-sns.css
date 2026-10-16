@@ -1,0 +1,4 @@
+/* legacy member_{naver|kakao|payco}_list.php inline <style> — 행 hover */
+.member-sns-table .table-responsive table tr:hover {
+  background-color: #fff0f0;
+}

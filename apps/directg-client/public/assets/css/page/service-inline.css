@@ -1,0 +1,379 @@
+/* legacy pc/service/service.html head <style> 블록 무수정 이관 (다이렉트 게임즈 소개 페이지 전용). */
+
+#pagination .page-link{
+	color:#ffffff;
+}
+
+footer{
+	background-color: #343a40;
+	color:#ced4da;
+}
+
+
+.bg-black{
+	background:#131B26;
+}
+
+.progressbar {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-content: center;
+	align-items: center;
+	height: 210px;
+	text-align: center;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.progressbar li {
+	list-style-type: none;
+	flex-grow: 0;
+	flex-shrink: 0;
+	flex-basis: 33%;
+	width: 210px;
+	text-align: center;
+	text-transform: uppercase;
+	color: #ffffff;
+	margin: 0 auto;
+	position: relative;
+}
+
+.progressbar li:before {
+	width: 210px;
+	height: 210px;
+	content: "";
+	line-height: 100px;
+	border: 8px solid #0C7CEC;
+	display: inline-flex;
+	text-align: center;
+	border-radius: 50%;
+	position: relative;
+	background: #fff no-repeat center center;
+	z-index: 2;
+}
+
+.progressbar li.active:before {
+	background: #0C7CEC no-repeat center center;
+	background-size: 60%;
+	z-index: 10;
+}
+
+.progressbar li img {
+	margin-top: 0;
+	margin-left: -210px;
+	z-index: 10000;
+	position: absolute;
+}
+
+.service-section{
+	padding-top:40px;
+	padding-bottom:40px;
+	height:400px;
+}
+
+.service-section:after{
+	content: ' ';
+	background-image: url('/assets/images/service/DG_Introbr_pc_object0_1920x400.jpg');
+	background-repeat:no-repeat;
+	position: absolute;
+	top:120px;
+	right: 0;
+	bottom: 0;
+	z-index: -1;
+	width: 100%;
+}
+
+
+
+.t3-masthead{
+	height:400px;
+	position: relative;
+}
+
+.t3-masthead .ja-masthead .ja-masthead-detail{
+	padding-top:40px;
+	padding-left:20px;
+	font-family: "Noto Sans KR", sans-serif;
+}
+
+.t3-masthead .ja-masthead .ja-masthead-title{
+	font-size:42px;
+	margin-top:20px;
+	font-family: "Noto Sans KR", sans-serif;
+	font-weight:600;
+}
+
+.ja-masthead .ja-masthead-detail{
+	color: #fff;
+	max-width: 1120px;
+	position: relative;
+	text-align: left;
+	z-index: 20;
+	padding:0;
+}
+
+.t3-masthead .ja-masthead .ja-masthead-detail{
+	padding:20px;
+}
+
+.tag_color{
+	border-radius:15px;
+	background:#ffffff;
+	color:#0c7ced;
+	padding:5px 10px;
+	font-size:20px;
+	font-family: "Do Hyeon";
+}
+
+.bg_bottom{
+	position:relative;
+	display:block;
+	margin-top:70px;
+	height:100px;
+}
+
+.bg_bottom img{
+	float:left;
+	padding-top:15px;
+	padding-right:30px;
+	bottom:0px;
+}
+
+.bg_bottom p{
+	float:left;
+	font-size:18px;
+	display:block;
+	line-height:150%;
+	font-family: "Noto Sans KR", sans-serif;
+}
+
+.section{
+	margin-top: 100px;
+}
+
+.section h3{
+	text-align:center;
+	font-family: "Noto Sans KR", sans-serif;
+	font-size:38px;
+	margin-bottom:20px;
+}
+
+.section_content{
+	margin:0;
+	padding:0;
+	text-align:center;
+	overflow:hidden;
+}
+
+.section_content .section_container{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-content: center;
+	margin:0;
+}
+
+.section_content .section_item{
+	flex-basis: 30%;
+	flex-grow: 1;
+	flex-shrink : 0;
+	background:#131c27;
+	margin:10px;
+	padding:10px 0 0 0;
+	display:flex;
+	flex-direction:column;
+}
+
+.section_content .section_item .section_tail{
+	margin-top: auto;
+}
+
+.section_content .section_item h4{
+	text-align:center;
+	font-size:24px;
+	font-weight:400;
+	font-family: "Noto Sans KR", sans-serif;
+}
+
+.section_content .section_item p{
+	margin:10px;
+	line-height:150%;
+	word-break:keep-all;
+	white-space:pre-line;
+	letter-spacing:0px;
+	text-align:center;
+	font-family: "Noto Sans KR", sans-serif;
+	font-size:16px;
+}
+
+.section_content .section_item .btn_link{
+	border-radius:20px;
+	background:#0C7CEC;
+	padding:0px 10px;
+	margin:10px;
+	height:30px;
+	line-height:30px;
+	color:#ffffff;
+	text-align:center;
+	display:block;
+	font-family: "Noto Sans KR", sans-serif;
+	font-size:16px;
+	text-decoration: none;
+}
+
+.section_content .section_item .btn_link:hover{
+	background:#0861b9;
+}
+
+.section_content .section_item2{
+	flex-basis: 148px;
+	flex-grow: 1;
+	background:#131B26;
+	margin:5px;
+	padding:0px;
+}
+
+.section_content .section_item2 p{
+	text-align:center;
+	font-family: "Noto Sans KR", sans-serif;
+	margin-top:-10px;
+	padding-bottom:10px;
+}
+
+.section_content .section_item2 a{
+	color:#ffffff;
+	font-size:16px;
+}
+
+.section_content .section_item3{
+	flex-basis: 104px;
+	flex-grow: 0;
+	background:#131B26;
+	margin:4px;
+	padding:0;
+	text-align:center;
+}
+
+.section_content .section_item3 img{
+	z-index:1000;
+}
+
+.progressbar-wrapper {
+	background: none;
+	margin-top: 10px;
+	margin-bottom: 15px;
+	height:250px;
+}
+
+.progressbar{
+	display:flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-content:center;
+	align-items:center;
+	height:210px;
+	text-align:center;
+	padding-left:20px;
+	padding-right:20px;
+}
+
+.progressbar li {
+	list-style-type: none;
+	flex-grow: 0;
+	flex-shrink : 0;
+	flex-basis: 33%;
+	width:210px;
+	text-align: center;
+	text-transform: uppercase;
+	color: #ffffff;
+	margin:0 auto;
+	position: relative;
+}
+
+.progressbar li img{
+	margin-top:0;
+	margin-left:-210px;
+	z-index:10000;
+	position: absolute;
+}
+
+.progressbar li:before {
+	width: 210px;
+	height: 210px;
+	content: "";
+	line-height: 100px;
+	border: 8px solid #0C7CEC;
+	display: inline-flex;
+	text-align: center;
+	border-radius: 50%;
+	position: relative;
+	z-index: 2;
+}
+.progressbar li:after {
+	 width: 100%;
+	 height: 8px;
+	 content: '';
+	 position: absolute;
+	 background-color: #0C7CEC;
+	 top: 100px;
+	 left: -75%;
+	 z-index: 0;
+}
+.progressbar li:first-child:after {
+	 content: none;
+}
+.progressbar li.active {
+	font-weight: bold;
+}
+.progressbar li.active:before {
+	border-color: #0C7CEC;
+ }
+.progressbar li.active + li:after {
+	background-color: #0C7CEC;
+}
+
+.progressbar li.active:before {
+	background: #0C7CEC   no-repeat center center;
+	background-size: 60%;
+	z-index:10;
+}
+.progressbar li::before {
+	background: #fff  no-repeat center center;
+	background-size: 60%;
+	z-index:10;
+}
+
+.label1{
+	background:#000000;
+	color:#8d8d8d;
+	padding:5px 10px;
+	border-radius:10px;
+	font-size:20px;
+	font-family: "Do Hyeon";
+}
+
+.label_color{
+	color:#ff0000;
+}
+
+.font18{
+	font-size:18px;
+	line-height:120%;
+	font-family: "Noto Sans KR", sans-serif;
+}
+
+.dg_link_logo:hover{
+	background:#0861b9;
+}
+
+.t3-masthead .ja-masthead #ja-masthead-bg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-size: cover;
+}

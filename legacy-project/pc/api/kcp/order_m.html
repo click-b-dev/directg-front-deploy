@@ -1,0 +1,50 @@
+<!DOCTYPE>
+<html>
+<head>
+	<title>TEST</title>
+</head>
+<body>
+	<form name="order_info" method="post" action="settle.html">
+		공통<br>
+		*주문번호 <input type="text" name="ordr_idxx"><br>
+		*상품명 <input type="text" name="good_name"><br>
+		*결제금액 <input type="text" name="good_mny"><br>
+		*화폐단위 <input type="text" name="currency" value="WON"><br>
+		주문자명 <input type="text" name="buyr_name"><br>
+		휴대폰번호 <input type="text" name="buyr_tel2"><br>
+		이메일 <input type="text" name="buyr_mail"><br>
+		*회원ID <input type="text" name="shop_user_id"><br>
+		<br>
+		<br>
+		<br>
+		PC<br>
+		상점이름 <input type="text" name="site_name"><br>
+		*결제수단 (PC)<br>
+		신용카드 <input type="radio" name="pay_method" value="100000000000" /><br>
+		계좌이체 <input type="radio" name="pay_method" value="010000000000" /><br>
+		가상계좌 <input type="radio" name="pay_method" value="001000000000" /><br>
+		포인트 <input type="radio" name="pay_method" value="000100000000" /><br>
+		휴대폰 <input type="radio" name="pay_method" value="000010000000" /><br>
+		상품권 <input type="radio" name="pay_method" value="000000001000" /><br>
+		<br>
+		<br>
+		Mobile<br>
+		*거래 인증 키 <input type="text" name="approval_key"><br>
+		*결제창 호출 주소 <input type="text" name="PayUrl"><br>
+		*리다이렉트 주소 <input type="text" name="Ret_URL"><br>
+		사이트명 <input type="text" name="shop_name"><br>
+		추가 파라미터1 <input type="text" name="param_opt_1"><br>
+		추가 파라미터2 <input type="text" name="param_opt_2"><br>
+		추가 파라미터3 <input type="text" name="param_opt_3"><br>
+
+		*결제수단 (Mobile)<br>
+		신용카드 <input type="radio" name="pay_method" value="CARD" /><br>
+		계좌이체 <input type="radio" name="pay_method" value="BANK" /><br>
+		가상계좌 <input type="radio" name="pay_method" value="VCNT" /><br>
+		포인트 <input type="radio" name="pay_method" value="TPNT" /><br>
+		휴대폰 <input type="radio" name="pay_method" value="MOBX" /><br>
+		상품권 <input type="radio" name="pay_method" value="GIFT" /><br>
+		<br>
+		<br>
+	</form>
+</body>

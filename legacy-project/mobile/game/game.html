@@ -1,0 +1,11 @@
+<?
+//기존페이지
+
+$search_platform = filter_input(INPUT_GET, "search_platform", FILTER_SANITIZE_STRING);
+
+if($search_platform){
+	header( "HTTP/1.1 301 Moved Permanently" );
+	header( 'Location: https://m.directg.net/game/game_platform_list.html?platform='.$search_platform);
+	exit;
+}
+?>

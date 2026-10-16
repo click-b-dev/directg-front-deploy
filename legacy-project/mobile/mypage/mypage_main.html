@@ -1,0 +1,225 @@
+<?
+	ini_set( "display_errors", 0 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title="마이페이지";
+
+try{
+	//리뉴얼DB
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	//기존DB
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$mypage = new Mypage($conn_dgkr);
+	$member_emoney = $mypage->getMemberEmoney($_SESSION['member']['m_no']);
+	
+	$mypage2 = new Mypage2($conn);
+	
+	$mypage_order_info =$mypage2->getOrderItemCount($_SESSION['member']['m_no'],'2');
+	$mypage_cancel_info = $mypage2->getOrderItemCount($_SESSION['member']['m_no'],'9');
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="section pt-2">
+		<div class="profile-head">
+			<div class="in">
+				<h3 class="name"><?=$_SESSION['member']['name']?> <small>님 환영합니다.</small></h3>
+			</div>
+		</div>
+	</div>
+
+	<div class="section full mt-2">
+		<div class="profile-stats ps-2 pe-2">
+			<a href="#" class="item">
+				<strong><?=number_format($member_emoney)?></strong>보유 포인트
+			</a>
+			<a href="#" class="item">
+				<strong><?=number_format($mypage_order_info['cc'])?></strong>총 주문건수
+			</a>
+			<a href="#" class="item">
+				<strong><?=number_format($mypage_order_info['ss'])?></strong>총 주문금액
+			</a>
+			<a href="#" class="item">
+				<strong><?=number_format($mypage_cancel_info['cc'])?></strong>총 취소건수
+			</a>
+
+			<a href="#" class="item">
+				<strong><?=number_format($mypage_cancel_info['ss'])?></strong>총 취소금액
+			</a>
+		</div>
+	</div>
+
+	<div class="section full mb-2">
+		<div class="listview-title mt-2">회원정보</div>
+		<ul class="listview link-listview mb-2">
+			<li>
+				<a href="/mypage/account_settings.html" class="item">
+					<div class="in">
+						<div class="">계정 설정</div>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="/mypage/sns_login_connect.html" class="item">
+					<div class="in">
+						<div>간편로그인 연결</div>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="/mypage/member_level_info.html" class="item">
+					<div class="in">
+						<div>회원등급 안내</div>
+					</div>
+				</a>
+			</li>
+		</ul>
+		<div class="listview-title mt-2">주문정보</div>
+		<ul class="listview link-listview mb-2">
+			<li>
+				<a href="/mypage/mypage_order_wating.html" class="item">
+					<div class="in">
+						<div>입금대기 내역</div>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="/mypage/mypage_order.html" class="item">
+					<div class="in">
+						<div>주문완료 내역</div>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="/mypage/mypage_cancel_request.html" class="item">
+					<div class="in">
+						<div>취소요청 내역</div>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="/mypage/mypage_cancel_end.html" class="item">
+					<div class="in">
+						<div>취소완료 내역</div>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="/mypage/mypage_wishlist.html" class="item">
+					<div class="in">
+						<div>위시리스트 내역</div>
+					</div>
+				</a>
+			</li>
+		</ul>
+		<div class="listview-title mt-2">고객센터</div>
+		<ul class="listview link-listview mb-2">
+			<li>
+				<a href="/mypage/mypage_qna.html" class="item">
+					<div class="in">
+						<div>문의 내역</div>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="/mypage/mypage_qna_register.html" class="item">
+					<div class="in">
+						<div>문의 하기</div>
+					</div>
+				</a>
+			</li>
+		</ul><div class="listview-title mt-2">혜택정보</div>
+		<ul class="listview link-listview mb-2">
+			<li>
+				<a href="/mypage/mypage_supply_content.html" class="item">
+					<div class="in">
+						<div>제공컨텐츠</div>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="/mypage/mypage_point.html" class="item">
+					<div class="in">
+						<div>포인트 내역</div>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="/mypage/mypage_coupon.html" class="item">
+					<div class="in">
+						<div>쿠폰 내역</div>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="/mypage/mypage_gift.html" class="item">
+					<div class="in">
+						<div>사은품 내역</div>
+					</div>
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+    <!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+</body>
+
+</html>

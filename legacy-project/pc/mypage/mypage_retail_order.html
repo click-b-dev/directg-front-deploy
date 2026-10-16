@@ -1,0 +1,251 @@
+<?php
+header("Content-Type:text/html; charset=utf-8"); 
+//ini_set('display_errors', '1');
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+$search_goods_name = filter_input(INPUT_GET, 'search_goods_name', FILTER_SANITIZE_STRING);
+$search_start_date = filter_input(INPUT_GET, 'search_start_date', FILTER_SANITIZE_STRING);
+$search_end_date = filter_input(INPUT_GET, 'search_end_date', FILTER_SANITIZE_STRING);
+
+if($search_start_date==""){
+	$d = mktime(0,0,0, date("m"), 1, date("Y"));
+	$search_start_date = date('Y-m-d',strtotime('-1 month'));
+}
+
+if($search_end_date==""){
+	$d = mktime(0,0,0, date("m"), 1, date("Y"));
+	$search_end_date = date('Y-m-d');
+}
+
+
+$page_title = "실물 상품 주문 내역";
+$aside_menu['retail_order'] = "text-primary fw-bold";
+
+if(empty($page)){
+	$page="1";
+}
+
+foreach($_GET as $key=>$value){
+	if($key<>"page" ){
+		if($value<>""){
+			$param.="&".$key."=".$value;
+		}
+	}
+}
+
+try{
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$mypage = new Mypage($conn_dgkr);
+
+	$where = array();
+	$where[] = "m_no='{$_SESSION['member']['m_no']}'";
+
+	if($search_start_date){
+		$where[] = "ord_ymd >='".$search_start_date."'";
+	}
+
+	if($search_end_date){
+		$where[] = "ord_ymd <='".$search_end_date."'";
+	}
+
+	$where_query = implode(" AND ", $where);
+	$orderby = "id DESC";
+
+	$order_list = $mypage->getRetailOrderList($page,$where_query,$orderby,$param);
+	$list = $order_list->resultset->fetchAll();
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+$retailStepText = array(
+	"0" => "주문완료",
+	"1" => "결제대기",
+	"2" => "결제완료",
+	"3" => "배송준비중",
+	"4" => "배송중",
+	"5" => "배송완료",
+	"6" => "구매확정",
+	"8" => "취소요청",
+	"9" => "취소완료",
+	"97" => "취소보류",
+	"11" => "반품요청",
+	"12" => "반품수거중",
+	"13" => "반품수거완료",
+	"14" => "반품완료",
+	"17" => "반품보류",
+	"18" => "반품반려중",
+	"19" => "반품반려완료",
+	"21" => "교환요청",
+	"22" => "수거중",
+	"23" => "수거완료",
+	"24" => "교환중",
+	"25" => "교환완료",
+	"27" => "교환보류",
+	"28" => "교환반려중",
+	"29" => "교환반려완료"
+);
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/daterangepicker-dark.css" />
+
+</head>
+<body>
+<div class="wrapper overflow-visible">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0 font-14">
+				<div class="col-12">
+					<div class="card shadow-none rounded-0 my-3 font-14">
+						<div class="d-flex">
+							<label for="search_payment_method" class="col-sm-1 col-form-label text-center border-end">기간검색</label>
+							<div id="reportrange" class="col-sm-3  rounded-0 align-content-center text-center border-end" data-toggle="date-picker-range" data-target-display="#reportrange2"  data-cancel-class="btn-light">
+								<i class="mdi mdi-calendar"></i>&nbsp;
+								<span id="reportrange2"><?=$search_start_date?> - <?=$search_end_date?></span> <i class="mdi mdi-menu-down"></i>
+							</div>
+							<div class="col-sm-9 p-0 rounded-0">
+								<form class="input-group" method="get" action="<?=$_SERVER['PHP_SELF']?>">
+										<div class="d-flex">
+											<input type="text" class="form-control rounded-0 border-0 border-end" id="search_start_date" name="search_start_date" placeholder="시작일자" value="<?=$search_start_date?>" readonly>
+											<span class="input-group-text rounded-0 border-0 border-end">~</span>
+											<input type="text" class="form-control rounded-0 border-0 border-end" id="search_end_date" name="search_end_date" placeholder="종료일자" value="<?=$search_end_date?>" readonly>
+										</div>
+										<div class=""><button class="btn btn-primary btn-xl font-14 mx-2 px-2" type="submit">검색</button></div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-12">
+					<table class="table table-bordered table-centered mb-0 text-center align-middle text-nowrap">
+						<thead class="align-middle">
+							<tr>
+								<th>결제번호</th>
+								<th>상품명</th>
+								<th>결제수단</th>
+								<th>결제금액</th>
+								<th>주문일자</th>
+								<th>결제상태</th>
+								<th>비고</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+							foreach($list as $data){
+						?>
+							<tr>
+								<td><?=$data['settle_no']?></td>
+								<td class="text-start text-wrap"><?=$data['goods_nm']?></td>
+								<td>
+									<?php
+										if($data['pg_provider']=="naverpay"){
+											echo "네이버페이<br>";
+										}
+										switch($data['settlekind']){
+											case "CARD":
+												$settlekind="카드결제";
+											break;
+											case "BANK":
+												$settlekind="계좌이체";
+											break;
+											case "POINT":
+												$settlekind="포인트";
+											break;
+											case "PHONE":
+												$settlekind="휴대폰";
+											break;
+											case "GIFT":
+												$settlekind="상품권";
+											break;
+											case "KAKAOM":
+												$settlekind="카카오머니";
+											break;
+											case "NPAY":
+												$settlekind="네이버페이 포인트";
+											break;
+											case "DGPOINT":
+												$settlekind="전액할인";
+											break;
+										}
+									?>
+									<?=$settlekind?>
+								</td>
+								<td class="text-end"><span style="font-family:dotum">\</span> <?=number_format($data['settleprice'])?></td>
+								<td><?=$data['regdt']?></td>
+								<td><?=$retailStepText[$data['step']]?></td>
+								<td><a href="/mypage/mypage_retail_order_view.html?settle_no=<?=$data['settle_no']?>" class="btn btn-sm btn-info font-14">상세보기</a></td>
+							</tr>
+						<?php
+							}
+						?>
+					</table>
+				</div>
+				<div id="pagination" class="mt-4"><?echo $order_list->links_html;?></div>
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<!-- bundle -->
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script type="text/javascript">
+	function cb(start, end) {
+		$('#reportrange2').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
+		$('#search_start_date').val(start.format('YYYY-MM-DD'));
+		$('#search_end_date').val(end.format('YYYY-MM-DD'));
+	}
+
+$(function() {
+	var start = moment().subtract(29, 'days');
+	var end = moment();
+	
+	$('#reportrange').daterangepicker({
+		startDate: start,
+		endDate: end,
+		ranges: {
+			'오늘': [moment(), moment()],
+			'어제': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+			'지난 7일': [moment().subtract(6, 'days'), moment()],
+			'지난 30일': [moment().subtract(29, 'days'), moment()],
+			'이번달': [moment().startOf('month'), moment().endOf('month')],
+			'지난달': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+			'올해': [moment().startOf('year'), moment()],
+//			'작년': [moment().subtract(1, 'year').startOf('year'),  moment().subtract(1, 'year').endOf('year')],
+		},
+		"cancelClass": "btn-danger",
+		"alwaysShowCalendars": true,
+	}, cb);
+});
+</script>
+
+</body>
+</html>

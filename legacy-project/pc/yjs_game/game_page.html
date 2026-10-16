@@ -1,0 +1,56 @@
+<?
+//기존 상품 상세페이지 url 
+//옵션상품코드로 체크해서 올바른 주소로 자동이동처리
+header("Content-Type:text/html; charset=utf-8"); 
+ini_set('display_errors', '0');
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$product_code = filter_input(INPUT_GET, "product_code", FILTER_SANITIZE_STRING);
+
+
+if($product_code==""){
+	echo "잘못된 접근입니다.";
+	exit;
+}
+
+try{  
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	
+	$goods= new Goods($conn);
+	
+	/*옵션상품 정보*/
+	$goods_item = $goods->getGoodsItemDetail($product_code);
+	
+	//옵션상품의 대표상품정보 
+	$title_info = $goods->getGoodsOptionTitleInfo($product_code);
+	
+	switch($goods_item['game_type']){
+		case "game":
+			$view_url = "/game/game_view.html?product_id=".$title_info['sku']."&sku=".$goods_item['goods_sku'];
+		break;
+		case "dlc":
+			$view_url = "/game/dlc_view.html?sku=".$goods_item['goods_sku'];
+		break;
+		case "music":
+			$view_url = "/game/dlc_view.html?sku=".$goods_item['goods_sku'];
+		break;
+		case "bundle":
+			$view_url = "/game/bundle_view.html?sku=".$goods_item['goods_sku'];
+		break;
+		case "accessories":
+			$view_url = "/game/goods_item_view.html?product_id=".$title_info['sku']."&sku=".$goods_item['goods_sku'];
+		break;
+	}
+	
+	//print_r($goods_item);
+	
+	header( "HTTP/1.1 301 Moved Permanently" );
+	header( 'Location: '.$view_url );
+	exit;
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+?>

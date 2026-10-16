@@ -1,0 +1,36 @@
+{
+  "name": "@click-b/config",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/fsd": "./eslint/fsd.js",
+    "./eslint/react": "./eslint/react.js",
+    "./eslint/next": "./eslint/next.js",
+    "./eslint/tanstack": "./eslint/tanstack.js",
+    "./prettier": "./prettier/index.js",
+    "./tsconfig/base": "./tsconfig/base.json",
+    "./tsconfig/react-app": "./tsconfig/react-app.json",
+    "./tsconfig/react-library": "./tsconfig/react-library.json",
+    "./tsconfig/next": "./tsconfig/next.json",
+    "./tailwind/base": "./tailwind/base.js"
+  },
+  "scripts": {
+    "build:eslint": "tsc -p eslint/tsconfig.json",
+    "typecheck:eslint": "tsc -p eslint/tsconfig.json --noEmit",
+    "typecheck": "tsc -p eslint/tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "eslint": "^10.0.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-unicorn": "^64.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3"
+  }
+}

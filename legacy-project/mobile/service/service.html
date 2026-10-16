@@ -1,0 +1,615 @@
+<?php
+	ini_set("display_errors", 0);
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	
+	$page_title="서비스 소개";
+
+$publisher_array= Array(
+		"90"=>"WiredProductions",
+		"135"=>"10Chambers",
+		"11"=>"11bitstudios",
+		"71"=>"1COnlineGamesLtd",
+		"12"=>"2K",
+		"85"=>"34BigThingssrl",
+		"46"=>"505Games",
+		"70"=>"AmanitaDesign",
+		"47"=>"ArcSystemWorks",
+		"53"=>"Aspyr",
+		"62"=>"Badland",
+		"133"=>"BehaviourInteractive",
+		"38"=>"BethesdaSoftworks",
+		"34"=>"Capcom",
+		"66"=>"CFK",
+		"1"=>"Cigames",
+		"114"=>"CITYCONNECTION",
+		"132"=>"CloudedLeopard",
+		"87"=>"CurveGames",
+		"73"=>"D3PUBLISHER",
+		"59"=>"DefiantDevelopment",
+		"115"=>"Digicon",
+		"96"=>"Dotemu",
+		"22"=>"Focus",
+		"81"=>"Funcom",
+		"163"=>"Gearbox",
+		"140"=>"Graffiti-Games",
+		"43"=>"GreyBox",
+		"48"=>"Haemimont",
+		"88"=>"HandyGames",
+		"154"=>"HatinhInteractive",
+		"98"=>"HeadupGmbH",
+		"136"=>"HitGrab",
+		"99"=>"IcebergInteractive",
+		"40"=>"InXileEntertainment",
+		"6"=>"KalypsoMedia",
+		"75"=>"Konami",
+		"49"=>"LeagueofGeeks",
+		"45"=>"LevelUpLabs",
+		"126"=>"Lightning",
+		"120"=>"Mantisco",
+		"143"=>"MapleWhispering",
+		"130"=>"Merge",
+		"63"=>"Microids",
+		"91"=>"Milestone",
+		"109"=>"MIXTVISION",
+		"100"=>"Modus",
+		"84"=>"Nacon",
+		"117"=>"NEOWIZ",
+		"72"=>"NISAmerica",
+		"30"=>"Paradox",
+		"119"=>"Pieplus",
+		"25"=>"PlugInDigital",
+		"78"=>"PridefulSloth",
+		"86"=>"PrivateDivision",
+		"134"=>"RedHookStudio",
+		"14"=>"Rockstar",
+		"97"=>"SamuraiPunk",
+		"93"=>"SEGA",
+		"89"=>"Shiro",
+		"74"=>"SNK",
+		"58"=>"Team17",
+		"23"=>"THQNordic",
+		"52"=>"Ubisoft",
+		"128"=>"UnitedLabel",
+		"80"=>"Versus",
+		"3"=>"WarnerBros",
+		"112"=>"WayForward",
+		"53"=>"Atari",
+	);
+
+	$publisher = array();
+	$loop="0";
+	foreach ($publisher_array as $key => $value){
+		$publisher[$loop]['publisher_code'] = $key;
+		$publisher[$loop]['publisher_name'] = $value;
+		$loop++;
+	}
+
+	$sortArr = array();	
+	foreach($publisher as $res){
+		$sortArr [] = $res['publisher_name']; 
+	}
+
+	array_multisort($sortArr , SORT_ASC, $publisher);
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<style type="text/css">
+body {
+	color:#000000;
+}
+
+/* body > #wrap > #top : 상단 영역 */
+header .gnb {
+	background:#1B2838;
+	color:#ffffff;
+}
+
+/* body > #wrap > #container : 메인 영역 */
+#container {
+	background:#1B2838;
+	color:#ffffff;
+	font-size:16px;
+}
+
+#header .head{
+	background:#1B2838;
+}
+
+#header .sub{
+	background:#ffffff;
+}
+
+.content {
+	padding:0.5em;
+	margin:0;
+	font-size:16px;
+	border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.content h3{
+	font-size:1em;
+	font-family: "Noto Sans KR", sans-serif;
+	font-weight:normal;
+	padding-top:2em;
+	padding-bottom:1em;
+	text-align:center;
+	letter-spacing:-1px;
+}
+
+#ja-masthead-bg{
+	width : 100%;
+	background:url('/assets/images/service/DG_Introbr_mobile_object0_460x540.jpg');
+	background-size:cover;
+}
+
+.ja-masthead{
+	position:relative;
+}
+
+.ja-masthead-detail{
+	position:absolute;
+	top:0;
+	padding:0.5em;
+	margin:0;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	align-items: flex-end;
+	justify-content: center;
+}
+
+.ja-masthead-detail .bg_tag{
+	position:relative;
+	margin-top:1em;
+	margin-bottom:1em;
+}
+
+.tag_color{
+	border-radius:15px;
+	background:#ffffff;
+	color:#0c7ced;
+	padding:0.25em 0.5em;
+	font-weight:700;
+	font-size:0.625em;
+	font-family: "Noto Sans KR", sans-serif;
+	line-height:150%;
+}
+
+.section_content{
+	 padding: 0;
+	 margin:0;
+}
+
+.section_item{
+	flex: 1 1 100%;
+    background: #131c27;
+    margin: 0;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+}
+.section_item img {
+    align-self: center;
+}
+
+.section_item p{
+	padding:0.25em;
+	line-height:150%;
+	word-break:keep-all;
+	white-space:pre-line;
+	letter-spacing:-1px;
+	text-align:center;
+	font-family: "Noto Sans KR", sans-serif;
+	font-size:1em;
+}
+.section_item h4{
+	font-size:1.25em;
+	text-align:center;
+}
+
+.section_item .btn_link{
+	background:#0C7CEC;
+	padding:0.25em 0.5em;
+	margin-top:auto;
+	line-height:150%;
+	color:#ffffff;
+	text-align:center;
+	display:block;
+	font-family: "Noto Sans KR", sans-serif;
+	font-size:1em;
+}
+
+.section_content .section_container{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.section_content .section_item2{
+	flex: 1 1 30%;
+    background: #131B26;
+    margin: 0.25em;
+    padding: 0;
+    text-align: center;
+}
+
+.section_content .section_item2 a{
+	color:#ffffff;
+	
+}
+
+.section_content .section_item2 p{
+	font-size:0.75em;
+	font-family: "Noto Sans KR", sans-serif;
+	margin-top:-1em;
+	padding-bottom:0.5em;
+}
+
+.section_content .section_item2 img {  
+	width:100%;
+}
+
+.section_content .section_container2{
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 0;
+	margin-right: -10px;
+	margin-bottom: -10px;
+}
+
+.section_content .section_item3{
+	flex-grow: 0;
+	flex-shrink: 1;
+	flex-basis: calc(25% - 10px);
+	box-sizing: border-box;
+	background:#131B26;
+	margin-bottom:10px;
+}
+
+.section_content .section_item3:nth-child(even) {
+	margin: 0 10px 10px 10px;
+}
+
+.section_content .section_item3 img{
+	text-align:center;
+	width:100%;
+}
+
+.swiper-pagination{
+	position:relative;
+}
+
+.swiper-pagination-bullet{
+	width:1em;
+	height:1em;
+	border:2px solid rgba(255,255,255,0.8);
+}
+.swiper-pagination-bullet-active{
+	border:2px solid #106ACA;
+}
+
+.progressbar-wrapper {
+	background: none;
+	width: 100%;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	display:block;
+	float:left;
+	margin:0;
+}
+
+.progressbar{
+	width: 100%;
+	display:block;
+}
+
+.progressbar li {
+	list-style-type: none;
+	width: 33%;
+	float: left;
+	position: relative;
+	text-align: center;
+	text-transform: uppercase;
+	color: #ffffff;
+}
+.progressbar li:first-child:before {
+	background-image:url("/assets/images/service/01-00_publisher.png");
+	background-size:cover;
+	background-color:#FFF;
+}
+.progressbar li.active:before {
+	background-image:url("/assets/images/service/01-01_dglogo_v2.png");
+	background-size:cover;
+	background-color:#0C7CEC;
+}
+.progressbar li:last-child:before {
+	background-image:url("/assets/images/service/01-02_member.png");
+	background-size:cover;
+	background-color:#FFF;
+}
+.progressbar li:before {
+    width: 70%;
+    height: auto;
+	padding-top:70%;
+    content: "";
+    border: 4px solid #0C7CEC;
+    display: block;
+    text-align: center;
+    border-radius: 50%;
+    position: relative;
+    z-index: 2;
+	background-size:cover;
+	margin: 0 auto;
+	background:rgba(27,40,56,1);
+}
+
+.progressbar-wrapper hr{
+	display:block;
+	width:70%;
+	border:2px solid #0C7CEC;
+}
+
+.progressbar li:first-child:after, .progressbar li.active:after {
+	content: "";
+	background: #0C7CEC;
+	position:absolute;
+	width:70%;
+	height:4px;
+	top:50%;
+}
+
+.flex-container{
+	position:relative;
+	display: flex;
+	height:100%;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	align-content:space-between;
+}
+
+.flex-item{
+	text-align:center;
+}
+
+.flex-item:nth-child(1){
+	height:60px;
+}
+.flex-item:nth-child(2){
+	height:40px;
+}
+.flex-item:nth-child(3){
+	margin-top:auto;
+}
+
+.flex-item .ja-masthead-title{
+	font-size:1em;
+	font-family: "Noto Sans KR", sans-serif;
+	text-align:center;
+	line-height:150%;
+	font-weight:600;
+	margin-top:1em;
+}
+
+.flex-item .bg_tag{
+	margin-top:1em;
+}
+
+.flex-item .ja-masthead-description{
+	padding:1em;
+	display:flex;
+	flex-direction: row;
+	align-items:center;
+}
+
+.flex-item .ja-masthead-description .flex_item2 img{
+	width:100%;
+}
+
+.flex-item .ja-masthead-description .flex_item2 p{
+	font-size:0.8em;
+	line-height:150%;
+	font-family: "Noto Sans KR", sans-serif;
+	padding-left:1em;
+	text-align:left;
+}
+
+.swiper-slide {
+    width: 80%;
+    height: auto;
+}
+.swiper-wrapper{
+	max-height:340px;
+}
+
+</style>
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="full-height">
+	<div class="section full">
+		<div class="ja-masthead">
+			<div id="ja-masthead-bg">
+				<div class="flex-container">
+					<div class="flex-item">
+						<h3 class="ja-masthead-title">실시간 엔터테인먼트 플랫폼 <br/> 다이렉트 게임즈에 오신 것을 환영합니다!</h3>
+					</div>
+					<div class="flex-item">
+						<div class="bg_tag">
+							<span class="tag_color">#상시할인</span>
+							<span class="tag_color">#정기프로모션</span>
+							<span class="tag_color">#실시간코드확인</span>
+							<span class="tag_color">#정식라이센스</span>
+						</div>
+					</div>
+					<div class="flex-item">
+						<div class="ja-masthead-description">
+							<div class="flex_item2"><img src="/assets/images/service/00-00_h2intlogo_v2.png"></div>
+							<div class="flex_item2">
+								<p>다이렉트 게임즈는 에이치투 인터렉티브에서 운영하는 공식 디지털 스토어입니다.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<section class="content">
+			<h3>보다 믿을 수 있는 서비스 제공을 약속합니다.</h3>
+			<div class="section_content">
+				<div class="progressbar-wrapper">
+					<ul class="progressbar">
+						<li></li>
+						<li class="active"></li>
+						<li></li>
+					</ul>
+				</div>
+				<p style="line-height:150%;font-size:0.875em;font-family: 'Noto Sans KR', sans-serif">다이렉트 게임즈는 세계 유수의 개발사 및 퍼블리셔와 직접 제휴하여 자체 유통 마진은 최소화하면서도 양질의 상품들을 좀 더 합리적인 가치로써 제공하고 있습니다. 또한, 회원분들의 다양한 피드백을 전달하여 직접적인 상호작용과 원활한 소통을 이어가고 있습니다.</p>
+			</div>
+		</section>
+		<section class="content">
+			<h3>다이렉트 게임즈 회원만의 혜택이 기다립니다.</h3>
+			<div class="carousel-multiple splide" id="main_best">
+				<div class="splide__track">
+					<div class="splide__list text-center">
+						<div class="splide__slide section_item">
+							<h4>정식 라이센스 계약</h4>
+							<img src="/assets/images/service/02-00_license.png">
+							<p>다이렉트 게임즈는 모든 상품이 개발사 및 퍼블리셔와의 정식 계약을 통해 판매 중인 공식 판매처입니다. </p>
+							<a href="/game/game_list.html" class="btn_link">모든 게임 보러가기</a>
+						</div>
+						<div class="splide__slide section_item">
+							<h4>프로모션과 이벤트</h4>
+							<img src="/assets/images/service/02-01_promotion.png">
+							<p>상시 할인, 정기 주말 특가, 수많은 퍼블리셔가 참여하는 대규모 프로모션과 랜덤 박스, 리워드 등 다양한 이벤트가 준비되어 있습니다.</p>
+							<a href="/promotion/promotion_ing.html" class="btn_link">진행 중인 프로모션 확인하기</a>
+						</div>
+						<div class="splide__slide section_item">
+							<h4>편리한 로그인</h4>
+							<img src="/assets/images/service/02-02_login.png">
+							<p>이메일 주소 인증만으로 쉽고 빠른 회원가입과 네이버, 카카오 계정 간편 로그인 지원으로 편의를 더합니다.</p>
+							<a href="/member/join_step1.html" class="btn_link">다이렉트 게임즈 회원가입</a>
+						</div>
+						<div class="splide__slide section_item">
+							<h4>원활한 소통</h4>
+							<img src="/assets/images/service/02-03_communication.png">
+							<p>고객센터 및 공식 소셜미디어 운영으로 회원분들의 문의와 요청에 적극적인 대응을 약속합니다.</p>
+						</div>
+						<div class="splide__slide section_item">
+							<h4>실시간 코드 발송</h4>
+							<img src="/assets/images/service/02-04_realtime.png">
+							<p>이메일, 문자를 기다릴 필요가 없습니다. PC 및 모바일에서 언제든지 구매한 제품 코드 확인이 가능합니다.</p>
+						</div>
+						<div class="splide__slide section_item">
+							<h4>다양한 결제 수단</h4>
+							<img src="/assets/images/service/02-05_payment.png">
+							<p>신용카드, 휴대폰결제, 계좌이체와 같은 기본결제는 물론 네이버페이, 페이코 등의 간편결제까지 선택의 폭이 넓습니다.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="content">
+			<h3>세계 유수의 파트너들이 함께합니다.</h3>
+			<div class="section_content">
+				<div class="section_container2">
+				<?	
+					foreach($publisher as $key=>$value){
+						if($value["publisher_code"]>0){
+							$publisher_link = "/game/game.html?search_publisher=".$value['publisher_code'];
+						}else{
+							$publisher_link = "#";
+						}
+				?>
+					<div class="section_item3">
+						<img src="/assets/images/service/v4/<?=$value['publisher_name']?>_partners_contents_0.png?3" alt="<?=$value['publisher_name']?>" title="<?=$value['publisher_name']?>">
+					</div>
+				<?}?>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- App Search -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/app_search.html'); ?>
+<!-- * App Search -->
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+<!-- Base Js File -->
+
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<script src="/assets/js/plugins/splide/splide-extension-grid.min.js"></script>
+
+
+<script src="/assets/js/base.js"></script>
+
+<script>
+$(document).ready(function(){
+	$("#ja-masthead-bg").height(($("#ja-masthead-bg").width()*540)/460);
+});
+
+	var main_best = document.getElementById("main_best");
+	if(main_best!=null){
+		var splide3 = new Splide( '#main_best', {
+			type : 'loop',
+			perPage: 1,
+			perMove: 1,
+			pagination: true,
+			arrows: true,
+			rewind: true,
+			rewindByDrag: true,
+			gap:"1.5em",
+			padding: { left:50, right:50 },
+			classes: {
+				pagination: 'splide__pagination position-relative mb-2'
+			},
+
+		});
+
+		splide3.mount(window.splide3.Extensions);
+	}
+	
+
+</script>
+
+</body>
+</html>

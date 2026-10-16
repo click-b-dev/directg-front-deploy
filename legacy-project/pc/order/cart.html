@@ -1,0 +1,565 @@
+<?
+ini_set('display_errors', '0');
+header("Content-Type:text/html; charset=utf-8"); 
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+include_once($_SERVER["DOCUMENT_ROOT"].'/../log4php/vendor/autoload.php');
+require_once($_SERVER["DOCUMENT_ROOT"]."/../log4php/src/main/php/Logger.php");
+Logger::configure($_SERVER["DOCUMENT_ROOT"] .'/../log4php/config_cart_chk.xml');
+$logger = Logger::getLogger("pc");
+
+if($_SESSION['member']['m_id']=="test@h2int.com"){
+	go("https://directg.net/order/test_cart.html");
+}
+$ip=get_client_ip_env();
+if($_SERVER['HTTP_REFERER']==""){
+	$headers = apache_request_headers();
+	$logger->info($headers);
+	
+	$logger->info($ip);
+	//$logger->info("메크로 접속구매 강제로그아웃처리");
+	//header( "HTTP/1.1 301 Moved Permanently" );
+	//header( 'Location: https://directg.net/member/logout.php' );
+	//exit;
+	sleep(20);
+	$logger->info("접속 강제딜레이 적용시키기 시작");
+	
+	//$logger->info("접속 강제딜레이 적용시키기 종료");
+}
+
+//리셀러 메크로 강제 딜레이 적용시키기
+if($_SESSION['member']['mem_type']=="R" || $ip=="182.221.192.76" || $ip=="101.79.9.106"  || $ip=="218.50.28.68"  || $ip=="158.247.224.58" || $ip=="211.188.61.253" || $ip=="211.188.56.100" || $ip=="118.223.194.106" || $ip=="211.188.57.72" || $ip=="223.130.132.191" || $ip=="211.188.58.96" || $ip=="223.130.131.241" || $ip=="49.50.136.72" || $ip=="223.130.138.175" || $ip=="49.50.129.102" || $ip=="49.50.139.175" || $ip=="223.130.134.51" || $ip=="182.221.192.79"  || $ip=="223.130.158.31" || $ip=="49.50.136.203" || $ip=="223.130.142.19" || $ip=="49.50.134.165" || $ip=="182.221.192.89"|| $ip=="121.142.176.153"|| $ip=="223.130.141.119" || $ip=="66.42.43.157" || $ip=="182.231.216.150" || $ip=="118.37.208.223" || $ip=="182.221.192.120"){
+	sleep(40);
+	$logger->info($ip);
+	$logger->info($_SESSION['member']['m_id']);
+	$logger->info("접속 강제딜레이 40초 적용시키기 시작");
+}
+
+
+$page_title = "장바구니";
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$order = new Order($conn);
+	$goods = new Goods($conn);
+	//장바구니 조회
+	$cart_list = $order->getCartList($_SESSION['member']['m_no']);
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<style>
+
+</style>
+</head>
+<body>
+<div class="wrapper ">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container">
+		<main class="mb-5">
+			<!--주문하기 step-->
+			<div class="row g-0 my-3">
+				<div class="col-12">
+					<div class="mb-4">
+						<ul class="nav nav-pills nav-fill">
+							<li class="nav-item rounded-0 border-primary bg-primary py-4">
+								<h4 class="list-group-item-heading fw-bold mb-0">01 장바구니</h4>
+							</li>
+							<li class="nav-item rounded-0 border-start border-top border-bottom py-4">
+								<h4 class="list-group-item-heading mb-0">02 주문하기</h4>
+							</li>
+							<li class="nav-item rounded-0 border-start border-top border-bottom py-4">
+								<h4 class="list-group-item-heading mb-0">03 결제하기</h4>
+							</li>
+							<li class="nav-item rounded-0 border-start border-top border-bottom border-end py-4">
+								<h4 class="list-group-item-heading mb-0">04 주문완료</h4>
+							</li>
+						</ul>
+					</div>
+
+					<div class="cart_msg bg-alert mb-4">
+						<div class="alert font-14 rounded-0 " role="alert">
+							<ul class="list-group list-group-flush p-0">
+								<li class="list-group-item border-0 bg-alert"><span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> 주문자의 의한 주문실수는 환불사유에 해당되지 않습니다. 선택하신 상품의 이름, 플랫폼, 가격, 지역, 중복구매여부 등의 정보를 다시 한 번 확인해 주시기 바랍니다.</span></li>
+								<li class="list-group-item border-0 bg-alert"><span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> 장바구니에 담긴 이후 상품 가격, 재고, 프로모션 여부, 특전제공 여부 등은 변경될 수 있습니다. 주문 전 다시 한 번 확인해 주시기 바랍니다.</span></li>
+								<li class="list-group-item border-0 bg-alert"><span class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> 다이렉트 게임즈에서는 제품코드(키)를 활성화하지 않은 주문건에 한하여, 주문일로부터 7일 이내에 취소가 가능합니다. 자세한 사항은 <a href="/service/refund_policy.html" target="_blank">[환불정책]</a>을 확인해 주시기 바랍니다.</span></li>
+								<li class="list-group-item border-0 bg-alert"><span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> 다이렉트 게임즈에서는 공급수량 및 시스템 안정을 위해 계정당 최대 주문수량을 제한하고 있습니다.</span></li>
+								<li class="list-group-item border-0 bg-alert"><span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> 랜덤박스 같은 이벤트상품과 예약상품은 단품 주문만 가능하며, 장바구니 주문은 지원하지 않습니다.</span></li>
+								<li class="list-group-item border-0 bg-alert"><span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> 장바구니에는 상품별로 1개씩, 최대 20개의 상품을 담을 수 있습니다.</span></li>
+							</ul>
+						</div>
+					</div>
+					
+					<form class="form-horizontal needs-validation mb-4" name="orderFrm" id="orderFrm" method="POST" action="order.html" novalidate>
+					<div class="row">
+						<div class="col-12">
+							<div class="mb-2">
+								<table class="table table-bordered table-centered caption-top mb-0 shadow-none" id="order_table" cellspacing="0">
+									<caption class="font-14">장바구니 상품수 ( <?=count($cart_list)?>/20 )</caption>
+									<thead class="table-light font-15">
+										<tr>
+											<th scope="col" class="text-center fw-500" style="width:50px;"><input type="checkbox" class="form-check-input shadow-none" name="goods_sku_all" value="all" id="cart_chk_all"></th>
+											<th scope="col" class="text-center fw-500" style="width:70px;">삭제</th>
+											<th scope="col" class="text-center fw-500">상품정보</th>
+											<th scope="col" class="text-center fw-500" style="width:180px;">가격정보</th>
+										</tr>
+									</thead>
+									<tbody class="font-14 table-dark">
+										<?
+											if(count($cart_list)==0){
+										?>
+										<tr>
+											<td colspan="4" class="text-center">장바구니가 비었습니다.</td>
+										</tr>
+										<?
+											}else{
+												$cart_num = "0";
+												foreach($cart_list as $key=>$value){
+													$title_info = $goods->getGoodsOptionTitleInfo($value['product_code']);
+													if($value['product_type']=="retail"){
+														$view_url = "/game/goods_item_view.html?product_id=".$title_info['sku']."&sku=".$value['goods_sku'];
+													} else {
+														switch($value['game_type']){
+															case "game":
+																$view_url = "/game/game_view.html?product_id=".$title_info['sku']."&sku=".$value['goods_sku'];
+															break;
+															case "dlc":
+																$view_url = "/game/dlc_view.html?sku=".$value['goods_sku'];
+															break;
+															case "music":
+																$view_url = "/game/dlc_view.html?sku=".$value['goods_sku'];
+															break;
+															case "bundle":
+																$view_url = "/game/bundle_view.html?sku=".$value['goods_sku'];
+															break;
+															case "holomodels":
+																$view_url = "/game/holomodels_view.html?product_id=".$title_info['sku']."&sku=".$value['goods_sku'];
+																if($value['display_type']=="holomodelsdlc"){
+																	$view_url = "/game/holomodelsdlc_view.html?sku=".$value['goods_sku']."&platform=";
+																}
+															break;
+														}
+													}
+										?>
+										<tr>
+											<td class="text-center align-middle">
+												<?if($value['selected']=="1"){?>
+												<input type="checkbox" class="form-check-input shadow-none" name="goods_sku[]" value="<?=$value['goods_sku']?>" id="cart_chk_<?=$cart_num?>" data-productname="<?=$value['product_name']?>" checked>
+												<?}else{?>
+												<input type="checkbox" class="form-check-input shadow-none" name="goods_sku[]" value="<?=$value['goods_sku']?>" id="cart_chk_<?=$cart_num?>" data-productname="<?=$value['product_name']?>">
+												<?}?>
+											</td>
+											<td class="text-center align-middle">
+												<a href="javascript:void(0);" class="action-icon btn_cart_del text-dark" data-sku="<?=$value['goods_sku']?>" data-productname="<?=$value['product_name']?>"> <i class="fa-solid fa-trash"></i></a>
+											</td>
+											<td class="align-middle">
+												<div class="card rounded-0 border-0 table-dark">
+													<div class="row g-0">
+														<div class="col-md-2 rounded-0">
+															<div class="position-relative">
+																<a href="<?=$view_url?>" class="text-white" target="_blank"><img src="/upload/product/<?=$value['product_code']?>/header/header.jpg" class="img-fluid rounded-0 w-100 h-100"></a>
+																<div class="position-absolute bottom-0 start-0">
+																	<? 
+																		switch($value['game_type']){
+																			case "game":
+																				switch($value['display_type']){
+																					case "basic":
+																	?>
+																	<span class="badge bg-info rounded-0 font-12 py-2">기본게임</span>
+																	<?
+																					break;
+																					case "edition":
+																	?>
+																	<span class="badge bg-primary rounded-0 font-12 py-2">에디션</span>
+																	<?
+																					break;
+																					case "multi":
+																	?>
+																	<span class="badge bg-warning rounded-0 font-12 py-2">멀티팩</span>
+																	<?
+																					break;
+																				}
+																			break;
+																			case "dlc":
+																	?>
+																	<span class="badge bg-content rounded-0 font-12 py-2">DLC</span>
+																	<?
+																			break;
+																			case "music":
+																	?>
+																	<span class="badge bg-content rounded-0 font-12 py-2">Music</span>
+																	<?
+																			break;
+																			case "bundle":
+																	?>
+																	<span class="badge bg-success rounded-0 font-12 py-2">번들</span>
+																	<?
+																			break;
+																			case "holomodels":
+																				switch($value['display_type']){
+																					case "holomodels":
+																	?>
+																	<span class="badge bg-success rounded-0 font-12 fw-bold">본체</span>
+																	<?
+																					break;
+																					case "holomodelsdlc":
+																	?>
+																	<span class="badge bg-content rounded-0 font-12 fw-bold">DLC</span>
+																	<?
+																					break;
+																					case "holomodelsedition":
+																	?>
+																	<span class="badge bg-primary rounded-0 font-12 fw-bold">에디션</span>
+																	<?
+																					break;
+																				}
+																			break;
+																		}
+																	?>
+																</div>
+															</div>
+														</div>
+														<div class="col-md-1">
+															<div class="text-center align-content-center h-100">
+															<?
+																switch($value['product_platform']){
+																	case "1":
+																		echo '<img class="mx-auto d-block rounded-0" src="/assets/images/platform/steam.svg">';
+																	break;
+																	case "34":
+																		echo '<img class="mx-auto d-block rounded-0" src="/assets/images/platform/epic_w.svg">';
+																	break;
+																	case "35":
+																		echo '<img class="mx-auto d-block rounded-0" src="/assets/images/platform/rockstar_2.svg">';
+																	break;
+																	case "51":
+																		echo '<img class="mx-auto d-block rounded-0 w-75" src="/assets/images/platform/holomodels.svg">';
+																	break;
+																	default:
+																		echo '';
+																	break;
+																}
+															?>
+															</div>
+														</div>
+														<div class="col-md-9">
+															<div class="row g-0 overflow-hidden flex-md-row shadow-sm position-relative">
+																<div class="col py-1 px-3 d-flex flex-column position-static align-content-start">
+																	<div class="mb-2 text-body-secondary">
+																	<?
+																		switch($value['delivery_type']){
+																			case "1":
+																	?>
+																	<span class="badge rounded-2 badge-outline-success font-11 fw-500">코드발송</span>
+																	<?
+																			break;
+																			case "2":
+																	?>
+																	<span class="badge rounded-2 badge-outline-post font-11 fw-500">택배발송</span>
+																	<?
+																			break;
+																			case "3":
+																	?>
+																	<span class="badge rounded-2 badge-outline-code-post font-11 fw-500">코드+택배발송</span>
+																	<?
+																			break;
+																		}
+																	?>
+																	</div>
+																	<h5 class="mb-2"><?=$value['product_name']?></h5>
+																	<div class="text-body-secondary">
+																		<?if(is_array($value['promotion'])){?><span class="badge rounded-2 badge-outline-danger font-11 fw-500">프로모션</span><?}?>
+																		<?if($value['is_preorder']=="Y"){?><span class="badge rounded-2 badge-outline-warning font-11 fw-500">예약구매</span><?}?>
+																		<?if($value['is_bonus']=="Y"){?><span class="badge rounded-2 badge-outline-info font-11 fw-500">특전</span><?}?>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</td>
+											<td class="px-2 align-middle">
+												<div class="d-block">
+													<?
+														if(is_array($value['promotion'])){ //할인 프로모션 일때
+													?>
+													<div class="d-flex flex-row justify-content-between align-self-end">
+														<span class="badge bg-danger align-self-center px-3 py-2 font-14 num minus"><?=$value['promotion']['discount_rate']?> %</span>
+														<div class="d-flex flex-column align-items-end">
+															<s class="text-muted font-11 num consumer_price won" data="<?=$value['consumer_price']?>"> <?=number_format($value['consumer_price'])?></s>
+															<span class="text-white fw-bold font-14 num price won" data="<?=$value['promotion']['sale_price']?>"> <?=number_format($value['promotion']['sale_price'])?></span>
+														</div>
+													</div>
+													<?
+														}else{
+															if($value['discount']>0){	//상시할인률이 있을때
+													?>
+														<div class="d-flex flex-row justify-content-between align-self-end">
+															<span class="badge bg-primary align-self-center px-3 py-2 font-14 num minus"><?=$value['discount']?> %</span>
+															<div class="d-flex flex-column align-items-end">
+																<s class="text-muted font-11 num consumer_price won" data="<?=$value['consumer_price']?>"> <?=number_format($value['consumer_price'])?></s>
+																<span class="text-white fw-bold font-14 num price won" data="<?=$value['price']?>"> <?=number_format($value['price'])?></span>
+															</div>
+														</div>
+													<?
+															}else{ //상시 할인률이 없을때
+													?>
+														<div class="d-flex flex-row justify-content-end align-self-end">
+															<div class="d-flex flex-column align-items-end">
+																<span class="text-white fw-bold font-14 num price won" data="<?=$value['price']?>"> <?=number_format($value['price'])?></span>
+															</div>
+														</div>
+													<?
+															}
+														}
+													?>
+													</div>
+												</td>
+											</tr>
+										<?
+													if($value['selected']=="1"){
+														$total_goods_price+=$value['consumer_price'];
+														if($value['promotion']['sale_price']>0){
+															$total_price+=$value['promotion']['sale_price'];
+														}else{
+															$total_price+=$value['price'];
+														}
+														$cart_num++;
+													}
+												}
+											}
+										?>
+									</tbody>
+								</table>
+							</div>
+							<div class="d-grid gap-2 d-md-block">
+								<button class="btn btn-outline-light shadow-none" type="button" id="btn_select_del">선택 상품 삭제</button>
+								<!--<button class="btn btn-light shadow-none" type="button">선택 상품 위시리스트</button>-->
+							</div>
+						</div>
+					</div>
+					</form>
+					
+					<div class="py-4 text-center bg-light-subtle rounded-0 border-top border-bottom border-primary border-2 shadow-none mb-4">
+						<div class="d-flex flex-row justify-content-center">
+							<div class="px-4">
+								<div class="mb-2"><strong class="font-16">총 주문수량</strong></div>
+								<div class="font-16 fw-bold text-center"><span class="num" id="total_goods_count"><?=$cart_num?></span> 개</div>
+							</div>
+							<div class="px-4">
+								<div class="mb-2"><strong class="font-16 mb-3">총 주문금액</strong></div>
+								<div class="font-16 fw-bold text-center"><span class="num" id="total_price"><?=number_format($total_price)?></span> 원</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="d-grid gap-3 d-flex justify-content-center">
+						<button class="btn btn-secondary btn-lg rounded-0 fs-4 w-25 py-3 shadow-none" type="button">쇼핑 계속하기</button>
+						<button class="btn btn-primary btn-lg rounded-0 fs-4 w-25 py-3 shadow-none" type="button"  id="btn_select_order">주문하기</button>
+					</div>
+					
+				</div>
+			</div>
+			
+			<!--기획 고정 배너2-->
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_banner.html');?>
+			<!--End 기획 고정 배너 배너2-->
+		</main>
+	</div>
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<!-- bundle -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script>
+$(document).ready(function(){
+	//getOrderPrice();
+	$("input[name='goods_sku[]']").change(function() {
+		if ($(this).is(":checked")) {
+		// 체크되었을 때 동작
+			//alert($(this).val()+" 선택");
+			$.ajax({
+				'url': '/order/cart_proc.php',
+				'type': 'POST',
+				'data':{mode:"cart_item_select",goods_sku:$(this).val()},
+				'success': function (data){
+					//console.log(data);
+					//location.reload();
+					//getOrderPrice();
+				},
+				'error':function(data){
+					alert(data);
+				}
+			});
+		}else{
+		// 체크 해제되었을 때 동작
+			$.ajax({
+				'url': '/order/cart_proc.php',
+				'type': 'POST',
+				'data':{mode:"cart_item_deselect",goods_sku:$(this).val()},
+				'success': function (data){
+					//console.log(data);
+					//location.reload();
+					//getOrderPrice();
+				},
+				'error':function(data){
+					alert(data);
+				}
+			});
+		}
+		getOrderPrice();
+	});
+	
+	$(".btn_cart_del").bind("click",function(){
+		var index = $(".btn_cart_del").index(this);
+		var goods_sku = $(".btn_cart_del").eq(index).attr("data-sku");
+		var product_name = $(".btn_cart_del").eq(index).attr("data-productname");
+
+		if(confirm("해당 상품을 장바구니에서 삭제하시겠습니까?")){
+			$.ajax({
+				'url': '/order/cart_proc.php',
+				'type': 'POST',
+				'data':{mode:"del_cart",goods_sku:goods_sku},
+				'success': function (data){
+					gtag('event', 'remove_from_cart', {  // 추가
+						items: [{
+							item_id: goods_sku,
+							item_name: product_name,
+							quantity: 1
+						}]
+					});
+					//console.log(data);
+					location.reload();
+				},
+				'error':function(data){
+					alert(data);
+				}
+			});
+		}
+	});
+
+	$(document).on('change', '#cart_chk_all', function() {
+		$('input[name="goods_sku[]"]').each(function() {
+			$(this).prop('checked', $('#cart_chk_all').is(':checked')).trigger('change');
+		});
+	});
+
+	$(document).on("click","#btn_select_del",function(){
+		const sku_Arr = new Array();
+		const product_Arr = new Array();
+		var i=0;
+		$("input[name='goods_sku[]']:checked").each(function(){
+			sku_Arr[i] = $("input[name='goods_sku[]']:checked").eq(i).val();
+			product_Arr.push({
+				item_id: $(this).val(),
+				item_name: $(this).data('productname'),
+				quantity: 1
+			});
+			i++;
+		});
+
+		if(confirm("선택한 상품을 장바구니에서 삭제하시겠습니까?")){
+			$.ajax({
+				url : '/order/cart_proc.php',
+				type: "POST",
+				data : {mode:"select_del_cart",goods_sku_arr:sku_Arr},
+				success:function(data, textStatus, jqXHR){
+					gtag('event', 'remove_from_cart', { items: product_Arr });
+					location.reload();
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					alert(jqXHR);
+				}
+			});
+		}
+	});
+	
+	$("#btn_select_order").bind("click",function(){
+		if(addCommas($("#total_price").text())==0){
+			alert("구매할 상품을 선택해 주세요.");
+			return;
+		}
+
+		const checkout_items = [];
+		$("input[name='goods_sku[]']:checked").each(function(){
+			checkout_items.push({
+				item_id: $(this).val(),
+				item_name: $(this).data('productname'),
+				quantity: 1
+			});
+		});
+
+		gtag('event', 'begin_checkout', {
+			currency: 'KRW',
+			items: checkout_items
+		});
+
+		$("#orderFrm").submit();
+		
+	});
+	
+	function getOrderPrice(){
+		var total_goods_price = 0;
+		var total_discount_price = 0;
+		var total_price = 0;
+		var cart_i=0;
+		$("input[name='goods_sku[]']").each(function(i) {
+			if($("input[name='goods_sku[]']").eq(i).is(":checked")){
+			cart_i++;
+			total_goods_price+= parseInt($(".consumer_price").eq(i).attr("data"));
+			total_discount_price+= parseInt($(".consumer_price").eq(i).attr("data")-$(".price").eq(i).attr("data"));
+			total_price+= parseInt($(".price").eq(i).attr("data"));
+			}
+		});
+		
+		$("#total_goods_count").text(addCommas(cart_i));
+		
+		$("#total_goods_price").text(addCommas(total_goods_price));
+		$("#total_discount_price").text(addCommas(total_discount_price));
+		$("#total_price").text(addCommas(total_price));
+	}
+	
+	function addCommas(amount) {
+		return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+
+	gtag('event', 'view_cart', {
+		currency: 'KRW',
+		items: [
+			<?php
+				foreach($cart_list as $value){
+			?>
+					{
+						item_id: '<?=$value['goods_sku']?>',
+						item_name: '<?=$value['product_name']?>'
+					},
+			<?php
+				}
+			?>
+		]
+	});
+});
+</script>
+</body>
+</html>

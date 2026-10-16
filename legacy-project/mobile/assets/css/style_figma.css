@@ -1,0 +1,1927 @@
+.mobile {
+  background-color: #071125;
+}
+
+.mobile .div {
+	background-color: #071125;
+	width: 100%;
+	position: relative;
+}
+
+.badge{
+	font-size:0.75rem;
+}
+
+/* 공지사항*/
+.main_notice{
+	position: relative;
+	background-color: #0000004c;
+	border: 1px solid;
+	border-color: #3688fc;
+	height:43px;
+}
+
+.main_notice .icon {
+  position: absolute;
+  width: 86px;
+  height: 19px;
+  top: 12px;
+  left: 6px;
+}
+
+.mobile .text-wrapper-40 {
+  top: 0;
+  left: 25px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #3688fc;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .text-wrapper-41 {
+  position: absolute;
+  top: 11px;
+  left: 102px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .text-wrapper-42 {
+  top: 12px;
+  left: 188px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 0.75rem;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .footer {
+  position: absolute;
+  width: 724px;
+  height: 491px;
+  top: 5809px;
+  left: -2px;
+  background-color: #303d4e;
+  border-top-width: 2px;
+  border-top-style: solid;
+  border-right-style: none;
+  border-bottom-style: none;
+  border-left-style: none;
+  border-color: #464f5b;
+}
+
+.mobile .INT-CI-horizontal {
+  position: absolute;
+  width: 160px;
+  height: 58px;
+  top: 386px;
+  left: 16px;
+  object-fit: cover;
+}
+
+.mobile .view {
+  position: absolute;
+  width: 419px;
+  height: 39px;
+  top: 335px;
+  left: 16px;
+}
+
+.mobile .text-wrapper {
+  position: absolute;
+  height: 17px;
+  top: 22px;
+  left: 0;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .p {
+  position: absolute;
+  height: 17px;
+  top: 0;
+  left: 0;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .f {
+  position: absolute;
+  width: 693px;
+  height: 48px;
+  top: 262px;
+  left: 16px;
+}
+
+.mobile .group {
+  position: relative;
+  width: 699px;
+  height: 48px;
+}
+
+.mobile .text-wrapper-2 {
+  position: absolute;
+  width: 538px;
+  height: 14px;
+  top: 34px;
+  left: 0;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .text-wrapper-3 {
+  position: absolute;
+  width: 693px;
+  height: 14px;
+  top: 17px;
+  left: 0;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .text-wrapper-4 {
+  position: absolute;
+  width: 402px;
+  height: 14px;
+  top: 0;
+  left: 0;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .text-wrapper-5 {
+  position: absolute;
+  height: 19px;
+  top: 456px;
+  left: 99px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 16px;
+  text-align: right;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.mobile .text-wrapper-6 {
+  position: absolute;
+  height: 19px;
+  top: 456px;
+  left: 16px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 16px;
+  text-align: right;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.mobile .d {
+  position: absolute;
+  width: 694px;
+  height: 48px;
+  top: 116px;
+  left: 16px;
+}
+
+.mobile .text-wrapper-7 {
+  position: absolute;
+  width: 688px;
+  height: 14px;
+  top: 34px;
+  left: 0;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .text-wrapper-8 {
+  position: absolute;
+  width: 214px;
+  height: 14px;
+  top: 17px;
+  left: 0;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .text-wrapper-9 {
+  position: absolute;
+  width: 144px;
+  height: 14px;
+  top: 0;
+  left: 0;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .vector {
+  top: 102px;
+  position: absolute;
+  width: 688px;
+  height: 1px;
+  left: 16px;
+}
+
+.mobile .img {
+  top: 176px;
+  position: absolute;
+  width: 688px;
+  height: 1px;
+  left: 16px;
+}
+
+.mobile .vector-2 {
+  top: 248px;
+  position: absolute;
+  width: 688px;
+  height: 1px;
+  left: 16px;
+}
+
+.mobile .vector-3 {
+  top: 322px;
+  position: absolute;
+  width: 688px;
+  height: 1px;
+  left: 16px;
+}
+
+.mobile .c {
+  position: absolute;
+  width: 425px;
+  height: 23px;
+  top: 68px;
+  left: 16px;
+}
+
+.mobile .text-wrapper-10 {
+  position: absolute;
+  height: 23px;
+  top: 0;
+  left: 358px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .text-wrapper-11 {
+  position: absolute;
+  height: 23px;
+  top: 0;
+  left: 230px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .text-wrapper-12 {
+  position: absolute;
+  height: 23px;
+  top: 0;
+  left: 147px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .text-wrapper-13 {
+  position: absolute;
+  height: 19px;
+  top: 2px;
+  left: 0;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #3688fc;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.mobile .e {
+  position: absolute;
+  width: 290px;
+  height: 50px;
+  top: 188px;
+  left: 15px;
+}
+
+.mobile .b {
+  position: absolute;
+  width: 690px;
+  height: 44px;
+  top: 12px;
+  left: 16px;
+}
+
+.mobile .overlap {
+  position: relative;
+  width: 692px;
+  height: 48px;
+  top: -2px;
+  left: -2px;
+  background-color: #071125;
+  border-radius: 3px;
+  border: 2px solid;
+  border-color: #263040;
+}
+
+.mobile .overlap-group-wrapper {
+  position: absolute;
+  width: 71px;
+  height: 44px;
+  top: 0;
+  left: 619px;
+}
+
+.mobile .overlap-group {
+  position: relative;
+  width: 69px;
+  height: 44px;
+  background-color: #3688fc;
+  border-radius: 0px 3px 3px 0px;
+}
+
+.mobile .text-wrapper-14 {
+  top: 10px;
+  left: 19px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 16px;
+  white-space: nowrap;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .text-wrapper-15 {
+  top: 12px;
+  left: 114px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 400;
+  color: #37404a;
+  font-size: 14px;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .icon-text {
+  position: absolute;
+  width: 92px;
+  height: 25px;
+  top: 9px;
+  left: 12px;
+}
+
+.mobile .akar-icons-paper {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  top: 0;
+  left: 0;
+}
+
+.mobile .text-wrapper-16 {
+  height: 19px;
+  top: 3px;
+  left: 31px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 16px;
+  white-space: nowrap;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .top-button {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 5711px;
+  left: 335px;
+  background-color: #1b1b1b;
+  border-radius: 3px;
+}
+
+.mobile .arrow-text {
+  position: relative;
+  width: 32px;
+  height: 30px;
+  top: 10px;
+  left: 10px;
+}
+
+.mobile .bytesize-chevron-top {
+  position: absolute;
+  width: 12px;
+  height: 7px;
+  top: 0;
+  left: 9px;
+}
+
+.mobile .text-wrapper-17 {
+  position: absolute;
+  height: 22px;
+  top: 8px;
+  left: 0;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .view-2 {
+  position: absolute;
+  width: 720px;
+  height: 652px;
+  top: 4910px;
+  left: 0;
+}
+
+.mobile .a {
+  position: absolute;
+  width: 338px;
+  height: 197px;
+  top: 455px;
+  left: 366px;
+  background-color: #191919;
+  border-radius: 3px 3px 0px 0px;
+  overflow: hidden;
+}
+
+.mobile .header {
+  width: 338px;
+  height: 157px;
+  top: 40px;
+  object-fit: cover;
+  position: absolute;
+  left: 0;
+}
+
+.mobile .view-3 {
+  position: absolute;
+  width: 340px;
+  height: 40px;
+  top: 0;
+  left: 0;
+}
+
+.mobile .div-wrapper {
+  position: relative;
+  width: 338px;
+  height: 40px;
+  background-color: #303c4d;
+}
+
+.mobile .text-wrapper-18 {
+  position: absolute;
+  width: 207px;
+  top: 10px;
+  left: 11px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 400;
+  color: #ced4da;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .a-2 {
+  position: absolute;
+  width: 338px;
+  height: 197px;
+  top: 455px;
+  left: 16px;
+  background-color: #191919;
+  border-radius: 3px 3px 0px 0px;
+  overflow: hidden;
+}
+
+.mobile .element {
+  position: absolute;
+  width: 258px;
+  top: 10px;
+  left: 14px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 400;
+  color: #ced4da;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .a-3 {
+  position: absolute;
+  width: 338px;
+  height: 197px;
+  top: 246px;
+  left: 366px;
+  background-color: #191919;
+  border-radius: 3px 3px 0px 0px;
+  overflow: hidden;
+}
+
+.mobile .a-4 {
+  position: absolute;
+  width: 338px;
+  height: 197px;
+  top: 246px;
+  left: 16px;
+  background-color: #191919;
+  border-radius: 3px 3px 0px 0px;
+  overflow: hidden;
+}
+
+.mobile .overlap-wrapper {
+  position: absolute;
+  width: 338px;
+  height: 189px;
+  top: 45px;
+  left: 366px;
+  background-color: #191919;
+  border-radius: 3px 3px 0px 0px;
+  overflow: hidden;
+}
+
+.mobile .overlap-2 {
+  position: relative;
+  width: 340px;
+  height: 189px;
+}
+
+.mobile .header-2 {
+  width: 338px;
+  height: 157px;
+  top: 32px;
+  object-fit: cover;
+  position: absolute;
+  left: 0;
+}
+
+.mobile .text-wrapper-19 {
+  position: absolute;
+  width: 211px;
+  top: 10px;
+  left: 11px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 400;
+  color: #ced4da;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .a-5 {
+  position: absolute;
+  width: 338px;
+  height: 189px;
+  top: 45px;
+  left: 16px;
+  background-color: #191919;
+  border-radius: 3px 3px 0px 0px;
+  overflow: hidden;
+}
+
+.mobile .header-3 {
+  width: 338px;
+  height: 153px;
+  top: 36px;
+  object-fit: cover;
+  position: absolute;
+  left: 0;
+}
+
+.mobile .text-wrapper-20 {
+  top: 19px;
+  left: 16px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 16px;
+  white-space: nowrap;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .view-4 {
+  position: absolute;
+  width: 720px;
+  height: 469px;
+  top: 4441px;
+  left: 0;
+}
+
+.mobile .box {
+  position: absolute;
+  width: 720px;
+  height: 397px;
+  top: 45px;
+  left: 0;
+  overflow: hidden;
+}
+
+.mobile .card {
+  position: absolute;
+  width: 642px;
+  top: 0;
+  height: 397px;
+  left: 16px;
+}
+
+.mobile .a-6 {
+  width: 206px;
+  height: 397px;
+  top: 0;
+  left: 436px;
+  border-radius: 0px 0px 3px 3px;
+  overflow: hidden;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .div-2 {
+  position: absolute;
+  width: 206px;
+  height: 49px;
+  top: 348px;
+  left: 0;
+  background-color: #313e4f;
+}
+
+.frame-wrapper {
+  position: absolute;
+  width: 55px;
+  height: 27px;
+  top: 11px;
+  left: 12px;
+}
+
+.frame {
+  height: 27px;
+  background-color: #3688fc;
+  border-radius: 5px;
+}
+
+.text-wrapper-21 {
+  top: 1px;
+  left: 12px;
+  white-space: nowrap;
+  position: absolute;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 15px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.view-5 {
+  position: absolute;
+  width: 72px;
+  height: 32px;
+  top: 10px;
+  left: 126px;
+}
+
+.text-wrapper-22 {
+  font-family: "Tahoma-Regular", Helvetica;
+  font-weight: 400;
+  color: #ced4da;
+  font-size: 11px;
+  text-align: right;
+  text-decoration: line-through;
+  white-space: nowrap;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.text-wrapper-23 {
+  font-family: "Tahoma-Bold", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 0.75rem;
+  text-align: right;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .view-6 {
+  position: absolute;
+  width: 39px;
+  height: 24px;
+  top: 317px;
+  left: 148px;
+}
+.overlap-group-2 {
+	border: 1px solid;
+	border-color: #44badc;
+}
+
+.text-wrapper-24 {
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #44badc;
+  font-size: 0.75rem;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .view-7 {
+  position: absolute;
+  width: 67px;
+  height: 24px;
+  top: 317px;
+  left: 77px;
+}
+
+.overlap-3 {
+  position: relative;
+  width: 65px;
+  height: 24px;
+  border-radius: 5px;
+  border: 1px solid;
+  border-color: #fa6767;
+}
+
+.text-wrapper-25 {
+  width: 48px;
+  top: 3px;
+  left: 7px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #fa6767;
+  font-size: 0.75rem;
+  text-align: center;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .view-8 {
+  position: absolute;
+  width: 67px;
+  height: 24px;
+  top: 317px;
+  left: 6px;
+}
+
+.mobile .overlap-4 {
+  position: relative;
+  width: 65px;
+  height: 24px;
+  border-radius: 5px;
+  border: 1px solid;
+  border-color: #ffbc00;
+}
+
+.mobile .text-wrapper-26 {
+  width: 48px;
+  top: 3px;
+  left: 7px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ffbc00;
+  font-size: 11px;
+  text-align: center;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .view-9 {
+  position: absolute;
+  width: 206px;
+  height: 310px;
+  top: 0;
+  left: 0;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/image-2-1.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-7 {
+  width: 206px;
+  height: 397px;
+  top: 0;
+  left: 218px;
+  border-radius: 0px 0px 3px 3px;
+  overflow: hidden;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-10 {
+  position: absolute;
+  width: 206px;
+  height: 310px;
+  top: 0;
+  left: 0;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/image-2-2.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-8 {
+  width: 206px;
+  height: 397px;
+  top: 0;
+  left: 0;
+  border-radius: 0px 0px 3px 3px;
+  overflow: hidden;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-11 {
+  position: absolute;
+  width: 206px;
+  height: 310px;
+  top: 0;
+  left: 0;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/image-2-3.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-9 {
+  width: 206px;
+  height: 397px;
+  top: 0;
+  left: 670px;
+  border-radius: 0px 0px 3px 3px;
+  overflow: hidden;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .image-wrapper {
+  position: absolute;
+  width: 206px;
+  height: 310px;
+  top: 0;
+  left: 0;
+}
+
+.mobile .image {
+  width: 50px;
+  height: 310px;
+  top: 0;
+  left: 0;
+  position: absolute;
+  object-fit: cover;
+}
+
+.mobile .view-12 {
+  position: absolute;
+  width: 59px;
+  height: 20px;
+  top: 20px;
+  left: 81px;
+}
+
+.mobile .overlap-5 {
+  position: relative;
+  width: 57px;
+  height: 20px;
+  background-color: #3688fc;
+  border-radius: 5px;
+}
+
+.mobile .text-wrapper-27 {
+  top: 3px;
+  left: 6px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 12px;
+  text-align: center;
+  white-space: nowrap;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .view-13 {
+  position: absolute;
+  width: 720px;
+  height: 15px;
+  top: 454px;
+  left: 0;
+}
+
+.mobile .rectangle-wrapper {
+  width: 1296px;
+  height: 15px;
+  background-color: #303d4e;
+}
+
+.mobile .rectangle {
+  width: 40px;
+  height: 15px;
+  background-color: #3688fc;
+}
+
+.mobile .view-14 {
+  position: absolute;
+  width: 720px;
+  height: 297px;
+  top: 4144px;
+  left: 0;
+}
+
+.mobile .image-2 {
+  width: 688px;
+  height: 252px;
+  top: 45px;
+  left: 16px;
+  position: absolute;
+  object-fit: cover;
+}
+
+.mobile .view-15 {
+  position: absolute;
+  width: 720px;
+  height: 469px;
+  top: 3675px;
+  left: 0;
+}
+
+.mobile .card-2 {
+  position: relative;
+  width: 860px;
+  height: 397px;
+  left: 16px;
+}
+
+.mobile .a-10 {
+  width: 206px;
+  height: 397px;
+  top: 0;
+  left: 654px;
+  border-radius: 0px 0px 3px 3px;
+  overflow: hidden;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .text-wrapper-28 {
+  top: 1px;
+  left: 12px;
+  position: absolute;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 15px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .view-16 {
+  position: absolute;
+  width: 39px;
+  height: 24px;
+  top: 317px;
+  left: 77px;
+}
+
+.mobile .view-17 {
+  position: absolute;
+  width: 206px;
+  height: 310px;
+  top: 0;
+  left: 0;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/image-2-6.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .view-18 {
+  position: absolute;
+  width: 206px;
+  height: 310px;
+  top: 0;
+  left: 0;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/image-2-7.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .view-19 {
+  position: absolute;
+  width: 206px;
+  height: 310px;
+  top: 0;
+  left: 0;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/image-2-8.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.view-20 {
+  position: absolute;
+  width: 728px;
+  height: 927px;
+  top: 2748px;
+  left: 0;
+}
+
+.a-11 {
+  width: 688px;
+  height: 68px;
+  top: 785px;
+  left: 16px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.view-21 {
+  width: 118px;
+  height: 14px;
+}
+
+.text-wrapper-29 {
+  font-family: "Tahoma-Regular", Helvetica;
+  font-weight: 400;
+  color: #8391a2;
+  font-size: 0.75rem;
+  text-align: right;
+  text-decoration: line-through;
+  white-space: nowrap;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.text-wrapper-30 {
+  font-family: "Tahoma-Bold", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 0.875rem;
+  text-align: right;
+  white-space: nowrap;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.view-22 {
+  width: 58px;
+  height: 27px;
+}
+
+.text-wrapper-31 {
+  white-space: nowrap;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 15px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.view-23 {
+  width: 39px;
+  height: 24px;
+}
+
+.view-24 {
+  width: 67px;
+  height: 24px;
+}
+
+.view-25 {
+  width: 67px;
+  height: 24px;
+}
+
+.overlap-wrapper-2 {
+  width: 108px;
+  height: 18px;
+  top: 37px;
+  left: 305px;
+}
+
+.overlap-6 {
+  position: relative;
+  width: 106px;
+  height: 18px;
+  background-color: #313e4f;
+  border-radius: 3px;
+}
+
+.text-wrapper-32 {
+  height: 13px;
+  top: 3px;
+  left: 4px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 11px;
+  white-space: nowrap;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.view-26 {
+  width: 64px;
+  height: 18px;
+  top: 37px;
+  left: 238px;
+}
+
+.overlap-7 {
+  position: relative;
+  width: 62px;
+  height: 18px;
+  background-color: #44badc;
+  border-radius: 3px;
+}
+
+.text-wrapper-33 {
+  height: 13px;
+  top: 3px;
+  left: 4px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 11px;
+  text-align: center;
+  white-space: nowrap;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.text-wrapper-34 {
+  top: 9px;
+  left: 238px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .overlap-8 {
+  position: absolute;
+  width: 226px;
+  height: 68px;
+  top: 0;
+  left: 0;
+}
+
+.mobile .view-27 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-2.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .info {
+  left: 67px;
+  position: absolute;
+  width: 49px;
+  height: 25px;
+  top: 0;
+}
+
+.overlap-9 {
+  position: relative;
+  width: 47px;
+  height: 25px;
+  background-color: #44badc;
+}
+
+.text-wrapper-35 {
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #f1f1f1;
+  font-size: 0.875rem;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .view-28 {
+  position: absolute;
+  width: 69px;
+  height: 68px;
+  top: 0;
+  left: 0;
+}
+
+.mobile .overlap-10 {
+  position: relative;
+  width: 67px;
+  height: 68px;
+  background-color: #313e4f;
+}
+
+.mobile .element-2 {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.mobile .overlap-11 {
+  position: absolute;
+  width: 688px;
+  height: 68px;
+  top: 45px;
+  left: 16px;
+  border-radius: 3px;
+}
+
+.mobile .a-12 {
+  position: absolute;
+  width: 688px;
+  height: 68px;
+  top: 0;
+  left: 0;
+  background-color: #191919;
+  border-radius: 3px;
+}
+
+.mobile .view-29 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-14.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .text-wrapper-36 {
+  position: absolute;
+  top: 25px;
+  left: 29px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.mobile .a-13 {
+  width: 688px;
+  height: 68px;
+  top: 711px;
+  left: 16px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-30 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-5.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-14 {
+  width: 688px;
+  height: 68px;
+  top: 637px;
+  left: 16px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-31 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-6.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-15 {
+  width: 688px;
+  height: 68px;
+  top: 563px;
+  left: 16px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-32 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-7.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-16 {
+  width: 688px;
+  height: 68px;
+  top: 489px;
+  left: 16px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-33 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-8.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-17 {
+  width: 688px;
+  height: 68px;
+  top: 415px;
+  left: 16px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-34 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-9.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-18 {
+  width: 688px;
+  height: 68px;
+  top: 341px;
+  left: 16px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-35 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-10.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-19 {
+  width: 688px;
+  height: 68px;
+  top: 267px;
+  left: 16px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-36 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-11.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-20 {
+  width: 688px;
+  height: 68px;
+  top: 193px;
+  left: 16px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-37 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-12.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-21 {
+  width: 688px;
+  height: 68px;
+  top: 119px;
+  left: 16px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-38 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-13.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-22 {
+  width: 688px;
+  height: 68px;
+  top: 859px;
+  left: 16px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-39 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 67px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-15.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .view-40 {
+  width: 100%;
+  height: 1597px;
+}
+
+.element-3 {
+}
+
+.a-23 {
+  border-radius: 3px;
+  background-color: #191919;
+}
+
+.mobile .overlap-wrapper-3 {
+  position: absolute;
+  width: 108px;
+  height: 18px;
+  top: 37px;
+  left: 171px;
+}
+
+.text-wrapper-37 {
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 500;
+  color: #ced4da;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.overlap-12 {
+  width: 159px;
+  height: 64px;
+  top: 0;
+  left: 0;
+}
+
+.view-41 {
+  width: 140px;
+  height: 60px;
+  background-image: url('https://image.directg.net/upload/product/50005141/header/header.jpg');
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .info-2 {
+  left: 0;
+  position: absolute;
+  width: 49px;
+  height: 25px;
+  top: 0;
+}
+
+.mobile .a-24 {
+  width: 688px;
+  height: 68px;
+  top: 628px;
+  left: 0;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #191919;
+}
+
+.mobile .view-42 {
+  position: absolute;
+  width: 159px;
+  height: 60px;
+  top: 4px;
+  left: 0;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-17.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .a-25 {
+  width: 100%;
+  height: 616px;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}
+
+.mobile .element-4 {
+  position: absolute;
+  width: 688px;
+  height: 770px;
+  top: 45px;
+  left: 16px;
+}
+
+.mobile .view-43 {
+  position: absolute;
+  width: 159px;
+  height: 61px;
+  top: 3px;
+  left: 0;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-18.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .overlap-wrapper-4 {
+  position: absolute;
+  width: 108px;
+  height: 18px;
+  top: 37px;
+  left: 239px;
+}
+
+.mobile .view-44 {
+  position: absolute;
+  width: 64px;
+  height: 18px;
+  top: 37px;
+  left: 171px;
+}
+
+.mobile .view-45 {
+  position: absolute;
+  width: 159px;
+  height: 61px;
+  top: 3px;
+  left: 0;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/rectangle-57-19.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .view-46 {
+  position: absolute;
+  width: 720px;
+  height: 297px;
+  top: 854px;
+  left: 0;
+}
+
+.mobile .img-wrapper {
+  position: absolute;
+  width: 688px;
+  height: 252px;
+  top: 45px;
+  left: 16px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/image-53-1.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.mobile .image-3 {
+  width: 235px;
+  height: 64px;
+  top: 170px;
+  left: 226px;
+  position: absolute;
+  object-fit: cover;
+}
+
+.mobile .nav {
+  position: absolute;
+  width: 720px;
+  height: 56px;
+  top: 5562px;
+  left: 0;
+  background-color: #101c36;
+}
+
+.mobile .icon-text-wrapper {
+  position: absolute;
+  width: 138px;
+  height: 44px;
+  top: 6px;
+  left: 16px;
+}
+
+.mobile .icon-text-2 {
+  position: relative;
+  width: 26px;
+  height: 39px;
+  top: 2px;
+  left: 57px;
+}
+
+.mobile .home-icon {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 0;
+  left: 0;
+}
+
+.mobile .text-wrapper-38 {
+  height: 12px;
+  top: 27px;
+  left: 7px;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 10px;
+  white-space: nowrap;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .b-2 {
+  position: absolute;
+  width: 138px;
+  height: 44px;
+  top: 6px;
+  left: 154px;
+}
+
+.mobile .icon-text-3 {
+  position: absolute;
+  width: 48px;
+  height: 12px;
+  top: 29px;
+  left: 46px;
+}
+
+.mobile .text-wrapper-39 {
+  height: 12px;
+  top: 0;
+  left: 0;
+  font-family: "Noto Sans KR", Helvetica;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 10px;
+  text-align: center;
+  white-space: nowrap;
+  position: absolute;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.mobile .img-2 {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 2px;
+  left: 57px;
+}
+
+.mobile .c-2 {
+  position: absolute;
+  width: 138px;
+  height: 44px;
+  top: 6px;
+  left: 292px;
+}
+
+.mobile .icon-text-4 {
+  position: absolute;
+  width: 39px;
+  height: 12px;
+  top: 29px;
+  left: 51px;
+}
+
+.mobile .overlap-13 {
+  position: absolute;
+  width: 274px;
+  height: 44px;
+  top: 6px;
+  left: 430px;
+}
+
+.mobile .d-PS {
+  position: absolute;
+  width: 138px;
+  height: 44px;
+  top: 0;
+  left: 0;
+}
+
+.mobile .icon-text-5 {
+  position: absolute;
+  width: 51px;
+  height: 12px;
+  top: 29px;
+  left: 45px;
+}
+
+.mobile .e-2 {
+  position: absolute;
+  width: 138px;
+  height: 44px;
+  top: 0;
+  left: 136px;
+}
+
+
+
+.mobile .mingcute {
+  position: absolute;
+  width: 19px;
+  height: 19px;
+  top: 0;
+  left: 0;
+}
+
+
+
+.mobile .view-48 {
+  position: absolute;
+  width: 720px;
+  height: 15px;
+  top: 776px;
+  left: 0;
+}
+
+.mobile .main-banner {
+  position: absolute;
+  width: 720px;
+  height: 720px;
+  top: 56px;
+  left: 0;
+}
+
+.mobile .header-4 {
+  width: 720px;
+  height: 56px;
+  top: 0;
+  background-color: #071125;
+  position: absolute;
+  left: 0;
+}
+
+.mobile .a-DG-logo {
+  position: absolute;
+  width: 130px;
+  height: 30px;
+  top: 13px;
+  left: 295px;
+  object-fit: cover;
+}
+
+.mobile .b-search {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  top: 15px;
+  left: 636px;
+}
+
+.mobile .e-basket {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  top: 15px;
+  left: 678px;
+  background-image: url(https://c.animaapp.com/melkeecvpzkLNo/img/basket-icon.svg);
+  background-size: 100% 100%;
+}
+
+.mobile .material-symbols {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  top: 15px;
+  left: 16px;
+}
+
+.mobile .weui-arrow-filled {
+  position: absolute;
+  width: 13px;
+  height: 26px;
+  top: 15px;
+  left: 610px;
+}

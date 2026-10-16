@@ -1,0 +1,89 @@
+<?
+	ini_set( "display_errors", 0 );
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+	$page_title="다이렉트 게임즈 이용안내";
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="mt-0 full-height">
+	<div class="section full mt-2">
+		<div class="listview-title mt-2 fs-5">다이렉트 게임즈</div>
+		<ul class="listview link-listview">
+			<li>
+				<a href="/service/guide_step1.html">회원가입</a>
+			</li>
+			<li>
+				<a href="/service/guide_step2.html">구매방법</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<script src="/assets/js/base.js"></script>
+
+<script>
+var splide = new Splide( '#carousel-slider2', {
+	grid: {
+		gap : {
+			row: '1rem',
+			col: '1rem',
+		},
+   },
+	type       : 'loop',
+	perPage    : 1,
+	perMove : 1,
+	arrows: false,
+	pagination: true,
+} );
+
+splide.mount(window.splide.Extensions);
+</script>
+
+</body>
+
+</html>

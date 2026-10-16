@@ -1,0 +1,55 @@
+import type { BundleDetailResponse } from "@entities/bundle-detail";
+
+/** 번들 상세 mock (legacy bundle_view.html). 비로그인, game_bundle. */
+export const bundleDetailFixture: BundleDetailResponse = {
+  goods_status: "Y",
+  goods_status_msg: "",
+  platform_name: "Steam",
+  goods_item: {
+    product_code: 7001,
+    product_name: "샘플 게임 번들 (3종 팩)",
+    product_name_en: "Sample Game Bundle (3 Pack)",
+    goods_sku: "bundle-sku-0001",
+    domain: "https://directg.net",
+    product_platform: "1",
+    display_type: "game_bundle",
+    is_preorder: "N",
+    is_bonus: "N",
+    soldout: "N",
+    consumer_price: 120000,
+    price: 120000,
+    discount: 0,
+    promotion: { sale_price: 89000, discount_rate: 26, promotion_end: "2026-12-31" },
+    coming_soon: "N",
+    coming_soon_date: "",
+    release_date: "2024-06-01",
+    developer: "Sample Studio",
+    publisher: "Sample Publisher",
+    wishlist_chk: "N",
+  },
+  region_msg: "",
+  show_description: "Y",
+  description_html: "<div><p>세 개의 인기 타이틀을 한 번에 즐기는 번들입니다.</p></div>",
+  show_bundle_items: "Y",
+  package_items: [
+    {
+      header_image: "https://directg.net/upload/apps/1001/header.jpg",
+      item_name: "샘플 게임 1",
+      short_description: "첫 번째 타이틀 소개입니다.",
+      release_date: "2023-01-15",
+    },
+    {
+      header_image: "https://directg.net/upload/apps/1002/header.jpg",
+      item_name: "샘플 게임 2",
+      short_description: "두 번째 타이틀 소개입니다.",
+      release_date: "2023-08-20",
+    },
+    {
+      header_image: "https://directg.net/upload/apps/1003/header.jpg",
+      item_name: "샘플 게임 3",
+      short_description: "세 번째 타이틀 소개입니다.",
+      release_date: "",
+    },
+  ],
+  max_rating: "15",
+};

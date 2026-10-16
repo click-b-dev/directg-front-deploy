@@ -1,0 +1,706 @@
+<?
+	include_once($_SERVER["DOCUMENT_ROOT"].'/lib/lib.php');
+	$page_title="다이렉트 게임즈 소개";
+
+
+	$publisher_array= Array(
+		"90"=>"WiredProductions",
+		"135"=>"10Chambers",
+		"11"=>"11bitstudios",
+		"71"=>"Fulqrum-Publishing",
+		"12"=>"2K",
+		"85"=>"34BigThingssrl",
+		"46"=>"505Games",
+		"70"=>"AmanitaDesign",
+		"47"=>"ArcSystemWorks",
+		"53"=>"Aspyr",
+		"62"=>"Badland",
+		"133"=>"BehaviourInteractive",
+		"38"=>"BethesdaSoftworks",
+		"34"=>"Capcom",
+		"66"=>"CFK",
+		"1"=>"Cigames",
+		"114"=>"CITYCONNECTION",
+		"132"=>"CloudedLeopard",
+		"87"=>"CurveGames",
+		"73"=>"D3PUBLISHER",
+		"59"=>"DefiantDevelopment",
+		"115"=>"Digicon",
+		"96"=>"Dotemu",
+		"22"=>"Focus",
+		"81"=>"Funcom",
+		"163"=>"Gearbox",
+		"140"=>"Graffiti-Games",
+		"43"=>"GreyBox",
+		"48"=>"Haemimont",
+		"88"=>"HandyGames",
+		"154"=>"HatinhInteractive",
+		"98"=>"HeadupGmbH",
+		"136"=>"HitGrab",
+		"99"=>"IcebergInteractive",
+		"40"=>"InXileEntertainment",
+		"6"=>"KalypsoMedia",
+		"75"=>"Konami",
+		"49"=>"LeagueofGeeks",
+		"45"=>"LevelUpLabs",
+		"126"=>"Lightning",
+		"120"=>"Mantisco",
+		"143"=>"MapleWhispering",
+		"130"=>"Merge",
+		"63"=>"Microids",
+		"91"=>"Milestone",
+		"109"=>"MIXTVISION",
+		"100"=>"Modus",
+		"84"=>"Nacon",
+		"117"=>"NEOWIZ",
+		"72"=>"NISAmerica",
+		"30"=>"Paradox",
+		"119"=>"Pieplus",
+		"25"=>"PlugInDigital",
+		"78"=>"PridefulSloth",
+		"86"=>"PrivateDivision",
+		"134"=>"RedHookStudio",
+		"14"=>"Rockstar",
+		"97"=>"SamuraiPunk",
+		"93"=>"SEGA",
+		"89"=>"Shiro",
+		"74"=>"SNK",
+		"58"=>"Team17",
+		"23"=>"THQNordic",
+		"52"=>"Ubisoft",
+		"128"=>"UnitedLabel",
+		"80"=>"Versus",
+		"3"=>"WarnerBros",
+		"112"=>"WayForward",
+		"53"=>"Atari",
+	);
+
+	$publisher = array();
+	$loop="0";
+	foreach ($publisher_array as $key => $value){
+		$publisher[$loop]['publisher_code'] = $key;
+		$publisher[$loop]['publisher_name'] = $value;
+		$loop++;
+	}
+
+	$sortArr = array();	
+	foreach($publisher as $res){
+		$sortArr [] = $res['publisher_name']; 
+	}
+
+	array_multisort($sortArr , SORT_ASC, $publisher);
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="" name="author" />
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap">
+
+<style>
+
+#pagination .page-link{
+	color:#ffffff;
+}
+
+footer{
+	background-color: #343a40;
+	color:#ced4da;
+}
+
+
+.bg-black{
+	background:#131B26;
+}
+
+.progressbar {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-content: center;
+	align-items: center;
+	height: 210px;
+	text-align: center;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.progressbar li {
+	list-style-type: none;
+	flex-grow: 0;
+	flex-shrink: 0;
+	flex-basis: 33%;
+	width: 210px;
+	text-align: center;
+	text-transform: uppercase;
+	color: #ffffff;
+	margin: 0 auto;
+	position: relative;
+}
+
+.progressbar li:before {
+	width: 210px;
+	height: 210px;
+	content: "";
+	line-height: 100px;
+	border: 8px solid #0C7CEC;
+	display: inline-flex;
+	text-align: center;
+	border-radius: 50%;
+	position: relative;
+	background: #fff no-repeat center center;
+	z-index: 2;
+}
+
+.progressbar li.active:before {
+	background: #0C7CEC no-repeat center center;
+	background-size: 60%;
+	z-index: 10;
+}
+
+.progressbar li img {
+	margin-top: 0;
+	margin-left: -210px;
+	z-index: 10000;
+	position: absolute;
+}
+
+.service-section{
+	padding-top:40px;
+	padding-bottom:40px;
+	height:400px;
+}
+
+.service-section:after{
+	content: ' ';
+	background-image: url('/assets/images/service/DG_Introbr_pc_object0_1920x400.jpg');
+	background-repeat:no-repeat;
+	position: absolute;
+	top:120px;
+	right: 0;
+	bottom: 0;
+	z-index: -1;
+	width: 100%;
+}
+
+
+
+.t3-masthead{
+	height:400px;
+	position: relative;
+}
+
+.t3-masthead .ja-masthead .ja-masthead-detail{
+	padding-top:40px;
+	padding-left:20px;
+	font-family: "Noto Sans KR", sans-serif;
+}
+
+.t3-masthead .ja-masthead .ja-masthead-title{
+	font-size:42px;
+	margin-top:20px;
+	font-family: "Noto Sans KR", sans-serif;
+	font-weight:600;
+}
+
+.ja-masthead .ja-masthead-detail{
+	color: #fff;
+	max-width: 1120px;
+	position: relative;
+	text-align: left;
+	z-index: 20;
+	padding:0;
+}
+
+.t3-masthead .ja-masthead .ja-masthead-detail{
+	padding:20px;
+}
+
+.tag_color{
+	border-radius:15px;
+	background:#ffffff;
+	color:#0c7ced;
+	padding:5px 10px;
+	font-size:20px;
+	font-family: "Do Hyeon";
+}
+
+.bg_bottom{
+	position:relative;
+	display:block;
+	margin-top:70px;
+	height:100px;
+}
+
+.bg_bottom img{
+	float:left;
+	padding-top:15px;
+	padding-right:30px;
+	bottom:0px;
+}
+
+.bg_bottom p{
+	float:left;
+	font-size:18px;
+	display:block;
+	line-height:150%;
+	font-family: "Noto Sans KR", sans-serif;
+}
+
+.section{
+	margin-top: 100px;
+}
+
+.section h3{
+	text-align:center;
+	font-family: "Noto Sans KR", sans-serif;
+	font-size:38px;
+	margin-bottom:20px;
+}
+
+.section_content{
+	margin:0;
+	padding:0;
+	text-align:center;
+	overflow:hidden;
+}
+
+.section_content .section_container{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-content: center;
+	margin:0;
+}
+
+.section_content .section_item{
+	flex-basis: 30%;
+	flex-grow: 1;
+	flex-shrink : 0;
+	background:#131c27;
+	margin:10px;
+	padding:10px 0 0 0;
+	display:flex;
+	flex-direction:column;
+}
+
+.section_content .section_item .section_tail{
+	margin-top: auto;
+}
+
+.section_content .section_item h4{
+	text-align:center;
+	font-size:24px;
+	font-weight:400;
+	font-family: "Noto Sans KR", sans-serif;
+}
+
+.section_content .section_item p{
+	margin:10px;
+	line-height:150%;
+	word-break:keep-all;
+	white-space:pre-line;
+	letter-spacing:0px;
+	text-align:center;
+	font-family: "Noto Sans KR", sans-serif;
+	font-size:16px;
+}
+
+.section_content .section_item .btn_link{
+	border-radius:20px;
+	background:#0C7CEC;
+	padding:0px 10px;
+	margin:10px;
+	height:30px;
+	line-height:30px;
+	color:#ffffff;
+	text-align:center;
+	display:block;
+	font-family: "Noto Sans KR", sans-serif;
+	font-size:16px;
+	text-decoration: none;
+}
+
+.section_content .section_item .btn_link:hover{
+	background:#0861b9;
+}
+
+.section_content .section_item2{
+	flex-basis: 148px;
+	flex-grow: 1;
+	background:#131B26;
+	margin:5px;
+	padding:0px;
+}
+
+.section_content .section_item2 p{
+	text-align:center;
+	font-family: "Noto Sans KR", sans-serif;
+	margin-top:-10px;
+	padding-bottom:10px;
+}
+
+.section_content .section_item2 a{
+	color:#ffffff;
+	font-size:16px;
+}
+
+.section_content .section_item3{
+	flex-basis: 104px;
+	flex-grow: 0;
+	background:#131B26;
+	margin:4px;
+	padding:0;
+	text-align:center;
+}
+
+.section_content .section_item3 img{
+	z-index:1000;
+}
+
+.progressbar-wrapper {
+	background: none;
+	margin-top: 10px;
+	margin-bottom: 15px;
+	height:250px;
+}
+
+.progressbar{
+	display:flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-content:center;
+	align-items:center;
+	height:210px;
+	text-align:center;
+	padding-left:20px;
+	padding-right:20px;
+}
+
+.progressbar li {
+	list-style-type: none;
+	flex-grow: 0;
+	flex-shrink : 0;
+	flex-basis: 33%;
+	width:210px;
+	text-align: center;
+	text-transform: uppercase;
+	color: #ffffff;
+	margin:0 auto;
+	position: relative;
+}
+
+.progressbar li img{
+	margin-top:0;
+	margin-left:-210px;
+	z-index:10000;
+	position: absolute;
+}
+
+.progressbar li:before {
+	width: 210px;
+	height: 210px;
+	content: "";
+	line-height: 100px;
+	border: 8px solid #0C7CEC;
+	display: inline-flex;
+	text-align: center;
+	border-radius: 50%;
+	position: relative;
+	z-index: 2;
+}
+.progressbar li:after {
+	 width: 100%;
+	 height: 8px;
+	 content: '';
+	 position: absolute;
+	 background-color: #0C7CEC;
+	 top: 100px;
+	 left: -75%;
+	 z-index: 0;
+}
+.progressbar li:first-child:after {
+	 content: none;
+}
+.progressbar li.active {
+	font-weight: bold;  
+}
+.progressbar li.active:before {
+	border-color: #0C7CEC;
+ }
+.progressbar li.active + li:after {
+	background-color: #0C7CEC;
+}
+
+.progressbar li.active:before {
+	background: #0C7CEC   no-repeat center center;
+	background-size: 60%;
+	z-index:10;
+}
+.progressbar li::before {
+	background: #fff  no-repeat center center;
+	background-size: 60%;
+	z-index:10;
+}
+
+.label1{
+	background:#000000;
+	color:#8d8d8d;
+	padding:5px 10px;
+	border-radius:10px;
+	font-size:20px;
+	font-family: "Do Hyeon";
+}
+
+.label_color{
+	color:#ff0000;
+}
+
+.font18{
+	font-size:18px;
+	line-height:120%;
+	font-family: "Noto Sans KR", sans-serif;
+}
+
+.dg_link_logo:hover{
+	background:#0861b9;
+}
+
+.t3-masthead .ja-masthead #ja-masthead-bg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-size: cover;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+
+	<div class="my-3 pb-5">
+		<main>
+	
+	<div class="wrap t3-masthead">
+		<div class="ja-masthead">
+			<div id="ja-masthead-bg" style="background-image: url('/assets/images/service/DG_Introbr_pc_object0_1920x400.jpg')"></div>
+			<div class="container pt-5">
+				<div class="ja-masthead-detail">
+					<div class="bg_tag">
+						<span class="tag_color">#상시할인</span>
+						<span class="tag_color">#정기프로모션</span>
+						<span class="tag_color">#실시간코드확인</span>
+						<span class="tag_color">#정식라이센스</span>
+					</div>
+					<h3 class="ja-masthead-title">실시간 엔터테인먼트 플랫폼 <br/> 다이렉트 게임즈에 오신 것을 환영합니다!</h3>
+					<div class="ja-masthead-description">
+						<div class="bg_bottom">
+							<img src="/assets/images/service/00-00_h2intlogo_v2.png">
+							<p>
+								다이렉트 게임즈는 <br/>
+								에이치투 인터렉티브에서 운영하는 <br/>
+								공식 디지털 스토어입니다.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+			<div id="t3-mainbody" class="wrap t3-mainbody" style="min-height:620px">
+				<div class="container">
+					<div class="row">
+						<!-- MAIN CONTENT -->
+						<div id="t3-content" class="t3-content col-md-12" style="padding-top:0px">
+							<div class="section">
+								<h3>보다 믿을 수 있는 서비스 제공을 약속합니다</h3>
+								<div class="section_content">
+									<div style="margin-bottom:40px;">
+										<span class="label1"><span class="label_color">NO!</span> 해외상품 우회등록</span>
+										<span class="label1"><span class="label_color">NO!</span> 아이디/패스워드 노출</span>
+										<span class="label1"><span class="label_color">NO!</span> 스토어/플랫폼 계정 차단</span>
+									</div>
+									<div class="progressbar-wrapper">
+										<ul class="progressbar">
+											<li><img src="/assets/images/service/01-00_publisher.png?3"></li>
+											<li class="active"><img src="/assets/images/service/01-01_dglogo_v2.png?3"></li>
+											<li><img src="/assets/images/service/01-02_member.png?3"></li>
+										</ul>
+									</div>
+									<p class='font18'>다이렉트 게임즈는 세계 유수의 개발사 및 퍼블리셔와 직접 제휴하여</p>
+									<p class='font18'>자체 유통 마진은 최소화하면서도 양질의 상품들을 좀 더 합리적인 가치로써 제공하고 있습니다. </p>
+									<p class='font18'>또한, 회원분들의 다양한 피드백을 전달하여 직접적인 상호작용과 원활한 소통을 이어가고 있습니다.</p>
+								</div>
+							</div>
+							<div class="section">
+								<h3>다이렉트 게임즈 회원만의 혜택이 기다립니다</h3>
+								<div class="section_content">
+									<div class="section_container">
+										<div class="section_item">
+											<div>
+												<h4>정식 라이센스 계약</h4>
+												<img src="/assets/images/service/02-00_license.png">
+												<p style="font-size:16px;padding:4px">다이렉트 게임즈는 모든 상품이 개발사 및 퍼블리셔와의 정식 계약을 통해 판매 중인 공식 판매처입니다.</p>
+											</div>
+											<div class="section_tail">
+												<a href="/game/game_list.html" class="btn_link" target="_blank">모든 게임 보러가기</a>
+											</div>
+										</div>
+										<div class="section_item">
+											<div>
+												<h4>프로모션과 이벤트</h4>
+												<img src="/assets/images/service/02-01_promotion.png">
+												<p style="font-size:16px;padding:4px">상시 할인, 정기 주말 특가, 수많은 퍼블리셔가 참여하는 대규모 프로모션과 랜덤 박스, 리워드 등 다양한 이벤트가 준비되어 있습니다.</p>
+											</div>
+											<div class="section_tail">
+												<a href="/promotion/promotion_ing.html" class="btn_link" target="_blank">진행 중인 프로모션 확인하기</a>
+											</div>
+										</div>
+										<div class="section_item">
+											<div>
+												<h4>편리한 로그인</h4>
+												<img src="/assets/images/service/02-02_login.png">
+												<p style="font-size:16px;padding:4px">이메일 주소 인증만으로 쉽고 빠른 회원가입과 네이버, 카카오 계정 간편 로그인 지원으로 편의를 더합니다.</p>
+											</div>
+											<div class="section_tail">
+												<a href="/member/join_step1.html" class="btn_link" target="_blank">다이렉트 게임즈 회원가입</a>
+											</div>
+										</div>
+										<div class="section_item">
+											<div>
+												<h4>원활한 소통</h4>
+												<img src="/assets/images/service/02-03_communication.png">
+												<p style="font-size:16px;padding:4px">고객센터 및 공식 소셜미디어 운영으로 회원분들의 문의와 요청에 적극적인 대응을 약속합니다.</p>
+											</div>
+										</div>
+										<div class="section_item">
+											<div>
+												<h4>실시간 코드 발송</h4>
+												<img src="/assets/images/service/02-04_realtime.png">
+												<p style="font-size:16px;padding:4px">이메일, 문자를 기다릴 필요가 없습니다. PC 및 모바일에서 언제든지 구매한 제품 코드 확인이 가능합니다.</p>
+											</div>
+										</div>
+										<div class="section_item">
+											<div>
+												<h4>다양한 결제 수단</h4>
+												<img src="/assets/images/service/02-05_payment.png">
+												<p style="font-size:16px;padding:4px">신용카드, 휴대폰결제, 계좌이체와 같은 기본결제는 물론 네이버페이, 페이코 등의 간편결제까지 선택의 폭이 넓습니다.</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--
+							<div class="section">
+								<h3>다이렉트 게임즈 및 플랫폼별 이용 방법이 궁금하시다면</h3>
+								<div class="section_content">
+									<div class="section_container">
+										<div class="section_item2 dg_link_logo">
+											<img src="/assets/images/service/03-00_DG.png?t=20250820">
+											<p>다이렉트 게임즈</p>
+										</div>
+										<div class="section_item2 dg_link_logo">
+											<a href="/service/guide_steam.html" title="스팀 이용안내" target="_blank">
+											<img src="/assets/images/service/03-01_steam.png">
+											<p>스팀</p>
+											</a>
+										</div>
+										<div class="section_item2 dg_link_logo">
+											<a href="/service/guide_ubisoft.html" title="유비소프트 커넥트 이용안내" target="_blank">
+											<img src="/assets/images/service/03-02_ubisoft.png">
+											<p>유비소프트 커넥트</p>
+											</a>
+										</div>
+										<div class="section_item2 dg_link_logo">
+											<a href="/service/guide_bethesda.html" title="베데스다 이용안내" target="_blank">
+											<img src="/assets/images/service/03-03_bethesda.png">
+											<p>베데스다</p>
+											</a>
+										</div>
+										<div class="section_item2 dg_link_logo">
+											<a href="/service/guide_epic.html" title="에픽 게임즈 이용안내" target="_blank">
+											<img src="/assets/images/service/03-04_epic.png">
+											<p>에픽 게임즈</p>
+											</a>
+										</div>
+										<div class="section_item2 dg_link_logo">
+											<a href="/service/guide_rockstar.html" title="락스타 게임즈 이용안내" target="_blank">
+											<img src="/assets/images/service/03-05_rockstar.png">
+											<p>락스타 게임즈</p>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							-->
+							
+							<div class="section">
+								<h3>세계 유수의 파트너들이 함께합니다</h3>
+								<div class="section_content">
+									<div class="section_container">
+									<?	
+										foreach($publisher as $key=>$value){
+											if($value["publisher_code"]>0){
+												$publisher_link = "/game/game_thumb.html?search_publisher=".$value['publisher_code'];
+											}else{
+												$publisher_link = "#";
+											}
+									?>
+										<div class="section_item3">
+											<img src="/assets/images/service/v4/<?=$value['publisher_name']?>_partners_contents_0.png?4" alt="<?=$value['publisher_name']?>" >
+										</div>
+									<?}?>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- MAIN CONTENT -->
+					</div>
+				</div>
+			</div>
+
+
+
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".section_item3 img").bind("mouseover",function(){
+		var index = $(".section_item3 img").index(this);
+		var image_off = $(this).attr("src");
+		var image_on = image_off.replace("_0","_1");
+		$(".section_item3 img").eq(index).attr("src",image_on);
+		$(".section_item3").eq(index).css("background","#ffffff");
+	});
+
+	$(".section_item3 img").bind("mouseout",function(){
+		$(".section_item3 img").each(function(i, item){
+			$(".section_item3 img").eq(i).attr("src",$(".section_item3 img").eq(i).attr("src").replace("_1","_0"));
+			$(".section_item3").eq(i).css("background","#131B26");
+		});
+	});
+});
+</script>
+</body>
+</html>

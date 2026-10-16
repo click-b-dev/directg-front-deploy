@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind Mobile Shop</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Material Symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+	<script>
+		  tailwind.config = {
+			darkMode: 'class',
+			theme: {
+			  extend: {
+				colors: {
+				  'custom-dark': '#071125', 
+				}
+			  }
+			}
+		  }
+		</script>
+    <style>
+        /* 가로 스크롤바 숨기기 */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+	<style>
+		.material-symbols-outlined {
+		  font-variation-settings:
+		  'FILL' 1,
+		  'wght' 400,
+		  'GRAD' 0,
+		  'opsz' 24
+		}
+		</style>
+</head>
+<body class="bg-white dark:bg-custom-dark text-white">
+    <!-- 1. 상단 헤더: 브랜드명 및 검색/장바구니 -->
+    <header class="sticky top-0 z-50 w-full bg-white dark:bg-[#121212] border-b dark:border-gray-800 shadow-sm">
+		 <!-- [1단] 상단 영역: 브랜드 로고 및 퀵 액션 -->
+		<div class="flex items-center justify-between px-4 h-14">
+			<h1 class="text-xl font-black tracking-tighter text-primary-500 dark:text-primary-400">LOGO</h1>
+			<div class="flex items-center gap-4">
+				<span class="material-symbols-outlined cursor-pointer text-gray-600 dark:text-white">favorite</span>
+				<div class="relative cursor-pointer">
+					<span class="material-symbols-outlined text-gray-600 dark:text-white">shopping_basket</span>
+					<!--<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-600 text-[10px] text-white font-bold">3</span>-->
+				</div>
+			</div>
+		</div>
+
+		<!-- [2단] 검색창 영역: 가독성 확보를 위한 독립 공간 -->
+		<div class="px-4 pb-3">
+			<div class="relative flex items-center">
+				<input 
+					type="text" 
+					placeholder="검색어를 입력해 주세요" 
+					class="w-full h-10 pl-10 pr-4 rounded-md bg-gray-100 dark:bg-gray-800 border border-indigo-500 text-sm focus:ring-1 focus:ring-primary-500 outline-none transition-colors dark:placeholder-gray-500"
+				>
+				<!-- 2. left-3 대신 right-3을 사용하여 우측 고정 -->
+				<span class="material-symbols-outlined absolute right-3 text-white text-2xl cursor-pointer">search</span>
+			</div>
+		</div>
+
+		<!-- [3단] 헤더 내비게이션(LNB): 카테고리 스크롤 -->
+		<nav class="flex overflow-x-auto hide-scrollbar px-2 gap-4 border-t dark:border-gray-800">
+			<a href="#" class="px-3 py-3 text-sm font-bold text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 whitespace-nowrap">추천</a>
+			<a href="#" class="px-3 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">베스트</a>
+			<a href="#" class="px-3 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">신상</a>
+			<a href="#" class="px-3 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">여성룩</a>
+			<a href="#" class="px-3 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">남성룩</a>
+			<a href="#" class="px-3 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">세일</a>
+		</nav>
+    </header>
+    <main class="pb-24">
+        <!-- 2. 가로 스크롤 카테고리: 엄지손가락 접근성 최적화 -->
+        <nav class="hide-scrollbar flex overflow-x-auto bg-white px-4 py-3 gap-6 border-b">
+            <a href="#" class="whitespace-nowrap border-b-2 border-indigo-600 pb-1 text-sm font-bold text-indigo-600">전체</a>
+            <a href="#" class="whitespace-nowrap pb-1 text-sm font-medium text-gray-500">베스트</a>
+            <a href="#" class="whitespace-nowrap pb-1 text-sm font-medium text-gray-500">신상품</a>
+            <a href="#" class="whitespace-nowrap pb-1 text-sm font-medium text-gray-500">의류</a>
+            <a href="#" class="whitespace-nowrap pb-1 text-sm font-medium text-gray-500">액세서리</a>
+            <a href="#" class="whitespace-nowrap pb-1 text-sm font-medium text-gray-500">세일</a>
+        </nav>
+
+        <!-- 3. 메인 배너 (Swiper.js 등이 들어갈 자리) -->
+        <section class="mt-4 px-4">
+            <div class="aspect-[16/9] w-full rounded-2xl bg-indigo-100 flex items-center justify-center overflow-hidden">
+                <img src="https://images.unsplash.com" class="object-cover w-full h-full" alt="Banner">
+            </div>
+        </section>
+
+        <!-- 4. 상품 그리드: 모바일 표준 2열 배치 -->
+        <section class="mt-8 px-4">
+            <h2 class="mb-4 text-lg font-bold">추천 상품</h2>
+            <div class="grid grid-cols-2 gap-x-4 gap-y-8">
+                <!-- 상품 카드 반복 -->
+                <div class="group relative">
+                    <div class="aspect-square w-full overflow-hidden rounded-xl bg-gray-200">
+                        <img src="https://images.unsplash.com" class="h-full w-full object-cover group-hover:opacity-75">
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-xs text-gray-500">미니멀 시리즈</p>
+                        <h3 class="text-sm font-medium text-gray-700">에센셜 화이트 워치</h3>
+                        <p class="mt-1 text-sm font-bold">₩129,000</p>
+                    </div>
+                </div>
+
+                <div class="group relative">
+                    <div class="aspect-square w-full overflow-hidden rounded-xl bg-gray-200">
+                        <img src="https://images.unsplash.com" class="h-full w-full object-cover group-hover:opacity-75">
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-xs text-gray-500">음향 기기</p>
+                        <h3 class="text-sm font-medium text-gray-700">프리미엄 헤드셋</h3>
+                        <p class="mt-1 text-sm font-bold text-indigo-600">₩349,000 <span class="text-xs text-gray-400 line-through">₩399,000</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 5. 하단 탭바: 고정형 네비게이션 -->
+    <nav class="fixed bottom-0 flex h-20 w-full items-center justify-around border-t bg-white/80 backdrop-blur-md pb-4">
+        <a href="#" class="flex flex-col items-center text-indigo-600">
+            <span class="material-symbols-outlined">home</span>
+            <span class="text-[10px] font-medium mt-1">홈</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-gray-400">
+            <span class="material-symbols-outlined">category</span>
+            <span class="text-[10px] font-medium mt-1">카테고리</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-gray-400">
+            <span class="material-symbols-outlined">favorite</span>
+            <span class="text-[10px] font-medium mt-1">찜</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-gray-400">
+            <span class="material-symbols-outlined">person</span>
+            <span class="text-[10px] font-medium mt-1">마이</span>
+        </a>
+    </nav>
+
+</body>
+</html>

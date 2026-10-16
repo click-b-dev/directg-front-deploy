@@ -1,0 +1,600 @@
+<?
+	ini_set( "display_errors", 0 );
+	header("Content-Type:text/html; charset=utf-8");
+	header("Cache-Control: no-cache");
+	session_cache_limiter('private_no_expire');
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title="주문하기";
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	//기존 DB
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$order = new Order($conn);
+	$member = new Member($conn_dgkr);
+	
+	//주문상품목록
+	$order_item_list = $order->getOrderItemList($_SESSION['member']['m_no']);
+	
+	//print_r($order_item_list );
+	
+	//보유포인트 현황
+	$member_emoney = $member->getMemberEmoney($_SESSION['member']['m_no']);
+	
+	$is_delivery_address = "false";
+	
+	foreach($order_item_list as $value){
+		if($value['delivery_type']=="2" || $value['delivery_type']=="3"){//실물발송
+			$is_delivery_address = "true";
+		}
+	}
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="manifest" href="/manifest.json?1">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+
+<style>
+.popover-header{
+	background:#303D4E;
+	font-size:14px;
+}
+.popover-body{
+	font-size:12px;
+}
+</style>
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="full-height">
+	<form class="form-horizontal" name="orderFrm" id="orderFrm" method="POST" action="<?=$_SESSION['member']['m_id']=="sati@h2interactive.co.kr"?"yjs_settle.html":"settle.html"?>">
+	<input type="hidden" name="emoney_chk" id="emoney_chk" value="N">
+	<input type="hidden" name="delivery_type" id="delivery_type" value="<?=$value['delivery_type']?>">
+	<div class="section full px-3 pt-2">
+		<div class="section-title">주문상품정보</div>
+		<?
+			$total_goods_price = 0;
+			foreach($order_item_list as $key=>$value){
+		?>
+		<div class="card cart-item mb-2 rounded-0">
+			<img src="/upload/product/<?=$value['product_code']?>/header/header.jpg?t=<?=time()?>" alt="product" class="card-img-top rounded-0">
+			<div class="card-body">
+				<h5 class="card-title fs-4 mb-2"><?=$value['product_name']?></h5>
+				<p class="card-text">
+					<?if(is_array($value['promotion'])){?>
+					<span class="badge bg-danger align-self-center px-3 py-3 font-16 num fw-bold rounded-2"><?=$value['promotion']['discount_rate']?> %</span>
+					<strong class="ms-1 font-16 num fw-bold price text-white" data="<?=$value['promotion']['sale_price']?>">&#8361; <?=number_format($value['promotion']['sale_price'])?></strong>
+					<s class="ms-1 font-12 num consumer_price" data="<?=$value['consumer_price']?>">&#8361; <?=number_format($value['consumer_price'])?></s>
+					<?}else{?>
+					<span class="badge bg-primary align-self-center px-3 py-3 font-16 num fw-bold rounded-2"><?=$value['discount']?> %</span>
+					<strong class="ms-1 font-16 num fw-bold price text-white" data="<?=$value['price']?>">&#8361; <?=number_format($value['price'])?></strong>
+					<s class="ms-1 font-12 num consumer_price" data="<?=$value['consumer_price']?>">&#8361; <?=number_format($value['consumer_price'])?></s>
+					<?}?>
+				</p>
+			</div>
+		</div>
+		<?
+				$total_goods_price+=$value['consumer_price'];
+				if($value['promotion']['sale_price']>0){
+					$total_price+=$value['promotion']['sale_price'];
+				}else{
+					$total_price+=$value['price'];
+				}
+			}
+		?>
+		<!-- * item -->
+	</div>
+	
+	<div class="section full px-3 mb-2">
+		<div class="section-title">다이렉트 게임즈 포인트 사용</div>
+		<div class="wide-block pt-2 pb-1">
+			<div class="row">
+				<label for="use_emoney" class="col-3 form-label text-nowrap">포인트</label>
+				<div class="col-5">
+					<button type="button" class="btn btn-light btn-sm shadow-none" id="btn_emoney_use" data-max="<?=$member_emoney?>">사용</button>
+					<button type="button" class="btn btn-secondary btn-sm shadow-none" id="btn_emoney_cancel" data-max="<?=$member_emoney?>">취소</button>
+				</div>
+				<div class="col-4">
+					<div class="input-group">
+						<div class="input-group-text border-none">-</div>
+						<input type="number" class="form-control font-14 text-end rounded-1 shadow-none " id="use_emoney" name="use_emoney" placeholder="0" step="100" >
+					</div>
+				</div>
+				<div class="col-12 text-end">
+					<span class="d-block font-14">잔여 포인트: <span class="num font-14"><?=number_format($member_emoney)?></span></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="section full px-3 mb-2">
+		<div class="section-title">결제수단</div>
+		<div class="wide-block p-0">
+			<div class="input-list">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="settle_kind" id="settle_kind_toss_bank" value="toss_bank">
+					<label class="form-check-label font-14 bg-white" for="settle_kind_toss_bank">
+						<?if(date('Y-m-d H:i:s')>='2025-12-16 00:00:00' && date('Y-m-d H:i:s')<'2026-01-06 23:59:00'){?>
+						<img src="https://image.directg.net/D85r5Ckrep" class="" style="height:32px">
+						<?}else{?>
+						<img src="/assets/images/order/m_toss_quick.svg" class="" style="height:32px">
+						<?}?>
+					</label>
+					<!-- 이벤트 배너 -->
+					<?
+						if(date('Y-m-d H:i:s')>='2025-12-18 00:00:00' && date('Y-m-d H:i:s')<'2026-01-06 23:59:00'){
+						?>
+						<div class="wide-block px-2">
+							<a href="/board/notice_view.html?idx=179"><img src="https://image.directg.net/x85i5NVWZE" class="img-fluid" alt="다이렉트 게임즈 토스 퀵계좌이체로 5만원이상 결제시 5% 즉시 할인(최대 1만원,중복불가, 기간내 1회 참여), 기간:2025-12-18~2026-01-06"></a>
+						</div>
+					<?
+						}
+					?>
+					<!-- 이벤트 배너 -->
+					<div class="wide-block py-2">
+						<span class="d-block small text-danger font-12">※ 결제 예정액이 200 원 이상일 때만 사용이 가능합니다.</span>
+					</div>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="settle_kind" id="settle_kind_naverpay" value="naverpay">
+					<label class="form-check-label py-2" for="settle_kind_naverpay" style="background:#00DE5A;"><img src="/assets/images/order/logo_npaybk_small.svg" class="" style="height:32px"></label>
+					
+					<!-- 이벤트 배너 -->
+					<?
+						if(date('Y-m-d H:i:s')>='2025-10-24 16:00:00' && date('Y-m-d H:i:s')<'2025-11-04 23:59:00'){
+						?>
+						<div class="wide-block px-2">
+							<a href="/board/notice_view.html?idx=112"><img src="https://image.directg.net/L846ZdNY6v" class="img-fluid" alt="네이버페이로 5만원이상 결제시 3천원 즉시 할인"></a>
+						</div>
+					<?
+						}
+					?>
+	
+					<div class="wide-block py-2">
+						<span class="d-block small text-danger font-12">※ 결제 예정액이 100 원 이상일 때만 사용이 가능합니다.</span>
+					</div>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="settle_kind" id="settle_kind_payco" value="payco">
+					<label class="form-check-label py-2" for="settle_kind_payco" style="background:#ffffff;"><img src="/assets/images/order/PAYCO_Logo_Basic.svg" class="" style="height:24px"></label>
+					<div class="wide-block py-2">
+						<span class="d-block small text-danger font-12">※ 결제 예정액이 100 원 이상일 때만 사용이 가능합니다.</span>
+					</div>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="settle_kind" id="settle_kind_SC0010" value="SC0010">
+					<label class="form-check-label font-14" for="settle_kind_SC0010">신용/체크카드 결제</label>
+					<div class="wide-block py-2">
+						<span class="d-block small text-danger font-12">※ 결제 예정액이 1,000 원 이상일 때만 사용이 가능합니다.</span>
+					</div>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="settle_kind" id="settle_kind_SC0030" value="SC0030">
+					<label class="form-check-label font-14" for="settle_kind_SC0030">실시간 계좌이체 결제</label>
+					<div class="wide-block py-2">
+						<span class="d-block small text-danger font-12">※ 결제 예정액이 10,000 원 이상일 때만 사용이 가능합니다.</span>
+					</div>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="settle_kind" id="settle_kind_SC0060" value="SC0060">
+					<label class="form-check-label font-14" for="settle_kind_SC0060">휴대폰 결제</label>
+					<div class="wide-block py-2">
+						<span class="d-block small text-danger font-12">※ 결제 예정액이 350 원 이상일 때만 사용이 가능합니다.<br>
+						※ 부분/이월 환불이 불가하며, 다이렉트 게임즈 포인트로 제공됩니다. 자세한 사항은 <a href="/service/refund_policy.html">[환불정책]</a>을 확인해 주시기 바랍니다.</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<?
+		if($is_delivery_address=="true"){
+	?>
+	<div class="section full px-3 mb-2">
+		<div class="section-title">배송지</div>
+		<div class="wide-block p-2">
+			<div class="row g-2 mb-2">
+				<label for="zipcode" class="col-3 form-label font-14">우편번호</label>
+				<div class="col-4"><input type="input" class="form-control font-14 rounded-1 shadow-none " id="zipcode" name="zipcode" readonly required></div>
+				<div class="col-4"><button type="button" class="btn btn-primary btn-sm shadow-none text-nowrap" id="btn_zipcode">우편번호 검색</button></div>
+			</div>
+			<div class="row g-2 mb-2">
+				<label for="address" class="col-3 form-label font-14">주소</label>
+				<div class="col-9"><input type="input" class="form-control font-14 rounded-1 shadow-none " id="address" name="address" readonly required></div>
+			</div>
+			<div class="row g-2 mb-2">
+				<label for="address2" class="col-3 form-label font-14">상세주소</label>
+				<div class="col-9"><input type="input" class="form-control font-14 rounded-1 shadow-none " id="address2" name="address2" required></div>
+			</div>
+			<div class="row g-2 mb-2">
+				<label for="buyr_name" class="col-3 form-label font-14">주문자 이름</label>
+				<div class="col-9"><input type="input" class="form-control font-14 rounded-1 shadow-none " id="buyr_name" name="buyr_name" maxlength="20" required></div>
+			</div>
+			<div class="row g-2 mb-2">
+				<label for="buyr_tel2" class="col-3 form-label font-14">휴대폰번호</label>
+				<div class="col-9"><input type="input" class="form-control font-14 rounded-1 shadow-none " id="buyr_tel2" name="buyr_tel2" maxlength="13" required></div>
+			</div>
+			<div class="row g-2 mb-2">
+				<label for="msg" class="col-3 form-label font-14">배송 요청메세지</label>
+				<div class="col-9"><textarea class="form-control font-14 rounded-1 shadow-none " id="msg" name="msg" required></textarea></div>
+			</div>
+		</div>
+	</div>
+	<?
+		}
+	?>
+	
+	<div class="section full px-3 mb-2">
+		<div class="section-title">최종 결제 금액</div>
+		<div class="card">
+			<ul class="listview flush transparent">
+				<li class="d-flex">총 상품 가격<span id="total_goods_price" class="num won"> <?=number_format($total_goods_price)?></span></li>
+				<li class="d-flex text-danger">총 할인 <span id="total_discount_price" class="num text-danger m-won"> <?=number_format($total_goods_price-$total_price)?></span></li>
+				<li class="d-flex text-primary fw-bold">총 결제 금액 <span id="total_price" class="num fs-4 fw-bold won" data-total="<?=$total_price?>"> <?=number_format($total_price)?></span></li>
+			</ul>
+		</div>
+	</div>
+	<div class="section full px-3 mb-2">
+		<div class="section-title">청약의사 재확인 <button type="button" class="btn btn-sm btn-link" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" title="전자상거래법 제8조 제2항" data-bs-content="<strong>제8조(전자적 대금 지급의 신뢰확보)</strong><br/>② 사업자와 전자결제업자등은 전자적 대금지급이 이루어지는 경우 소비자가 입력한 정보가 소비자의 진정 의사 표시에 의한 것인지를 확인함에 있어 주의를 다하여야 한다." ><ion-icon name="information-circle" role="img" class="md hydrated"></ion-icon></button></div>
+		<div class="wide-block py-2">
+			<div class="form-check">
+				<input type="checkbox" class="form-check-input" name="is_agree"  id="is_agree" value="Y">
+				<label class="form-check-label font-14 fw-normal" for="is_agree">상품의 이름, 플랫폼, 정보, 가격, 결제방법 등의 주문내용을 모두 확인하였으며, 관련 내용에 동의합니다.</label>
+			</div>
+		</div>
+	</div>
+
+	<div class="section mb-2">
+		<button type="submit" class="btn btn-primary btn-lg btn-block" id="btn_order">결제하기</button>
+	</div>
+	</form>
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.bundle.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js?t=20250825"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+<script>
+$(function () {
+	$('[data-bs-toggle="tooltip"]').tooltip();
+});
+
+document.querySelectorAll('[data-bs-toggle="popover"]')
+.forEach(popover => {
+	new bootstrap.Popover(popover)
+});
+
+$(document).ready(function(){
+	<?=$_SESSION['member']['m_id']=="sati@h2interactive.co.kr"?"":"set_real_settle_price(0);"?>
+	
+	$("#btn_zipcode").bind("click",function(){
+		sample4_execDaumPostcode();
+	});
+	
+	$("#orderFrm").on('submit', function(e) {
+		var settlekind = $('input[name="settle_kind"]').is(':checked');
+		var is_agree = $('input[name="is_agree"]').is(':checked');
+		var emoney_chk = $('input[name="emoney_chk"]').val();
+		var total_amount = parseInt($("#total_price").text());
+		var delivery_type = $('input[name="delivery_type"]').val();
+		
+		if(emoney_chk=="N"){
+			$('input[name="use_emoney"]').val('0');
+		}
+
+		if($('input[name="settle_kind"]:checked:not(:disabled)').length==0){
+			if(total_amount=="0"){
+			}else{
+				e.preventDefault();
+				alert("결제수단을 선택해주세요.");
+				return false;
+			}
+		}
+		
+		if(delivery_type!="1"){
+			if($('input[name="zipcode"]').val()==""){
+				e.preventDefault();
+				alert("우편번호를 입력해주세요.");
+				return false;
+			}
+			
+			if($('input[name="address"]').val()==""){
+				e.preventDefault();
+				alert("주소를 입력해주세요.");
+				return false;
+			}
+			
+			if($('input[name="address2"]').val()==""){
+				e.preventDefault();
+				alert("상세주소를 입력해주세요.");
+				return false;
+			}
+			
+			if($('input[name="buyr_name"]').val()==""){
+				e.preventDefault();
+				alert("주문자 이름을 입력해주세요.");
+				return false;
+			}
+			
+			if($('input[name="buyr_tel2"]').val()==""){
+				e.preventDefault();
+				alert("휴대폰번호를 입력해주세요.");
+				return false;
+			}
+			
+			if($('input[name="msg"]').val()==""){
+				e.preventDefault();
+				alert("배송요청메세지를 입력해주세요.");
+				return false;
+			}
+		}
+		
+		if(!is_agree){
+			e.preventDefault();
+			alert("결제진행을 위해선 청약의사 관련 내용에 동의가 필요합니다.");
+			return false;
+		}
+		
+		this.submit(); // 원시 DOM submit 호출
+	});
+	
+	//포인트 사용버튼 클릭
+	$('#btn_emoney_use').bind("click",function(){
+		var tmp_emoney= $('input[name="use_emoney"]').val();
+
+		if(tmp_emoney=="0" || tmp_emoney==""){
+			alert("사용할 포인트(원)을 입력해주세요.");
+			return false;
+		}
+
+		//포인트 사용체크
+		$('#emoney_chk').val('Y');
+		//포인트 할인 금액이 있는지 체크
+		if (tmp_emoney < 0 || tmp_emoney=="") {
+			$('input[name="use_emoney"]').val("0");
+			return false;
+		}
+
+		// 현재 결제 금액
+		var realSettlePrice = parseInt("<?=$total_price?>");
+		//보유포인트
+		var memberEmoney = $('#btn_emoney_use').attr("data-max");
+
+		// 구매자가 작성한 포인트 금액
+		var useEmoney = parseInt(tmp_emoney);
+		var checkEmoney = Math.floor(useEmoney/100)*100;
+
+
+		if(memberEmoney<1000){
+			alert("보유한 포인트가 1000원 이상시 사용가능합니다.");
+			$('input[name="use_emoney"]').val("0");
+			return false;
+		}
+
+		//결제금액 초과 입력
+		if (realSettlePrice < checkEmoney) {
+			checkEmoney = realSettlePrice;
+		}
+
+		//보유포인트 초과 입력
+		if (checkEmoney > memberEmoney) {
+			checkEmoney = memberEmoney;
+			alert("보유포인트보다 많은 포인트을 사용하실 수 없습니다.");
+			$('input[name="use_emoney"]').val("0");
+			return false;
+		}
+
+		$('input[name="use_emoney"]').val(checkEmoney);
+		
+		$('input[name="use_emoney"]').attr("readonly",true);
+
+		// 결제 금액 계산
+		set_real_settle_price(checkEmoney);
+	});
+	
+	//포인트 사용취소버튼 클릭
+	$('#btn_emoney_cancel').bind("click",function(){
+		$('#emoney_chk').val('N');
+		if($('input[name="use_emoney"]').val()>0){
+			$('input[name="use_emoney"]').val("0");
+			$('input[name="use_emoney"]').attr("readonly",false);
+			set_real_settle_price("0");
+		}
+	});
+
+
+	if(document.getElementById("buyr_tel2")){
+		document.getElementById("buyr_tel2").addEventListener("input", function(e) {
+			let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 추출
+			let result = '';
+
+			// 서울 지역번호: 02
+			if (value.startsWith('02')) {
+				if (value.length < 6) {
+					result = value.replace(/(\d{2})(\d{0,3})/, '$1-$2');
+				} else if (value.length < 10) {
+					result = value.replace(/(\d{2})(\d{3})(\d{0,4})/, '$1-$2-$3'); // 02-123-4567
+				} else {
+					result = value.slice(0, 10).replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3'); // 02-1234-5678
+				}
+			} else if (value.startsWith('0')) {
+				// 그 외 지역번호 또는 휴대폰
+				if (value.length < 7) {
+					result = value.replace(/(\d{3})(\d{0,3})/, '$1-$2');
+				} else if (value.length < 11) {
+					result = value.replace(/(\d{3})(\d{3})(\d{0,4})/, '$1-$2-$3'); // 031-123-1234
+				} else {
+					result = value.slice(0, 11).replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'); // 010-1234-5678
+				}
+			} else {
+				result = value;
+			}
+
+			e.target.value = result;
+		});
+	}
+});
+
+function set_real_settle_price(checkEmoney){
+	var total_amount = $("#total_price").data("total");
+	var real_settle = total_amount-checkEmoney;
+	//var total_sale = parseInt($("#total_sale").attr("data-sale")) + parseInt(checkEmoney);
+
+	//결제총액 계산
+	$("#total_price").text(addCommas(parseInt(real_settle)));
+	$("settle_kind_naverpay").prop("checked",false);
+	$("#settle_kind_payco").prop("checked",false);
+	$("#settle_kind_SC0010").prop("checked",false);
+	$("#settle_kind_SC0060").prop("checked",false);
+	$("#settle_kind_SC0030").prop("checked",false);
+
+	if(real_settle<10000 && real_settle>=1000){
+		$("#settle_kind_naverpay").attr("disabled",false);
+		$("#settle_kind_payco").attr("disabled",false);
+		$("#settle_kind_SC0010").attr("disabled",false);
+		$("#settle_kind_SC0030").attr("disabled",true);
+		$("#settle_kind_SC0060").attr("disabled",false);
+	}else if(real_settle<1000 && real_settle>=350){
+		$("#settle_kind_naverpay").attr("disabled",false);
+		$("#settle_kind_payco").attr("disabled",false);
+		$("#settle_kind_SC0010").attr("disabled",true);
+		$("#settle_kind_SC0030").attr("disabled",true);
+		$("#settle_kind_SC0060").attr("disabled",false);
+	}else if(real_settle<350 && real_settle>=100){
+		$("#settle_kind_naverpay").attr("disabled",false);
+		$("#settle_kind_payco").attr("disabled",false);
+		$("#settle_kind_SC0010").attr("disabled",true);
+		$("#settle_kind_SC0030").attr("disabled",true);
+		$("#settle_kind_SC0060").attr("disabled",true);
+	}else if(real_settle<100){
+		$("#settle_kind_naverpay").attr("disabled",false);
+		$("#settle_kind_payco").attr("disabled",false);
+		$("#settle_kind_SC0010").attr("disabled",true);
+		$("#settle_kind_SC0030").attr("disabled",true);
+		$("#settle_kind_SC0060").attr("disabled",true);
+	}else{
+		$("#settle_kind_naverpay").attr("disabled",false);
+		$("#settle_kind_payco").attr("disabled",false);
+		$("#settle_kind_SC0010").attr("disabled",false);
+		$("#settle_kind_SC0030").attr("disabled",false);
+		$("#settle_kind_SC0060").attr("disabled",false);
+	}
+}
+
+function addCommas(amount) {
+	return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+</script>
+<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+<script type="text/javascript">
+	//본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+	function sample4_execDaumPostcode() {
+		new daum.Postcode({
+			oncomplete: function(data) {
+				 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+				// 각 주소의 노출 규칙에 따라 주소를 조합한다.
+				// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+				var fullAddr = ''; // 최종 주소 변수
+				var extraAddr = ''; // 조합형 주소 변수
+
+				// 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+				if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+					fullAddr = data.roadAddress;
+
+				} else { // 사용자가 지번 주소를 선택했을 경우(J)
+					fullAddr = data.jibunAddress;
+				}
+
+				// 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+				if(data.userSelectedType === 'R'){
+					//법정동명이 있을 경우 추가한다.
+					if(data.bname !== ''){
+						extraAddr += data.bname;
+					}
+					// 건물명이 있을 경우 추가한다.
+					if(data.buildingName !== ''){
+						extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+					}
+					// 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+					fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+				}
+
+				// 우편번호와 주소 정보를 해당 필드에 넣는다.
+				document.getElementById('zipcode').value = data.zonecode; //5자리 새우편번호 사용
+				document.getElementById('address').value = fullAddr;
+
+				// 커서를 상세주소 필드로 이동한다.
+				document.getElementById('address2').focus();
+			},
+			 onclose: function(state) {
+					//state는 우편번호 찾기 화면이 어떻게 닫혔는지에 대한 상태 변수 이며, 상세 설명은 아래 목록에서 확인하실 수 있습니다.
+					if(state === 'FORCE_CLOSE'){
+						//사용자가 브라우저 닫기 버튼을 통해 팝업창을 닫았을 경우, 실행될 코드를 작성하는 부분입니다.
+
+					} else if(state === 'COMPLETE_CLOSE'){
+						//사용자가 검색결과를 선택하여 팝업창이 닫혔을 경우, 실행될 코드를 작성하는 부분입니다.
+						//oncomplete 콜백 함수가 실행 완료된 후에 실행됩니다.
+						return false;
+					}
+				}
+
+		}).open();
+	}
+
+</script>
+</body>
+</html>

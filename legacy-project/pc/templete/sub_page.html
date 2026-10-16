@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>서브페이지</title>
+
+<link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/footers/">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link href="./assets/dist/css/custom.css?t=<?=time()?>" rel="stylesheet">
+
+<link href="/assets/css/dg_common.css?t=<?=time()?>" rel="stylesheet" type="text/css" />
+<link href="/assets/css/dg_style.css?t=<?=time()?>" rel="stylesheet" type="text/css" />
+
+<style>
+html{
+	font-family: 'Noto Sans KR', sans-serif;
+	font-size:12px;
+}
+
+body{
+	font-family: 'Noto Sans KR', sans-serif;
+	background-color:#071125;
+}
+
+#navbar{
+	background-color: #101C36;
+	
+}
+
+.font-14{
+	font-size:14px !important;
+}
+
+.font-12{
+	font-size:12px !important;
+}
+
+footer{
+	background-color: #343a40;
+	color:#ced4da;
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/templete/inc/header.html');?>
+	
+	<div class="container py-3 mb-5 h-100">
+		<main class="d-grid gap-3" style="grid-template-columns: 1fr 5fr;">
+			<div id="sidebar" class="border rounded-0">
+				<div class="d-flex flex-column flex-shrink-0 bg-dark-subtle">
+					<div class="bg-body-tertiary h4 py-3 text-center mb-0 ">검색필터</div>
+					<hr class="my-0">
+					
+					<ul class="nav nav-pills flex-column mb-auto bg-dark-subtle">
+						<li class="nav-item ps-2">
+							<a href="#" class="nav-link text-white font-14">Home</a>
+						</li>
+						<li class="nav-item ps-2">
+						<a href="#" class="nav-link text-white font-14">Dashboard</a>
+						</li>
+						<li class="nav-item ps-2">
+						<a href="#" class="nav-link text-white font-14"> Orders</a>
+						</li>
+						<li class="nav-item ps-2">
+						<a href="#" class="nav-link text-white font-14">Products</a>
+						</li>
+						<li class="nav-item ps-2">
+						<a href="#" class="nav-link text-white font-14">Customers</a>
+						</li>
+					</ul>
+					<hr>
+					<div class="search-filter-group p-2">
+						<h5 class="ps-3 fw-bold mb-3">멀티플레이 지원</h5>
+						<div class="ps-3 font-14">
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201001" name="category_code" value="P0201001">
+								<label class="form-check-label fw-400" for="tags_P0201001">멀티플레이어</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201002" name="category_code" value="P0201002">
+								<label class="form-check-label fw-400" for="tags_P0201002">협동</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201003" name="category_code" value="P0201003">
+								<label class="form-check-label fw-400" for="tags_P0201003">MMO</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201004" name="category_code" value="P0201004">
+								<label class="form-check-label fw-400" for="tags_P0201004">온라인 PvP</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201005" name="category_code" value="P0201005">
+								<label class="form-check-label fw-400" for="tags_P0201005">온라인 협동</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201006" name="category_code" value="P0201006">
+								<label class="form-check-label fw-400" for="tags_P0201006">LAN PvP</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201007" name="category_code" value="P0201007">
+								<label class="form-check-label fw-400" for="tags_P0201007">LAN 협동</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201008" name="category_code" value="P0201008">
+								<label class="form-check-label fw-400" for="tags_P0201008">PvP</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201009" name="category_code" value="P0201009">
+								<label class="form-check-label fw-400" for="tags_P0201009">대규모 멀티플레이어</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201010" name="category_code" value="P0201010">
+								<label class="form-check-label fw-400" for="tags_P0201010">4명 로컬 플레이</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201011" name="category_code" value="P0201011">
+								<label class="form-check-label fw-400" for="tags_P0201011">로컬 멀티플레이어</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201012" name="category_code" value="P0201012">
+								<label class="form-check-label fw-400" for="tags_P0201012">로컬 협동</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201013" name="category_code" value="P0201013">
+								<label class="form-check-label fw-400" for="tags_P0201013">협동 캠페인</label>
+							</div>
+							<div class="form-check mb-2">
+								<input type="checkbox" class="form-check-input" id="tags_P0201014" name="category_code" value="P0201014">
+								<label class="form-check-label fw-400" for="tags_P0201014">비동기 멀티플레이어</label>
+							</div>
+						</div>
+					</div>
+					
+					<hr>
+					
+					<ul class="list-group rounded-0">
+						<li class="list-group-item border-0 bg-dark-subtle">
+							<div class="form-check font-14 mb-2">
+								<input class="form-check-input me-1" type="radio" value="" id="firstCheckbox">
+								<label class="form-check-label" for="firstCheckbox">First checkbox</label>
+							</div>
+							<div class="form-check font-14 mb-2">
+								<input class="form-check-input me-1" type="radio" value="" id="firstCheckbox">
+								<label class="form-check-label" for="firstCheckbox">First checkbox</label>
+							</div>
+							<div class="form-check font-14 mb-2">
+								<input class="form-check-input me-1" type="radio" value="" id="firstCheckbox">
+								<label class="form-check-label" for="firstCheckbox">First checkbox</label>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="content rounded-0 border">
+				본문
+			</div>
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/templete/inc/footer.html');?>
+</div>
+
+
+<script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

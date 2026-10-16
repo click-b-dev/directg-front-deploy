@@ -1,0 +1,352 @@
+<?php
+header("Content-Type:text/html; charset=utf-8"); 
+ini_set('display_errors', 1);
+
+include_once($_SERVER["DOCUMENT_ROOT"].'/lib/lib.php');
+
+$idx = filter_input(INPUT_GET, 'idx', FILTER_SANITIZE_NUMBER_INT);
+
+$survey_view = false;
+
+if ($_SESSION['admin']['admin_id'] != '') {
+    // 미리보기
+    $survey_view = true;
+}
+
+try {
+	$pdo = new PDO($dsn_dgkr, DGKR_USER, DGKR_PASSWORD);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+
+	$Board = new Board($pdo);
+
+    $survey_info = $Board->getSurveyInfo($idx);
+    $survey_questions = json_decode($survey_info['question'] ?? '[]', true);
+} catch (PDOException $e) {
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+
+if (!$survey_view) {
+    // 조건 체크
+    if ($survey_info['flag'] != "Y" || ($survey_info['start_dt'] > date('Y-m-d H:i:s')) || ($survey_info['end_dt'] < date('Y-m-d H:i:s'))) {
+        echo "<script>alert('종료된 설문입니다.');";
+        echo "history.go(-1)</script>";
+        exit;
+    } else if (!$survey_info) {
+        echo "잘못된 접근";
+        exit;
+    }
+
+    // 참여인원 제한 체크
+    if ($survey_info['max_people'] <= $survey_info['answer_cnt']) {
+        echo "<script>alert('참여인원이 마감된 설문입니다.');";
+        echo "history.go(-1)</script>";
+        exit;
+    }
+
+    // 로그인체크
+    include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+}
+
+// 참여이력 확인
+$user_answer = "";
+
+if ($_SESSION['member']['m_id'] != '') {
+    $user_answer = $Board->getUserAnswerInfo($_SESSION['member']['m_id'], $idx);
+}
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title>설문조사</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+</head>
+<style>
+    .section_item {
+        background-color: #172230;
+        border-radius: 6px;
+        padding: 25px 30px;
+        margin-bottom: 25px;
+        border-top: 2px solid #1c62b9;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .section_item h4 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0 0 15px 0;
+        color: #ffffff;
+        line-height: 1.5;
+    }
+    .section_item hr {
+        border: none;
+        border-top: 1px solid #24354b;
+        margin: 0 0 20px 0;
+    }
+    .option_wrapper {
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+    }
+    .option_wrapper:last-child {
+        margin-bottom: 0;
+    }
+    /* 라디오 버튼 및 텍스트를 감싸 클릭 영역을 넓힘 */
+    .option_label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        color: #b0c4de;
+        font-size: 0.95rem;
+        transition: color 0.2s ease;
+        width: 100%;
+    }
+    .option_label:hover {
+        color: #ffffff;
+    }
+    .option_label input[type="radio"] {
+        margin: 0 12px 0 0;
+        accent-color: #1c62b9; /* 최신 브라우저 브랜딩 컬러 매칭 */
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+    }
+    .option_label input[type="checkbox"] {
+        margin: 0 12px 0 0;
+        accent-color: #1c62b9; /* 최신 브라우저 브랜딩 컬러 매칭 */
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+    }
+    .section_item .etc_text {
+        width: 100%;
+        height: 120px;
+        background-color: #111923;
+        border: 1px solid #24354b;
+        border-radius: 4px;
+        padding: 15px;
+        color: #ffffff;
+        font-family: inherit;
+        font-size: 0.95rem;
+        resize: vertical;
+        box-sizing: border-box;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .section_item .etc_text:focus {
+        outline: none;
+        border-color: #1c62b9;
+        box-shadow: 0 0 8px rgba(28, 98, 185, 0.4);
+    }
+    /* 제출 버튼 스타일 */
+    .submit_btn_container {
+        text-align: center;
+        margin-top: 40px;
+    }
+    .submit_btn {
+        background-color: #1c62b9;
+        color: #ffffff;
+        border: none;
+        padding: 14px 80px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.1s;
+        box-shadow: 0 4px 10px rgba(28, 98, 185, 0.3);
+    }
+    .submit_btn:hover {
+        background-color: #2476dd;
+    }
+    .submit_btn:active {
+        transform: scale(0.98);
+    }
+</style>
+<body>
+    <div class="wrap">
+    <? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+        <div class="container my-3 pb-5">
+            <main>
+                <form id="survey-form" method="POST" action="./survey_ps.php" style="background-color: #111923; color: #ffffff; font-family: 'Noto Sans KR', sans-serif; padding: 40px 20px; max-width: 900px; margin: 0 auto; box-sizing: border-box;">
+                    <input type="hidden" name="mode" value="register">
+                    <input type="hidden" name="idx" value="<?=$idx?>">
+                <?php
+                    if($survey_info['banner_image'] != '') {
+                ?>
+                    <div style="margin: 0 0 40px 0; width: 100%; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                        <img src="https://directg.diskn.com/i7EuDjvcPb?2" style="width: 100%; display: block;">
+                    </div>
+                <?php
+                    }
+
+                    foreach ($survey_questions as $idx => $q) {
+                        $itemNum = $idx + 1;
+                        $type = ($q['type'] === 'descript') ? 'sub' : 'obj';
+                        $items = $q['item'] ?? [['item' => ''], ['item' => '']];
+                ?>
+                    <div class="section_item" data-required="<?=($q['required']=="Y")?'true':'false'?>">
+                        <h4><?=$itemNum?>. <?=$q['question']?></h4>
+                        <hr>
+                <?php
+                    // 해당유저의 전체 답변중 해당 질문의 답변만 새로운 arr로 생성
+                    $answer = [];
+
+                    foreach ($user_answer as $i) {
+                        if ($i['question_idx'] == $q['idx']) {
+
+                            if ($i['answer'] != "") {
+                                // 객관식
+                                $answer[$q['idx']][$i['answer']] = [
+                                    'checked' => true,
+                                    'answer_text' => ''
+                                ];
+
+                                // 기타
+                                if ($i['answer'] == 100) {
+                                    $answer[$q['idx']][$i['answer']]['answer_text'] = htmlspecialchars($i['answer_text']);
+                                }
+                            } else {
+                                // 주관식
+                                $answer['answer_text'] = htmlspecialchars($i['answer_text']);
+                            }
+                        }
+                    }
+
+                    if ($type == 'obj') {
+                        if ($q['etc']) {
+
+                            $items[] = [
+                                'number' => 100, // 기타
+                                'item' => "기타"
+                            ];
+                        }
+
+                        foreach ($items as $item) {
+                            // 답변한 경우 답변이 체크되도록
+                            $checked = $user_answer?"disabled":"";
+                            $display = "d-none";
+                            $answer_text = "";
+
+                            if ($answer) {
+                                foreach ($answer as $y) {
+                                    if (isset($y[$item['number']]['checked']) && $y[$item['number']]['checked']) {
+                                        $checked = "checked disabled";
+
+                                        if ($item['number'] == 100) {
+                                            $display = "";
+                                            $answer_text = $y[$item['number']]['answer_text'];
+                                        }
+                                    }
+                                }
+                            }
+                ?>
+                        <div class="option_wrapper">
+                            <label class="option_label">
+                                <input type="<?=$q['type']?>" name="answer[<?=$q['idx']?>]<?=($q['type']=="checkbox")?"[]":""?>" value="<?=$item['number']?>" onchange="toggleInput(this)" <?=$checked?> data-target="answer-etc<?=$q['idx']?>"><?=$item['item']?>
+                            </label>
+                        </div>
+                    <?php if ($item['number'] == 100) { ?>
+                        <div class="option_wrapper <?=$display?>" id="answer-etc<?=$q['idx']?>">
+                            <label class="option_label">
+                                <input type="text" name="answer_etc[<?=$q['idx']?>]" value="<?=$answer_text?>" class="etc_text" onchange="toggleInput(this)" <?=$checked?> style="height: 0px;">
+                            </label>
+                        </div>
+                    <?php } ?>
+                <?php
+                        }
+                    } else {
+                        // 답변한 경우 답변이 체크되도록
+                        $checked = $user_answer?"disabled":"";
+                        $answer_text = $answer['answer_text'] ?? "";
+                ?>
+                        <input type="hidden" name="answer[<?=$q['idx']?>]" value="answer_text">
+                        <textarea name="answer_text[<?=$q['idx']?>]" id="result_textarea_<?=$q['idx']?>" class="etc_text" <?=$checked?>><?=$answer_text?></textarea>
+                <?php
+                    }
+                ?>
+                    </div>
+                <?php 
+                    }
+                ?>
+                    <div class="submit_btn_container">
+                    <?php if ($user_answer) { ?>
+                        <button type="button" class="submit_btn" onclick="alert('이미 제출하였습니다.')">제출</button>
+                    <?php } else { ?>
+                        <button type="submit" class="submit_btn">제출</button>
+                    <?php } ?>
+                    </div>
+                </form>
+            </main>
+        </div>
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+    </div>
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+</body>
+</html>
+<script>
+    // 기타선택시 기타input 노출 및 required 처리
+    function toggleInput(element) {
+        const radioName = element.name;
+        const isValue100Checked = document.querySelector(`input[name="${radioName}"][value="100"]:checked`);
+        const targetRadio = document.querySelector(`input[name="${radioName}"][value="100"]`);
+
+        if (!targetRadio) return; // 해당 문항에 100번 라디오가 없다면 스킵
+        
+        const targetId = targetRadio.getAttribute('data-target');
+        const hiddenWrapper = document.getElementById(targetId);
+        
+        if (hiddenWrapper) {
+            const textInput = hiddenWrapper.querySelector('input[type="text"]');
+            
+            if (isValue100Checked) {
+                hiddenWrapper.classList.remove('d-none');
+                
+                if (textInput) {
+                    textInput.required = true;
+                    textInput.focus();
+                }
+            } else {
+                hiddenWrapper.classList.add('d-none');
+                
+                if (textInput) {
+                    textInput.required = false; 
+                    textInput.value = '';
+                }
+            }
+        }
+    }
+    
+    // 폼 제출시 필수항목 체크
+    document.querySelector('#survey-form').addEventListener('submit', function(e) {
+        const requiredSections = document.querySelectorAll('.section_item[data-required="true"]');
+
+        for (const section of requiredSections) {
+            const inputs = section.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+            const textareas = section.querySelectorAll('textarea');
+            
+            let isSelectionValid = true;
+            if (inputs.length > 0) {
+                isSelectionValid = Array.from(inputs).some(input => input.checked);
+            }
+
+            let isTextareaValid = true;
+            if (textareas.length > 0) {
+                isTextareaValid = Array.from(textareas).every(textarea => textarea.value.trim() !== "");
+            }
+
+            if (!isSelectionValid || !isTextareaValid) {
+                e.preventDefault(); 
+
+                const questionTitle = section.querySelector('h4').innerText;
+                alert(`[필수 입력 누락]\n${questionTitle}`);
+                
+                section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                return; 
+            }
+        }
+    });
+</script>

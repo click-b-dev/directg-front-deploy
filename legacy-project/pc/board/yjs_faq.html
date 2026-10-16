@@ -1,0 +1,162 @@
+<?
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+$searchValue = filter_input(INPUT_GET, 'searchValue', FILTER_SANITIZE_STRING);
+$searchType = filter_input(INPUT_GET, 'searchType', FILTER_SANITIZE_STRING);
+
+$page_title="자주묻는질문";
+
+$aside_menu['faq'] = "text-primary fw-bold";
+
+if(empty($page)){
+	$page="1";
+}
+
+$add_where = "";
+
+$where = array();
+
+if($searchValue){
+	$where[] = " question like '%".$searchValue."%'";
+}
+
+if($searchType){
+	$where[] = " faq_type = '".$searchType."'";
+}
+
+foreach($where as $value){
+	$add_where.= " and ".$value;
+}
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$board = new Board($conn);
+	$parsedown= new Parsedown();
+	$orderby=" faq_type asc, question asc ";
+
+	$faq_list = $board->getFaqList($page,$add_where,$orderby,$param);
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+$faq_type_label = array(
+	"M01"=>"계정, 회원",
+	"M02"=>"포인트",
+	"O01"=>"주문, 결제",
+	"O02"=>"제품 코드(키)",
+	"O03"=>"취소, 환불",
+	"O04"=>"가격",
+	"O05"=>"할인",
+	"G01"=>"상품",
+	"G02"=>"구성, DLC",
+	"G03"=>"특전",
+	"G04"=>"한글",
+	"S01"=>"이용방법",
+	"S02"=>"게임 등록",
+	"S03"=>"게임 설치",
+	"S04"=>"게임 실행",
+	"E01"=>"기타"
+);
+$nav_active[$searchType]="active";
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<style>
+
+</style>
+</head>
+<body>
+<div class="wrap">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_customer.html');?>
+			<section id="content" class="content rounded-0">
+				<div class="row">
+					<div class="col-12">
+						<form method="GET" action="">
+						<div class="mb-3 input-group rounded-0">
+							<input class="form-control form-control-lg rounded-0" type="text" name="searchValue" placeholder="궁금하신 점이 있다면 여기서 먼저 찾아보세요" value="<?=$searchValue?>"><button type="submit" id="button-addon2" class="btn btn-lg btn-secondary rounded-0">자주묻는질문 검색</button>
+						</div>
+						</form>
+					</div>
+				</div>
+				<div class="row">
+					<ul class="nav">
+<?php
+	foreach($faq_type_label as $key=>$type){
+?>
+						<li class="nav-item"><a class="nav-link <?=$nav_active[$key]?>" aria-current="true" href="/board/yjs_faq.html?searchType=<?=$key?>"><?=$type?></a></li>
+<?php
+	}
+?>
+					</ul>
+				</div>
+				<div class="card mb-0 shadow-none rounded-0 text-center font-14">
+					<div class="card-header border-bottom accordion align-content-center text-wrap">
+						<div class="row fw-bold">
+							<div class="col-2">구분</div>
+							<div class="col-10">제목</div>
+						</div>
+					</div>
+					<div class="card-body py-0 text-wrap">
+					<?
+						$i=0;
+						if($faq_list->success == true){
+							$result = $faq_list->resultset->fetchAll();
+
+							$count = 0;
+							foreach($result as $value){
+					?>
+								<div class="row border-top py-2 align-items-center" data-bs-toggle="collapse" data-bs-target="#collapse-<?=$i?>" aria-expanded="false" aria-controls="#collapse-<?=$i?>" data-idx="<?=$value['idx']?>">
+									<div class="col-2"><?=$faq_type_label[$value['faq_type']]?></div>
+									<div class="col-10 text-start text-wrap cursor-pointer"><?=htmlspecialchars_decode($parsedown->text($value['question']))?></div>
+								</div>
+
+								<div id="collapse-<?=$i?>" class="collapse text-start">
+									<div class="card-body m-5">
+										<?=htmlspecialchars_decode($parsedown->text($value['answer']))?>
+									</div>
+								</div>
+					<?
+								$i++;
+							}
+						}
+						if($qna_list->total_results=="0"){
+					?>
+						<div class="p-3">등록된 문의가 없습니다.</div>
+					<?
+						}
+					?>
+						</div>
+					</div>
+					<div id="pagination" class="mt-4"><?echo $faq_list->links_html;?></div>
+				</div>
+				
+
+			</section>
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+</body>
+</html>

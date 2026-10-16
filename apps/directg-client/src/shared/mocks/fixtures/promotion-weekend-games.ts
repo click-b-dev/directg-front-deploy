@@ -1,0 +1,88 @@
+import type { ProductThumb } from "@entities/product-thumb";
+
+import { makeProductThumb } from "./product-thumb-sample";
+
+/**
+ * 개발용 fixture — `GET /api/promotion/weekend/games`. legacy getPromotionIng(주말특가 기간) 형태.
+ * game+basic 프로모션 상품. drawGrid(ProductGridCard). 6개(6열 한 행).
+ */
+export const promotionWeekendGamesFixture: ProductThumb[] = [
+  makeProductThumb({
+    product_code: 7001,
+    product_name: "발더스 게이트 3",
+    goods_sku: "SKU-7001",
+    view_url: "/game/game_view?product_id=7001",
+    is_promotion: "Y",
+    promotion_end: "2026-09-07",
+    promotion_label: "bg-danger",
+    discount: 30,
+    consumer_price: 66000,
+    price: 46200,
+    interface_korean: "Y",
+  }),
+  makeProductThumb({
+    product_code: 7002,
+    product_name: "엘든 링",
+    goods_sku: "SKU-7002",
+    view_url: "/game/game_view?product_id=7002",
+    is_promotion: "Y",
+    promotion_end: "2026-09-07",
+    promotion_label: "bg-danger",
+    discount: 20,
+    consumer_price: 64800,
+    price: 51840,
+    spoken_korean: "Y",
+  }),
+  makeProductThumb({
+    product_code: 7003,
+    product_name: "P의 거짓",
+    goods_sku: "SKU-7003",
+    view_url: "/game/game_view?product_id=7003",
+    is_promotion: "Y",
+    promotion_end: "2026-09-07",
+    promotion_label: "bg-danger",
+    discount: 40,
+    consumer_price: 62800,
+    price: 37680,
+    interface_korean: "Y",
+  }),
+  makeProductThumb({
+    product_code: 7004,
+    product_name: "몬스터 헌터 와일즈",
+    goods_sku: "SKU-7004",
+    view_url: "/game/game_view?product_id=7004",
+    is_promotion: "Y",
+    promotion_end: "2026-09-07",
+    promotion_label: "bg-danger",
+    discount: 15,
+    consumer_price: 79800,
+    price: 67830,
+    spoken_korean: "Y",
+  }),
+  makeProductThumb({
+    product_code: 7005,
+    product_name: "스타듀 밸리",
+    goods_sku: "SKU-7005",
+    view_url: "/game/game_view?product_id=7005",
+    is_promotion: "Y",
+    promotion_end: "2026-09-07",
+    promotion_label: "bg-danger",
+    discount: 25,
+    consumer_price: 16000,
+    price: 12000,
+    interface_korean: "Y",
+  }),
+  makeProductThumb({
+    product_code: 7006,
+    product_name: "하데스",
+    goods_sku: "SKU-7006",
+    view_url: "/game/game_view?product_id=7006",
+    is_promotion: "Y",
+    promotion_end: "2026-09-07",
+    promotion_label: "bg-danger",
+    discount: 30,
+    consumer_price: 24000,
+    price: 16800,
+    interface_korean: "Y",
+  }),
+];

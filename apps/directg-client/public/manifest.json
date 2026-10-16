@@ -1,0 +1,54 @@
+{
+    "name": "다이렉트 게임즈",
+    "short_name": "다이렉트 게임즈",
+    "start_url": "https://m.directg.net",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "orientation": "portrait",
+    "icons": [
+	 {
+            "src": "/favicon/android-icon-36x36.png",
+            "type": "image/png",
+            "sizes": "36x36"
+        },
+        {
+            "src": "/favicon/android-icon-72x72.png",
+            "type": "image/png",
+            "sizes": "72x72"
+        },
+        {
+            "src": "/favicon/android-icon-96x96.png",
+            "type": "image/png",
+            "sizes": "96x96"
+        },
+        {
+            "src": "/favicon/apple-icon-120x120.png",
+            "type": "image/png",
+            "sizes": "120x120"
+        },
+        {
+            "src": "/favicon/android-icon-144x144.png",
+            "type": "image/png",
+            "sizes": "144x144"
+        },
+        {
+            "src": "/favicon/apple-icon-152x152.png",
+            "type": "image/png",
+            "sizes": "152x152"
+        },
+        {
+            "src": "/favicon/android-icon-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+	{
+            "src": "/favicon/android-icon-512x512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "lang" : "ko-KR",
+    "dir" : "ltr",
+    "description" : "실시간 엔터테인먼트 플랫폼 다이렉트 게임즈에 오신 것을 환영합니다!"
+}

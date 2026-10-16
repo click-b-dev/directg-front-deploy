@@ -1,0 +1,86 @@
+<?
+	$page_title="회원가입";
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+<style>
+.carousel-slider .splide__pagination{
+	bottom:5rem;
+}
+
+.carousel-slider .splide__pagination button.is-active{
+	background:#ffffff !important;
+}
+
+</style>
+</head>
+<body class="dark-mode-active">
+
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="mt-0">
+	<!-- carousel slider -->
+	<div class="carousel-slider splide" id="carousel-slider">
+		회원가입 안내
+	</div>
+	<!-- * carousel slider -->
+	<div class="carousel-button-footer">
+		<div class="row">
+			<div class="col-6">
+				<a href="#" class="btn btn-secondary btn-block goBack">뒤로가기</a>
+			</div>
+			<div class="col-6">
+				<a href="/game/game.html" class="btn btn-primary btn-block">게임 목록</a>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<script src="/assets/js/dg_default.js?t=<?=date('YmdHis')?>"></script>
+
+<script>
+var splide = new Splide( '#carousel-slider', {
+	grid: {
+		gap : {
+			row: '1rem',
+			col: '1rem',
+		},
+   },
+	type       : 'loop',
+	perPage    : 1,
+	perMove : 1,
+	arrows: false,
+} );
+
+splide.mount(window.splide.Extensions);
+</script>
+</body>
+</html>

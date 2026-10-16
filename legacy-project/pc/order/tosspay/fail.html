@@ -1,0 +1,25 @@
+<?php
+	$msg = filter_input(INPUT_GET, 'msg', FILTER_SANITIZE_STRING);
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<script>
+	function closeWindow() {
+		if (window.opener && !window.opener.closed) {
+			window.opener.location.href = '/order/order_fail.html?msg=<?=$msg?>';
+		} else {
+			localStorage.setItem('toss_payment_complete', Date.now());
+		}
+		window.close();
+	}
+	
+	// 페이지 로드 후 자동으로 실행
+	closeWindow();
+	</script>
+</body>
+</html>

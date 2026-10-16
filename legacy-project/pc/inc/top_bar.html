@@ -1,0 +1,93 @@
+<header class="text-header">
+	<div class="container">
+		<div class="row align-items-center p-2">
+			<div class="col-2">
+				<a href="/index.html" class="brand-wrap">
+					<img src="/assets/images/H2_DG_logo_160x45.png" alt="" >
+				</a> 
+			</div>
+			<div class="col-6">
+				<form action="/game/game_search.html" method="GET" class="search-header mb-0 ">
+					<div class="input-group border-searchinput rounded-pill">
+						<input type="text" class="form-control border-0 rounded-pill" name="q" value="<?=$q?>" placeholder="게임명 검색" required>
+						<div class="input-group-append">
+							<button class="btn shadow-none" type="submit">
+								<i class="fa fa-search"></i>
+							</button>
+						</div>
+					</div>
+				</form>
+				<div class="mt-2 font-14">
+					<div class="ps-2">
+						<strong class="font-12" style="color:#CED4DA">추천검색어: </strong>
+						<a href="/game/game_search.html?q=드래곤즈 도그마 2" class="font-12 mx-1 text-info text-decoration-underline">드래곤즈 도그마 2</a>
+						<a href="/game/game_search.html?q=호라이즌 포비든 웨스트 컴플리트 에디션" class="font-12 mx-1 text-info text-decoration-underline">호라이즌 포비든 웨스트 컴플리트 에디션</a>
+						<a href="/game/game_search.html?q=그랑블루 판타지 리링크" class="font-12 mx-1 text-info text-decoration-underline">그랑블루 판타지 리링크</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="d-flex flex-row justify-content-center">
+					<?if($_SESSION['member']['m_id']){?>
+					<div class="px-2 font-14"><a href="/member/logout.php" class="text-secondary"><i class="mdi mdi-logout"></i> 로그아웃 </a></div>
+					<div class="px-2 font-14"><a href="/mypage/mypage_main.html" class="text-secondary"><i class="mdi mdi-account"></i> 마이페이지</a></div>
+					<?}else{?>
+					<div class="px-2 font-14"><a href="/member/login.html" class="text-secondary"><i class="mdi mdi-login"></i> 로그인 </a></div>
+					<div class="px-2 font-14"><a href="/member/join_step1.html" class="text-secondary"><i class="mdi mdi-account-plus"></i> 회원가입</a></div>
+					<?}?>
+					
+					<div class="px-2 font-14"><a href="/order/cart.html" class=" text-info"><i class="mdi mdi-basket"></i> 장바구니</a></div>
+					<div class="px-2 font-14"><a href="#" class="text-danger"><i class="mdi mdi-cards-heart "></i> 위시리스트</a></div>
+				</div>
+			</div> 
+		</div> 
+	</div>
+	<nav class="border-nav">
+		<div class="container">
+			<ul class="nav d-flex flex-wrap justify-content-between align-items-center">
+				<li class="nav-item flex-fill text-center border-black border-top-0 border-bottom-0 border-start-0 py-1">
+					<a  href="/service/service.html" class="btn btn-link fw-600 font-16">서비스소개</a>
+				</li>
+				<li class="nav-item flex-fill text-center border-black border-top-0 border-bottom-0 border-start-0 py-1">
+					<div class="dropdown-center">
+						<button class="btn btn-link fw-600 font-16 dropdown-toggle" type="button" id="topnav-promotion" role="button" data-bs-toggle="dropdown" aria-expanded="false">할인 프로모션</button>
+						<ul class="dropdown-menu" aria-labelledby="topnav-promotion">
+							<li><a href="/promotion/promotion_ing.html" class="dropdown-item">진행중인 프로모션</a></li>
+						<!--	<li><a href="/promotion/promotion_spring.html" class="dropdown-item">봄 프로모션</a></li>
+							<li><a href="/promotion/promotion_summer.html" class="dropdown-item">여름 프로모션</a></li>
+							<li><a href="/promotion/promotion_spring.html" class="dropdown-item">추석 프로모션</a></li>
+							<li><a href="/promotion/promotion_winter.html" class="dropdown-item">겨울 프로모션</a></li>
+
+							<li><a href="/promotion/promotion_winter.html" class="dropdown-item">설날 프로모션</a></li>
+							<li><a href="/promotion/promotion_winter.html" class="dropdown-item">할로윈 프로모션</a></li>
+							<li><a href="/promotion/promotion_winter.html" class="dropdown-item">블랙프라이데이 프로모션</a></li>-->
+
+							<li><a href="/promotion/time_deal.html" class="dropdown-item">타임딜</a></li>
+						</ul>
+					</div>
+				</li>
+				<li class="nav-item flex-fill text-center border-black border-top-0 border-bottom-0 border-start-0 py-1"><a  href="/board/event.html" class="btn btn-link fw-600 font-16">이벤트</a></li>
+				<li class="nav-item flex-fill text-center border-black border-top-0 border-bottom-0 border-start-0 py-1"><a  href="/board/notice.html" class="btn btn-link fw-600 font-16">공지사항</a></li>
+				<li class="nav-item flex-fill text-center border-black border-top-0 border-bottom-0 border-start-0 py-1">
+					<div class="dropdown-center">
+						<button class="btn btn-link fw-600 font-16 dropdown-toggle" type="button" id="topnav-guide" role="button" data-bs-toggle="dropdown" aria-expanded="false">이용안내</button>
+						<ul class="dropdown-menu" aria-labelledby="topnav-guide">
+							<li><a href="/service/guide.html" class="dropdown-item">다이렉트 게임즈</a></li>
+							<li><a href="/service/guide_steam.html" class="dropdown-item">스팀</a></li>
+							<li><a href="/service/guide_epic.html" class="dropdown-item">에픽 게임즈</a></li>
+							<li><a href="/service/guide_rockstar.html" class="dropdown-item">락스타 게임즈</a></li>
+						</ul>
+					</div>
+				</li>
+				<li class="nav-item flex-fill text-center border-black border-top-0 border-bottom-0 border-start-0 py-1">
+					<button class="btn btn-link fw-600 font-16 dropdown-toggle" type="button" id="topnav-support" role="button" data-bs-toggle="dropdown" aria-expanded="false">고객지원</button>
+					<ul class="dropdown-menu" aria-labelledby="topnav-support">
+						<li><a href="/board/faq.html" class="dropdown-item">자주묻는질문</a></li>
+						<li><a href="/board/qna.html" class="dropdown-item">문의하기</a></li>
+						<li><a href="/board/dataroom.html" class="dropdown-item">자료실</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</nav>
+</header>

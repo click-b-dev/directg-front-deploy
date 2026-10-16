@@ -1,0 +1,78 @@
+<?
+	ini_set('display_errors', 0 );
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+	$page_title = 'Epic Games 이용안내';
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="mt-0 full-height">
+	<div class="section full mt-2">
+		<div class="section-title">Epic Games</div>
+		<ul class="listview link-listview">
+			<li>
+				<a href="/service/guide_epic_step1.html">제품 키 확인 및 활성화</a>
+			</li>
+			<li>
+				<a href="/service/guide_epic_step2.html">가입 및 계정만들기</a>
+			</li>
+			<li>
+				<a href="/service/guide_epic_step3.html">클라이언트 설치하기</a>
+			</li>
+			<li>
+				<a href="/service/guide_epic_step4.html">라이브러리 게임 등록 및 플레이</a>
+			</li>
+			<li>
+				<a href="/service/guide_epic_step5.html">등록 불가 상황 대처법</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,106 @@
+<?php
+	print_r($_POST);
+	echo "<br>";
+	$ordr_idxx = $_POST['ordr_idxx'];
+	$good_name = $_POST['good_name'];
+	$good_mny = $_POST['good_mny'];
+	$currency = $_POST['currency'];
+	$buyr_name = $_POST['buyr_name'];
+	$buyr_tel2 = $_POST['buyr_tel2'];
+	$buyr_mail = $_POST['buyr_mail'];
+	$shop_user_id = $_POST['shop_user_id'];
+	$site_name = $_POST['site_name'];
+	$pay_method = $_POST['pay_method'];
+	$settle_no = round(microtime(true) * 1000);
+
+?>
+	<script type="text/javascript">
+		/****************************************************************/
+		/* m_Completepayment  설명                                      */
+		/****************************************************************/
+		/* 인증완료시 재귀 함수                                         */
+		/* 해당 함수명은 절대 변경하면 안됩니다.                        */
+		/* 해당 함수의 위치는 kcp_spay_hub.js 보다먼저 선언되어여 합니다.*/
+		/* Web 방식의 경우 리턴 값이 form 으로 넘어옴                   */
+		/****************************************************************/
+		function m_Completepayment( FormOrJson, closeEvent ) 
+		{
+			var frm = document.order_info; 
+		 
+			/********************************************************************/
+			/* FormOrJson은 가맹점 임의 활용 금지                               */
+			/* frm 값에 FormOrJson 값이 설정 된 frm 값으로 활용 하셔야 됩니다.  */
+			/********************************************************************/
+			GetField( frm, FormOrJson ); 
+
+			
+			if( frm.res_cd.value == "0000" )
+			{
+				/* 결제인증 완료 후 결제승인 요청을 위한 비즈니스 로직 구현 */
+				frm.submit();
+				console.log(frm);
+			}
+			else
+			{
+				/* 결제인증 실패에 대한 처리 */
+				alert( "[" + frm.res_cd.value + "] " + frm.res_msg.value );
+				closeEvent();
+			}
+		}
+	</script>
+	<!--
+		결제창 호출 JS 
+		개발 : https://testspay.kcp.co.kr/plugin/kcp_spay_hub.js
+		운영 : https://spay.kcp.co.kr/plugin/kcp_spay_hub.js
+	-->
+	<script type="text/javascript" src="https://js.tosspayments.com/v2/k-adapter"></script> 
+	<script type="text/javascript">
+		/* 표준웹 실행 */
+		function jsf__pay( form )
+		{
+			try
+			{
+				KCP_Pay_Execute_Web( form );
+			}
+			catch (e)
+			{
+				/* IE 에서 결제 정상종료시 throw로 스크립트 종료 */ 
+			}
+		}
+	</script>
+
+	<form name="order_info" method="post" action="kcp_api_pay.php">
+		*주문번호 <input type="text" name="ordr_idxx" value="<?=$settle_no?>"><br>
+		*상품명 <input type="text" name="good_name" value="테스트상품"><br>
+		*결제금액 <input type="text" name="good_mny" value="1000"><br>
+		*화폐단위 <input type="text" name="currency" value="KRW"><br>
+		주문자명 <input type="text" name="buyr_name" value="테스트"><br>
+		휴대폰번호 <input type="text" name="buyr_tel2" value=""><br>
+		이메일 <input type="text" name="buyr_mail" value="test@h2int.com"><br>
+		*회원ID <input type="text" name="shop_user_id" value="test@h2int.com"><br>
+		상점이름 <input type="text" name="site_name" value="다이렉트게임즈"><br>
+		*결제수단 (PC)<br>
+		<input type="text" name="pay_method" value="010000000000" /><br>
+
+
+		<input type="text" name="site_cd"         value="tvivarepublica" />
+		<input type="text" name="site_name"       value="다이렉트게임즈" />
+		<input type="text" name="tosspay_direct" value="Y"/>
+		<input type="text" name="ordr_mony" value="1000"/>
+		<input type="text" name="pay_type" value="PABK"/>
+		<input type="text" name="ordr_no" value="<?=$settle_no?>"/>
+
+		<!-- ㄴㄴ
+			※필수 항목
+			결제인증 완료 후 결제창에서 값을 설정하는 부분으로 반드시 포함되어야 합니다. 
+			임의로 값을 설정하지 마십시오.
+		-->
+		<input type="text" name="res_cd" value=""/>
+		<input type="text" name="res_msg" value=""/>
+		<input type="text" name="enc_info" value=""/>
+		<input type="text" name="enc_data" value=""/>
+		<input type="text" name="tran_cd" value="00100000"/>
+		
+		<input type="text" name="escw_used" value="Y"/>
+		<input type="button" onclick="jsf__pay(document.order_info);" value="결제요청">
+	</form>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 86" width="184" height="86" preserveAspectRatio="xMidYMid slice">
+  <rect width="184" height="86" fill="#1b2536"/>
+  <g fill="none" stroke="#3a4a63" stroke-width="2">
+    <rect x="70" y="30" width="44" height="26" rx="3"/>
+    <circle cx="92" cy="43" r="6"/>
+  </g>
+  <text x="92" y="72" fill="#4a5a73" font-size="9" text-anchor="middle" font-family="'Noto Sans KR',sans-serif">이미지 준비중</text>
+</svg>

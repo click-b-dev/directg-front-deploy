@@ -1,0 +1,121 @@
+<?
+	ini_set( "display_errors", 0 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	
+	$idx = filter_input(INPUT_GET, 'idx', FILTER_SANITIZE_NUMBER_INT);
+
+	$page_title="공지사항";
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$board = new Board($conn);
+	$parsedown= new Parsedown();
+
+	$notice_data = $board->getNoticeView($idx);
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/favicon/favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css?t=<?=date('YmdHis')?>">
+<link rel="stylesheet" href="/assets/css/dg_style.css?t=<?=date('YmdHis')?>">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+
+<style>
+
+.post-body{
+	font-size:14px;
+}
+
+.post-body p{
+	 margin-bottom:0px;
+}
+
+.post-body img{
+	padding:16px;
+}
+
+.post-body strong{
+	font-size:16px;
+	margin-bottom:10px;
+}
+
+.post-body li{
+	line-height:150%;
+}
+
+.post-body div{
+	margin-top:20px;
+	margin-bottom:20px;
+}
+
+</style>
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+	<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="blog-post">
+		<h1 class="title pt-2"><?=$notice_data['subject']?></h1>
+
+		<div class="post-header">
+			<span class="font-12"><?=$notice_data['deploy_date']?></span> <span>다이렉트 게임즈</span>
+		</div>
+		<div class="post-body mb-2">
+			<?=str_replace("&#13;&#10;","<br/>",$parsedown->text($notice_data['contents']))?>
+		</div>
+	</div>
+	
+	<div class="section full">
+		<div class="wide-block">
+			<a type="button" href="notice.html" class="btn btn-cprimary btn-block">목록</a>
+		</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+    <!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+</body>
+
+</html>

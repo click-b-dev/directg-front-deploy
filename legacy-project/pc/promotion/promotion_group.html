@@ -1,0 +1,91 @@
+<?
+	header("Content-Type:text/html; charset=utf-8"); 
+	header( 'Location: https://directg.net/' );
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	
+	$page_title = "2025 가을 프로모션";
+	
+	try{
+		$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+
+		$query="SELECT idx,subject,banner,start_date,end_date,use_flag,banner_domain,type FROM tbl_group WHERE type=:type AND use_flag=:use_flag AND idx IN (11,12,13,14,15,16,17,18,19)";
+		$stmt = $conn->prepare($query);
+		$params = array(
+			":type"=>"1",
+			":use_flag"=>"Y"
+		);
+		$stmt->execute($params);
+		$group_info = $stmt->fetchAll();
+	}catch (PDOException $e){
+		echo 'Error!: '.$e->getMessage();
+		die();
+	}
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<meta name="robots" content="noindex">
+</head>
+<body>
+<div class="wrap">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<section id="publisher_info" class="my-3">
+			<div class="col-md-12 rounded-0">
+				<a href="/promotion/promotion_ing_thumb.html"><img src="https://image.directg.net/i83rHjtrOl" class="rounded-0" alt="다이렉트 게임즈 가을 프로모션"></a>
+			</div>
+		</section>
+
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<section id="content" class="content rounded-0">
+			<?php
+			foreach ($group_info as $group) {
+			?>
+				<div class="banner_link mb-4 cursor-pointer" data-groupidx="<?=$group['idx']?>" data-startdate="<?=$group['start_date']?>" data-enddate="<?=$group['end_date']?>" id="link_<?=$group['idx']?>" >
+					<img src="<?=$group['banner_domain']?>upload/banner/<?=$group['banner']?>" class="rounded-0" alt="<?=$group['subject']?>">
+				</div>
+			<?php
+			}
+			?>
+			</section>
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script>
+$(document).ready(function(){
+	$(".banner_link").on('click', function(e) {
+		var now = Math.floor(Date.now() / 1000);
+
+		if($(this).data('startdate') > now){
+			alert("프로모션 기간이 아닙니다. 일정을 확인해 주시기 바랍니다.");
+		}
+
+		if($(this).data('enddate') < now){
+			alert("프로모션 기간이 아닙니다. 일정을 확인해 주시기 바랍니다.");
+		}
+		
+		if(($(this).data('startdate') < now) && ($(this).data('enddate') > now)){
+			location.href="/game/group_thumb.html?idx="+$(this).data('groupidx');
+		}
+		
+	});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<div class="appHeader flex-column text-light mt-0 position-relative" style="height: unset;">
+	<div class="section full d-flex w-100 align-items-center">
+		<div class="left">
+			<a href="#" class="headerButton goBack" data-rel="back">
+				<ion-icon name="chevron-back-outline"></ion-icon>
+			</a>
+		</div>
+		<div class="pageTitle"><?=$page_title?></div>
+		<div class="right">
+			<a href="/mypage/mypage_wishlist.html" class="headerButton" title="위시리스트">
+				<div class="col">
+					<img src="/assets/images/icon/wishlist-icon_white.svg" style="width:1.6rem;" alt="위시리스트">
+				</div>
+			</a>
+			<a href="/order/cart.html" class="headerButton" title="장바구니">
+				<div class="col">
+					<img src="/assets/images/icon/basket_icon_white.svg">
+				</div>
+			</a>
+		</div>
+	</div>
+	<div class="row w-100">
+		<form class="search-form" method="GET" action="/game/game_search_thumb.html">
+			<div class="form-group searchbox bg-black">
+				<input type="text" class="form-control" id="q" name="q"  value="<?=$q?>" minLength="2" placeholder="Search...">
+				<a href="#" class="ms-1 search toggle-searchbox">
+					<img src="/assets/images/icon/search_icon_white.svg">
+				</a>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- * Search Component -->

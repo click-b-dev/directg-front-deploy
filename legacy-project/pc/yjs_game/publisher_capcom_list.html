@@ -1,0 +1,103 @@
+<?
+	header("Content-Type:text/html; charset=utf-8"); 
+	ini_set('display_errors', '0');
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');;
+
+	$publisher_code = "34";
+	
+	$page_name="publisher_capcom";
+	$page_type="list";
+	$sub_title = "퍼블리셔별 (";
+	$sub_title2 = ")";
+	
+	$aside['product_type'] = "game";
+	$aside['cart'] = "Y";
+	$aside['wishlist'] = "Y";
+
+	$result_per_page = 60;
+	
+	$price_arr = array(
+		"1"=>array("min"=>0,"max"=>5000,"msg"=>'<span class="won"> 5,000 미만</span>'),
+		"2"=>array("min"=>5000,"max"=>10000,"msg"=>'<span class="won"> 5,000 이상</span> ~ <span class="won"> 10,000 미만</span>'),
+		"3"=>array("min"=>10000,"max"=>20000,"msg"=>'<span class="won"> 10,000 이상</span> ~ <span class="won"> 20,000 미만</span>'),
+		"4"=>array("min"=>20000,"max"=>30000,"msg"=>'<span class="won"> 20,000 이상</span> ~ <span class="won"> 30,000 미만</span>'),
+		"5"=>array("min"=>30000,"max"=>50000,"msg"=>'<span class="won"> 30,000 이상</span> ~ <span class="won"> 50,000 미만</span>')
+	);
+
+	try{
+		$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+
+		$goods= new Goods($conn);
+		$promotion = new Promotion($conn);
+		$mypage = new Mypage2($conn);
+		$draw = new Draw($conn);
+		
+		$page_title = $goods->getPublisher($publisher_code);
+		
+		include_once($_SERVER['DOCUMENT_ROOT'].'/inc/filter_include.php');
+
+		$goods_list = $goods->getGoodsList2($page,$add_where,$orderby,$param,$result_per_page,$q);
+	}catch (PDOException $e){
+		echo 'Error!: '.$e->getMessage();
+		die();
+	}
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<section id="publisher_info" class="my-3">
+			<div class="card shadow-none mb-3 rounded-0">
+				<div class="row g-0 rounded-0">
+					<div class="col-md-12 rounded-0">
+						<a href="https://www.capcom-games.com/en-asia/" target="_blank"><img src="https://image.directg.net/C82mEwprAr" alt="CAPCOM" class="rounded-0"></a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<main>
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/game_filter.html');?>
+			<section id="content" class="content rounded-0">
+				<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/game_filter_order.html');?>
+				<div id="card_list">
+					<div class="row g-3">
+					<?php
+						if($goods_list->success == true){
+							$result = $goods_list->resultset->fetchAll();
+							//함수 출력으로 변경
+							$draw->drawList($result, $_SESSION['member']['m_no']);
+						}
+					?>
+					</div>
+				</div>
+				
+				<div id="pagination" class="mt-4"><?echo $goods_list->links_html;?></div>
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/cart.html');?>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+</body>
+</html>

@@ -1,0 +1,12 @@
+/*
+  legacy는 simplebar(커스텀 스크롤바)로 긴 사이드바를 스크롤한다.
+  CSS-only(테마 JS 미도입)이므로 네이티브 스크롤 폴백을 적용한다.
+  base `.leftside-menu`는 overflow 미지정(visible)이라, goods처럼 그룹이 많은
+  사이드바는 뷰포트를 넘어 하단이 잘린다 → 컨테이너에 세로 스크롤 부여.
+*/
+#leftside-menu-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* 얇은 스크롤바(legacy simplebar 느낌) */
+  scrollbar-width: thin;
+}

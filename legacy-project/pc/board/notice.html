@@ -1,0 +1,152 @@
+<?
+
+header("Content-Type:text/html; charset=utf-8"); 
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+$searchValue = filter_input(INPUT_GET, 'searchValue', FILTER_SANITIZE_STRING);
+
+$page_title="공지사항";
+
+if(empty($page)){
+	$page="1";
+}
+
+$add_where = "";
+
+$where = array();
+
+if($searchValue){
+	$where[] = " subject like '%".$searchValue."%'";
+}
+
+foreach($where as $value){
+	$add_where.= " and ".$value;
+}
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$board = new Board($conn);
+
+	$orderby = " is_notice desc,deploy_date desc";
+
+	$notice_list = $board->getNoticeList($page,$add_where,$orderby,$param);
+
+	//고정 공지사항 목록
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+
+$gubun_array = array(
+	"1"=>"제품코드(키) 발송",
+	"2"=>"프로모션/이벤트",
+	"3"=>"상품 출시/판매",
+	"4"=>"기타",
+);
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+
+<body>
+<div class="wrap">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container my-3 pb-5">
+		<main>
+			<h2 class="page-title mb-4"><?=$page_title?></h2>
+				
+			<div class="row g-0">
+				<div class="col-12">
+					<table class="table table-bordered table-centered mb-0 text-center align-middle text-nowrap">
+						<thead class="table-light font-14">
+							<tr>
+								<!--<th class="text-center bg-body-tertiary">구분</th>-->
+								<th class="text-center table-light">제목</th>
+								<th class="text-center table-light">작성일자</th>
+								<th class="text-center table-light">조회수</th>
+							</tr>
+						</thead>
+						<tbody class="font-14 table-dark">
+					<?
+						if($notice_list->success == true){
+							$result = $notice_list->resultset->fetchAll();
+
+							$count = 0;
+							if($notice_list->total_results=="0"){
+					?>
+						<tr>
+							<td colspan="3" class="text-center">등록된 게시물이 없습니다.</td>
+						</tr>
+					<?
+							}else{
+								foreach($result as $value){
+						
+					?>
+						<tr>
+							<!--<td class="text-center"><?=$gubun_array[$value['notice_type']]?></td>-->
+							<td class="text-start py-2"><a href="/board/notice_view.html?idx=<?=$value['idx']?>" class="text-white link-underline link-underline-opacity-0"><?=$value['subject']?></a></td>
+							<td class="text-center py-2"><?=substr($value['deploy_date'],0,10)?></td>
+							<td class="text-center py-2"><?=number_format($value['hit'])?></td>
+						</tr>
+					<?
+								}
+							}
+						}
+					?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+				
+			<div class="row g-0">
+				<div class="my-3">
+					<div id="pagination" class="mt-4"><?echo $notice_list->links_html;?></div>
+				</div>
+			</div>
+
+			<div class="row g-0">
+				<div class="offset-4 col-4">
+					<form method="GET" action="">
+					<div class="row g-3">
+						<div class="input-group">
+							<!--<select id="search_gubun" name="search_gubun" class="form-select flex-grow-0 w-25">
+								<option value="">구분선택</option>
+								<option value="1">제품코드(키) 발송</option>
+								<option value="2">프로모션/이벤트</option>
+								<option value="3">상품 출시/판매</option>
+								<option value="4">기타</option>
+							</select>
+							-->
+							<input type="text" class="form-control form-control-lg" name="searchValue" placeholder="제목" aria-label="" value="<?=$searchValue?>">
+							<button class="btn btn-dark btn-lg shadow-none" type="submit">검색</button>
+						</div>
+					</div>
+					</form>
+				</div>
+			</div>
+			
+			
+		</main>
+	</div>
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+</body>
+</html>

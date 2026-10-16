@@ -1,0 +1,523 @@
+<?
+ini_set( "display_errors", 0 );
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$sku = filter_input(INPUT_GET, "sku", FILTER_SANITIZE_STRING);
+$product_id = filter_input(INPUT_GET, "product_id", FILTER_SANITIZE_STRING);
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$goods = new Goods($conn);
+	$parsedown= new Parsedown();
+	
+	//대표상품정보
+	$title_info = $goods->getTitleInfoSku($product_id);
+	
+	//옵션상품정보
+	$option_item_info = $goods->getGoodsItemDetailSku($sku);
+	
+	//상품정보 제공고시
+	$attribute_info = $goods->getAttributeInfo($title_info['title_id']);
+	
+	//옵션상품 상세설명
+	$goods_option_description = $goods->getGoodsOptionDescription($option_item_info['product_code']);
+	
+	if($option_item_info['is_view']=="Y"){
+		$goods_status = "Y";
+	}else{
+		if($_SERVER['REMOTE_ADDR']<>"112.216.231.146"){
+			$goods_status = "N";
+			$goods_status_msg = "판매중인 상품이 아닙니다";
+		}else{
+			$goods_status = "Y";
+		}
+	}
+	
+	$delivery_item_list = $goods->getGoodsItemDeliveryList($option_item_info['product_code']);
+	
+	//연령제한 확인
+	if($option_item_info['delivery_type']=="3"){
+		$is_age_check = "Y";
+		$age_limit  = 0;
+		foreach($delivery_item_list as $delivery_item){
+			if($age_limit<$delivery_item['age_limit']){
+				$age_limit = $delivery_item['age_limit'];
+			}
+		}
+	}else{
+		$is_age_check = "N";
+	}
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+$page_title=$option_item_info['product_name'];
+
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+<style>
+
+.nav-pills .nav-link.active{
+	background:#464f5b;
+}
+
+.btn_wishlist{
+}
+
+.goods_detail_info{
+	font-size:12px;
+}
+
+.goods_detail_info p{
+	font-size:12px;
+}
+
+.goods_detail_info img{
+	width:100%;
+}
+
+.goods_detail_info ul{
+	margin-bottom:1rem;
+}
+
+</style>
+</head>
+<body class="dark-mode-active">
+	<!-- App Header -->
+	<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+	<!-- * App Header -->
+
+	<!-- App Capsule -->
+	<?
+		if($goods_status=="N"){
+	?>
+	<div id="appCapsuleSub" class="full-height">
+		<div class="error-page">
+			<div class="icon-box text-danger">
+				<ion-icon name="alert-circle" role="img" class="md hydrated" aria-label="alert circle"></ion-icon>
+			</div>
+			<h1 class="title">ERROR</h1>
+			<div class="text mb-5">
+				<?=$goods_status_msg?>
+			</div>
+		</div>
+	</div>
+	<?}else{?>
+	<div id="appCapsuleSub" class="full-height">
+		<div class="card mb-2">
+			<img src="<?=$option_item_info['domain']?>/upload/product/<?=$option_item_info['product_code']?>/header/header.jpg" class="card-img-top rounded-0" alt="<?=$title_info['title_name']?>">
+			<div class="card-body text-white py-3">
+				<small class="font-12">[<?=$option_item_info['product_name_en']?>]</small>
+				<h2><?=$option_item_info['product_name']?> </h2>
+				<p class="font-12">
+					<span class="badge text-bg-danger rounded-1 font-11 fw-bold">무료배송</span>
+					<?//=$age_limit;?>
+				</p>
+				<div class="d-flex justify-content-between align-items-center">
+					<?if($option_item_info['promotion']['sale_price']>0){?>
+						<div class=" p-0 text-center">
+							<span class="font-14 badge bg-danger rounded-2 px-3 py-2 fw-bold minus"><?=$option_item_info['promotion']['discount_rate']?> %</span>
+						</div>
+						<div class="price text-end">
+							<s class="old-price font-12 text-secondary pe-1 won"> <?=number_format($option_item_info['consumer_price'])?></s> 
+							<span class="font-14 current-price text-white won"> <?=number_format($option_item_info['promotion']['sale_price'])?></span> 
+						</div>
+					<?}else{?>
+						<div class=" p-0 text-center">
+							<? if($option_item_info['discount']>0){?>
+							<span class="font-14 badge bg-primary rounded-2 px-3 py-2 fw-bold minus"><?=$option_item_info['discount']?> %</span>
+							<?}?>
+						</div>
+						
+						<div class="price text-end">
+							<? if($option_item_info['discount']>0){?>
+							<s class="old-price font-12 text-secondary pe-1 won"> <?=number_format($option_item_info['consumer_price'])?></s> 
+							<?}?>
+							<span class="font-14 current-price text-white won"> <?=number_format($option_item_info['price'])?></span> 
+						</div>
+					<?}?>
+				</div>
+			</div>
+			<div class="card-footer px-3">
+				<div class="d-flex d-row justify-content-between">
+					<button type="button" class="btn btn-sm shadow-none font-14 rounded-0 bg-danger btn_wishlist" data-sku="<?=$option_item_info['goods_sku']?>"><ion-icon name="heart-outline"></ion-icon> 위시리스트</button>
+					<?if($option_item_info['soldout']=="N"){?>
+					<button type="button" class="btn btn-sm shadow-none font-14 rounded-0 bg-primary btn_cart" data-sku="<?=$option_item_info['goods_sku']?>"><ion-icon name="cart-outline"></ion-icon> 장바구니</button>
+					<?}else{?>
+					<span class="badge bg-secondary font-14 rounded-1 py-3 px-2">품절</span>
+					<?}?>
+				</div>
+			</div>
+		</div>
+		
+		<div class="section inset mb-2">
+			<div class="alert alert-outline-warning rounded-0" role="alert">
+				<p class="font-14 mb-0">※ 해당 상품은 실물로 배송되는 상품이 포함되거나, 단품으로 배송되는 상품입니다.</p>
+				<p class="font-14 mb-0">※ 실물로 배송되는 상품이 포함되거나, 단품으로 배송되는 상품들은 적립금이 지급되지 않습니다. (주문결제 시 사용은 가능)</p>
+				<p class="font-14 mb-0">※ 이미지는 실제와 다소 차이가 있을 수 있습니다.</p>
+				<p class="font-14 mb-0">※ 영업일 오후 2시(금요일은 오전 11시 30분) 이전 결제 완료 건은 당일 발송되며, 이후 주문은 익일(주말 및 공휴일 제외) 발송됩니다.</p>
+			</div>
+		</div>
+
+		<div class="section full">
+			<div class="section-title">상품설명</div>
+			<div class="wide-block pt-2 pb-2">
+				<div class="goods_detail_info" >
+					<?
+						if($option_item_info['is_package_view']=="Y"){
+							//옵션상품 구성정보
+							$query="select * from tbl_goods_option_bundle where product_code=:product_code order by unit_type asc,unit_name asc";
+							$stmt = $conn->prepare($query);
+							$params = array(
+								":product_code"=>$option_item_info['product_code']
+							);
+							$stmt->execute($params);
+
+							$goods_item_package_info= $stmt->fetchAll();
+							
+							foreach($goods_item_package_info as $package_info){
+								if($package_info['unit_type']=="1"){
+									echo "<hr/><h4>".$package_info['unit_name']." 게임정보</h4>";
+								}else{
+									echo "<h4>".$package_info['unit_name']." 상세설명</h4>";
+								}
+								
+								if($package_info['unit_code']>'0'){
+									$query="select description from tbl_goods_item_description where product_code=:product_code";
+									$stmt = $conn->prepare($query);
+									$params = array(
+										":product_code"=>$package_info['unit_code']
+									);
+									$stmt->execute($params);
+
+									$goods_item_description = $stmt->fetch();
+									echo $parsedown->text($goods_item_description['description']);
+								}
+							}
+						}else{
+						echo $parsedown->text($goods_option_description['description']);
+						}
+					?>
+				</div>
+			</div>
+		</div>
+
+		<div class="section full mb-2">
+			<div class="section-title">상품정보 제공고시</div>
+			<div class="wide-block p-0">
+				<ul class="list-unstyled mb-0">
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">품명</span> 
+							<p class="font-12 mb-0"><?=$attribute_info['product_name']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">모델명</span> 
+							<p class="font-12 mb-0"><?=$attribute_info['model_name']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">KC 인증정보</span>
+							<p class="font-12 mb-0"><a href="https://www.rra.go.kr/ko/license/A_b_popup_keyno.do?key_no=<?=$attribute_info['kc_safety_infomartion']?>" target="_blank"><?=$attribute_info['kc_safety_infomartion']?></a></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">정격전압</span>
+							<p class="font-12 mb-0"><?=$attribute_info['rated_voltage']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">소비전력</span> 
+							<p class="font-12 mb-0"><?=$attribute_info['power']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">동일모델의 출시년월</span>
+							<p class="font-12 mb-0"><?=$attribute_info['manufacturing_date']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">제조자/수입자</span> 
+							<p class="font-12 mb-0"><?=$attribute_info['manufacturer']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">제조국</span> 
+							<p class="font-12 mb-0"><?=$attribute_info['manufacture_country']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">크기(mm)</span> 
+							<p class="font-12 mb-0"><?=$attribute_info['size']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">무게(kg)</span> 
+							<p class="font-12 mb-0"><?=$attribute_info['weight']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">주요사양</span> 
+							<p class="font-12 mb-0"><?=$attribute_info['main_requirements']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">품질보증기준</span>
+							<p class="font-12 mb-0"><?=$attribute_info['warranty_service']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">A/S 책임자/전화번호</span> 
+							<p class="font-12 mb-0"><?=$attribute_info['as_information']?></p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="section full mb-2">
+			<div class="section-title">거래조건에 관한 정보</div>
+			<div class="wide-block p-0">
+				<ul class="list-unstyled mb-0">
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">재화 등의 배송방법에 관한 정보</span>
+							<p class="font-12 mb-0"><?=$attribute_info['delivery_method_info']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">주문 이후 예상되는 배송기간</span>
+							<p class="font-12 mb-0 text-break">대금지급일(결제완료일)로부터 3영업일 이내에 발송<br/>(단, 예약 판매 상품이 포함된 경우 별도의 공지를 통해 안내)</p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">제품하자·오배송 등에 따른 청약철회 등의 경우 청약철회 등의 기한 및 통신판매업자가 부담하는 반품비용 등에 관한 정보</span> 
+							<p class="font-12 mb-0 text-break text-wrap">전자상거래 등에서의 소비자보호에 관한 법률 등에 의한 제품의 하자 또는 오배송 등으로 인한 청약철회의 경우에는 상품 수령 후 3개월 이내, 그 사실을 안 날 또는 알 수 있었던 날로부터 30일 이내에 청약철회를 할 수 있으며, 반품 비용은 통신판매업자가 부담합니다.</p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">제품하자가 아닌 소비자의 단순변심에 따른 청약철회 시 소비자가 부담하는 반품비용 등에 관한 정보</span>
+							<p class="font-12 mb-0 text-break">단순변심에 따른 청약철회 시 재화의 반환에 필요한 비용은 소비자가 부담합니다.<br/>(전자상거래 등에서의 소비자보호에 관한 법률 제18조 제9항)</p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">제품하자가 아닌 소비자의 단순변심에 따른 청약철회가 불가능한 경우 그 구체적 사유와 근거</span>
+							<p class="font-12 mb-0 text-break">전자상거래 등에서의 소비자보호에 관한 법률 등에 의한 청약철회 제한 사유에 해당하는 경우 및 기타 객관적으로 이에 준하는 것으로 인정되는 경우 청약철회가 제한될 수 있습니다.</p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">재화 등의 교환·반품·보증 조건 및 품질보증기준</span> 
+							<p class="font-12 mb-0">소비자분쟁해결기준(공정거래위원회 고시) 및 관계법령에 따릅니다.</p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">재화 등의 A/S 관련 전화번호</span>
+							<p class="font-12 mb-0"><?=$attribute_info['as_information2']?></p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">대금을 환불받기 위한 방법과 환불이 지연될 경우 지연배상금을 지급받을 수 있다는 지연배상금 지급의 구체적인 조건·절차</span>
+							<p class="font-12 mb-0 text-break">주문취소 및 대금의 환불은 [마이페이지 > 주문내역] 메뉴에서 신청할 수 있으며, 전자상거래 등에서의 소비자보호에 관한 법률에 따라 소비자의 청약철회 후 판매자가 재화 등을 반환 받은 날로부터 3영업일 이내에 지급받은 대금의 환급을 정당한 사유 없이 지연하는 때에는 소비자는 지연기간에 대해서 연 15%의 지연배상금을 판매자에게 청구할 수 있습니다.</p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">소비자피해보상의 처리, 재화 등에 대한 불만 처리 및 소비자와 사업자 사이의 분쟁처리에 관한 사항</span> 
+							<p class="font-12 mb-0">소비자분쟁해결기준(공정거래위원회 고시) 및 관계법령에 따릅니다.</p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">거래에 관한 약관의 내용 또는 확인할 수 있는 방법</span> 
+							<p class="font-12 mb-0">홈페이지 하단에 이용약관 및 개인정보처리방침 링크에서 확인할 수 있습니다.</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="section full mb-2">
+			<div class="section-title">교환/반품 정보</div>
+			<div class="wide-block p-0">
+				<ul class="list-unstyled mb-0">
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">교환/반품 비용</span> 
+							<p class="font-12 mb-0">배송비 편도 3,000원<br/>(최초 배송비 무료인 경우 6,000원 부과)</p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">교환/반품 주소지</span> 
+							<p class="font-12 mb-0">[07583] 서울특별시 강서구 강서로56가길 35(등촌동, 에이치투아이앤티빌딩) 5층 (주)에이치투인터렉티브</p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">교환/반품 연락처</span> 
+							<p class="font-12 mb-0">1544-2367</p>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">교환/반품 가능기간</span> 
+							<ul class="font-12">
+								<li>단순변심: 상품 수령일로부터 7일 이내 (배송비: 구매자 부담)<br/>(단, 제품 코드(키) 상품이 포함된 경우는 디지털 상품 환불정책에 따라 구입일로부터 7일)</li>
+								<li>제품의 하자 또는 오배송: 상품 수령일로부터 3개월 이내, 그 사실을 안 날 또는 알 수 있었던 날로부터 30일 이내 (배송비: 판매자 부담)</li>
+								<li>품질 보증기간은 제품 구매일로부터 1년입니다. (구매 영수증으로 증빙)</li>
+							</ul>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">교환/반품 불가기준</span> 
+							<ul class="font-12">
+								<li>교환/반품 가능기간이 경과된 경우</li>
+								<li>구매자 귀책으로 상품 등이 멸실 또는 훼손된 경우</li>
+								<li>포장을 개봉하였거나, 포장이 훼손되어 상품 등의 가치가 현저히 상실된 경우<br/>(단, 상품 내용 확인을 위해 포장 등을 훼손한 경우는 제외)</li>
+								<li>구매자의 사용 또는 일부 소비에 의하여 상품 등의 가치가 현저히 감소한 경우</li>
+								<li>시간의 경과에 의해 재판매가 곤란할 정도로 상품 등의 가치가 현저히 감소한 경우</li>
+							</ul>
+						</div>
+					</li>
+					<li class="px-3 py-2 border-bottom border-opacity-25">
+						<div class="p-0">
+							<span class="text-secondary font-14">플레이스테이션 하드웨어 및 액세서리 제품 초기불량</span> 
+							<ul class="font-12">
+								<li>초기 불량의 경우, SIEK 공식 고객센터에서 불량 판정 후 교환/반품이 가능합니다.</li>
+								<li>제품 불량 여부는 제조사 A/S 센터에서만 판정할 수 있습니다.</li>
+								<li>불량 판정이 확인되면, 제조사 고객센터의 안내에 따라 교환 또는 반품 절차를 진행해 주시기 바랍니다.</li>
+								<li>수리 접수 안내: <a href="http://www.playstation.com/ko-kr/support/hardware/service-center/" target="_blank">http://www.playstation.com/ko-kr/support/hardware/service-center/</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- * App Capsule -->
+	<?}?>
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- App 장바구니 알림 -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/dialog_cart.html'); ?>
+<!-- * App 장바구니 알림 -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<script src="/assets/js/base.js"></script>
+
+<script>
+$(document).ready(function(){
+	sessionStorage.setItem('LastUrl', "<?=$_SERVER['REQUEST_URI']?>");
+	//장바구니 담기(동기)
+	$(".btn_cart").bind("click",function(){
+		var index = $(".btn_cart").index(this);
+		var goods_sku = $(".btn_cart").eq(index).attr("data-sku");
+
+		$.ajax({
+			'url': '/order/cart_proc.php',
+			'dataType': 'json',
+			'type': 'POST',
+			'data':{mode:"add_cart",goods_sku:goods_sku},
+			'success': function (data) {
+				if(data.error_code=="0"){
+					$("#dialog_cart").modal("show");
+				}else{
+					$("#dialog_cart #msg").html(data.error_msg);
+					$("#dialog_cart").modal("show");
+				}
+				
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+
+	//위시리스트 담기
+	$(".btn_wishlist").bind("click",function(){
+		var index = $(".btn_wishlist").index(this);
+		var goods_sku = $(".btn_wishlist").eq(index).attr("data-sku");
+
+		$.ajax({
+			'url': '/order/wishlist_proc.php',
+			'type': 'POST',
+			'dataType': 'json',
+			'data':{mode:"add_wishlist",goods_sku:goods_sku},
+			'success': function (data) {
+				if(data.error_code=="0"){
+					$("#dialog_wishlist").modal("show");
+				}else{
+					$("#dialog_wishlist #msg").html(data.error_msg);
+					$("#dialog_wishlist").modal("show");
+				}
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+});
+</script>
+</body>
+</html>

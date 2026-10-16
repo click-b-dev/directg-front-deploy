@@ -1,0 +1,97 @@
+<!-- 장바구니 알림 -->
+<div class="modal fade dialogbox" id="dialog_cart" data-bs-backdrop="static" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">장바구니 알림</h5>
+			</div>
+			<div class="modal-body">
+				<span class="font-14" id="msg">장바구니에 상품이 추가되었습니다</span>
+			</div>
+			<div class="modal-footer">
+				<div class="btn-inline">
+					<a href="#" class="btn btn-text-danger" data-bs-dismiss="modal">닫기</a>
+					<a href="/order/cart.html" class="btn btn-text-primary"><?=$_SESSION['member']['m_id']?"장바구니 이동":"로그인"?></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- * 장바구니 알림 -->
+
+<!-- 위시리스트 알림 -->
+<div class="modal fade dialogbox" id="dialog_wishlist" data-bs-backdrop="static" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">위시리스트 알림</h5>
+			</div>
+			<div class="modal-body">
+				<span class="font-14" id="msg">위시리스트에 상품이 추가되었습니다.</span>
+			</div>
+			<div class="modal-footer">
+				<div class="btn-inline">
+					<a href="#" class="btn btn-text-danger" data-bs-dismiss="modal">닫기</a>
+					<a href="/mypage/mypage_wishlist.html" class="btn btn-text-primary"><?=$_SESSION['member']['m_id']?"위시리스트 이동":"로그인"?></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- * 위시리스트 알림 -->
+
+<script>
+//장바구니·위시리스트 알림을 닫으면 헤더/사이드바 배지(갯수·빨간점)만 AJAX로 다시 그린다(새로고침 없음)
+//'이동'(또는 로그인) 링크로 이동 중일 때는 갱신할 필요가 없으므로 제외
+(function(){
+	//배지 값만 받아오고, 그리는 것은 sub_header.html / sidebar.html 이 등록해둔 함수가 담당한다
+	function refreshHeaderBadge(){
+		fetch('/order/cart_proc.php', {
+				method:'POST',
+				credentials:'same-origin',
+				headers:{'Content-Type':'application/x-www-form-urlencoded'},
+				body:'mode=header_badge'
+			})
+			.then(function(res){ return res.json(); })
+			.then(function(badge){
+				if(badge.cart_cnt === undefined){ location.reload(); return; }
+				(window.headerBadgeDrawers || []).forEach(function(draw){ draw(badge); });
+			})
+			.catch(function(){ location.reload(); });   //실패하면 기존 방식대로 새로고침
+	}
+
+	//뒤로가기로 돌아온 경우 — bfcache 로 DOM이 그대로 복원되어 배지가 이전 값으로 보인다.
+	//(예: 장바구니 페이지에서 상품을 지우고 뒤로가기) 복원 감지 시 값만 다시 받아 갱신한다.
+	window.addEventListener('pageshow', function(e){
+		var nav = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+		if(e.persisted || (nav && nav.type === 'back_forward')){
+			refreshHeaderBadge();
+		}
+	});
+
+	['dialog_cart','dialog_wishlist'].forEach(function(dialog_id){
+		var dialog = document.getElementById(dialog_id);
+		if(!dialog){ return; }
+
+		//알림 문구의 기본값을 기억해둔다.
+		//목록(inc/footer_common.html)·상세페이지 스크립트는 실패 시 #msg 를 error_msg 로 덮어쓰지만
+		//성공 시에는 되돌리지 않는다. 그래서 "이미 담긴 상품" 같은 문구가 한 번 뜨면
+		//이후 다른 상품을 정상적으로 담아도 계속 그 문구가 남았다.
+		//문구를 소유한 이 파일에서 닫을 때 되돌린다(호출부 14곳을 고치지 않아도 됨).
+		var msg_box = dialog.querySelector('#msg');
+		var default_msg = msg_box ? msg_box.innerHTML : '';
+
+		var is_moving = false;
+		dialog.querySelectorAll('a[href]:not([data-bs-dismiss])').forEach(function(link){
+			link.addEventListener('click', function(){ is_moving = true; });
+		});
+
+		dialog.addEventListener('hidden.bs.modal', function(){
+			if(msg_box){ msg_box.innerHTML = default_msg; }   //이동 여부와 무관하게 항상 복원
+
+			if(is_moving){ return; }
+			refreshHeaderBadge();
+		});
+	});
+})();
+</script>

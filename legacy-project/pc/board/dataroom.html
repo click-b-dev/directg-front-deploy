@@ -1,0 +1,167 @@
+<?
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+header("Content-Type:text/html; charset=utf-8"); 
+ini_set('display_errors', '0');
+
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+
+$page_title="자료실";
+
+$aside_menu['dataroom'] = "text-primary fw-bold";
+
+if(empty($page)){
+	$page="1";
+}
+
+foreach($_GET as $key=>$value){
+	if($key<>"page" ){
+		if($value<>""){
+			$param.="&".$key."=".$value;
+		}
+	}
+}
+
+$add_where = "";
+
+$where = array();
+$where[] = "is_free='Y' ";
+$where[] = "is_view='Y'";
+
+foreach($where as $value){
+	$add_where.= " and ".$value;
+}
+
+
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$dataroom = new Dataroom($conn);
+
+	$orderby = " reg_date DESC";
+
+	$dataroom_list = $dataroom->getDataroomList($page,$add_where,$orderby,$param);
+	$list = $dataroom_list->resultset->fetchAll();
+
+	$parsedown= new Parsedown();
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+<link rel="shortcut icon" href="/favicon.ico">
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<link href="/assets/css/card-list.css?d=<?=time()?>" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+<div class="wrap">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main>
+			<section id="content" class="content rounded-0">
+				<div class="top_banner">
+					<img src="https://image.directg.net/h8a6cl5Nrp" alt="다이렉트 게임즈 자료실" class="w-100">
+				</div>
+
+				<div class="card shadow-none rounded-0 mb-3 p-3 font-14 bg-darkgray text-secondary">
+					<div>
+						<ul class="m-0">
+							<li>다이렉트 게임즈의 자료는 다이렉트 게임즈 회원분들을 위해 제공되며, 다운로드를 위해선 다이렉트 게임즈 계정이 필요합니다.</li>
+							<li>다이렉트 게임즈의 자료는 무단 배포와 상업적 사용을 제한하며, 부적절한 행위는 법적인 처벌을 받을 수 있습니다.</li>
+							<li>일부 자료는 사정에 따라 다운로드 기간 및 횟수, 연령 제한 등이 있을 수 있습니다.</li>
+							<li>다이렉트 게임즈의 자료는 메가 드라이브(https://mega.io)를 통해 제공됩니다.</li>
+						</ul>
+					</div>
+				</div>
+				<div class="thumb_data">
+				<?php
+					$i=0;
+					foreach($list as $value){
+						
+				?>
+					<div class="card rounded-0 bg-card border-0 p-0 flex-shrink-0">
+						<div class="thumb-area p-0 position-relative flex-shrink-0">
+							<img src="/upload/dataroom/<?=$value['thumbnail']?>" class="card-img-top rounded-0 w-100 h-100" alt="..." onerror="this.style.visibility='hidden'">
+							<div class="label_area position-absolute bottom-0 start-0">
+								<span class="label bg-warning rounded-0 font-12 fw-bold">월페이퍼</span>
+							</div>
+						</div>
+						<div class="content-area bg-light d-flex flex-column h-100 text-secondary">
+							<div class="title-area font-14 text-decoration-none text-truncate align-content-center flex-shrink-0">
+								<?=$value['file_name']?>
+							</div>
+							<div class="info-area d-flex h-100 w-100 justify-content-between bg-none-25">
+								<div class="d-flex flex-column">
+									<ul>
+										<li>배포일자: <?=$value['deploy_date']?></li>
+										<li><?=$value['contents']?></li>
+									</ul>
+								</div>
+								<div class="button-area d-flex align-self-end">
+									<div class="wishlist-area text-center">
+										<button type="button" class="btn btn-sm btn-primary border-0 shadow-none btn_wishlist justify-content-center btn-file" data-idx="<?=$value['idx']?>" data-url="<?=$value['file_url']?>">
+											<span class="icon_area"><img src="/assets/images/icon/download.svg" class="d-block w-100"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<?php
+					}
+				?>
+				</div>
+			</section>
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function () {
+	$(document).on("click",".btn-file",function(){
+		const file_url = $(this).data("url");
+		const idx = $(this).data("idx");
+		$.ajax({
+			url : "dataroom_ps.php",
+			dataType:"json",
+			type: "POST",
+			data : {file_url:file_url,idx:idx},
+			success:function(data, textStatus, jqXHR){
+				if(data.status=="error"){
+					alert(data.error_msg);
+				}else{
+					window.open(data.file_url,"_blank");
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+					alert(jqXHR);
+			}
+		});
+	});
+});
+</script>
+
+</body>
+</html>

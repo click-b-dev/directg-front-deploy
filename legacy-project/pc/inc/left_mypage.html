@@ -1,0 +1,105 @@
+<?
+	$page_url = explode("/",$_SERVER['REQUEST_URI']);
+	switch($page_url['2']){
+		case "mypage_order.html": //주문완료 내역
+			$left_menu_active1 = "fw-bold active";
+			$left_menu_active2 = "link-dark";
+		break;
+		case "mypage_order_view.html": //주문상세내역
+			$left_menu_active1 = "fw-bold active";
+			$left_menu_active2 = "link-dark";
+		break;
+		case "mypage_order_refund.html": //취소완료 내역
+			$left_menu_active1 = "link-dark";
+			$left_menu_active2 = "fw-bold active";
+		break;
+		case "mypage_main.html": //취소완료 내역
+			$left_menu_active1 = "link-dark";
+			$left_menu_active2 = "link-dark";
+		break;
+		default:
+			$left_menu_active1 = "link-dark";
+			$left_menu_active2 = "link-dark";
+		break;
+	}
+?>
+<div class="aside col-sm-2">
+	<div class="d-flex flex-column bg-light">
+		<div class="text-center py-1 bg-primary text-white"><h4 class="font-20">마이페이지</h4></div>
+		<ul class="side-nav">
+			<li class="side-nav-item"><a href="/mypage/mypage_main.html" class="side-nav-link px-3 fw-bold">대시보드</a></li>
+			<li class="side-nav-item">
+				<div class="side-nav-link px-3"><span>회원정보</span></div>
+				<div class=" " id="mypageMember">
+					<ul class="side-nav-second-level">
+						<li class="ps-2">
+							<a href="/mypage/account_password.html" class="px-3">- 정보수정</a>
+						</li>
+						<li class="ps-2">
+							<a href="/mypage/sns_login_connect.html" class="px-3">- 간편로그인 연결</a>
+						</li>
+						<li class="ps-2">
+							<a href="/mypage/member_leave.html" class="px-3">- 회원탈퇴 요청</a>
+						</li>
+						<li class="ps-2">
+							<a href="/mypage/member_level_info.html" class="px-3">- 회원등급 안내</a>
+						</li>
+					</ul>
+				</div>
+			</li>
+			<li class="side-nav-item">
+				<div class="side-nav-link px-3"><span>주문정보</span></div>
+				<div class=" " id="mypageOrder">
+					<ul class="side-nav-second-level">
+						<li class="ps-2">
+							<a href="/mypage/mypage_order.html" class="px-3">- 주문 내역</a>
+						</li>
+						<li class="ps-2">
+							<a href="/mypage/mypage_refund.html" class="px-3">- 취소 내역</a>
+						</li>
+						<!--
+						<li class="ps-2">
+							<a href="/mypage/mypage_library.html" class="px-3">라이브러리</a>
+						</li>
+						-->
+						<li class="ps-2">
+							<a href="/mypage/mypage_wishlist.html" class="px-3">- 위시리스트 내역</a>
+						</li>
+					</ul>
+				</div>
+			</li>
+			<li class="side-nav-item">
+				<div class="side-nav-link px-3"><span>고객센터</span></div>
+				<div class=" " id="myageCustomer">
+					<ul class="side-nav-second-level">
+						<li class="ps-2">
+							<a href="/mypage/mypage_qna.html" class="px-3">- 문의 내역</a>
+						</li>
+						<li class="ps-2">
+							<a href="/mypage/mypage_qna_register.html" class="px-3">- 문의 하기</a>
+						</li>
+					</ul>
+				</div>
+			</li>
+			<li class="side-nav-item">
+				<div class="side-nav-link px-3"><span>혜택정보</span></div>
+				<div class=" " id="mypageBenefits">
+					<ul class="side-nav-second-level">
+						<li class="ps-2">
+							<a href="/mypage/member_point.html" class="px-3">- 포인트 내역</a>
+						</li>
+						<li class="ps-2">
+							<a href="/mypage/mypage_coupon.html" class="px-3">- 쿠폰 내역</a>
+						</li>
+						<li class="ps-2">
+							<a href="/mypage/mypage_event_gift.html" class="px-3">- 사은품 내역</a>
+						</li>
+						<li class="ps-2">
+							<a href="/mypage/mypage_supply_content_v2.html" class="px-3">- 제공콘텐츠 내역</a>
+						</li>
+					</ul>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>

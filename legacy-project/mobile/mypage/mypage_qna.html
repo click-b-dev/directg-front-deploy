@@ -1,0 +1,215 @@
+<?php
+	ini_set( "display_errors", 1 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+	$search_goods_name = filter_input(INPUT_GET, 'search_goods_name', FILTER_SANITIZE_STRING);
+
+	$page_title = "문의 내역";
+
+	if(empty($page)){
+		$page="1";
+	}
+
+	foreach($_GET as $key=>$value){
+		if($key<>"page" ){
+			if($value<>""){
+				$param.="&".$key."=".$value;
+			}
+		}
+	}
+
+	try{
+		$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+		$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		$mypage = new Mypage($conn_dgkr);
+		$parsedown= new Parsedown();
+
+		$where = array();
+		$where[] = "user_id='{$_SESSION['member']['m_id']}'";
+		$where_query = implode(" AND ", $where);
+		$orderby = "reg_date DESC";
+
+		$qna_list = $mypage->getQnaMobileList($page,$where_query,$orderby,$param);
+		$list = $qna_list->resultset->fetchAll();
+	}catch (PDOException $e){
+		echo 'Error!: '.$e->getMessage();
+		die();
+	}
+
+	$qnaGubun = array(
+		"6"=>"계정, 회원, 인증",
+		"7"=>"한글, 제공 콘텐츠",
+		"1"=>"게임 설치, 플레이",
+		"2"=>"주문, 결제",
+		"4"=>"주문취소 및 환불",
+		"3"=>"기타",
+		"5"=>"제품 코드(키) 오류",
+		"8"=>"할인, 가격",
+		"9"=>"이용방법",
+	);
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/inc/bootstrap/bootstrap.css">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="section full">
+		<div>
+			<div class="section-title mt-2">문의 내역</div>
+
+			<div class="accordion" id="accordion">
+			<?php
+				foreach($list as $value){
+			?>
+				<div class="accordion-item">
+					<h2 class="accordion-header">
+						<button class="btn-show-answer accordion-button collapsed justify-content-between pe-5" style="justify-content:space-between !important;" type="button" data-bs-toggle="collapse" data-bs-target="#accordion_<?=$value['idx']?>" aria-expanded="false" data-idx="<?=$value['idx']?>">
+							<span class="col-9 p-0"><?=$value['subject']?></span>
+							<?php
+								if($value['is_answer']=="Y"){
+							?>
+								<span class="badge badge-primary col-3 ms-1">답변완료</span>
+							<?php
+								} else {
+							?>
+								<span class="badge badge-danger col-3 ms-1">답변대기중</span>
+							<?php
+								}
+							?>
+						</button>
+					</h2>
+					<div id="accordion_<?=$value['idx']?>" class="accordion-collapse collapse" data-bs-parent="#accordion" style="">
+						<div class="accordion-body py-0">
+							<div class="card-body mb-3 p-1">
+								<h4>문의내용</h4>
+									<div class="p-1 shadow-none rounded-0">
+										<?=htmlspecialchars_decode($parsedown->text($value['contents']))?>
+									</div>
+								<hr>
+								<h4>답변</h4>
+									<div class="p-1 shadow-none rounded-0">
+								<?php
+									if($value['is_answer']=="Y"){
+										echo htmlspecialchars_decode($value['answer']);
+									} else {
+										echo "답변 대기중 입니다.";
+									}
+								?>
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<?php
+				}
+			?>
+			</div>
+			<div class="col-12">
+				<input type="button" class="btn <?=$page>=$qna_list->total_pages?"btn-secondary":"btn-primary"?> btn-lg btn-block" value="<?=$page>=$qna_list->total_pages?"마지막 페이지":"더보기"?>" name="btn_more" id="btn_more" data-page="<?=$page?>">
+			</div>
+		</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+<!-- Base Js File -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+<script src="/assets/js/base.js"></script>
+
+<script>
+$(document).ready(function() {
+	$('#btn_more').on('click', function(e) {
+		e.preventDefault();
+		const page = parseInt($(this).data('page')) + 1;
+		$.get('./ajax_qna.php', {'page' : page,page_num:"10"}, function (data) {
+			if (page >= <?=$qna_list->total_pages?>) {
+				$('.accordion').append(data);
+				$('#btn_more').data('page', page);
+				$('#btn_more').val("마지막 페이지");
+				$('#btn_more').removeClass("btn-primary")
+				$('#btn_more').addClass("btn-secondary")
+			} else {
+				$('.accordion').append(data);
+				$('#btn_more').data('page', page);
+			}
+		});
+	});
+});
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 모든 답변보기 버튼 선택
+        const answerButtons = document.querySelectorAll('.btn-show-answer');
+
+        answerButtons.forEach(button => {
+            button.addEventListener('click', function() {
+				const statusText = this.querySelector('.badge').innerText;
+
+				if (statusText.includes('답변대기중')) {
+					return;
+				}
+
+				const inquiryIdx = this.getAttribute('data-idx');
+                const isExpanding = this.getAttribute('aria-expanded') === 'true';
+                
+                if (isExpanding) {
+            		$.ajax({
+            			url : "./mypage_qna_proc.php",
+            			type: "POST",
+            			data : {
+                            idx: inquiryIdx,
+                            mode: "view"
+                        }
+            		});
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+
+</html>

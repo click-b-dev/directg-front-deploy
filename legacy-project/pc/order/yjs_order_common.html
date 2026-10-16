@@ -1,0 +1,338 @@
+<?php
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	//기존 DB
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$order = new Order($conn);
+	$member = new Member($conn_dgkr);
+	$asset = new Asset();
+	$genba = new Genba("Live");
+	$ztorm = new Ztorm();
+	$vaultn = new Vaultn();
+
+	// tbl_order step 업데이트
+	$u_query = "UPDATE tbl_order SET step = :step, payment_date = NOW() WHERE settle_no = :settle_no";
+	$stmt = $conn->prepare($u_query);
+	$stmt->execute([":step" => $step, ":settle_no" => $settle_no]);
+
+	// 결제 완료 시에만 게임코드 발송
+	if ($is_paid) {
+		$order_item = $order->getOrderItem($settle_no);
+
+		foreach ($order_item as $value) {
+			$delivery_item_list = $order->getGoodsItemDelivery($value['product_code']);
+			$order_status = "1";
+			$send_status = "pending";
+			$order_system = "";
+
+			// ========================================
+			// 디지털 상품 발송 처리
+			// ========================================
+			if ($value['delivery_type'] == '1' || $value['delivery_type'] == '3') {
+				foreach ($delivery_item_list as $sub_value) {
+					switch ($sub_value['order_system']) {
+						case "1": // Asset
+							$order_system = "Asset";
+							try {
+								$asset_response = $asset->runReserveRegister($m_id, $value['ordno'], $sub_value['item_id']);
+								$logger->info($asset_response);
+
+								foreach ($asset_response->list as $asset_item) {
+									$query = "INSERT INTO tbl_order_item_asset 
+											  SET m_no=:m_no, m_id=:m_id, ordno=:ordno,
+												  product_code=:product_code, product_name=:product_name,
+												  asset_id=:asset_id, asset_name=:asset_name,
+												  reserve_id=:reserve_id, asset_publisher=:asset_publisher,
+												  asset_platform=:asset_platform, order_date=NOW(),
+												  asset_type=:asset_type, ord_ymd=:ord_ymd";
+									$stmt = $conn->prepare($query);
+									$stmt->execute([
+										":m_no" => $m_no,
+										":m_id" => $m_id,
+										":ordno" => $asset_item->po,
+										":product_code" => $value['product_code'],
+										":product_name" => $value['product_name'],
+										":asset_id" => $asset_item->assetId,
+										":asset_name" => $sub_value['item_name'],
+										":reserve_id" => $asset_item->reserveId,
+										":asset_publisher" => $sub_value['item_publisher'],
+										":asset_platform" => $sub_value['item_platform'],
+										":asset_type" => $sub_value['item_type'],
+										":ord_ymd" => date('Y-m-d'),
+									]);
+								}
+								$order_status = "2";
+								$send_status = "delivered";
+							} catch (Exception $e) {
+								$order_status = "1";
+								$send_status = "fail";
+							}
+							break;
+
+						case "2": // Ztorm
+							$order_system = "Ztorm";
+							$name = $_SESSION['member']['name'] ?: $_SESSION['member']['nickname'];
+
+							$ztorm->runCreateCustomer([
+								"RetailerCustomerID" => $m_id,
+								"Username" => $name,
+								"Email" => $m_id,
+								"FirstName" => '', "LastName" => '',
+								"CountryCode" => 'KR', "YearOfBirth" => ''
+							]);
+
+							$zt_ord_no = $ztorm->runZtormOrder(
+								$m_id, $ip, $value['ordno'], $sub_value['item_id'],
+								$value['price'], $payment_method ?? '', $value['publisher_code']
+							);
+							$logger->info($zt_ord_no);
+
+							$query = "INSERT INTO tbl_order_item_ztorm 
+									  SET m_no=:m_no, m_id=:m_id, ordno=:ordno,
+										  product_code=:product_code, product_name=:product_name,
+										  ztorm_item_id=:ztorm_item_id, ztorm_item_name=:ztorm_item_name,
+										  customer_product_id=:customer_product_id,
+										  ztorm_publisher=:ztorm_publisher, ztorm_platform=:ztorm_platform,
+										  order_date=NOW(), ord_ymd=:ord_ymd
+									  ON DUPLICATE KEY UPDATE batch_date=NOW()";
+							$stmt = $conn->prepare($query);
+							$stmt->execute([
+								":m_no" => $m_no, ":m_id" => $m_id,
+								":ordno" => $value['ordno'],
+								":product_code" => $value['product_code'],
+								":product_name" => $value['product_name'],
+								":ztorm_item_id" => $sub_value['item_id'],
+								":ztorm_item_name" => $sub_value['item_name'],
+								":customer_product_id" => $zt_ord_no,
+								":ztorm_publisher" => $sub_value['item_publisher'],
+								":ztorm_platform" => $sub_value['item_platform'],
+								":ord_ymd" => date('Y-m-d'),
+							]);
+							$order_status = "2";
+							$send_status = "delivered";
+							break;
+
+						case "8": // Vaultn
+							$order_system = "Vaultn";
+							$vaultn_data = $vaultn->runOrderCreate([
+								"sku" => $sub_value['item_id'],
+								"ipAddress" => $ip,
+								"salesPriceGross" => $value['price'],
+								"clientOrderReference" => $value['ordno'],
+								"clientCustomerReference" => (string)$m_no,
+							]);
+							$logger->info($vaultn_data);
+
+							if ($vaultn_data->orderId) {
+								$query = "INSERT INTO tbl_order_item_vaultn 
+										  SET m_no=:m_no, m_id=:m_id, orderId=:orderId,
+											  clientOrderReference=:clientOrderReference, sku=:sku,
+											  clientCustomerReference=:clientCustomerReference,
+											  created=:created, status=:status,
+											  salesCurrency=:salesCurrency, salesCountry=:salesCountry,
+											  salesCountryCode=:salesCountryCode, salesPriceGross=:salesPriceGross,
+											  publisherName=:publisherName, publisherGuid=:publisherGuid,
+											  priceModel=:priceModel, priceListGuid=:priceListGuid,
+											  countryCode=:countryCode, srpCurrency=:srpCurrency,
+											  purchasePriceCurrency=:purchasePriceCurrency,
+											  baseSRP=:baseSRP, discountedSRP=:discountedSRP,
+											  netDiscountedSRP=:netDiscountedSRP, priceListVAT=:priceListVAT,
+											  basePurchasePrice=:basePurchasePrice,
+											  promoPercentage=:promoPercentage,
+											  netPurchasePrice=:netPurchasePrice,
+											  estimatedMargin=:estimatedMargin,
+											  provider=:provider, fulfilmentStatus=:fulfilmentStatus,
+											  reg_date=NOW(), ord_ymd=:ord_ymd,
+											  product_code=:product_code, product_name=:product_name,
+											  Name=:Name
+										  ON DUPLICATE KEY UPDATE update_date=NOW()";
+								$stmt = $conn->prepare($query);
+								$pd = $vaultn_data->orderDetails->priceListDetails;
+								$stmt->execute([
+									":m_no" => $m_no, ":m_id" => $m_id,
+									":orderId" => $vaultn_data->orderId,
+									":clientOrderReference" => $value['ordno'],
+									":sku" => $vaultn_data->orderItemDetails->sku,
+									":clientCustomerReference" => $m_no,
+									":created" => $vaultn_data->created,
+									":status" => $vaultn_data->status,
+									":salesCurrency" => $vaultn_data->orderDetails->salesCurrency,
+									":salesCountry" => $vaultn_data->orderDetails->salesCountry,
+									":salesCountryCode" => $vaultn_data->orderDetails->salesCountryCode,
+									":salesPriceGross" => $vaultn_data->orderDetails->salesPriceGross,
+									":publisherName" => $pd->publisherName,
+									":publisherGuid" => $pd->publisherGuid,
+									":priceModel" => $pd->priceModel,
+									":priceListGuid" => $pd->priceListGuid,
+									":countryCode" => $pd->countryCode,
+									":srpCurrency" => $pd->srpCurrency,
+									":purchasePriceCurrency" => $pd->purchasePriceCurrency,
+									":baseSRP" => $pd->baseSRP,
+									":discountedSRP" => $pd->discountedSRP,
+									":netDiscountedSRP" => $pd->netDiscountedSRP,
+									":priceListVAT" => $pd->priceListVAT,
+									":basePurchasePrice" => $pd->basePurchasePrice,
+									":promoPercentage" => $pd->promoPercentage,
+									":netPurchasePrice" => $pd->netPurchasePrice,
+									":estimatedMargin" => $pd->estimatedMargin,
+									":provider" => $vaultn_data->orderItemDetails->provider,
+									":fulfilmentStatus" => $vaultn_data->orderItemDetails->fulfilmentStatus,
+									":ord_ymd" => date('Y-m-d'),
+									":product_code" => $value['product_code'],
+									":product_name" => $value['product_name'],
+									":Name" => $sub_value['item_name'],
+								]);
+								$order_status = "2";
+								$send_status = "delivered";
+							} else {
+								$order_status = "1";
+								$send_status = "fail";
+							}
+							break;
+
+						case "9": // Genba
+							$order_system = "Genba";
+							if ($value['is_preorder'] == "Y") {
+								$reservationid = "";
+								$order_response = $genba->runGenbaPlaceOrderAsync(
+									$reservationid, $sub_value['item_id'],
+									$value['price'], $value['order_ppr'], $value['ip']
+								);
+								$Created = $order_response->Created;
+								$Expiration = "";
+							} else {
+								$reservation_response = $genba->runGenbaPlaceReservationAsync(
+									$sub_value['item_id'], $value['price'],
+									$value['order_ppr'], $value['ip']
+								);
+
+								if ($reservation_response->Code == "2007") {
+									$reservationid = "";
+									$order_response = $genba->runGenbaPlaceOrderAsync(
+										$reservationid, $sub_value['item_id'],
+										$value['price'], $value['order_ppr'], $value['ip']
+									);
+									$Created = $order_response->Created;
+									$Expiration = "";
+								} else {
+									$reservationid = $reservation_response->ID;
+									$order_response = $genba->runGenbaPlaceOrderAsync(
+										$reservationid, $sub_value['item_id'],
+										$value['price'], $value['order_ppr'], $value['ip']
+									);
+									$Created = $reservation_response->Created;
+									$Expiration = $reservation_response->Expiration;
+								}
+							}
+
+							if ($order_response->ID) {
+								$query = "INSERT INTO tbl_order_item_genba 
+										  SET m_no=:m_no, m_id=:m_id, ordno=:ordno,
+											  ID=:ID, ClientTransactionID=:ClientTransactionID,
+											  Sku=:Sku, Created=:Created, Expiration=:Expiration,
+											  State=:State,
+											  CommunicatedBuyingPrice=:CommunicatedBuyingPrice,
+											  ActualBuyingPrice=:ActualBuyingPrice,
+											  NetAmount=:NetAmount, GrossAmount=:GrossAmount,
+											  ReservationID=:ReservationID, ord_ymd=:ord_ymd,
+											  product_code=:product_code, product_name=:product_name,
+											  Name=:Name, Platform=:Platform, Publisher=:Publisher";
+								$stmt = $conn->prepare($query);
+								$stmt->execute([
+									':m_no' => $m_no, ':m_id' => $m_id,
+									':ordno' => $value['ordno'],
+									':ID' => $order_response->ID,
+									':ClientTransactionID' => $order_response->ClientTransactionID,
+									':Sku' => $order_response->Sku,
+									':Created' => $Created, ':Expiration' => $Expiration,
+									':State' => $order_response->State,
+									':CommunicatedBuyingPrice' => $order_response->CommunicatedBuyingPrice->Amount,
+									':ActualBuyingPrice' => $order_response->ActualBuyingPrice->Amount,
+									':NetAmount' => $order_response->SellingPrice->NetAmount,
+									':GrossAmount' => $order_response->SellingPrice->GrossAmount,
+									':ReservationID' => $order_response->ReservationID,
+									":ord_ymd" => date('Y-m-d'),
+									":product_code" => $value['product_code'],
+									":product_name" => $value['product_name'],
+									":Name" => $sub_value['Name'],
+									":Platform" => $sub_value['Platform'],
+									":Publisher" => $sub_value['Publisher'],
+								]);
+								$order_status = "2";
+								$send_status = "delivered";
+							} else {
+								$query = "INSERT INTO genba_error_log 
+										  SET ordno=:ordno, sku=:sku, name=:name,
+											  Code=:Code, Details=:Details, reg_date=NOW()";
+								$stmt = $conn->prepare($query);
+								$stmt->execute([
+									":ordno" => $value['ordno'],
+									":sku" => $sub_value['item_id'],
+									":name" => $sub_value['Name'],
+									":Code" => $order_response->Code,
+									":Details" => $order_response->Details,
+								]);
+								$order_status = "1";
+								$send_status = "fail";
+							}
+							break;
+					}
+				}
+			}
+
+			// ========================================
+			// 실물 상품 배송 처리
+			// ========================================
+			if ($value['delivery_type'] == '2' || $value['delivery_type'] == '3') {
+				$name = $_SESSION['member']['name'] ?: $_SESSION['member']['nickname'];
+				$query = "INSERT INTO tbl_order_shipment 
+						  SET settle_no=:settle_no, ordno=:ordno,
+							  product_code=:product_code, product_name=:product_name,
+							  model_code=:model_code, model_name=:model_name,
+							  courier_name=:courier_name, shipment_status='2'";
+				$stmt = $conn->prepare($query);
+				$stmt->execute([
+					":settle_no" => $settle_no,
+					":ordno" => $value['ordno'],
+					":product_code" => $value['product_code'],
+					":product_name" => $value['product_name'],
+					":model_code" => $value['model_code'],
+					":model_name" => $value['model_name'],
+					":courier_name" => $name,
+				]);
+				if ($value['delivery_type'] == '2') {
+					$order_status = "2";
+				}
+			}
+
+			// tbl_order_item 상태 업데이트
+			$query = "UPDATE tbl_order_item 
+					  SET status=:status, send_status=:send_status, order_system=:order_system 
+					  WHERE ordno=:ordno";
+			$stmt = $conn->prepare($query);
+			$stmt->execute([
+				":status" => $order_status,
+				":send_status" => $send_status,
+				":order_system" => $order_system,
+				":ordno" => $value['ordno'],
+			]);
+		}
+
+		// 장바구니 삭제
+		$query = "DELETE FROM tbl_cart WHERE m_no = :m_no AND selected = '1'";
+		$stmt = $conn->prepare($query);
+		$stmt->execute([':m_no' => $m_no]);
+
+		// 포인트 차감
+		if ($use_emoney > 0) {
+			$member->setMemberEmoney($m_no, $use_emoney, '주문결제시 할인', $settle_no);
+		}
+	}
+}catch(Exception $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}

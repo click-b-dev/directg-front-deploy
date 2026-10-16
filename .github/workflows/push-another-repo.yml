@@ -1,0 +1,42 @@
+# Vercel cannot support organization repo deploy in hobby account.
+# So this workflow pushes stage to click-b-dev/directg-front-deploy main (commits authored by click-b-dev) to deploy to Vercel.
+# Vercel projects (connected to click-b-dev/directg-front-deploy, Production Branch main):
+#   - directg-client: Root Directory apps/directg-client
+#   - directg-admin:  Root Directory apps/directg-admin
+
+name: PushDeployRepo
+
+on:
+  push:
+    branches: [stage]
+jobs:
+  build_check:
+    if: >-
+      contains(github.event.head_commit.message, '(skip-ci)') == false &&
+      github.repository == 'click-b-dev/directg-front'
+    uses: ./.github/workflows/build-check.yml
+
+  push_another_repository:
+    needs: build_check
+    if: >-
+      contains(github.event.head_commit.message, '(skip-ci)') == false &&
+      github.repository == 'click-b-dev/directg-front' &&
+      needs.build_check.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: rm -rf .git
+
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+        with:
+          source-directory: .
+          destination-github-username: click-b-dev
+          destination-repository-name: directg-front-deploy
+          user-email: clickb.corp@gmail.com
+          user-name: click-b-dev
+          target-branch: main
+          create-target-branch-if-needed: true

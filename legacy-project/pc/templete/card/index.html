@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+<title>Card · Bootstrap v5.3</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link href="../assets/dist/css/custom.css?t=<?=time()?>" rel="stylesheet">
+
+<style>
+html{
+	font-family: 'Noto Sans KR', sans-serif;
+	font-size:12px;
+}
+
+body{
+	font-family: 'Noto Sans KR', sans-serif;
+	background-color:#071125;
+	
+}
+
+#topnav{
+	background-color: #101C36;
+}
+
+  .nav-scroller {
+	position: relative;
+	z-index: 2;
+	height: 2.75rem;
+	overflow-y: hidden;
+  }
+
+
+  .btn-bd-primary {
+	--bd-violet-bg: #712cf9;
+	--bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+	--bs-btn-font-weight: 600;
+	--bs-btn-color: var(--bs-white);
+	--bs-btn-bg: var(--bd-violet-bg);
+	--bs-btn-border-color: var(--bd-violet-bg);
+	--bs-btn-hover-color: var(--bs-white);
+	--bs-btn-hover-bg: #6528e0;
+	--bs-btn-hover-border-color: #6528e0;
+	--bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+	--bs-btn-active-color: var(--bs-btn-hover-color);
+	--bs-btn-active-bg: #5a23c8;
+	--bs-btn-active-border-color: #5a23c8;
+  }
+
+  .bd-mode-toggle {
+	z-index: 1500;
+  }
+
+  .bd-mode-toggle .dropdown-menu .active .bi {
+	display: block !important;
+  }
+  
+.num{
+	font-family:tahoma;
+}
+
+.list{
+	display: grid;
+	grid-template-rows: auto;
+	grid-template-columns: 1fr 4fr;
+	gap: 1rem;
+}
+
+.list2{
+	display: grid;
+	grid-template-rows: auto;
+	grid-template-columns: 1fr;
+	gap: 1rem;
+}
+
+.font-14{
+	font-size:14px !important;
+}
+
+.font-12{
+	font-size:12px !important;
+}
+
+.font-11{
+	font-size:11px !important;
+}
+</style>
+
+
+
+<!-- Custom styles for this template -->
+
+</head>
+<body>
+
+
+<main class="py-3">
+	<!--추천 및 특집-->
+	<section id="special" class="mb-4">
+		<div class="container">
+			<h3 class="fw-bold">추천 및 특집</h3>
+			<article class="my-3">
+				<div class="row">
+					<div class="col-md-6"><img src="/upload/title/T0001001/capsule/capsule_616x353.jpg" class="img-fluid w-100 h-100"></div>
+					<div class="col-md-6">
+						<div class="row row-cols-md-2 gx-3 gy-3">
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="card-header text-truncate">크루세이더 킹즈 3: 죽음의 전설</div>
+									<img src="https://directgames.co.kr/upload/product/50004601/header/header.jpg" class="rounded-0">
+									<div class="card-footer px-2">
+										<div class="d-flex flex-row justify-content-between align-items-end">
+										<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+											<div class="text-end mb-0">
+												<s class="num pe-1">&#8361; 22,000</s>
+												<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="card-header text-truncate">크루세이더 킹즈 3 콘텐츠 크리에이터 팩: 북아프리카 의상</div>
+									<img src="https://directgames.co.kr/upload/product/50004555/header/header.jpg" class="rounded-0">
+									<div class="card-footer px-2">
+										<div class="d-flex flex-row justify-content-between align-items-end">
+										<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+											<div class="text-end mb-0">
+												<s class="num pe-1">&#8361; 22,000</s>
+												<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="card-header text-truncate">크루세이더 킹즈 3: 죽음의 전설</div>
+									<img src="https://directgames.co.kr/upload/product/50004601/header/header.jpg" class="rounded-0">
+									<div class="card-footer px-2">
+										<div class="d-flex flex-row justify-content-between align-items-end">
+										<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+											<div class="text-end mb-0">
+												<s class="num pe-1">&#8361; 22,000</s>
+												<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="card-header text-truncate">크루세이더 킹즈 3: 죽음의 전설</div>
+									<img src="https://directgames.co.kr/upload/product/50004601/header/header.jpg" class="rounded-0">
+									<div class="card-footer px-2">
+										<div class="d-flex flex-row justify-content-between align-items-end">
+										<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+											<div class="text-end mb-0">
+												<s class="num pe-1">&#8361; 22,000</s>
+												<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</article>
+		</div>
+	</section>
+	
+	<!--인기게임-->
+	<section id="new" class="mb-4">
+		<div class="container">
+			<h3 class="fw-bold">인기게임</h3>
+			<article class="my-3">
+				<div class="row row-cols-md-6 gx-3 gy-3">
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="https://directgames.co.kr/upload/title/T0001850/library/library_600x900.jpg">
+						</div>
+					</div>
+				</div>
+			</article>
+		</div>
+	</section>
+	
+	<!--신규게임-->
+	<section id="new" class="mb-4">
+		<div class="container">
+			<h3 class="fw-bold">신규게임</h3>
+			<article class="my-3">
+				<div class="row row-cols-md-4 gx-3 gy-3">
+					<div class="col">
+						<div class="card rounded-0">
+							<div class="card-header text-truncate">크루세이더 킹즈 3: 죽음의 전설</div>
+							<img src="https://directgames.co.kr/upload/product/50004601/header/header.jpg" class="rounded-0">
+							<div class="card-footer px-2">
+								<div class="d-flex flex-row justify-content-between align-items-end">
+								<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+									<div class="text-end mb-0">
+										<s class="num pe-1">&#8361; 22,000</s>
+										<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card rounded-0">
+							<div class="card-header text-truncate">크루세이더 킹즈 3: 죽음의 전설</div>
+							<img src="https://directgames.co.kr/upload/product/50004601/header/header.jpg" class="rounded-0">
+							<div class="card-footer px-2">
+								<div class="d-flex flex-row justify-content-between align-items-end">
+								<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+									<div class="text-end mb-0">
+										<s class="num pe-1">&#8361; 22,000</s>
+										<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card rounded-0">
+							<div class="card-header text-truncate">크루세이더 킹즈 3: 죽음의 전설</div>
+							<img src="https://directgames.co.kr/upload/product/50004601/header/header.jpg" class="rounded-0">
+							<div class="card-footer px-2">
+								<div class="d-flex flex-row justify-content-between align-items-end">
+								<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+									<div class="text-end mb-0">
+										<s class="num pe-1">&#8361; 22,000</s>
+										<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card rounded-0">
+							<div class="card-header text-truncate">크루세이더 킹즈 3: 죽음의 전설</div>
+							<img src="https://directgames.co.kr/upload/product/50004601/header/header.jpg" class="rounded-0">
+							<div class="card-footer px-2">
+								<div class="d-flex flex-row justify-content-between align-items-end">
+								<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+									<div class="text-end mb-0">
+										<s class="num pe-1">&#8361; 22,000</s>
+										<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card rounded-0">
+							<div class="card-header text-truncate">크루세이더 킹즈 3: 죽음의 전설</div>
+							<img src="https://directgames.co.kr/upload/product/50004601/header/header.jpg" class="rounded-0">
+							<div class="card-footer px-2">
+								<div class="d-flex flex-row justify-content-between align-items-end">
+								<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+									<div class="text-end mb-0">
+										<s class="num pe-1">&#8361; 22,000</s>
+										<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card rounded-0">
+							<div class="card-header text-truncate">크루세이더 킹즈 3: 죽음의 전설</div>
+							<img src="https://directgames.co.kr/upload/product/50004601/header/header.jpg" class="rounded-0">
+							<div class="card-footer px-2">
+								<div class="d-flex flex-row justify-content-between align-items-end">
+								<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+									<div class="text-end mb-0">
+										<s class="num pe-1">&#8361; 22,000</s>
+										<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card rounded-0">
+							<div class="card-header text-truncate">크루세이더 킹즈 3: 죽음의 전설</div>
+							<img src="https://directgames.co.kr/upload/product/50004601/header/header.jpg" class="rounded-0">
+							<div class="card-footer px-2">
+								<div class="d-flex flex-row justify-content-between align-items-end">
+								<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+									<div class="text-end mb-0">
+										<s class="num pe-1">&#8361; 22,000</s>
+										<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card rounded-0">
+							<div class="card-header text-truncate">크루세이더 킹즈 3: 죽음의 전설</div>
+							<img src="https://directgames.co.kr/upload/product/50004601/header/header.jpg" class="rounded-0">
+							<div class="card-footer px-2">
+								<div class="d-flex flex-row justify-content-between align-items-end">
+								<span class="rounded-2 bg-primary fs-5 fw-bold px-3 py-1 num">40 %</span>
+									<div class="text-end mb-0">
+										<s class="num pe-1">&#8361; 22,000</s>
+										<span class="num fs-5 fw-bold">&#8361; 13,200</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</article>
+		</div>
+	</section>
+	
+	<div id="korean" class="container">
+		<div class="d-grid gap-3" style="grid-template-columns: 1fr 1fr">
+			<section id="spoken_korean">
+				<div class="container px-0">
+					<h3 class="fw-bold">음성 한국어지원</h3>
+					<article class="my-3 list2">
+						<div class="row row-cols-1 row-cols-md-1 g-3">
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="row g-0">
+										<div class="col-md-4 rounded-0 border-1 border-end border-secondary border-opacity-50">
+											<img src="https://directgames.co.kr/upload/title/T0002039/capsule/capsule_231x87.jpg" class="img-fluid rounded-0">
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title pb-2">퍼스트 버서커: 카잔</h5>
+												<div class="d-flex flex-row justify-content-between align-items-end">
+													<span class="rounded-2 bg-primary font-14 fw-bold px-3 py-1 num">40 %</span>
+													<div class="text-end mb-0">
+														<s class="num pe-1 font-11">&#8361; 22,000</s>
+														<span class="num font-14 fw-bold text-white">&#8361; 13,200</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="row g-0">
+										<div class="col-md-4 rounded-0 border-1 border-end border-secondary border-opacity-50">
+											<img src="https://directgames.co.kr/upload/title/T0002039/capsule/capsule_231x87.jpg" class="img-fluid rounded-0">
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title pb-2">퍼스트 버서커: 카잔</h5>
+												<div class="d-flex flex-row justify-content-between align-items-end">
+													<span class="rounded-2 bg-primary font-14 fw-bold px-3 py-1 num">40 %</span>
+													<div class="text-end mb-0">
+														<s class="num pe-1 font-11">&#8361; 22,000</s>
+														<span class="num font-14 fw-bold text-white">&#8361; 13,200</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="row g-0">
+										<div class="col-md-4 rounded-0 border-1 border-end border-secondary border-opacity-50">
+											<img src="https://directgames.co.kr/upload/title/T0002039/capsule/capsule_231x87.jpg" class="img-fluid rounded-0">
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title pb-2">퍼스트 버서커: 카잔</h5>
+												<div class="d-flex flex-row justify-content-between align-items-end">
+													<span class="rounded-2 bg-primary font-14 fw-bold px-3 py-1 num">40 %</span>
+													<div class="text-end mb-0">
+														<s class="num pe-1 font-11">&#8361; 22,000</s>
+														<span class="num font-14 fw-bold text-white">&#8361; 13,200</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="row g-0">
+										<div class="col-md-4 rounded-0 border-1 border-end border-secondary border-opacity-50">
+											<img src="https://directgames.co.kr/upload/title/T0002039/capsule/capsule_231x87.jpg" class="img-fluid rounded-0">
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title pb-2">퍼스트 버서커: 카잔</h5>
+												<div class="d-flex flex-row justify-content-between align-items-end">
+													<span class="rounded-2 bg-primary font-14 fw-bold px-3 py-1 num">40 %</span>
+													<div class="text-end mb-0">
+														<s class="num pe-1 font-11">&#8361; 22,000</s>
+														<span class="num font-14 fw-bold text-white">&#8361; 13,200</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="row g-0">
+										<div class="col-md-4 rounded-0 border-1 border-end border-secondary border-opacity-50">
+											<img src="https://directgames.co.kr/upload/title/T0002039/capsule/capsule_231x87.jpg" class="img-fluid rounded-0">
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title pb-2">퍼스트 버서커: 카잔</h5>
+												<div class="d-flex flex-row justify-content-between align-items-end">
+													<span class="rounded-2 bg-primary font-14 fw-bold px-3 py-1 num">40 %</span>
+													<div class="text-end mb-0">
+														<s class="num pe-1 font-11">&#8361; 22,000</s>
+														<span class="num font-14 fw-bold text-white">&#8361; 13,200</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</article>
+				</div>
+			</section>
+
+			<section id="exclusive_korean">
+				<div class="container px-0">
+					<h3 class="fw-bold">독점 한국어지원</h3>
+					<article class="my-3 list2">
+						<div class="row row-cols-1 row-cols-md-1 g-3">
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="row g-0">
+										<div class="col-md-4 rounded-0 border-1 border-end border-secondary border-opacity-50">
+											<img src="https://directgames.co.kr/upload/title/T0002039/capsule/capsule_231x87.jpg" class="img-fluid rounded-0">
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title pb-3">퍼스트 버서커: 카잔</h5>
+												<div class="d-flex justify-content-between align-items-end">
+													<div class="float-start">
+														<span class="badge bg-light-subtle border p-1 font-11 num rounded-0 py-2 px-2">2025-03-27</span>
+													</div>
+													<div class="float-end">
+														<div class="d-flex flex-row justify-content-between align-items-end">
+															<span class="rounded-2 bg-primary font-14 fw-bold px-3 py-0 num me-2">40 %</span>
+															<div class="text-end mb-0">
+																<s class="num pe-1 font-11">&#8361; 22,000</s>
+																<span class="num font-14 fw-bold text-white">&#8361; 13,200</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="row g-0">
+										<div class="col-md-4 rounded-0 border-1 border-end border-secondary border-opacity-50">
+											<img src="https://directgames.co.kr/upload/title/T0002039/capsule/capsule_231x87.jpg" class="img-fluid rounded-0">
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title pb-2">퍼스트 버서커: 카잔</h5>
+												<div class="d-flex flex-row justify-content-between align-items-end">
+													<span class="rounded-2 bg-primary font-14 fw-bold px-3 py-1 num">40 %</span>
+													<div class="text-end mb-0">
+														<s class="num pe-1 font-11">&#8361; 22,000</s>
+														<span class="num font-14 fw-bold text-white">&#8361; 13,200</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="row g-0">
+										<div class="col-md-4 rounded-0 border-1 border-end border-secondary border-opacity-50">
+											<img src="https://directgames.co.kr/upload/title/T0002039/capsule/capsule_231x87.jpg" class="img-fluid rounded-0">
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title pb-2">퍼스트 버서커: 카잔</h5>
+												<div class="d-flex flex-row justify-content-between align-items-end">
+													<span class="rounded-2 bg-primary font-14 fw-bold px-3 py-1 num">40 %</span>
+													<div class="text-end mb-0">
+														<s class="num pe-1 font-11">&#8361; 22,000</s>
+														<span class="num font-14 fw-bold text-white">&#8361; 13,200</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="row g-0">
+										<div class="col-md-4 rounded-0 border-1 border-end border-secondary border-opacity-50">
+											<img src="https://directgames.co.kr/upload/title/T0002039/capsule/capsule_231x87.jpg" class="img-fluid rounded-0">
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title pb-2">퍼스트 버서커: 카잔</h5>
+												<div class="d-flex flex-row justify-content-between align-items-end">
+													<span class="rounded-2 bg-primary font-14 fw-bold px-3 py-1 num">40 %</span>
+													<div class="text-end mb-0">
+														<s class="num pe-1 font-11">&#8361; 22,000</s>
+														<span class="num font-14 fw-bold text-white">&#8361; 13,200</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card rounded-0">
+									<div class="row g-0">
+										<div class="col-md-4 rounded-0 border-1 border-end border-secondary border-opacity-50">
+											<img src="https://directgames.co.kr/upload/title/T0002039/capsule/capsule_231x87.jpg" class="img-fluid rounded-0">
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title pb-2">퍼스트 버서커: 카잔</h5>
+												<div class="d-flex flex-row justify-content-between align-items-end">
+													<span class="rounded-2 bg-primary font-14 fw-bold px-3 py-1 num">40 %</span>
+													<div class="text-end mb-0">
+														<s class="num pe-1 font-11">&#8361; 22,000</s>
+														<span class="num font-14 fw-bold text-white">&#8361; 13,200</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</article>
+				</div>
+			</section>
+		</div>
+	</div>
+	
+	<section id="new" class="mb-4">
+		<div class="container">
+			<h3 class="fw-bold">목록</h3>
+			
+			<article class="my-3 list">
+				<div class="aside border">1</div>
+				<div class="row  row-cols-1 row-cols-md-1 g-4">
+					<div class="col">
+						<div class="card rounded-0">
+							<div class="row g-0">
+								<div class="col-md-3 rounded-0">
+									<img src="/upload/product/50005189/header/header.jpg" class="img-fluid rounded-0">
+								</div>
+								<div class="col-md-9">
+									<div class="card-body">
+										<h5 class="card-title pb-2">Card title</h5>
+										<div class="card-text mb-2 border-0">
+											<span class="badge rounded-2 bg-primary fs-6">출시일</span>
+											<span class="badge rounded-2 bg-secondary fs-6">음성 한국어</span>
+											<span class="badge rounded-2 bg-secondary fs-6">인터페이스/자막 한글</span>
+											<span class="badge rounded-2 bg-secondary fs-6">독점 한국어</span>
+											<span class="badge rounded-2 bg-success fs-6">Success</span>
+											<span class="badge rounded-2 bg-danger fs-6">프로모션</span>
+											<span class="badge rounded-2 text-bg-warning fs-6">예약구매</span>
+											<span class="badge rounded-2 text-bg-info fs-6">특전</span>
+											<span class="badge rounded-2 text-bg-light fs-6">Light</span>
+										</div>
+										<p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<div class="row g-0">
+								<div class="col-md-3">
+									<img src="/upload/product/50005189/header/header.jpg" class="img-fluid rounded-0">
+								</div>
+								<div class="col-md-9">
+									<div class="card-body">
+										<h5 class="card-title">Card title</h5>
+										<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+										<p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card rounded-0">
+							<div class="row g-0">
+								<div class="col-md-3">
+									<img src="/upload/product/50005189/header/header.jpg" class="img-fluid rounded-0">
+								</div>
+								<div class="col-md-9">
+									<div class="card-body">
+										<h5 class="card-title">Card title</h5>
+										<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+										<p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</article>
+		</div>
+	</div>
+</main>
+
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

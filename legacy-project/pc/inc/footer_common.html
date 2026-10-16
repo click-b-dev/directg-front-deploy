@@ -1,0 +1,359 @@
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.0/dist/loadingoverlay.min.js"></script>
+<script>
+	const topBtn = document.getElementById("topBtn");
+	window.addEventListener("scroll", () => {
+		if (window.scrollY > 200) {
+			topBtn.classList.add("show");
+		} else {
+			topBtn.classList.remove("show");
+		}
+	});
+
+	topBtn.addEventListener("click", () => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	});
+</script>
+
+<?php
+	if($aside['product_type']=="game" || $aside['product_type']=="group" || $aside['product_type']=="accessories" || $aside['product_type']=="holomodels"){
+?>
+<script>
+$(document).ready(function(){
+	$("#btn_tag_reset").bind("click",function(){
+		alert("태그필터링 초기화");
+	});
+	
+	$("#btn_filter").bind("click",function(){
+		goodsFilter();
+	});
+	
+	$("#sort").bind("change",function(){
+		goodsFilter();
+	});
+
+	var goodsFilter = function(){
+		var q = "<?=$q?>";
+		var idx = "<?=$idx?>";
+		
+		var is_promotion = $('input[name=is_promotion]:checked').val();
+		var is_preorder = $('input[name=is_preorder]:checked').val();
+		var is_bonus = $('input[name=is_bonus]:checked').val();
+		var is_repay = $('input[name=is_repay]:checked').val();
+		var game_type = $('input[name=game_type]:checked').val();
+		// 플랫폼별,장르,카테고리 리스트에서 orderby 변경시 input 데이터가 같이 넘어가지 않는 오류 수정 KDY 20260507
+        var platform = $('input[name=platform]').val();
+		var genre_code = $('input[name=genre_code]').val();
+
+		var interface_korean = $('input[name=interface_korean]:checked').val();
+		var spoken_korean = $('input[name=spoken_korean]:checked').val();
+		var exclusive_korean = $('input[name=exclusive_korean]:checked').val();
+		
+		var search_price = $('input[name=search_price]:checked').val();
+		var sort = $('select[name=sort] option:selected').val();
+		var min_price = "<?=$min_price?>";
+		var max_price = "<?=$max_price?>";
+		
+		var game_type_basic=$('input[name=game_type_basic]:checked').val();
+		var game_type_edition=$('input[name=game_type_edition]:checked').val();
+		var game_type_dlc=$('input[name=game_type_dlc]:checked').val();
+		var game_type_music=$('input[name=game_type_music]:checked').val();
+		var game_type_bundle=$('input[name=game_type_bundle]:checked').val();
+		var platform_1=$('input[name=platform_1]:checked').val();
+		var platform_34=$('input[name=platform_34]:checked').val();
+		var platform_35=$('input[name=platform_35]:checked').val();
+		var genre_code_1=$('input[name=genre_code_1]:checked').val();
+		var genre_code_2=$('input[name=genre_code_2]:checked').val();
+		var genre_code_3=$('input[name=genre_code_3]:checked').val();
+		var genre_code_4=$('input[name=genre_code_4]:checked').val();
+		var genre_code_5=$('input[name=genre_code_5]:checked').val();
+		var genre_code_6=$('input[name=genre_code_6]:checked').val();
+		var genre_code_7=$('input[name=genre_code_7]:checked').val();
+		var genre_code_8=$('input[name=genre_code_8]:checked').val();
+		var genre_code_9=$('input[name=genre_code_9]:checked').val();
+		var genre_code_10=$('input[name=genre_code_10]:checked').val();
+		var search_price_1=$('input[name=search_price_1]:checked').val();
+		var search_price_2=$('input[name=search_price_2]:checked').val();
+		var search_price_3=$('input[name=search_price_3]:checked').val();
+		var search_price_4=$('input[name=search_price_4]:checked').val();
+		var search_price_5=$('input[name=search_price_5]:checked').val();
+		var search_price_6=$('input[name=search_price_6]:checked').val();
+		var search_price_7=$('input[name=search_price_7]:checked').val();
+		var search_price_8=$('input[name=search_price_8]:checked').val();
+		var search_price_9=$('input[name=search_price_9]:checked').val();
+		var search_price_10=$('input[name=search_price_10]:checked').val();
+
+		var search_tags = [];
+		$("input[name=category_code]").each(function(){
+			var chk_tag = $(this).val();
+			search_tags.push(chk_tag);
+		});
+
+		var new_form = $('<form></form>');
+		new_form.attr("name", "test_form");
+		new_form.attr("method", "get");
+		new_form.attr("action", "<?=$_SERVER['PHP_SELF']?>");
+		if(q){
+		new_form.append($('<input/>', {type: 'hidden', name: 'q', value: q}));
+		}
+		if(idx){
+		new_form.append($('<input/>', {type: 'hidden', name: 'idx', value: idx}));
+		}
+		if(is_promotion){
+		new_form.append($('<input/>', {type: 'hidden', name: 'is_promotion', value: is_promotion}));
+		}
+		if(is_preorder){
+		new_form.append($('<input/>', {type: 'hidden', name: 'is_preorder', value: is_preorder}));
+		}
+		if(is_bonus){
+		new_form.append($('<input/>', {type: 'hidden', name: 'is_bonus', value: is_bonus}));
+		}
+		if(is_repay){
+		new_form.append($('<input/>', {type: 'hidden', name: 'is_repay', value: is_repay}));
+		}
+		if(game_type){
+		new_form.append($('<input/>', {type: 'hidden', name: 'game_type', value: game_type}));
+		}
+		if(platform){
+		new_form.append($('<input/>', {type: 'hidden', name: 'platform', value: platform}));
+		}
+		if(genre_code){
+		new_form.append($('<input/>', {type: 'hidden', name: 'genre_code', value: genre_code}));
+		}
+		if(interface_korean){
+		new_form.append($('<input/>', {type: 'hidden', name: 'interface_korean', value: interface_korean}));
+		}
+		if(exclusive_korean){
+		new_form.append($('<input/>', {type: 'hidden', name: 'exclusive_korean', value: exclusive_korean}));
+		}
+		if(spoken_korean){
+		new_form.append($('<input/>', {type: 'hidden', name: 'spoken_korean', value: spoken_korean}));
+		}
+		if(search_tags){
+		new_form.append($('<input/>', {type: 'hidden', name: 'category_code', value: search_tags}));
+		}
+		if(search_price){
+		new_form.append($('<input/>', {type: 'hidden', name: 'search_price', value: search_price}));
+		}
+		if(min_price){
+		new_form.append($('<input/>', {type: 'hidden', name: 'min_price', value: min_price}));
+		}
+		if(max_price){
+		new_form.append($('<input/>', {type: 'hidden', name: 'max_price', value: max_price}));
+		}
+		if(game_type_basic){new_form.append($('<input/>',{type:'hidden',name:'game_type_basic',value:game_type_basic}))};
+		if(game_type_edition){new_form.append($('<input/>',{type:'hidden',name:'game_type_edition',value:game_type_edition}))};
+		if(game_type_dlc){new_form.append($('<input/>',{type:'hidden',name:'game_type_dlc',value:game_type_dlc}))};
+		if(game_type_music){new_form.append($('<input/>',{type:'hidden',name:'game_type_music',value:game_type_music}))};
+		if(game_type_bundle){new_form.append($('<input/>',{type:'hidden',name:'game_type_bundle',value:game_type_bundle}))};
+		// if(platform){new_form.append($('<input/>',{type:'hidden',name:'platform',value:platform}))};
+		if(platform_1){new_form.append($('<input/>',{type:'hidden',name:'platform_1',value:platform_1}))};
+		if(platform_34){new_form.append($('<input/>',{type:'hidden',name:'platform_34',value:platform_34}))};
+		if(platform_35){new_form.append($('<input/>',{type:'hidden',name:'platform_35',value:platform_35}))};
+		if(genre_code_1){new_form.append($('<input/>',{type:'hidden',name:'genre_code_1',value:genre_code_1}))};
+		if(genre_code_2){new_form.append($('<input/>',{type:'hidden',name:'genre_code_2',value:genre_code_2}))};
+		if(genre_code_3){new_form.append($('<input/>',{type:'hidden',name:'genre_code_3',value:genre_code_3}))};
+		if(genre_code_4){new_form.append($('<input/>',{type:'hidden',name:'genre_code_4',value:genre_code_4}))};
+		if(genre_code_5){new_form.append($('<input/>',{type:'hidden',name:'genre_code_5',value:genre_code_5}))};
+		if(genre_code_6){new_form.append($('<input/>',{type:'hidden',name:'genre_code_6',value:genre_code_6}))};
+		if(genre_code_7){new_form.append($('<input/>',{type:'hidden',name:'genre_code_7',value:genre_code_7}))};
+		if(genre_code_8){new_form.append($('<input/>',{type:'hidden',name:'genre_code_8',value:genre_code_8}))};
+		if(genre_code_9){new_form.append($('<input/>',{type:'hidden',name:'genre_code_9',value:genre_code_9}))};
+		if(genre_code_10){new_form.append($('<input/>',{type:'hidden',name:'genre_code_10',value:genre_code_10}))};
+		if(search_price_1){new_form.append($('<input/>',{type:'hidden',name:'search_price_1',value:search_price_1}))};
+		if(search_price_2){new_form.append($('<input/>',{type:'hidden',name:'search_price_2',value:search_price_2}))};
+		if(search_price_3){new_form.append($('<input/>',{type:'hidden',name:'search_price_3',value:search_price_3}))};
+		if(search_price_4){new_form.append($('<input/>',{type:'hidden',name:'search_price_4',value:search_price_4}))};
+		if(search_price_5){new_form.append($('<input/>',{type:'hidden',name:'search_price_5',value:search_price_5}))};
+		if(search_price_6){new_form.append($('<input/>',{type:'hidden',name:'search_price_6',value:search_price_6}))};
+		if(search_price_7){new_form.append($('<input/>',{type:'hidden',name:'search_price_7',value:search_price_7}))};
+		if(search_price_8){new_form.append($('<input/>',{type:'hidden',name:'search_price_8',value:search_price_8}))};
+		if(search_price_9){new_form.append($('<input/>',{type:'hidden',name:'search_price_9',value:search_price_9}))};
+		if(search_price_10){new_form.append($('<input/>',{type:'hidden',name:'search_price_10',value:search_price_10}))};
+
+		new_form.append($('<input/>', {type: 'hidden', name: 'sort', value: sort}));
+		new_form.appendTo('body');
+		new_form.submit();
+	}
+
+	$("input[type=radio]").on("click", function() {
+		let $this = $(this);
+
+		// 이미 체크된 상태라면 해제
+		if ($this.data("waschecked") === "checked") {
+			$this.prop("checked", false);
+			$this.data("waschecked", false);
+		} else {
+			// 다른 라디오들은 상태 초기화
+			$("input[name='" + $this.attr("name") + "']").data("waschecked", false);
+
+			// 현재 라디오만 체크 상태 저장
+			$this.data("waschecked", "checked");
+		}
+	});
+
+	$('button[name=search_price]').on('click',function(){
+		$('#min_price').val($(this).data('minprice'));
+		$('#max_price').val($(this).data('maxprice'));
+	});
+
+	$("#btn_reset").on('click', function() {
+		$('#sidebar input[type="checkbox"], #sidebar input[type="radio"]').prop('checked', false);
+		$('#topbar input[type="checkbox"], #topbar input[type="radio"]').prop('checked', false);
+		$('#topbar input[type="checkbox"], #topbar input[type="radio"]').trigger('change');
+		$('#topbar #min_price').val('');
+		$('#topbar #max_price').val('');
+	});
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+	const collapseEl = document.getElementById('filter_body');
+	if (collapseEl){ // 필터가 없으면 스크립트 중단
+		const savedState = localStorage.getItem('filterBodyCollapse');
+
+		// 초기 렌더링 시 클래스 적용
+		if (savedState === 'hide') {
+			collapseEl.classList.remove('show');
+		} else {
+			collapseEl.classList.add('show');
+		}
+
+		// Bootstrap Collapse 제어
+		const bsCollapse = new bootstrap.Collapse(collapseEl, { toggle: false });
+
+		collapseEl.addEventListener('shown.bs.collapse', () => {
+			localStorage.setItem('filterBodyCollapse', 'show');
+		});
+		collapseEl.addEventListener('hidden.bs.collapse', () => {
+			localStorage.setItem('filterBodyCollapse', 'hide');
+		});
+	}
+});
+</script>
+<?php
+	}
+?>
+
+<?php
+	if($aside['cart']=="Y"){
+?>
+<script>
+	//장바구니 추가
+	$(".btn_cart").bind("click",function(){
+		const goods_sku = $(this).data("sku");
+
+		$.ajax({
+			'url': '/order/cart_proc.php',
+			'type': 'POST',
+			'data':{mode:"add_cart",goods_sku:goods_sku},
+			'success': function (data) {
+				$("#cart_result").html(data);
+				$("#cart-modal").modal("show");
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+	$("#cart-modal #btn_model_close").bind("click",function(){
+		$("#cart-modal").modal("hide");
+	});
+	$("#cart-modal #btn_cart_move").bind("click",function(){
+		location.href="/order/cart.html";
+	});
+</script>
+<?php
+	}
+?>
+
+<?php
+	if($aside['wishlist']=="Y"){
+?>
+<script>
+	//위시리스트 추가
+	$(document).on("click", ".btn_wishlist", function(){
+		const goods_sku = $(this).data("sku");
+		const $btn = $(this);
+		$.ajax({
+			'url': '/order/wishlist_proc.php',
+			'type': 'POST',
+			'data':{mode:"add_wishlist",goods_sku:goods_sku},
+			'success': function (data) {
+				const $response = $(data);
+				if ($response.filter("#fail").length==0) {
+					$btn.removeClass("btn_wishlist_off");
+					$btn.find("img").attr("src", "/assets/images/icon/wishlist-icon_y-new.svg");
+				}
+
+				$("#wishlist-modal #topModalLabel").text("위시리스트");
+				$("#wishlist_result").html(data);
+				$("#wishlist-modal").modal("show");
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+	
+
+	$("#wishlist-modal #btn_wishlist_move").bind("click",function(){
+		location.href="/mypage/mypage_wishlist.html";
+	});
+</script>
+<?php
+	}
+?>
+
+<script>
+//장바구니·위시리스트 모달을 닫으면 헤더 배지(갯수/빨간점)만 AJAX로 다시 그린다(새로고침 없음)
+//'바로가기' 버튼으로 이동 중일 때는 갱신할 필요가 없으므로 제외
+(function(){
+	//배지 값만 받아오고, 그리는 것은 header.html 이 등록해둔 함수가 담당한다
+	function refreshHeaderBadge(){
+		fetch('/order/cart_proc.php', {
+				method:'POST',
+				credentials:'same-origin',
+				headers:{'Content-Type':'application/x-www-form-urlencoded'},
+				body:'mode=header_badge'
+			})
+			.then(function(res){ return res.json(); })
+			.then(function(badge){
+				if(badge.cart_cnt === undefined){ location.reload(); return; }
+				(window.headerBadgeDrawers || []).forEach(function(draw){ draw(badge); });
+			})
+			.catch(function(){ location.reload(); });   //실패하면 기존 방식대로 새로고침
+	}
+
+	//뒤로가기로 돌아온 경우 — bfcache 로 DOM이 그대로 복원되어 배지가 이전 값으로 보인다.
+	//(예: 장바구니 페이지에서 상품을 지우고 뒤로가기) 복원 감지 시 값만 다시 받아 갱신한다.
+	window.addEventListener('pageshow', function(e){
+		var nav = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+		if(e.persisted || (nav && nav.type === 'back_forward')){
+			refreshHeaderBadge();
+		}
+	});
+
+	var targets = [
+		{modal:'cart-modal', move:'btn_cart_move'},
+		{modal:'wishlist-modal', move:'btn_wishlist_move'}
+	];
+
+	targets.forEach(function(target){
+		var modal = document.getElementById(target.modal);
+		if(!modal){ return; }
+
+		var is_moving = false;
+		var move_btn = modal.querySelector('#'+target.move);
+		if(move_btn){
+			move_btn.addEventListener('click', function(){ is_moving = true; });
+		}
+
+		modal.addEventListener('hidden.bs.modal', function(){
+			if(is_moving){ return; }
+			refreshHeaderBadge();
+		});
+	});
+})();
+</script>

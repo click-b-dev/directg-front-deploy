@@ -1,0 +1,68 @@
+<?
+	$page_url = explode("/",$_SERVER['REQUEST_URI']);
+	
+	switch($page_url['2']){
+		case "guide.html": //다이렉트 게임즈
+			$left_menu_active1 = "fw-bold";
+			$left_menu_active2 = "link-dark";
+			$left_menu_active3 = "link-dark";
+			$left_menu_active4 = "link-dark";
+			$left_menu_active5 = "link-dark";
+		break;
+		case "guide_steam.html": //스팀
+			$left_menu_active1 = "link-dark";
+			$left_menu_active2 = "fw-bold active";
+			$left_menu_active3 = "link-dark";
+			$left_menu_active4 = "link-dark";
+			$left_menu_active5 = "link-dark";
+		break;
+		case "guide_ubisoft.html": //유비소프트 커넥트
+			$left_menu_active1 = "link-dark";
+			$left_menu_active2 = "link-dark";
+			$left_menu_active3 = "link-dark";
+			$left_menu_active3 = "fw-bold active";
+			$left_menu_active4 = "link-dark";
+			$left_menu_active5 = "link-dark";
+		break;
+		case "guide_epic.html": //에픽 게임즈
+			$left_menu_active1 = "link-dark";
+			$left_menu_active2 = "link-dark";
+			$left_menu_active3 = "link-dark";
+			$left_menu_active4 = "fw-bold active";
+			$left_menu_active5 = "link-dark";
+		break;
+		case "guide_rockstar.html": //락스타 게임즈
+			$left_menu_active1 = "link-dark";
+			$left_menu_active2 = "link-dark";
+			$left_menu_active3 = "link-dark";
+			$left_menu_active4 = "link-dark";
+			$left_menu_active5 = "fw-bold active";
+		break;
+	}
+?>
+
+<div class="aside col-sm-2">
+	<div class="d-flex flex-column bg-light">
+		<div class="text-center py-1 bg-primary text-white"><h4 class="font-20">이용안내</h4></div>
+		<ul class="side-nav">
+			<li class="side-nav-item">
+				<a href="/service/guide.html" class="side-nav-link <?=$left_menu_active1?>">다이렉트 게임즈</a>
+			</li>
+			<li class="side-nav-item">
+				<a href="/service/guide_steam.html" class="side-nav-link <?=$left_menu_active2?>">스팀</a>
+			</li>
+			<!--<li class="nav-item">
+				<a href="<?=$document_root?>/service/guide_ubisoft.html" class="nav-link <?=$left_menu_active3?>">유비소프트 커넥트</a>
+			</li>-->
+			<li class="side-nav-item">
+				<a href="/service/guide_epic.html" class="side-nav-link <?=$left_menu_active4?>">에픽 게임즈</a>
+			</li>
+			<li class="side-nav-item">
+				<a href="/service/guide_rockstar.html" class="side-nav-link <?=$left_menu_active5?>">락스타 게임즈</a>
+			</li>
+			<li class="side-nav-item">
+				<a href="https://xr-marketplace.com/ko/holomodels/play/ar" class="side-nav-link" target="_blank">홀로 모델</a>
+			</li>
+		</ul>
+	</div>
+</div>

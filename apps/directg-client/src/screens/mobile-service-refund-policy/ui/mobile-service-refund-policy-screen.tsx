@@ -1,0 +1,456 @@
+import { MobileSimpleSubHeader } from "@widgets/mobile-simple-sub-header";
+
+/**
+ * 모바일 환불정책 (legacy `mobile/service/refund_policy.html`).
+ * 완전 정적 인라인 HTML — 디지털상품/실물배송상품 2개 표를 legacy에서 verbatim 전사.
+ * quirk 보존: 디지털 표 class `table table-boldered mb-3`(오타 "boldered"), 실물 표 `table mb-3`;
+ * 실물배송상품 정의 `<p>`만 font-14 클래스 없음. PS 외부링크는 프로젝트 관행대로 rel="noreferrer" 부여.
+ */
+export function MobileServiceRefundPolicyScreen() {
+  return (
+    <>
+      <MobileSimpleSubHeader pageTitle="다이렉트 게임즈 환불정책" />
+      <div id="appCapsuleSub" className="full-height">
+        <div className="section full mt-2">
+          <div className="wide-block pt-2 font-14">
+            <p className="font-14">
+              다이렉트 게임즈에서는 취급하는 재화 등은 &quot;디지털상품&quot; 및
+              &quot;실물배송상품&quot;으로 구분되며, 각 상품군의 특징에 따라 환불정책이 상이합니다.
+            </p>
+
+            <h4 className="fw-bold">디지털상품</h4>
+            <p className="font-14">
+              &quot;디지털상품&quot;이란, 부호ㆍ문자ㆍ도형ㆍ색채ㆍ음성ㆍ음향ㆍ이미지 및 영상
+              등(이들의 복합체를 포함합니다)의 자료 또는 정보로서 그 보존 및 이용의 효용을 높일 수
+              있도록 디지털 형태로 제작하거나 처리한 디지털콘텐츠를 의미합니다. 제품코드 형식으로
+              제공되는 게임이나 소프트웨어 및 상품권, 다운로드 콘텐츠 등이 이에 해당합니다.
+            </p>
+            <p className="font-14">
+              * 매월 말일은 고객센터 운영시간을 기준으로 합니다. (고객센터 운영시간: 월~목
+              10:00~17:00 (점심시간: 12:30~14:00) / 금 10:00~12:00 / 토, 일, 공휴일 휴무)
+            </p>
+
+            <table className="table table-boldered mb-3">
+              <colgroup>
+                <col width="100%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th className="table-dark">교환/반품 가능기간</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    <ul className="mb-0">
+                      <li>
+                        단순변심: 상품 구매일로부터 7일 이내 (단, 예약 판매 상품의 경우 제품
+                        코드(키) 발송일로부터 7일)
+                      </li>
+                      <li>
+                        제품의 하자 또는 오배송: 상품 수령일로부터 3개월 이내, 그 사실을 안 날 또는
+                        알 수 있었던 날로부터 30일 이내
+                      </li>
+                      <li>품질 보증기간은 제품 구매일로부터 1년입니다. (구매 영수증으로 증빙)</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">교환/반품 불가기준</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    <ul className="mb-0">
+                      <li>교환/반품 가능기간이 경과된 경우</li>
+                      <li>제품 코드(키) 활성화, 수신 또는 계정 동기화가 완료된 경우</li>
+                      <li>
+                        플랫폼, 시스템 사양, 지역 제한 등의 상품 정보 미확인, 보유한 상품 중복 구매,
+                        가격 변동 등 구매자의 실수 및 부주의로 인해 문제가 발생의 경우
+                      </li>
+                      <li>
+                        시간의 경과에 의하여 재판매가 곤란할 정도로 상품 등의 가치가 현저히 감소한
+                        경우
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">교환/반품 절차 및 소요기간</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    <ul className="mb-0">
+                      <li>
+                        취소/환불 요청 → 고객센터에서 요청 건 접수 및 취소/환불 가부 검토 → 결제취소
+                        또는 대금 환불
+                      </li>
+                      <li>
+                        영업일 기준 요청한 다음 날 고객센터 운영시간에 순차적으로 처리되며, 최대
+                        3~5일 소요
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">교환/반품 요청 방법</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    <ul className="mb-0">
+                      <li>
+                        [마이페이지-주문내역]메뉴에서 해당 주문건의 [상세보기]로 이동 → [주문취소]
+                        버튼 클릭 → 상세 내용 기입 후 [취소요청] 버튼 클릭
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">결제수단별 환불정책</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    <ul className="mb-0">
+                      <li>네이버페이: 각 결제수단의 결제취소로 환불</li>
+                      <li>
+                        페이코
+                        <ul>
+                          <li>간편계좌: 구매자가 기재한 계좌정보로 대금 환불</li>
+                          <li>신용/체크카드, 페이코 쿠폰/포인트: 각 결제수단의 결제취소로 환불</li>
+                        </ul>
+                      </li>
+                      <li>계좌이체, 가상계좌: 구매자가 기재한 계좌정보로 대금 환불</li>
+                      <li>
+                        휴대폰
+                        <ul>
+                          <li>부분취소: 다이렉트 게임즈 포인트로 대금 환불</li>
+                          <li>*당월 전체취소: 결제수단의 결제취소로 환불</li>
+                          <li>익월 전체취소: 다이렉트 게임즈 포인트로 대금 환불</li>
+                        </ul>
+                      </li>
+                      <li>토스 퀵계좌이체: 결제일로부터 4일 이후 가능</li>
+                      <li>토스 페이: 각 결제수단의 결제취소로 환불</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">
+                    제품하자·오배송 등에 따른 청약철회 등의 경우 청약철회 등의 기한 및
+                    통신판매업자가 부담하는 반품비용 등에 관한 정보
+                  </th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    전자상거래 등에서의 소비자보호에 관한 법률 등에 의한 제품의 하자 또는 오배송
+                    등으로 인한 청약철회의 경우에는 구매일부터 3개월 이내, 그 사실을 안 날 또는 알
+                    수 있었던 날로부터 30일 이내에 청약철회를 할 수 있으며, 반품 비용은
+                    통신판매업자가 부담합니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">
+                    제품하자가 아닌 소비자의 단순변심에 따른 청약철회가 불가능한 경우 그 구체적
+                    사유와 근거
+                  </th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    전자상거래 등에서의 소비자보호에 관한 법률 등에 의한 청약철회 제한 사유에
+                    해당하는 경우 및 기타 객관적으로 이에 준하는 것으로 인정되는 경우 청약철회가
+                    제한될 수 있습니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">재화 등의 교환·반품·보증 조건 및 품질보증기준</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    소비자분쟁해결기준(공정거래위원회 고시) 및 관계법령에 따릅니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">
+                    대금을 환불받기 위한 방법과 환불이 지연될 경우 지연배상금을 지급받을 수 있다는
+                    지연배상금 지급의 구체적인 조건·절차
+                  </th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    주문취소 및 대금의 환불은 [마이페이지-주문내역]메뉴에서 신청할 수 있으며,
+                    전자상거래 등에서의 소비자보호에 관한 법률에 따라 소비자의 청약철회 후 판매자가
+                    재화 등을 반환 받은 날로부터 3영업일 이내에 지급받은 대금의 환급을 정당한 사유
+                    없이 지연하는 때에는 소비자는 지연기간에 대해서 연 15%의 지연배상금을 판매자에게
+                    청구할 수 있습니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">
+                    소비자피해보상의 처리, 재화 등에 대한 불만 처리 및 소비자와 사업자 사이의
+                    분쟁처리에 관한 사항
+                  </th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    소비자분쟁해결기준(공정거래위원회 고시) 및 관계법령에 따릅니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">거래에 관한 약관의 내용 또는 확인할 수 있는 방법</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    페이지 하단에 이용약관 및 개인정보처리방침 링크에서 확인할 수 있습니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p className="font-14">
+              * 매월 말일은 고객센터 운영시간을 기준으로 합니다. (고객센터 운영시간: 월~목
+              10:00~17:00 (점심시간: 12:30~14:00) / 금 10:00~12:00 / 토, 일, 공휴일 휴무)
+            </p>
+
+            <h4 className="fw-bold">실물배송상품</h4>
+            <p>
+              &quot;실물배송상품&quot;이란, 물리적 형태를 가지며 소비자에게 실질적인 점유가 가능한
+              상품으로, 택배, 우편, 직접 전달 등의 방법으로 수령인이 있는 장소로 운송 또는 배송되는
+              제품을 의미합니다. 패키지 형태의 게임이나 소프트웨어, PC 및 콘솔 주변기기, 피규어,
+              의류, 책자 및 기타 굿즈 상품 등이 이에 해당합니다.
+            </p>
+
+            <table className="table mb-3">
+              <colgroup>
+                <col width="100%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th className="table-dark">교환/반품 가능기간</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    <ul className="mb-0">
+                      <li>
+                        단순변심: 상품 수령일로부터 7일 이내 (단, 제품 코드(키) 상품이 포함된 경우는
+                        디지털 상품 환불정책에 따라 구입일로부터 7일)
+                      </li>
+                      <li>
+                        제품의 하자 또는 오배송: 상품 수령일로부터 3개월 이내, 그 사실을 안 날 또는
+                        알 수 있었던 날로부터 30일 이내
+                      </li>
+                      <li>품질 보증기간은 제품 구매일로부터 1년입니다. (구매 영수증으로 증빙)</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">교환/반품 불가기준</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    <ul className="mb-0">
+                      <li>교환/반품 가능기간이 경과된 경우</li>
+                      <li>구매자의 책임있는 사유로 상품 등이 멸실 또는 훼손된 경우</li>
+                      <li>
+                        포장을 개봉하였거나, 포장이 훼손되어 상품 등의 가치가 현저히 상실된 경우(
+                        단, 상품 내용 확인을 위해 포장 등을 훼손한 경우는 제외)
+                      </li>
+                      <li>
+                        구매자의 사용 또는 일부 소비에 의하여 상품의 가치가 현저히 감소한 경우
+                      </li>
+                      <li>
+                        시간의 경과에 의하여 재판매가 곤란할 정도로 상품 등의 가치가 현저히 감소한
+                        경우
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">플레이스테이션 하드웨어 및 액세서리 제품 초기불량</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    <ul className="mb-0">
+                      <li>
+                        초기 불량의 경우, SIEK 공식 고객센터에서 불량 판정 후 교환/반품이
+                        가능합니다.
+                      </li>
+                      <li>제품 불량 여부는 제조사 A/S 센터에서만 판정할 수 있습니다.</li>
+                      <li>
+                        불량 판정이 확인되면, 제조사 고객센터의 안내에 따라 교환 또는 반품 절차를
+                        진행해 주시기 바랍니다.
+                      </li>
+                      <li>
+                        수리 접수 안내:{" "}
+                        <a
+                          href="http://www.playstation.com/ko-kr/support/hardware/service-center/"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          http://www.playstation.com/ko-kr/support/hardware/service-center/
+                        </a>
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">교환/반품 절차 및 소요기간</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    <ul className="mb-0">
+                      <li>
+                        교환/반품 요청 → 고객센터에서 요청 건 접수 및 사유 검토 → 상품 수거 및
+                        교환/반품 가부 검토 → 교환 상품 재발송 또는 대금 환불
+                      </li>
+                      <li>
+                        영업일 기준 요청한 다음 날 고객센터 운영시간에 순차적으로 처리되며, 상품
+                        수거 후 최대 3~5일 소요
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">교환/반품 요청 방법</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    [마이페이지-주문내역]메뉴에서 해당 주문건의 [상세보기]로 이동 → [교환/반품] 버튼
+                    클릭 → 교환/반품 요청 사유, 상품 수거 주소 등의 상세 내용 기입 후 [교환/반품
+                    요청] 버튼 클릭
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">교환/반품 비용</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    배송비 편도 3,000원 (최초 배송비 무료인 경우 6,000원 부과)
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">교환/반품 주소지</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    [07583] 서울특별시 강서구 강서로56가길 35(등촌동, 에이치투아이앤티빌딩) 5층
+                    (주)에이치투 인터렉티브
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">교환/반품 연락처</th>
+                </tr>
+                <tr>
+                  <td className="table-light">1544-2367</td>
+                </tr>
+                <tr>
+                  <th className="table-dark">교환/반품 배송업체</th>
+                </tr>
+                <tr>
+                  <td className="table-light">CJ 대한통운</td>
+                </tr>
+                <tr>
+                  <th className="table-dark">결제수단별 환불정책</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    <ul className="mb-0">
+                      <li>네이버페이: 각 결제수단의 결제취소로 환불</li>
+                      <li>
+                        페이코
+                        <ul>
+                          <li>간편계좌: 구매자가 기재한 계좌정보로 대금 환불</li>
+                          <li>신용/체크카드, 페이코 쿠폰/포인트: 각 결제수단의 결제취소로 환불</li>
+                        </ul>
+                      </li>
+                      <li>계좌이체, 가상계좌: 구매자가 기재한 계좌정보로 대금 환불</li>
+                      <li>
+                        휴대폰
+                        <ul>
+                          <li>부분취소: 다이렉트 게임즈 포인트로 대금 환불</li>
+                          <li>*당월 전체취소: 결제수단의 결제취소로 환불</li>
+                          <li>익월 전체취소: 다이렉트 게임즈 포인트로 대금 환불</li>
+                        </ul>
+                      </li>
+                      <li>토스 퀵계좌이체: 결제일로부터 4일 이후 가능</li>
+                      <li>토스 페이: 각 결제수단의 결제취소로 환불</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">
+                    제품하자·오배송 등에 따른 청약철회 등의 경우 청약철회 등의 기한 및
+                    통신판매업자가 부담하는 반품비용 등에 관한 정보
+                  </th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    전자상거래 등에서의 소비자보호에 관한 법률 등에 의한 제품의 하자 또는 오배송
+                    등으로 인한 청약철회의 경우에는 상품 수령일로부터 3개월 이내, 그 사실을 안 날
+                    또는 알 수 있었던 날로부터 30일 이내에 청약철회를 할 수 있으며, 반품 비용은
+                    통신판매업자가 부담합니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">
+                    제품하자가 아닌 소비자의 단순변심에 따른 청약철회가 불가능한 경우 그 구체적
+                    사유와 근거
+                  </th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    전자상거래 등에서의 소비자보호에 관한 법률 등에 의한 청약철회 제한 사유에
+                    해당하는 경우 및 기타 객관적으로 이에 준하는 것으로 인정되는 경우 청약철회가
+                    제한될 수 있습니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">재화 등의 교환·반품·보증 조건 및 품질보증기준</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    소비자분쟁해결기준(공정거래위원회 고시) 및 관계법령에 따릅니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">
+                    대금을 환불받기 위한 방법과 환불이 지연될 경우 지연배상금을 지급받을 수 있다는
+                    지연배상금 지급의 구체적인 조건·절차
+                  </th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    주문취소 및 대금의 환불은 [마이페이지-주문내역]메뉴에서 신청할 수 있으며,
+                    전자상거래 등에서의 소비자보호에 관한 법률에 따라 소비자의 청약철회 후 판매자가
+                    재화 등을 반환 받은 날로부터 3영업일 이내에 지급받은 대금의 환급을 정당한 사유
+                    없이 지연하는 때에는 소비자는 지연기간에 대해서 연 15%의 지연배상금을 판매자에게
+                    청구할 수 있습니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">
+                    소비자피해보상의 처리, 재화 등에 대한 불만 처리 및 소비자와 사업자 사이의
+                    분쟁처리에 관한 사항
+                  </th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    소비자분쟁해결기준(공정거래위원회 고시) 및 관계법령에 따릅니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th className="table-dark">거래에 관한 약관의 내용 또는 확인할 수 있는 방법</th>
+                </tr>
+                <tr>
+                  <td className="table-light">
+                    페이지 하단에 이용약관 및 개인정보처리방침 링크에서 확인할 수 있습니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p className="font-14">
+              * 매월 말일은 고객센터 운영시간을 기준으로 합니다. (고객센터 운영시간: 월~목
+              10:00~17:00 (점심시간: 12:30~14:00) / 금 10:00~12:00 / 토, 일, 공휴일 휴무)
+            </p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

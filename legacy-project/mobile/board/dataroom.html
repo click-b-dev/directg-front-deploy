@@ -1,0 +1,130 @@
+<?php
+ini_set( "display_errors", 0 );
+header("Content-Type:text/html; charset=utf-8");
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$page_title="자료실";
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css?t=20250826">
+
+<style>
+    #appCapsuleSub{
+        padding-top:56px;
+    }
+    .pc-only-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    .pc-only-card {
+        text-align: center;
+        max-width: 340px;
+        width: 100%;
+        padding: 30px 24px;
+        background-color: #1b263b;
+        border-radius: 8px;
+        border: 1px solid #2c3a52;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    .pc-only-card .icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        background-color: #243048;
+        border-radius: 50%;
+        margin-bottom: 20px;
+    }
+    .pc-only-card .icon-wrapper svg path {
+        fill: #8a99ad;
+    }
+    .pc-only-card .pc-only-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+        letter-spacing: -0.5px;
+    }
+    .pc-only-card .pc-only-desc {
+        font-size: 13px;
+        color: #8a99ad;
+        line-height: 1.5;
+        margin-bottom: 24px;
+        word-break: keep-all;
+    }
+    /* .pc-only-card .btn-home {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 6px;
+    } */
+</style>
+</head>
+
+<body class="dark-mode-active">
+<!-- App Header -->
+	<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="pc-only-container">
+        <div class="pc-only-card">
+            <div class="icon-wrapper">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 4H4C2.89543 4 2 4.89543 2 6V16C2 17.1046 2.89543 18 4 18H10V20H8V22H16V20H14V18H20C21.1046 18 22 17.1046 22 16V6C22 4.89543 21.1046 4 20 4ZM20 16H4V6H20V16Z" fill="#6c757d"/>
+                </svg>
+            </div>
+            
+            <!-- <h5 class="pc-only-title font-weight-bold text-white">PC 버전 전용 메뉴입니다</h5> -->
+            <p class="pc-only-desc">자료실은 PC 환경에서만 지원됩니다.</p>
+            
+            <a href="/" class="btn btn-primary btn-home">메인으로 이동</a>
+        </div>
+    </div>
+</div>
+<!-- * App Capsule -->
+
+    <!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,245 @@
+<div id="sidebar" class="border rounded-0 bg-dark-subtle">
+	<div class="d-flex flex-column flex-shrink-0 bg-dark-subtle">
+		<div class="bg-primary h4 py-4 text-center mb-0 fw-bold"><?=$page_title?></div>
+		<hr class="my-0">
+		<div class="search-filter-group p-2">
+			<div class="ps-3 font-14">
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="is_promotion" name="is_promotion" value="Y" <?=$checked['is_promotion'][$is_promotion]?>>
+					<label class="form-check-label fw-400 " for="is_promotion">할인 프로모션</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="is_bonus" name="is_bonus" value="Y" <?=$checked['is_bonus'][$is_bonus]?>>
+					<label class="form-check-label fw-400 " for="is_bonus">구매특전</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="is_preorder" name="is_preorder" value="Y" <?=$checked['is_preorder'][$is_preorder]?>>
+					<label class="form-check-label fw-400 " for="is_preorder">예약구매</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="is_repay" name="is_repay" value="Y" <?=$checked['is_repay'][$is_repay]?>>
+					<label class="form-check-label fw-400 " for="is_repay">추가적립</label>
+				</div>
+			</div>
+		</div>
+		
+		<hr class="my-0">
+		
+		<div class="search-filter-group p-2">
+			<h5 class="ps-3 fw-bold text-secondary-emphasis my-2">상품유형</h5>
+			<div class="ps-3 font-14">
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="game_type_game" name="game_type" value="game" <?=$checked['game_type']['game']?>>
+					<label class="form-check-label fw-400" for="game_type_game">게임</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="game_type_dlc" name="game_type" value="dlc" <?=$checked['game_type']['dlc']?>>
+					<label class="form-check-label fw-400" for="game_type_dlc">다운로드 가능한 콘텐츠</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="game_type_music" name="game_type" value="music" <?=$checked['game_type']['music']?>>
+					<label class="form-check-label fw-400" for="game_type_music">사운드트랙</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="game_type_bundle" name="game_type" value="bundle" <?=$checked['game_type']['bundle']?>>
+					<label class="form-check-label fw-400" for="game_type_bundle">번들</label>
+				</div>
+				<!--<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="game_type_accessories" name="game_type" value="accessories" <?=$checked['game_type']['accessories']?>>
+					<label class="form-check-label fw-400" for="game_type_accessories">악세사리</label>
+				</div>-->
+			</div>
+		</div>
+
+		
+		<?if($aside['platform']<>"false"){?>
+		<hr class="my-0">
+		
+		<div class="search-filter-group p-2">
+			<h5 class="ps-3 fw-bold text-secondary-emphasis my-2">플랫폼</h5>
+			<div class="ps-3 font-14">
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="platform_1" name="search_platform" value="1" <?=$checked['search_platform']['1']?>>
+					<label class="form-check-label fw-400" for="platform_1">Steam</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="platform_34" name="search_platform" value="34" <?=$checked['search_platform']['34']?>>
+					<label class="form-check-label fw-400" for="platform_34">Epic Games</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="platform_35" name="search_platform" value="35" <?=$checked['search_platform']['35']?>>
+					<label class="form-check-label fw-400" for="platform_35">Rockstar Games</label>
+				</div>
+			</div>
+		</div>
+		<?}?>
+		
+
+		<?if($aside['genre']<>"false"){?>
+		<hr class="my-0">
+		
+		<div class="search-filter-group p-2">
+			<h5 class="ps-3 fw-bold text-secondary-emphasis my-2">게임장르</h5>
+			<div class="ps-3 font-14">
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_1" name="genre_code" value="G0001" <?=$checked['genre_code']['G0001']?>>
+					<label class="form-check-label fw-400" for="genre_code_1">액션</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_2" name="genre_code" value="G0002" <?=$checked['genre_code']['G0002']?>>
+					<label class="form-check-label fw-400" for="genre_code_2">어드벤처</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_3" name="genre_code" value="G0003" <?=$checked['genre_code']['G0003']?>>
+					<label class="form-check-label fw-400" for="genre_code_3">RPG</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_5" name="genre_code" value="G0004" <?=$checked['genre_code']['G0004']?>>
+					<label class="form-check-label fw-400" for="genre_code_5">전략</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_4" name="genre_code" value="G0005" <?=$checked['genre_code']['G0005']?>>
+					<label class="form-check-label fw-400" for="genre_code_4">시뮬레이션</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_7" name="genre_code" value="G0006" <?=$checked['genre_code']['G0006']?>>
+					<label class="form-check-label fw-400" for="genre_code_7">스포츠</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_6" name="genre_code" value="G0007" <?=$checked['genre_code']['G0007']?>>
+					<label class="form-check-label fw-400" for="genre_code_6">캐주얼</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_8" name="genre_code" value="G0010" <?=$checked['genre_code']['G0010']?>>
+					<label class="form-check-label fw-400" for="genre_code_8">레이싱</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_9" name="genre_code" value="G0008" <?=$checked['genre_code']['G0008']?>>
+					<label class="form-check-label fw-400" for="genre_code_9">인디</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_10" name="genre_code" value="G0009" <?=$checked['genre_code']['G0009']?>>
+					<label class="form-check-label fw-400" for="genre_code_10">앞서 해보기</label>
+				</div>
+			</div>
+		</div>
+		<?}?>
+		
+		<hr class="my-0">
+		
+		<div class="search-filter-group p-2">
+			<h5 class="ps-3 fw-bold text-secondary-emphasis my-2">한국어지원</h5>
+			<div class="ps-3 font-14">
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="interface_korean" name="interface_korean" value="Y" <?=$checked['interface_korean'][$interface_korean]?>>
+					<label class="form-check-label fw-400" for="interface_korean">한국어 자막지원</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="spoken_korean" name="spoken_korean" value="Y" <?=$checked['spoken_korean'][$spoken_korean]?>>
+					<label class="form-check-label fw-400" for="spoken_korean">한국어 음성지원</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="exclusive_korean" name="exclusive_korean" value="Y" <?=$checked['exclusive_korean'][$exclusive_korean]?>>
+					<label class="form-check-label fw-400" for="exclusive_korean">독점/한글패치</label>
+				</div>
+			</div>
+		</div>
+		
+		<hr class="my-0">
+		
+		<div class="search-filter-group">
+			<h5 class="ps-3 fw-bold text-secondary-emphasis my-2">가격대</h5>
+			<div class="ps-3 font-14">
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="search_price_1" name="search_price" value="1" <?=$checked['search_price']['1']?>>
+					<label class="form-check-label fw-400" for="search_price_1">&#8361; 10,000 미만</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="search_price_2" name="search_price" value="2" <?=$checked['search_price']['2']?>>
+					<label class="form-check-label fw-400" for="search_price_2">&#8361; 10,000 이상 ~ &#8361; 30,000 미만</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="search_price_3" name="search_price" value="3" <?=$checked['search_price']['3']?>>
+					<label class="form-check-label fw-400" for="search_price_3">&#8361; 30,000 이상 ~ &#8361; 50,000 미만</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="search_price_4" name="search_price" value="4" <?=$checked['search_price']['4']?>>
+					<label class="form-check-label fw-400" for="search_price_4">&#8361; 50,000 이상 ~ &#8361; 100,000 미만</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="search_price_5" name="search_price" value="5" <?=$checked['search_price']['5']?>>
+					<label class="form-check-label fw-400" for="search_price_5">&#8361; 100,000 이상</label>
+				</div>
+			</div>
+		</div>
+		
+		<hr class="my-0">
+		
+		<div class="d-grid gap-2 p-2 mt-3">
+			<button class="btn btn-lg btn-primary" type="button" id="btn_filter">검 색</button>
+		</div>
+		<!--
+		<div class="search-filter-group p-2">
+			<h5 class="ps-3 fw-bold text-secondary-emphasis my-2">멀티플레이 지원</h5>
+			<div class="ps-3 font-14">
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201001" name="category_code" value="P0201001">
+					<label class="form-check-label fw-400" for="tags_P0201001">멀티플레이어</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201002" name="category_code" value="P0201002">
+					<label class="form-check-label fw-400" for="tags_P0201002">협동</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201003" name="category_code" value="P0201003">
+					<label class="form-check-label fw-400" for="tags_P0201003">MMO</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201004" name="category_code" value="P0201004">
+					<label class="form-check-label fw-400" for="tags_P0201004">온라인 PvP</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201005" name="category_code" value="P0201005">
+					<label class="form-check-label fw-400" for="tags_P0201005">온라인 협동</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201006" name="category_code" value="P0201006">
+					<label class="form-check-label fw-400" for="tags_P0201006">LAN PvP</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201007" name="category_code" value="P0201007">
+					<label class="form-check-label fw-400" for="tags_P0201007">LAN 협동</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201008" name="category_code" value="P0201008">
+					<label class="form-check-label fw-400" for="tags_P0201008">PvP</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201009" name="category_code" value="P0201009">
+					<label class="form-check-label fw-400" for="tags_P0201009">대규모 멀티플레이어</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201010" name="category_code" value="P0201010">
+					<label class="form-check-label fw-400" for="tags_P0201010">4명 로컬 플레이</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201011" name="category_code" value="P0201011">
+					<label class="form-check-label fw-400" for="tags_P0201011">로컬 멀티플레이어</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201012" name="category_code" value="P0201012">
+					<label class="form-check-label fw-400" for="tags_P0201012">로컬 협동</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201013" name="category_code" value="P0201013">
+					<label class="form-check-label fw-400" for="tags_P0201013">협동 캠페인</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="tags_P0201014" name="category_code" value="P0201014">
+					<label class="form-check-label fw-400" for="tags_P0201014">비동기 멀티플레이어</label>
+				</div>
+			</div>
+		</div>
+		-->
+	</div>
+</div>

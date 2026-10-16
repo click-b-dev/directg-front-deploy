@@ -1,0 +1,162 @@
+<?
+	ini_set( "display_errors", 0 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title="주문완료";
+	
+	$settle_no = filter_input(INPUT_GET, 'settle_no', FILTER_SANITIZE_STRING);
+	$wait = filter_input(INPUT_GET, 'wait', FILTER_SANITIZE_STRING);
+	if($wait>0){
+		sleep(10);
+	}
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$order = new Order($conn);
+	
+	//주문조회
+	$order_info = $order->getOrder($settle_no);
+	$order_item_list = $order->getOrderItem($settle_no);
+	
+	//결제로그조회
+	switch($order_info['pg_provider']){
+		case "kcp":
+			$payment_log = $order->getKcpLog($settle_no);
+		break;
+		case "naverpay":
+		break;
+		case "payco":
+		break;
+	}
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+
+$payment_method_label = array(
+	"SC0010"=>"신용카드",
+	"SC0030"=>"계좌이체",
+	"SC0040"=>"가상계좌",
+	"SC0060"=>"휴대폰",
+	"PAYCO"=>"페이코",
+	"POINT"=>"네이버포인트",
+	"toss_bank"=>"퀵계좌이체(토스)",
+	"DG0000"=>"전액할인",
+	"toss_pay"=>"토스페이머니"
+);
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="manifest" href="/manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+
+<style>
+.popover-header{
+	background:#303D4E;
+	font-size:14px;
+}
+.popover-body{
+	font-size:12px;
+}
+</style>
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="full-height">
+	<div class="section full px-3 pt-2">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="text-dark-50 text-center fw-bold mb-3 fs-4">주문이 정상적으로 완료되었습니다.</h4>
+				<div class="text-start mb-3">
+					<p class=""><strong class="text-white">결제번호</strong> <span class="ps-2"><?=$order_info['settle_no']?></span></p>
+					<p class=""><strong class="text-white">결제수단</strong> <span class="ps-2"><?=$payment_method_label[$order_info['payment_method']]?></span></p>
+					<?if($order_info['payment_method']=="SC0040"){?>
+					<p class=""><strong class="text-white">결제금액</strong> <span class="ps-2"><?=number_format($payment_log['amount'])?> 원</span></p>
+					<p class=""><strong class="text-white">입금자</strong> <span class="ps-2"><?=$payment_log['va_name']?></span></p>
+					<p class=""><strong class="text-white">입금계좌정보</strong> <span class="ps-2"><?=$payment_log['bank_name']?> / <?=$payment_log['account']?></span></p>
+					<p class=""><strong class="text-white">예금주</strong> <span class="ps-2"><?=$payment_log['depositor']?></span></p>
+					<p class=""><strong class="text-white">입금마감시기</strong> <span class="ps-2"><?=substr($payment_log['va_date'],0,4)?>-<?=substr($payment_log['va_date'],4,2)?>-<?=substr($payment_log['va_date'],6,2)?> <?=substr($payment_log['va_date'],8,2)?>:<?=substr($payment_log['va_date'],10,2)?>:<?=substr($payment_log['va_date'],12,2)?></span></p>
+					<?}else{?>
+					<p class=""><strong class="text-white">결제금액</strong> <span class="ps-2"><?=number_format($order_info['total_price'])?> 원</span></p>
+					<p class=""><strong class="text-white">결제일자</strong> <span class="ps-2"><?=$order_info['reg_date']?></span></p>
+					<?}?>
+				</div>
+				<div class="mb-0 text-center">
+					<a href="/mypage/mypage_order_view.html?settle_no=<?=$order_info['settle_no']?>" class="btn btn-primary" type="button"><i class="mdi mdi-home"></i> 주문내역 확인하기</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.bundle.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+<script>
+gtag('event', 'purchase', {
+	transaction_id: '<?=$order_info["settle_no"]?>',
+	value: <?=$order_info["total_price"]?>,
+	currency: 'KRW',
+	items: [
+		<?php
+			foreach($order_item_list as $value){
+		?>
+		{
+			item_id: '<?=$value["goods_sku"]?>',
+			item_name: '<?=$value["product_name"]?>',
+			price: <?=$value["price"]?>,
+			quantity: 1
+		},
+		<?php
+			}
+		?>
+	]
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<script>
+	function LoadingOverlay(action) {
+		let el = document.getElementById('_loading_overlay');
+		if (!el) {
+			el = document.createElement('div');
+			el.id = '_loading_overlay';
+			el.innerHTML = '<div style="width:48px;height:48px;border:5px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .8s linear infinite"></div>';
+			el.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:9999;justify-content:center;align-items:center';
+			document.head.insertAdjacentHTML('beforeend', '<style>@keyframes spin{to{transform:rotate(360deg)}}</style>');
+			document.body.appendChild(el);
+		}
+		el.style.display = action === 'show' ? 'flex' : 'none';
+	}
+
+
+	function escHtml(str) {
+		if (str == null) return '';
+		return String(str)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;');
+	}
+
+	/**
+	 * 공통 페이징 생성
+	 * @param {object} options
+	 * @param {number}   options.page          현재 페이지
+	 * @param {number}   options.totalPages    전체 페이지 수
+	 * @param {number}   options.totalElements 전체 데이터 수
+	 * @param {string}   options.baseUrl       페이지 링크 기본 URL (예: 'asset_list.php')
+	 * @param {object}   options.params        URL에 추가할 파라미터 객체
+	 * @param {string}   options.targetPaging  페이징 넣을 selector  (기본: '#paging')
+	 * @param {string}   options.targetTotal   총 개수 넣을 selector (기본: '#total')
+	 * @param {number}   options.perBlock      페이징 블록당 페이지 수 (기본: 10)
+	 */
+	function renderPaging(options) {
+		var page          = parseInt(options.page) || 1;
+		var totalPages    = options.totalPages    || 1;
+		var totalElements = options.totalElements || 0;
+		var baseUrl       = options.baseUrl;
+		var params        = options.params        || {};
+		var targetPaging  = options.targetPaging  || '#paging';
+		var targetTotal   = options.targetTotal   || '#total';
+		var perBlock      = options.perBlock      || 10;
+
+		// 파라미터 쿼리스트링 조립
+		var qs = '';
+		$.each(params, function (key, val) {
+			if (val !== undefined && val !== null) {
+				qs += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(val);
+			}
+		});
+
+		var start = (Math.ceil(page / perBlock) - 1) * perBlock + 1;
+		var end   = (start + perBlock > totalPages) ? totalPages + 1 : start + perBlock;
+
+		var html = '<nav><ul class="pagination justify-content-center">';
+
+		// 이전 블록
+		if (start <= 1) {
+			html += '<li class="page-item disabled"><a class="page-link">&laquo;</a></li>';
+		} else {
+			html += '<li class="page-item">'
+				  + '<a class="page-link" href="' + baseUrl + '?page=' + (start - perBlock) + qs + '">&laquo;</a>'
+				  + '</li>';
+		}
+
+		// 페이지 번호
+		for (var i = start; i < end; i++) {
+			if (i === page) {
+				html += '<li class="page-item active"><a class="page-link" href="#">' + i + '</a></li>';
+			} else {
+				html += '<li class="page-item">'
+					  + '<a class="page-link" href="' + baseUrl + '?page=' + i + qs + '">' + i + '</a>'
+					  + '</li>';
+			}
+		}
+
+		// 다음 블록
+		if (end > totalPages) {
+			html += '<li class="page-item disabled"><a class="page-link">&raquo;</a></li>';
+		} else {
+			html += '<li class="page-item">'
+				  + '<a class="page-link" href="' + baseUrl + '?page=' + end + qs + '">&raquo;</a>'
+				  + '</li>';
+		}
+
+		html += '</ul></nav>';
+
+		$(targetPaging).html(html);
+		$(targetTotal).text(totalElements);
+	}
+</script>

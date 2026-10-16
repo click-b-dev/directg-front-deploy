@@ -1,0 +1,41 @@
+/* legacy _Admin_/inc/topbar.php 인라인 <style> 재현 (전역 적용도 legacy와 동일) */
+.nav-item {
+  width: 100px;
+}
+
+/* legacy main.php 인라인 <style>: topnav 레이아웃 로고 영역 폭(메뉴 시작 위치 정합) */
+.topnav-logo {
+  width: 260px;
+}
+
+/*
+  사용자 요청: 사이드바 있을 때(88px)와 없을 때(topnav)의 topbar 높이를 88px로 통일.
+  topnav topbar는 in-flow(position:relative)라 높이를 88px로 맞추면 그 아래 content도 88px에서 시작.
+  (legacy는 사이드바 88 / topnav 76으로 달랐으나, 사용자 지시로 88px 통일.)
+*/
+.navbar-custom.topnav-navbar {
+  min-height: 88px;
+}
+
+.navbar-custom.topnav-navbar > .container-fluid,
+.navbar-custom.topnav-navbar > .container-fluid > .d-flex {
+  min-height: 88px;
+  align-items: center;
+}
+
+.fw-500 {
+  font-weight: 500 !important;
+}
+
+.nav-pills > li > a {
+  font-weight: 500;
+}
+
+.navbar-custom {
+  background-color: #313a46;
+  color: #ffffff;
+}
+
+.content-page {
+  padding-top: 88px;
+}

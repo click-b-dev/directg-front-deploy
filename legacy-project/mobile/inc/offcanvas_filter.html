@@ -1,0 +1,127 @@
+<?
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$goods = new Goods($conn);
+	$publisher_list = $goods->getPublisherList();
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<div class="offcanvas offcanvas-end"  id="offcanvas_filter">
+	<div class="offcanvas-header py-3">
+		<h5 class="offcanvas-title p-0">검색 필터</h5>
+		<a href="#" class="offcanvas-close" data-bs-dismiss="offcanvas"><ion-icon name="close-outline"></ion-icon></a>
+	</div>
+	<div class="offcanvas-body p-0">
+		<form id="goods_filter_frm" method="GET" action="<?=$_SERVER['PHP_SELF']?>">
+			<div class="section p-0">
+				<div class="form-group boxed py-0">
+					<div class="section-title ps-2 fs-5">퍼블리셔</div>
+					<div class="input-wrapper">
+						<select class="form-control form-select" name="search_publisher" id="search_publisher">
+							<option value="">::::퍼블리셔 선택::</option>
+							<?
+								foreach($publisher_list  as $value){
+							?>
+							<option value="<?=$value['idx']?>" <?=$select['search_publisher'][$value['idx']]?>><?=$value['publisher']?></option>
+							<? }?>
+						</select>
+					</div>
+				</div>
+				<div class="form-group boxed py-0">
+					<div class="section-title ps-2 fs-5">플랫폼</div>
+					<div class="input-list">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="search_platform" id="search_platform1" value="1" <?=$checked['search_platform']['1']?>>
+							<label class="form-check-label font-14" for="search_platform1">Steam</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="search_platform" id="search_platform2" value="34" <?=$checked['search_platform']['34']?>>
+							<label class="form-check-label font-14" for="search_platform2">Epic</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="search_platform" id="search_platform3" value="35" <?=$checked['search_platform']['35']?>>
+							<label class="form-check-label font-14" for="search_platform3">Rockstar Games Launcher</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group boxed py-0">
+					<div class="section-title ps-2 fs-5">한국어지원</div>
+					<div class="input-list">
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" name="search_interface_korean" id="search_interface_korean" value="Y" <?=$checked['search_interface_korean']['Y']?>>
+							<label class="form-check-label font-14" for="search_interface_korean">인터페이스/자막 한글</label>
+						</div>
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" name="search_spoken_korean" id="search_spoken_korean" value="Y" <?=$checked['search_spoken_korean']['Y']?>>
+							<label class="form-check-label font-14" for="search_spoken_korean">음성 한글</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group boxed py-0">
+					<div class="section-title ps-2 fs-5">지원모드</div>
+					<div class="input-list">
+						<div class="form-check">
+							<input type="radio" class="form-check-input" name="search_game_mode" id="search_game_mode1" value="1" <?=$checked['search_game_mode']['1']?>>
+							<label class="form-check-label font-14" for="search_game_mode1">싱글 플레이</label>
+						</div>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" name="search_game_mode" id="search_game_mode2" value="2" <?=$checked['search_game_mode']['2']?>>
+							<label class="form-check-label font-14" for="search_game_mode2">싱글 및 멀티 플레이</label>
+						</div>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" name="search_game_mode" id="search_game_mode3" value="4" <?=$checked['search_game_mode']['4']?>>
+							<label class="form-check-label font-14" for="search_game_mode3">멀티 플레이</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group boxed py-0">
+					<div class="section-title ps-2 fs-5">입력지원</div>
+					<div class="input-list">
+						<div class="form-check">
+							<input type="radio" class="form-check-input" name="search_input_device" id="search_input_device1" value="1" <?=$checked['search_input_device']['1']?>>
+							<label class="form-check-label font-14" for="search_input_device1">키보드/마우스 및 컨트롤러</label>
+						</div>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" name="search_input_device"  id="search_input_device2" value="2" <?=$checked['search_input_device']['2']?>>
+							<label class="form-check-label font-14" for="search_input_device2">키보드/마우스</label>
+						</div>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" name="search_input_device"  id="search_input_device3" value="3" <?=$checked['search_input_device']['3']?>>
+							<label class="form-check-label font-14" for="search_input_device3">컨트롤러</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group boxed py-0">
+					<div class="section-title ps-2 fs-5">게임유형</div>
+					<div class="input-list">
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" name="search_goods_option" id="search_goods_option1" value="20" <?=$checked['search_goods_option']['20']?>>
+							<label class="form-check-label font-14" for="search_goods_option1">기본게임</label>
+						</div>
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" name="search_goods_option" id="search_goods_option2" value="101" <?=$checked['search_goods_option']['101']?>>
+							<label class="form-check-label font-14" for="search_goods_option2">기본게임+DLC번들</label>
+						</div>
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" name="search_goods_option" id="search_goods_option3" value="90" <?=$checked['search_goods_option']['90']?>>
+							<label class="form-check-label font-14" for="search_goods_option3">DLC</label>
+						</div>
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input"name="search_goods_option"  id="search_goods_option4" value="102" <?=$checked['search_goods_option']['102']?>>
+							<label class="form-check-label font-14" for="search_goods_option4">DLC번들</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2">
+					<button type="submit" class="btn btn-primary btn-block">검색</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

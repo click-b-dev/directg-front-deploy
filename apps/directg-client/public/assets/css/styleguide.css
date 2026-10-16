@@ -1,0 +1,294 @@
+/* ====== 공통 색상 변수 덮1어쓰기 ====== */
+:root {
+  --bs-primary: #3688FC;
+  --bs-primary-rgb: 54, 136, 252;
+
+  --bs-info: #44BADC;
+  --bs-info-rgb: 68, 186, 220;
+
+  --bs-secondary: #CED4DA;
+  --bs-secondary-rgb: 206, 212, 218;
+
+  --bs-light: #303D4E;
+  --bs-light-rgb: 48, 61, 78;
+
+  --bs-success: #1CEAAC;
+  --bs-success-rgb: 28, 234, 172;
+
+  --bs-dark: #EEEEEE;
+  --bs-dark-rgb: 238, 238, 238;
+
+  --bs-danger: #FA6767;
+  --bs-danger-rgb: 250, 103, 103;
+
+  --bs-warning: #FFBC00;
+  --bs-warning-rgb: 255, 188, 0;
+
+  /* custom */
+  --bs-content: #A655B2;
+  --bs-content-rgb: 166, 85, 178;
+  
+  --bs-deepdark: #212529;
+
+  --bs-wait: #464F5B;
+  --bs-wait-rgb: 70, 79, 91;
+  
+  --bs-darkgray: #13161D;
+  --bs-darkgray-rgb: 19, 22, 29;
+}
+
+/* ====== 버튼 색상 재정의 ====== */
+.btn-primary {
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: rgba(var(--bs-primary-rgb), 0.85);
+  --bs-btn-active-bg: rgba(var(--bs-primary-rgb), 0.75);
+  --bs-btn-active-border-color: rgba(var(--bs-primary-rgb), 0.75);
+}
+
+.btn-info {
+  --bs-btn-bg: var(--bs-info);
+  --bs-btn-border-color: var(--bs-info);
+  --bs-btn-hover-bg: rgba(var(--bs-info-rgb), 0.85);
+  --bs-btn-active-bg: rgba(var(--bs-info-rgb), 0.75);
+  --bs-btn-active-border-color: rgba(var(--bs-info-rgb), 0.75);
+}
+
+.btn-secondary {
+  --bs-btn-bg: var(--bs-secondary);
+  --bs-btn-border-color: var(--bs-secondary);
+  --bs-btn-hover-bg: rgba(var(--bs-secondary-rgb), 0.85);
+  --bs-btn-active-bg: rgba(var(--bs-secondary-rgb), 0.75);
+  --bs-btn-active-border-color: rgba(var(--bs-secondary-rgb), 0.75);
+}
+
+.btn-light {
+  --bs-btn-bg: var(--bs-light);
+  --bs-btn-border-color: var(--bs-light);
+  --bs-btn-hover-bg: rgba(var(--bs-light-rgb), 0.85);
+  --bs-btn-active-bg: rgba(var(--bs-light-rgb), 0.75);
+  --bs-btn-active-border-color: rgba(var(--bs-light-rgb), 0.75);
+}
+
+.btn-success {
+  --bs-btn-bg: var(--bs-success);
+  --bs-btn-border-color: var(--bs-success);
+  --bs-btn-hover-bg: rgba(var(--bs-success-rgb), 0.85);
+  --bs-btn-active-bg: rgba(var(--bs-success-rgb), 0.75);
+  --bs-btn-active-border-color: rgba(var(--bs-success-rgb), 0.75);
+}
+
+.btn-dark {
+  --bs-btn-bg: var(--bs-dark);
+  --bs-btn-border-color: var(--bs-dark);
+  --bs-btn-hover-bg: rgba(var(--bs-dark-rgb), 0.85);
+  --bs-btn-active-bg: rgba(var(--bs-dark-rgb), 0.75);
+  --bs-btn-active-border-color: rgba(var(--bs-dark-rgb), 0.75);
+}
+
+.btn-danger {
+  --bs-btn-bg: var(--bs-danger);
+  --bs-btn-border-color: var(--bs-danger);
+  --bs-btn-hover-bg: rgba(var(--bs-danger-rgb), 0.85);
+  --bs-btn-active-bg: rgba(var(--bs-danger-rgb), 0.75);
+  --bs-btn-active-border-color: rgba(var(--bs-danger-rgb), 0.75);
+}
+
+.btn-warning {
+  --bs-btn-bg: var(--bs-warning);
+  --bs-btn-border-color: var(--bs-warning);
+  --bs-btn-hover-bg: rgba(var(--bs-warning-rgb), 0.85);
+  --bs-btn-active-bg: rgba(var(--bs-warning-rgb), 0.75);
+  --bs-btn-active-border-color: rgba(var(--bs-warning-rgb), 0.75);
+}
+
+.btn-outline-danger {
+	--bs-btn-color: var(--bs-danger);
+	--bs-btn-border-color: var(--bs-danger);
+	--bs-btn-hover-color: #fff;
+	--bs-btn-hover-bg: rgba(var(--bs-danger-rgb), 0.5);
+	--bs-btn-hover-border-color: var(--bs-danger);
+	--bs-btn-focus-shadow-rgb: 220, 53, 69;
+	--bs-btn-active-color: #fff;
+	--bs-btn-active-bg: var(--bs-danger);
+	--bs-btn-active-border-color: var(--bs-danger);
+	--bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--bs-btn-disabled-color: var(--bs-danger);
+	--bs-btn-disabled-bg: transparent;
+	--bs-btn-disabled-border-color: var(--bs-danger);
+	--bs-gradient: none;
+}
+
+.btn-outline-primary {
+	--bs-btn-color: var(--bs-primary);
+	--bs-btn-border-color: var(--bs-primary);
+	--bs-btn-hover-color: #fff;
+	--bs-btn-hover-bg: transparent;
+	--bs-btn-hover-border-color: var(--bs-primary);
+	--bs-btn-focus-shadow-rgb: 220, 53, 69;
+	--bs-btn-active-color: #fff;
+	--bs-btn-active-bg: transparent;
+	--bs-btn-active-border-color: var(--bs-primary);
+	--bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--bs-btn-disabled-color: var(--bs-primary);
+	--bs-btn-disabled-bg: transparent;
+	--bs-btn-disabled-border-color: var(--bs-primary);
+	--bs-gradient: none;
+}
+
+.btn-outline-info {
+	--bs-btn-color: var(--bs-info);
+	--bs-btn-border-color: var(--bs-info);
+	--bs-btn-hover-color: #fff;
+	--bs-btn-hover-bg: rgba(var(--bs-info-rgb), 0.5);
+	--bs-btn-hover-border-color: var(--bs-info);
+	--bs-btn-focus-shadow-rgb: 220, 53, 69;
+	--bs-btn-active-color: #fff;
+	--bs-btn-active-bg: var(--bs-info);
+	--bs-btn-active-border-color: var(--bs-info);
+	--bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--bs-btn-disabled-color: var(--bs-info);
+	--bs-btn-disabled-bg: transparent;
+	--bs-btn-disabled-border-color: var(--bs-info);
+	--bs-gradient: none;
+}
+
+.btn:hover {
+	opacity: 70%;
+}
+
+.hover-70:hover{
+	opacity: 70%;
+}
+
+/* ====== 배경색 / 텍스트색 재정의 ====== */
+/* 텍스트 #FFFFFF */
+.bg-primary, .bg-info, .bg-light, .bg-danger, .bg-content, .btn-secondary, .btn-success, .btn-dark, .btn-warning, .bg-darkgray {
+  color: #FFFFFF !important;
+}
+
+/* 텍스트 #071125 */
+.bg-secondary, .bg-success, .bg-dark, .bg-warning, .btn-secondary, .btn-success, .btn-dark, .btn-warning{
+  color: #071125 !important;
+}
+
+.bg-primary   { background-color: var(--bs-primary) !important; }
+.bg-info      { background-color: var(--bs-info) !important; }
+.bg-secondary { background-color: var(--bs-secondary) !important; }
+.bg-light     { background-color: var(--bs-light) !important; }
+.bg-success   { background-color: var(--bs-success) !important; }
+.bg-dark      { background-color: var(--bs-dark) !important; }
+.bg-danger    { background-color: var(--bs-danger) !important; }
+.bg-warning   { background-color: var(--bs-warning) !important; }
+.bg-content   { background-color: var(--bs-content) !important; }
+.bg-deepdark  { background-color: var(--bs-deepdark) !important; }
+.bg-darkgray  { background-color: var(--bs-darkgray) !important; }
+.bg-none      { background-color: #071125; }
+.bg-none-40   { background-color: rgba(7, 17, 37, 0.4); }
+.bg-none-25   { background-color: rgba(7, 17, 37, 0.25); }
+.bg-light-50  { background-color: rgba(var(--bs-light-rgb), 0.5); }
+.bg-secondary-25 { background-color: rgba(var(--bs-secondary-rgb), 0.25); }
+
+/* ====== 텍스트 색상 클래스 ====== */
+.text-primary   { color: var(--bs-primary) !important; } 
+.text-info      { color: var(--bs-info) !important; }
+.text-secondary { color: var(--bs-secondary) !important; }
+.text-light     { color: var(--bs-light) !important; }
+.text-success   { color: var(--bs-success) !important; }
+.text-dark      { color: var(--bs-dark) !important; }
+.text-danger    { color: var(--bs-danger) !important; }
+.text-warning   { color: var(--bs-warning) !important; }
+.text-content   { color: var(--bs-content) !important; }
+.text-darkgray  { color: var(--bs-darkgray) !important; }
+
+.text-red       { color: #FF0000 !important; }
+
+/* ====== Alert 색상 재정의 ====== */
+.alert-primary   { --bs-alert-bg: var(--bs-primary); --bs-alert-border-color: var(--bs-primary); color: #fff; }
+.alert-info      { --bs-alert-bg: var(--bs-info); --bs-alert-border-color: var(--bs-info); color: #fff; }
+.alert-secondary { --bs-alert-bg: var(--bs-secondary); --bs-alert-border-color: var(--bs-secondary); color: #071125; }
+.alert-light     { --bs-alert-bg: var(--bs-light); --bs-alert-border-color: var(--bs-light); background-color: var(--bs-light); color: #fff; }
+.alert-success   { --bs-alert-bg: var(--bs-success); --bs-alert-border-color: var(--bs-success); color: #071125; }
+.alert-dark      { --bs-alert-bg: var(--bs-dark); --bs-alert-border-color: var(--bs-dark); color: #071125; }
+.alert-danger    { --bs-alert-bg: var(--bs-danger); --bs-alert-border-color: var(--bs-danger); color: #fff; }
+.alert-warning   { --bs-alert-bg: var(--bs-warning); --bs-alert-border-color: var(--bs-warning); color: #071125; }
+
+
+.border-primary   { --bs-border-opacity: 1; border-color:rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important}
+.border-info      { --bs-border-opacity: 1; border-color:rgba(var(--bs-info-rgb), var(--bs-border-opacity)) !important; }
+.border-secondary { --bs-border-opacity: 1; border-color:rgba(var(--bs-secondary-rgb), var(--bs-border-opacity)) !important; }
+.border-light     { --bs-border-opacity: 1; border-color:rgba(var(--bs-light-rgb), var(--bs-border-opacity)) !important; }
+.border-success   { --bs-border-opacity: 1; border-color:rgba(var(--bs-success-rgb), var(--bs-border-opacity)) !important; }
+.border-dark      { --bs-border-opacity: 1; border-color:rgba(var(--bs-dark-rgb), var(--bs-border-opacity)) !important; }
+.border-danger    { --bs-border-opacity: 1; border-color:rgba(var(--bs-danger-rgb), var(--bs-border-opacity)) !important; }
+.border-warning   { --bs-border-opacity: 1; border-color:rgba(var(--bs-warning-rgb), var(--bs-border-opacity)) !important; }
+.border-content   { --bs-border-opacity: 1; border-color:rgba(var(--bs-content-rgb), var(--bs-border-opacity)) !important; }
+/*.border-menu      { --bs-border-opacity: 1; border-color: rgba((45,53,72,1), var(--bs-border-opacity)) !important; }*/
+.border-opacity-0 { --bs-border-opacity: 0 };
+
+.bg-table-dark {
+	background-color: #191919;
+}
+
+.text-secondary-80{
+	color: rgba(var(--bs-secondary-rgb), 0.8) !important;
+}
+
+.table-dark {
+	--bs-table-color: #fff;
+	--bs-table-bg: #191919;
+	--bs-table-border-color: #45494D;
+	--bs-table-striped-bg: rgb(44.1, 47.9, 51.7);
+	--bs-table-striped-color: #fff;
+	--bs-table-active-bg: rgb(55.2, 58.8, 62.4);
+	--bs-table-active-color: #fff;
+	--bs-table-hover-bg: rgb(49.65, 53.35, 57.05);
+	--bs-table-hover-color: #fff;
+	color: var(--bs-table-color);
+	border-color: var(--bs-table-border-color);
+	background-color: var(--bs-table-bg);
+}
+
+.table-light {
+	--bs-table-color: #fff;
+	--bs-table-bg: var(--bs-light);
+	--bs-table-border-color: #45494D;
+	color: var(--bs-table-color);
+	border-color: var(--bs-table-border-color);
+	background-color: var(--bs-table-bg);
+}
+
+.pagination-lg{
+	--bs-pagination-border-radius: 0;
+}
+
+.bg-label{
+	background-color: #313E4F;
+	color: #FFFFFF;
+}
+
+.bg-wait{
+	background-color: #464F5B;
+	color: #FFFFFF;
+}
+
+.border-solid{
+	border: solid;
+}
+
+.table > :not(caption) > * > *{
+	background:#191919;
+}
+
+.table th{
+	background:#303D4E;
+}
+
+.card-badge{
+	min-height: 42px;
+}
+
+.card .card-header a{
+	text-decoration: none;
+}
+

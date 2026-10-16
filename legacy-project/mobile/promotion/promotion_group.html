@@ -1,0 +1,124 @@
+<?php
+ini_set( "display_errors", 0 );
+error_reporting(E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_PARSE | E_USER_ERROR | E_USER_WARNING);
+header( 'Location: https://m.directg.net/' );
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+header('Content-Type:text/html; charset=utf-8'); 
+
+$page_title="2025 가을 프로모션";
+
+try{  
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	
+	$query="SELECT idx,subject,banner,start_date,end_date,use_flag,banner_domain,type,banner_url FROM tbl_group WHERE type=:type AND use_flag=:use_flag AND idx IN (11,12,13,14,15,16,17,18,19)";
+	$stmt = $conn->prepare($query);
+	$params = array(
+		":type"=>"1",
+		":use_flag"=>"Y"
+	);
+	$stmt->execute($params);
+	$group_info = $stmt->fetchAll();
+	
+
+}catch (PDOException $e){
+	//echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+
+<meta name="robots" content="noindex">
+
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="full-height">
+	<div class="section full">
+		<div class="wide-block pb-1 px-2">
+			<div class="my-2"><img src="https://image.directg.net/s83rHjFH7J" class="w-100"></div>
+			<?
+				foreach($group_info as $group){
+					if($group['banner_url']){
+						$banner_img = $group['banner_url'];
+					} else if($group['banner']){
+						$banner_img = $group['banner_domain']."upload/banner/".$group['banner'];
+					}
+			?>
+					<div class="banner_link mb-2" data-groupidx="<?=$group['idx']?>" data-startdate="<?=$group['start_date']?>" data-enddate="<?=$group['end_date']?>" id="link_<?=$group['idx']?>" >
+						<img src="<?=$banner_img?>" class="w-100" alt="<?=$group['subject']?>">
+					</div>
+			<?
+				}
+			?>
+		</div>
+	</div>
+	
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+<script>
+$(document).ready(function(){
+	$(".banner_link").on('click', function(e) {
+		var now = Math.floor(Date.now() / 1000);
+
+		if($(this).data('startdate') > now){
+			alert("프로모션 기간이 아닙니다. 일정을 확인해 주시기 바랍니다.");
+		}
+
+		if($(this).data('enddate') < now){
+			alert("프로모션 기간이 아닙니다. 일정을 확인해 주시기 바랍니다.");
+		}
+		
+		if(($(this).data('startdate') < now) && ($(this).data('enddate') > now)){
+			location.href="/game/group_list.html?idx="+$(this).data('groupidx');
+		}
+		
+	});
+});
+</script>
+</body>
+</html>

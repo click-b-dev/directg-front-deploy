@@ -1,0 +1,181 @@
+<?
+	ini_set( "display_errors", 0 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+	$page_title="자주묻는 질문";
+	
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+$searchValue = filter_input(INPUT_GET, 'searchValue', FILTER_SANITIZE_STRING);
+$search_faq_type = filter_input(INPUT_GET, 'search_faq_type', FILTER_SANITIZE_STRING);
+
+if(!$page){
+	$page=1;
+}
+
+$where = [];
+
+if(isset($search_faq_type) && $search_faq_type<>"" && $search_faq_type<>"all"){
+	$where[] = " faq_type ='".$search_faq_type."'";
+}
+
+if($searchValue){
+	$where[] = " question like '%".$searchValue."%'";
+}
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$board= new Board($conn);
+	$parsedown= new Parsedown();
+
+	foreach($where as $value){
+		$add_where.= " and ".$value;
+	}
+
+	//echo $add_where;
+
+	foreach($_GET as $key=>$value){
+		if($key<>"page" ){
+			if($value<>""){
+				$param.="&".$key."=".$value;
+			}
+		}
+	}
+
+	$orderby = "idx desc";
+
+	$faq_list = $board->getFaqList($page,$add_where,$orderby,$param);
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+$faq_type_label = array(
+	"M01"=>"계정, 회원",
+	"M02"=>"포인트",
+	"O01"=>"주문, 결제",
+	"O02"=>"제품 코드(키)",
+	"O03"=>"취소, 환불",
+	"O04"=>"가격",
+	"O05"=>"할인",
+	"G01"=>"상품",
+	"G02"=>"구성, DLC",
+	"G03"=>"특전",
+	"G04"=>"한글",
+	"S01"=>"이용방법",
+	"S02"=>"게임 등록",
+	"S03"=>"게임 설치",
+	"S04"=>"게임 실행",
+	"E01"=>"기타"
+);
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css?t=20250826">
+
+<style>
+#appCapsuleSub{
+	padding-top:56px;
+}
+
+</style>
+</head>
+
+<body class="dark-mode-active">
+<!-- App Header -->
+	<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="extraHeader">
+		<form class="search-form" id="search-form" method="GET">
+			<div class="form-group searchbox">
+				<input type="text" class="form-control" name="searchValue" value="<?=$searchValue?>" placeholder="검색어를 입력해 주세요.">
+				<i class="input-icon">
+					<ion-icon name="search-outline" role="img" class="md hydrated"></ion-icon>
+				</i>
+			</div>
+		</form>
+	</div>
+	
+	<div class="section full mt-2">
+		<?
+			if($faq_list->total_results=="0"){
+		?>
+		<div class="section full mt-2">
+			<div class="text-center mb-2">검색된 게시물이 없습니다.</div>
+		</div>
+		<?
+			}
+		?>
+		<div class="accordion" id="accordionExample1">
+			<?
+			if($faq_list->success == true){
+				$result = $faq_list->resultset->fetchAll();
+
+				foreach($result as $value){
+			?>
+			<div class="accordion-item">
+				<h2 class="accordion-header">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion<?=$value['idx']?>" aria-expanded="false">
+						[<?=$faq_type_label[$value['faq_type']]?>] <?=$value['question']?>
+					</button>
+				</h2>
+				<div id="accordion<?=$value['idx']?>" class="accordion-collapse collapse" data-bs-parent="#accordionExample1" style="">
+					<div class="accordion-body">
+						<?=$parsedown->text($value['answer'])?>
+					</div>
+				</div>
+			</div>
+		<?
+				}
+			}
+		?>
+		</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+    <!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+</body>
+
+</html>

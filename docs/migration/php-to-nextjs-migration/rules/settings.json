@@ -1,0 +1,16 @@
+{
+  "//": "대상 프로젝트 .claude/settings.json 에 병합. 위험 작업을 경고만 한다(비차단).",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/migration-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

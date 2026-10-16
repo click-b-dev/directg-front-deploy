@@ -1,0 +1,173 @@
+<?php
+	header("Content-Type:text/html; charset=utf-8"); 
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+	$page_name="game_genre";
+	$page_type="list";
+
+	$sub_title = "<a href='/game/game_".$page_type.".html' class='text-decoration-none'>게임</a> > 장르별 (";
+	$sub_title2 = ")";
+	
+	$aside['genre'] = "false";
+	$aside['product_type'] = "game";
+	$aside['cart'] = "Y";
+	$aside['wishlist'] = "Y";
+
+	$result_per_page = 60;
+
+	$price_arr = array(
+		"1"=>array("min"=>0,"max"=>5000,"msg"=>'<span class="won"> 5,000 미만</span>'),
+		"2"=>array("min"=>5000,"max"=>10000,"msg"=>'<span class="won"> 5,000 이상</span> ~ <span class="won"> 10,000 미만</span>'),
+		"3"=>array("min"=>10000,"max"=>20000,"msg"=>'<span class="won"> 10,000 이상</span> ~ <span class="won"> 20,000 미만</span>'),
+		"4"=>array("min"=>20000,"max"=>30000,"msg"=>'<span class="won"> 20,000 이상</span> ~ <span class="won"> 30,000 미만</span>'),
+		"5"=>array("min"=>30000,"max"=>50000,"msg"=>'<span class="won"> 30,000 이상</span> ~ <span class="won"> 50,000 미만</span>')
+	);
+
+	$genre_code = filter_input(INPUT_GET, 'genre_code', FILTER_SANITIZE_STRING);
+	if(!$genre_code){
+		$genre_code="G0001";
+	}
+
+	try{
+		$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+
+		$goods= new Goods($conn);
+		$promotion = new Promotion($conn);
+		$mypage = new Mypage2($conn);
+		$draw = new Draw($conn);
+		
+		$page_title = $goods->getPrimaryGenreName($genre_code);
+		$genre_best_title = $goods->getGenreBestTitle($genre_code);
+
+		include_once($_SERVER['DOCUMENT_ROOT'].'/inc/filter_include.php');
+
+		$goods_list = $goods->getGoodsList2($page,$add_where,$orderby,$param,$result_per_page);
+	}catch (PDOException $e){
+		echo 'Error!: '.$e->getMessage();
+		die();
+	}
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="" name="author" />
+<meta name="amazonbot" content="noarchive">
+<!-- App favicon -->
+<link rel="shortcut icon" href="/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<div class="row" id="game_page">
+			<section class="splide" id="splide">
+				<div class="splide__track">
+					<ul class="splide__list">
+						<?php
+							$count=0;
+							foreach($genre_best_title as $sub_value){
+								if($count==0){
+									$active = "active";
+								}else{
+									$active = "";
+								}
+								
+								$title_genre_list = explode(",",$sub_value['genre']);
+								$title_genre_label = "";
+								foreach($title_genre_list as $title_genre){
+									$title_genre_name = $goods->getTagName($title_genre);
+									$title_genre_label.= "<a href='/game/game_genre_list.html?genre_code=".$title_genre."' class='' title='".$title_genre_name."'><span class='badge font-12 mb-1 me-2 fw-normal'>".$title_genre_name."</span></a>";
+								}
+								
+								$title_category_list = explode(",",$sub_value['category']);
+								$title_category_label = "";
+								foreach($title_category_list as $title_category){
+									$category_name = $goods->getTagName($title_category);
+									$title_category_label.="<a href='/game/game_category_list.html?category_code=".$title_category."' class='' title='".$category_name."'><span class='badge font-12 mb-1 me-2 fw-normal'>".$category_name."</span></a>";
+								}
+						?>
+						<li class="splide__slide">
+							<div class="splide__slide__container">
+								<div class="card mb-3">
+									<div class="row g-0">
+										<div class="col-md-4">
+											<img src="<?=$sub_value['domain']?>/upload/title/<?=$sub_value['title_id']?>/header/<?=$sub_value['title_id']?>.jpg" class="img-fluid rounded-start" alt="...">
+										</div>
+										<div class="col-md-8">
+											<div class="card-body p-0">
+												<h4 class="card-title mx-4 py-3 ps-1 border-bottom"><?=$sub_value['title_name']?></h4>
+											</div>
+											<ul class="list-group list-group-flush bg-transparent px-4">
+												<li class="list-group-item bg-transparent py-2"><small class="pe-1 text-secondary-emphasis font-14">장르: </small> <?=$title_genre_label?></li>
+												<li class="list-group-item bg-transparent py-2"><small class="pe-1 text-secondary-emphasis font-14">카테고리:</small> <?=$title_category_label?></li>
+												<li class="list-group-item bg-transparent pb-0"><small class="pe-1 text-secondary-emphasis font-14">출시일:</small> <?=date("Y년 m월 d일",strtotime($sub_value['release_date']))?></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<?
+								$count++;
+							}
+						?>
+					</ul>
+				</div>
+			</section>
+		</div>
+		<main>
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/game_filter.html');?>
+			<section id="content" class="content rounded-0">
+				<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/game_filter_order.html');?>
+				<div id="card_list">
+					<div class="row g-3">
+					<?php
+						if($goods_list->success == true){
+							$result = $goods_list->resultset->fetchAll();
+							//함수 출력으로 변경
+							$draw->drawList($result, $_SESSION['member']['m_no']);
+						}
+					?>
+					</div>
+				</div>
+				<div id="pagination" class="mt-4"><?echo $goods_list->links_html;?></div>
+			</section>
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/cart.html');?>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+<script>
+document.addEventListener( 'DOMContentLoaded', function () {
+
+	var main = new Splide( '#splide', {
+		type   : 'loop',
+		focus    : 'center',
+		arrows:true,
+		arrowPath: 'M33.1875 26.1313L15.7719 42.725C15.4813 43.002 15.0952 43.1566 14.6937 43.1566C14.2923 43.1566 13.9062 43.002 13.6156 42.725L13.5969 42.7063C13.4555 42.572 13.3429 42.4103 13.266 42.2312C13.1891 42.052 13.1494 41.859 13.1494 41.6641C13.1494 41.4691 13.1891 41.2762 13.266 41.097C13.3429 40.9178 13.4555 40.7562 13.5969 40.6219L29.9969 24.9969L13.5969 9.37813C13.4555 9.24384 13.3429 9.0822 13.266 8.90303C13.1891 8.72387 13.1494 8.53092 13.1494 8.33595C13.1494 8.14096 13.1891 7.94802 13.266 7.76886C13.3429 7.58969 13.4555 7.42805 13.5969 7.29376L13.6156 7.27501C13.9062 6.99799 14.2923 6.84346 14.6937 6.84346C15.0952 6.84346 15.4813 6.99799 15.7719 7.27501L33.1875 23.8688C33.3407 24.0147 33.4626 24.1902 33.5459 24.3847C33.6292 24.5791 33.6722 24.7885 33.6722 25C33.6722 25.2116 33.6292 25.4209 33.5459 25.6154C33.4626 25.8098 33.3407 25.9853 33.1875 26.1313Z',
+		pagination: false,
+		autoplay: true,
+		interval: 4000
+	} );
+
+	main.mount();
+});
+
+</script>
+</body>
+</html>

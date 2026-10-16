@@ -1,0 +1,359 @@
+<?php
+	ini_set( "display_errors", 1 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title="위시리스트 내역";
+
+	$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+	$search_goods_name = filter_input(INPUT_GET, 'search_goods_name', FILTER_SANITIZE_STRING);
+
+if(empty($page)){
+	$page="1";
+}
+
+foreach($_GET as $key=>$value){
+	if($key<>"page" ){
+		if($value<>""){
+			$param.="&".$key."=".$value;
+		}
+	}
+}
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$mypage = new Mypage2($conn);
+	$promotion = new Promotion($conn);
+	$goods = new Goods($conn);
+
+	$member_data = $mypage->getMemberInfo($_SESSION['member']['m_no']);
+
+	$where = array();
+	$where[] = "a.m_no='{$_SESSION['member']['m_no']}'";
+	$where_query = implode(" AND ", $where);
+	$orderby = "a.idx DESC";
+	$wish_list = $mypage->getWishlist($page,$where_query,$orderby,$param);
+	$list = $wish_list->resultset->fetchAll();
+
+	if($member_data['is_auth']=="Y"){
+		if(strlen($member_data['birth_day'])=="6"){
+			if(date('y')>substr($member_data['birth_day'],0,2)){
+				$age = date('Y') - ("20".substr($member_data['birth_day'],0,2));
+			}else{
+				$age = date('Y') - ("19".substr($member_data['birth_day'],0,2));
+			}
+		}else{
+			$age = date('Y') - substr($member_data['birth_day'],0,4);
+		}
+
+		if(substr($member_data['birth_day'],4,4)-date('md')>0){
+			//$age = $age-1;
+		}
+	}else{
+		$age = 0;
+	}
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+<style>
+.form-check-label::after{
+	top:50% !important;
+	transform: translate(0, -50%);
+	border-color: #071125 !important;
+}
+.form-check-label::before{
+	top:50% !important;
+	transform: translate(0, -50%);
+}
+.cart-item .detail{
+	/*color:#ec4433 !important;*/
+}
+.section .card-body{
+
+}
+</style>
+<body class="dark-mode-active">
+<!-- App Header -->
+<div class="appHeader bg-primary text-light">
+	<div class="left">
+		<a href="#" class="headerButton goBack">
+			<ion-icon name="chevron-back-outline"></ion-icon>
+		</a>
+	</div>
+	<div class="pageTitle"><?=$page_title?></div>
+	<div class="right"></div>
+</div>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="section pt-2">
+		<?php
+			foreach($list as $data){
+				$title_info = $goods->getGoodsOptionTitleInfo($data['product_code']);
+
+				switch($data['game_type']){
+					case "game":
+						$view_url = "/game/game_view.html?product_id=".$title_info['sku']."&sku=".$data['goods_sku'];
+					break;
+					case "dlc":
+						$view_url = "/game/dlc_view.html?sku=".$data['goods_sku'];
+						
+						if($data['display_type']=="dlc_bundle"){
+							$view_url = "/game/dlc_view.html?sku=".$data['goods_sku']."&platform=".$data['product_platform'];
+						}
+					break;
+					case "music":
+						$view_url = "/game/dlc_view.html?sku=".$data['goods_sku'];
+					break;
+					case "bundle":
+						$view_url = "/game/bundle_view.html?sku=".$data['goods_sku'];
+					break;
+					case "accessories":
+						$view_url = "/game/goods_item_view.html?product_id=".$title_info['sku']."&sku=".$data['goods_sku'];
+					break;
+					case "holomodels":
+						$view_url = "/game/holomodels_view.html?product_id=".$title_info['sku']."&sku=".$data['goods_sku'];
+						
+						if($data['display_type']=="holomodelsdlc"){
+							$view_url = "/game/holomodelsdlc_view.html?sku=".$data['goods_sku']."&platform=".$data['product_platform'];
+						}
+					break;
+				}
+
+				$promotion_data =$promotion->getPromotionGoodsPrice($data['product_code']);
+							
+				if($promotion_data['sale_price']>0){
+					$price = $promotion_data['sale_price'];
+					$discount =$promotion_data['discount_rate'];
+					$is_promotion="Y";
+					$promotion_label="bg-danger";
+				} else {
+					$price = $data['price'];
+					$is_promotion="N";
+					$discount =$data['discount'];
+					$promotion_label="bg-primary";
+				}
+		?>
+
+		<div class="card cart-item mb-2">
+			<div class="card-body">
+				<div class="in form-check">
+				<?php
+					if(($data['age_limit']>17) && ($data['age_limit']>$age)){
+				?>
+				<?php
+					} else {
+				?>
+					<input type="checkbox" name="idx" class="form-check-input" id="chk_<?=$data['idx']?>" value="<?=$data['idx']?>" data-productcode="<?=$data['product_code']?>" data-status="<?=$data['status']?>" data-productname="<?=$data['product_name']?>" >
+					<label class="form-check-label in" for="chk_<?=$data['idx']?>"></label>
+				<?php
+					}
+				?>
+					<a href="<?=$view_url?>" class="text-decoration-none text-white" target="_self">
+						<div class="text flex-fill">
+							<h3 class="title mb-2">
+								<?=$data['product_name']?>
+							</h3>
+							<p class="detail text-secondary mb-2">
+							<?
+								switch($data['status']){
+									case "0":
+										echo "판매중";
+									break;
+									case "3":
+										echo "판매종료";
+									break;
+								}
+							?><?=(($data['age_limit']>17)&&($data['age_limit']>$age))?"<br>".$data['age_limit']."세 이용가":""?>
+								<?
+									if($is_promotion=="Y"){
+										echo "<span class='badge badge-outline-danger rounded-2 font-12 ms-1'>프로모션</span>";
+									}
+								?>
+							</p>
+							
+							<div class="me-1">
+								<?if($discount>0){?>
+								<span class="badge <?=$promotion_label?> num font-14 px-2 py-2 rounded-1 fw-bold minus"><?=$discount?> %</span>
+								<?}?>
+								<s class="font-11 text-secondary"><?=number_format($data['consumer_price'])?> 원</s>
+								<strong class="price text-white font-16"><?=number_format($price)?> 원</strong>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="cart-item-footer">
+					<input type="button" class="btn btn-danger btn-sm btn_delete" data-idx="<?=$data['idx']?>" value="삭제">
+				</div>
+			</div>
+		</div>
+		<?php
+			}
+			
+			if($wish_list->total_results=="0"){
+		?>
+			<div class="text-center">위시리스트에 등록된 상품이 없습니다.</div>
+		<?
+			}else{
+		?>
+		<div class="d-flex justify-content-between">
+			<button type="button" class="btn btn-danger font-14" id="btn_select_delete">선택상품 삭제</button>
+			<button type="button" class="btn btn-primary font-14" id="btn_select_move_cart">장바구니 이동</button>
+		</div>
+		<?}?>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+    <!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+<!-- Base Js File -->
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<script src="/assets/js/base.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".btn_delete").bind("click",function(){
+		var idx = $(this).data("idx");
+		var mode = "delete";
+
+		if(confirm("선택하신 상품을 삭제하시겠습니까?")){
+			$.ajax({
+				url : "wishlist_proc.php",
+				type: "POST",
+				dataType: "json",
+				data : {idx:idx,mode:mode},
+				success:function(data, textStatus, jqXHR){
+					alert(data.error_msg);
+					location.href="mypage_wishlist.html";
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					alert(jqXHR);
+				}
+			});
+		}
+	});
+
+	$("#btn_select_delete").bind("click",function(){
+		var idx = new Array();
+		var mode = "select_delete";
+
+		$("input[name='idx']:checked").each(function(){
+			idx.push($(this).val());
+		});
+
+		if(idx.length==0){
+			alert("삭제할 상품을 선택해 주세요.");
+			return;
+		}
+
+		if(confirm("선택하신 상품을 삭제하시겠습니까?")){
+			$.ajax({
+				url : "wishlist_proc.php",
+				type: "POST",
+				dataType: "json",
+				data : {idx_arr:idx,mode:mode},
+				success:function(data){
+					alert(data.error_msg);
+					location.href="mypage_wishlist.html";
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					alert(jqXHR);
+				}
+			});
+		}
+	});
+
+	//장바구니 이동
+	$("#btn_select_move_cart").bind("click",function(){
+		var product_code = new Array();
+		var product_name = new Array();
+		var mode = "cart_move";
+		var flag=true;
+
+		$("input[name='idx']:checked").each(function(){
+			if($(this).data("status")!=0){
+				product_name.push($(this).data("productname"));
+				flag=false;
+				$(this).prop("checked", false);
+			} else {
+				product_code.push($(this).data("productcode"));
+			}
+		});
+		
+		if(flag){
+			if(product_code.length==0){
+				alert("장바구니로 이동할 상품을 선택해 주세요.");
+				return false;
+			}
+
+			if(confirm("선택하신 상품을 장바구니로 이동하시겠습니까?")){
+				$.ajax({
+					url : "wishlist_proc.php",
+					type: "POST",
+					dataType: "json",
+					data : {product_code_arr:product_code,mode:mode},
+					success:function(data, textStatus, jqXHR){
+						alert(data.error_msg);
+						if(confirm("장바구니로 이동하시겠습니까?")){
+							location.href="/order/cart.html";
+						} else {
+							location.href="/mypage/mypage_wishlist.html";
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						alert(jqXHR);
+					}
+				});
+			}
+		} else {
+			alert(product_name.join(", ") + "은(는) 판매중인 상품이 아닙니다.");
+		}
+	});
+});
+</script>
+
+</body>
+
+</html>

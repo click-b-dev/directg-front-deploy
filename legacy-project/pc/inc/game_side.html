@@ -1,0 +1,162 @@
+<div id="sidebar" class="rounded-0">
+	<div class="d-flex flex-column flex-shrink-0 bg-table-dark border border-primary border-2">
+<?if($aside['product_type']!="group"){?>
+		<div class="bg-primary h4 py-4 text-center mb-0 fw-bold" <?=$aside['product_type']=="group"?'d-none':''?>><?=$page_title?></div>
+		<hr class="my-0 <?=$aside['product_type']=="group"?'d-none':''?>">
+<?}?>
+		<div class="g-2 p-2 mt-0 row">
+			<div class="col-6 mt-0">
+				<button class="btn btn-lg btn-secondary w-100" type="button" id="btn_reset">전체해제</button>
+			</div>
+			<div class="col-6 mt-0">
+				<button class="btn btn-lg btn-primary w-100" type="button" id="btn_filter">검 색</button>
+			</div>
+		</div>
+		<hr class="my-0">
+		<div class="search-filter-group p-2">
+			<div class="ps-3 font-14">
+				<div class="form-check my-2 <?=$aside['product_type']!="accessories"?'':'d-none'?>">
+					<input type="checkbox" class="form-check-input" id="is_bonus" name="is_bonus" value="Y" <?=$checked['is_bonus'][$is_bonus]?>>
+					<label class="form-check-label fw-400 " for="is_bonus">구매특전</label>
+				</div>
+				<div class="form-check mb-2 <?=$aside['product_type']!="accessories"?'':'d-none'?>">
+					<input type="checkbox" class="form-check-input" id="is_preorder" name="is_preorder" value="Y" <?=$checked['is_preorder'][$is_preorder]?>>
+					<label class="form-check-label fw-400 " for="is_preorder">예약구매</label>
+				</div>
+				<div class="form-check mb-2 <?=$aside['product_type']!="game"&&$aside['product_type']!="group"?'':'d-none'?>">
+					<input type="checkbox" class="form-check-input" id="is_promotion" name="is_promotion" value="Y" <?=$checked['is_promotion'][$is_promotion]?>>
+					<label class="form-check-label fw-400 " for="is_promotion">할인진행중</label>
+				</div>
+			</div>
+		</div>
+		
+		<hr class="my-0 <?=$aside['product_type']!="accessories"?'':'d-none'?>">
+		<div class="search-filter-group p-2 <?=$aside['product_type']!="accessories"?'':'d-none'?>">
+			<h5 class="ps-3 fw-bold text-secondary-emphasis my-2">상품유형</h5>
+			<div class="ps-3 font-14">
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="game_type_basic" name="game_type" value="basic" <?=$checked['game_type']['basic']?> data-waschecked="<?=$checked['game_type']['basic']?>">
+					<label class="form-check-label fw-400" for="game_type_basic">기본게임</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="game_type_edition" name="game_type" value="edition" <?=$checked['game_type']['edition']?> data-waschecked="<?=$checked['game_type']['edition']?>">
+					<label class="form-check-label fw-400" for="game_type_edition">에디션</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="game_type_dlc" name="game_type" value="dlc" <?=$checked['game_type']['dlc']?> data-waschecked="<?=$checked['game_type']['dlc']?> ">
+					<label class="form-check-label fw-400" for="game_type_dlc">DLC</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="game_type_music" name="game_type" value="music" <?=$checked['game_type']['music']?> data-waschecked="<?=$checked['game_type']['music']?>">
+					<label class="form-check-label fw-400" for="game_type_music">사운드트랙</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="game_type_bundle" name="game_type" value="bundle" <?=$checked['game_type']['bundle']?> data-waschecked="<?=$checked['game_type']['bundle']?>">
+					<label class="form-check-label fw-400" for="game_type_bundle">번들</label>
+				</div>
+			</div>
+		</div>
+		
+		<hr class="my-0 <?=$aside['platform']!="false"?'':'d-none'?>">
+		<div class="search-filter-group p-2 <?=$aside['platform']!="false"?'':'d-none'?>"">
+			<h5 class="ps-3 fw-bold text-secondary-emphasis my-2">플랫폼</h5>
+			<div class="ps-3 font-14">
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="platform_1" name="platform" value="1" <?=$checked['platform']['1']?> data-waschecked="<?=$checked['platform']['1']?>">
+					<label class="form-check-label fw-400" for="platform_1">Steam</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="platform_34" name="platform" value="34" <?=$checked['platform']['34']?> data-waschecked="<?=$checked['platform']['34']?>">
+					<label class="form-check-label fw-400" for="platform_34">Epic Games</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="platform_35" name="platform" value="35" <?=$checked['platform']['35']?> data-waschecked="<?=$checked['platform']['35']?>">
+					<label class="form-check-label fw-400" for="platform_35">Rockstar Games</label>
+				</div>
+			</div>
+		</div>
+
+		<hr class="my-0 <?=$aside['genre']!="false"?'':'d-none'?>">
+		<div class="search-filter-group p-2 <?=$aside['genre']!="false"?'':'d-none'?>">
+			<h5 class="ps-3 fw-bold text-secondary-emphasis my-2">게임장르</h5>
+			<div class="ps-3 font-14">
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_1" name="genre_code" value="G0001" <?=$checked['genre_code']['G0001']?> data-waschecked="<?=$checked['genre_code']['G0001']?>">
+					<label class="form-check-label fw-400" for="genre_code_1">액션</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_2" name="genre_code" value="G0002" <?=$checked['genre_code']['G0002']?> data-waschecked="<?=$checked['genre_code']['G0002']?>">
+					<label class="form-check-label fw-400" for="genre_code_2">어드벤처</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_3" name="genre_code" value="G0003" <?=$checked['genre_code']['G0003']?> data-waschecked="<?=$checked['genre_code']['G0003']?>">
+					<label class="form-check-label fw-400" for="genre_code_3">RPG</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_5" name="genre_code" value="G0004" <?=$checked['genre_code']['G0004']?> data-waschecked="<?=$checked['genre_code']['G0004']?>">
+					<label class="form-check-label fw-400" for="genre_code_5">전략</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_4" name="genre_code" value="G0005" <?=$checked['genre_code']['G0005']?> data-waschecked="<?=$checked['genre_code']['G0005']?>">
+					<label class="form-check-label fw-400" for="genre_code_4">시뮬레이션</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_7" name="genre_code" value="G0006" <?=$checked['genre_code']['G0006']?> data-waschecked="<?=$checked['genre_code']['G0006']?>">
+					<label class="form-check-label fw-400" for="genre_code_7">스포츠</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_6" name="genre_code" value="G0007" <?=$checked['genre_code']['G0007']?> data-waschecked="<?=$checked['genre_code']['G0007']?>">
+					<label class="form-check-label fw-400" for="genre_code_6">캐주얼</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_8" name="genre_code" value="G0010" <?=$checked['genre_code']['G0010']?> data-waschecked="<?=$checked['genre_code']['G0010']?>">
+					<label class="form-check-label fw-400" for="genre_code_8">레이싱</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_9" name="genre_code" value="G0008" <?=$checked['genre_code']['G0008']?> data-waschecked="<?=$checked['genre_code']['G0008']?>">
+					<label class="form-check-label fw-400" for="genre_code_9">인디</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="genre_code_10" name="genre_code" value="G0009" <?=$checked['genre_code']['G0009']?> data-waschecked="<?=$checked['genre_code']['G0009']?>">
+					<label class="form-check-label fw-400" for="genre_code_10">앞서 해보기</label>
+				</div>
+			</div>
+		</div>
+
+		<hr class="my-0 <?=$aside['korean']!="false"?'':'d-none'?>">
+		<div class="search-filter-group p-2 <?=$aside['korean']!="false"?'':'d-none'?>">
+			<h5 class="ps-3 fw-bold text-secondary-emphasis my-2">한국어지원</h5>
+			<div class="ps-3 font-14">
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="interface_korean" name="interface_korean" value="Y" <?=$checked['interface_korean'][$interface_korean]?>>
+					<label class="form-check-label fw-400" for="interface_korean">자막 한국어지원</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="spoken_korean" name="spoken_korean" value="Y" <?=$checked['spoken_korean'][$spoken_korean]?>>
+					<label class="form-check-label fw-400" for="spoken_korean">음성 한국어지원</label>
+				</div>
+				<div class="form-check mb-2">
+					<input type="checkbox" class="form-check-input" id="exclusive_korean" name="exclusive_korean" value="Y" <?=$checked['exclusive_korean'][$exclusive_korean]?>>
+					<label class="form-check-label fw-400" for="exclusive_korean">독점 한국어지원</label>
+				</div>
+			</div>
+		</div>
+
+		<hr class="my-0 <?=$aside['cost']!="false"?'':'d-none'?>">
+		<div class="search-filter-group <?=$aside['cost']!="false"?'':'d-none'?>">
+			<h5 class="ps-3 fw-bold text-secondary-emphasis my-2">가격대</h5>
+			<div class="ps-3 font-14">
+				<?php
+					foreach($price_arr as $key=>$value){
+				?>
+				<div class="form-check mb-2">
+					<input type="radio" class="form-check-input" id="search_price_<?=$key?>" name="search_price" value="<?=$key?>" <?=$checked['search_price'][$key]?> data-waschecked="<?=$checked['search_price'][$key]?>">
+					<label class="form-check-label fw-400" for="search_price_<?=$key?>"><?=$value?></label>
+				</div>
+				<?php
+					}
+				?>
+			</div>
+		</div>
+	</div>
+</div>

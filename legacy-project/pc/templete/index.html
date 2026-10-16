@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<title>다이렉트 게임즈</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+<link rel="shortcut icon" href="<?=$document_root?>/assets/images/favicon.ico">
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+<!-- Font awesome 5 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" type="text/css" rel="stylesheet">
+
+<!-- App css -->
+<link href="<?=$document_root?>/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+<link href="<?=$document_root?>/assets/css/app-creative.min.css?t=<?=time()?>" rel="stylesheet" type="text/css" id="light-style" />
+<link href="<?=$document_root?>/assets/css/app-creative-dark.min.css?t=<?=time()?>" rel="stylesheet" type="text/css" id="dark-style" />
+
+<style>
+html { font-family: 'Noto Sans KR', sans-serif; font-size:16px}
+
+.num{
+	font-family:"tahoma";
+}
+
+.eng{
+	font-family:"arial";
+}
+
+.currency{
+	font-family:"dodum";
+}
+
+</style>
+</head>
+
+<body class="loading" data-layout="topnav" data-layout-config='{"layoutBoxed":false,"darkMode":true,"showRightSidebarOnStart": false}'>
+<!-- Begin page -->
+<div class="wrapper">
+	<!-- ============================================================== -->
+	<!-- Start Page Content here -->
+	<!-- ============================================================== -->
+	<div class="content-page">
+		<div class="content">
+			<!-- Topbar Start -->
+			 <? include_once($_SERVER['DOCUMENT_ROOT'].'/frontend/inc/top_bar.html');?>
+			<!-- end Topbar -->
+
+			<!-- Top nav Start -->
+		   <? include_once($_SERVER['DOCUMENT_ROOT'].'/frontend/inc/top_nav.html');?>
+			<!-- end Top nav -->
+
+			<!-- Start Content-->
+			<div class="container">
+				<div class="row row-cols-2 mt-0 mb-3 g-3">
+					<div class="col-lg-2">
+						<div class="list-group">
+							<a href="<?=$document_root?>/game/game_genre.html?genre_code=PG001" class="list-group-item list-group-item-action">액션</a>
+							<a href="<?=$document_root?>/game/game_genre.html?genre_code=PG002" class="list-group-item list-group-item-action">어드벤처</a>
+							<a href="<?=$document_root?>/game/game_genre.html?genre_code=PG006" class="list-group-item list-group-item-action">RPG</a>
+							<a href="<?=$document_root?>/game/game_genre.html?genre_code=PG008" class="list-group-item list-group-item-action">전략</a>
+							<a href="<?=$document_root?>/game/game_genre.html?genre_code=PG007" class="list-group-item list-group-item-action">시뮬레이션</a>
+							<a href="<?=$document_root?>/game/game_genre.html?genre_code=PG005" class="list-group-item list-group-item-action">스포츠</a>
+							<a href="<?=$document_root?>/game/game_genre.html?genre_code=G0006" class="list-group-item list-group-item-action">레이싱</a>
+							<a href="<?=$document_root?>/game/game_genre.html?genre_code=G0008" class="list-group-item list-group-item-action">인디</a>
+						</div>
+					</div>
+					<div class="col-lg-10">
+						<div class="card mb-0">
+							<div id="carouselExampleCaption" class="carousel slide" data-bs-ride="carousel">
+								<div class="carousel-inner" role="listbox">
+									<div class="carousel-item active">
+										<img src="https://image.directg.net/upload/ezwel/banner/main_banner_1678760933.jpg?t=1679362584" alt="..." class="img-fluid w-100">
+										<div class="d-flex flex-row align-items-center justify-content-center flex-wrap overflow-hidden">
+											<div class="p-2 bg-success"><span class="fs-5 text-white">절찬판매중</span></div>
+											<div class="flex-grow-1"><h4 class="ps-2 text-white">올리올리 월드 한국어판</h4></div>
+											<div class="p-2 bg-warning"><span class="fs-5 text-white fw-bold">6% </span></div>
+											<div class="p-2"><span class="fs-5 text-white">32,000 원</span></div>
+										</div>
+									</div>
+								</div>
+
+								<a class="carousel-control-prev" href="#carouselExampleCaption" role="button" data-bs-slide="prev">
+									<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+									<span class="visually-hidden">Previous</span>
+								</a>
+								<a class="carousel-control-next" href="#carouselExampleCaption" role="button" data-bs-slide="next">
+									<span class="carousel-control-next-icon" aria-hidden="true"></span>
+									<span class="visually-hidden">Next</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row mt-2">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header"><h4 class="card-title mb-0">신규게임</h4></div>
+							<div class="card-body p-0 mb-0">
+								<div class="row g-3">
+									<? 
+										foreach($goods_new as $value){
+									?>
+									<div class="col-sm-3">
+										<div class="card border h-100">
+											<a href="/frontend/game/game_page.html?title_id=<?=$value['title_id']?>"><img src="/upload/title/<?=$value['title_id']?>/header/<?=$value['title_id']?>.jpg" class="card-img-top" alt="..."></a>
+											<div class="card-body px-2 pb-0 pt-2">
+												<h5 class="card-title text-white"><?=$value['product_name']?></h5>
+												<div class="card-text font-14 mb-2">
+													<div class="d-block">퍼블리셔 : <span class="eng"><?=$value['publisher']?></span></div>
+													<div class="d-block">출시일 : <span class="num"><?=$value['release_date']?></span></div>
+												</div>
+												<? 
+													switch($value['price_info']['status']){
+														case "0":
+												?>
+												<div class="card-text">
+													<div class="d-flex justify-content-between align-items-center ">
+														<div class="">
+															<? if($value['price_info']['discount']>0){?>
+															<span class="badge bg-danger font-15 num p-2"><?=$value['price_info']['discount']?> %</span>
+															<?}?>
+														</div>
+														<div class="d-flex flex-column align-items-end">
+															<div class="d-block"> 
+																<? if($value['price_info']['discount']>0){?>
+																<s class="font-14"><span class="currency">\</span> <span class=" num"><?=number_format($value['price_info']['consumer_price'])?></span></s>
+																<?}else{?>
+																&nbsp;
+																<?}?>
+															</div>
+															
+															<div class="mt-auto d-block"><span class="currency">\</span> <strong class="num"><?=number_format($value['price_info']['price'])?></strong></div>
+														</div>
+													</div>
+												</div>
+												<?	break;
+														case "9":
+												?>
+												<p class="card-text">판매예정<p>
+												<?
+														break;
+													}
+												?>
+											</div>
+											<div class="card-footer m-0 p-1">
+												<div class="float-start">
+													<span class="badge badge-dark-lighten font-14"><?=$value['platform']?></span>
+												</div>
+												<div class="float-end">
+												</div>
+											</div>
+										</div>
+									</div>
+									<?
+										}
+									?>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- end row-->
+					<div class="row mt-2">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								인기게임
+							</div>
+							<div class="card-body">
+								<div class="row">
+									<? 
+										foreach($goods_best as $value){
+									?>
+									<div class="col-sm-3">
+										<div class="card border">
+											<a href="/frontend/game/game_page.html?title_id=<?=$value['title_id']?>"><img src="/upload/apps/header/<?=$value['title_id']?>.jpg" class="card-img-top" alt="..."></a>
+											<div class="card-body p-2">
+												<h4 class="card-title"><?=$value['title_name']?></h4>
+												<p class="card-text font-14">
+													<span class="d-block">개발사 : <?=$value['developer']?></span>
+													<span class="d-block">퍼블리셔 : <?=$value['publisher']?></span>
+													<span class="d-block">출시일 : <?=$value['release_date']?></span>
+												</p>
+												<? 
+													switch($value['price_info']['status']){
+														case "0":
+												?>
+												<p class="card-text">
+													<div class="d-flex align-items-start">
+														<div class="flex-shrink-1 pe-2 mt-1">
+															<span class="badge bg-danger font-15 p-2"><?=$value['price_info']['discount']?> %</span>
+														</div>
+														<div class="me-auto">
+															<span class="d-block">정상가 : <?=number_format($value['price_info']['consumer_price'])?></span>
+															<span class="d-block">판매가 : <?=number_format($value['price_info']['price'])?></span>
+														</div>
+													</div>
+												</p>
+												<?	break;
+														case "9":
+												?>
+												<p class="card-text">판매예정<p>
+												<?
+														break;
+													}
+												?>
+											</div>
+											<div class="card-footer m-0 p-1">
+												<div class="float-start">
+													<img src="<?=$document_root?>/assets/images/platform/<?=$value['platform_svg']?>" width="48">
+												</div>
+												<div class="float-end">
+												</div>
+											</div>
+										</div>
+									</div>
+									<?
+										}
+									?>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- end row-->
+
+				<div class="row">
+					<div class="col-12">
+						 <div class="card">
+							<div class="card-header">
+								한글화게임
+							</div>
+							<div class="card-body">
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="card border">
+											<div class="row g-0 align-items-center">
+												<div class="col-md-5">
+													<img src="https://directg.diskn.com/upload/product/goods_1624342484_bimg.jpg" class="card-img" alt="...">
+												</div>
+												<div class="col-md-7">
+													<div class="card-body">
+														<h5 class="card-title">타이니 티나의 원더랜드</h5>
+														<p class="card-text"></p>
+														<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+													</div> <!-- end card-body-->
+												</div> <!-- end col -->
+											</div> <!-- end row-->
+										</div> <!-- end card-->
+									</div> <!-- end col-->
+									<div class="col-lg-6">
+										<div class="card border">
+											<div class="row g-0 align-items-center">
+												<div class="col-md-5">
+													<img src="https://directg.diskn.com/upload/product/goods_1624342484_bimg.jpg" class="card-img" alt="...">
+												</div> <!-- end col -->
+												<div class="col-md-7">
+													<div class="card-body">
+														<h5 class="card-title">Card title</h5>
+														<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+													</div> <!-- end card-body -->
+												</div> <!-- end col -->
+												
+											</div> <!-- end row-->
+										</div> <!-- end card -->
+									</div> <!-- end col-->
+								</div>
+							</div>
+						 </div>
+					</div>
+				</div>
+				<!-- end row-->
+
+				<div class="row">
+					<div class="col-12">
+						<div class="card ">
+							<div class="card-header">예약판매</div>
+							<div class="card-body p-0 mb-0">
+								<div class="row g-3">
+									<? 
+										foreach($goods_preorder as $value){
+									?>
+									<div class="col-sm-3">
+										<div class="card border h-100">
+											<a href="/frontend/game/game_page.html?title_id=<?=$value['title_id']?>"><img src="/frontend/assets/images/product/<?=$value['title_id']?>.jpg" class="card-img-top" alt="..."></a>
+											<div class="card-body px-2 pb-0 pt-2">
+												<h5 class="card-title text-white"><?=$value['title_name']?></h5>
+												<div class="card-text font-14 mb-2">
+													<div class="d-block">개발사 : <span class="eng"><?=$value['developer']?></span></div>
+													<div class="d-block">퍼블리셔 : <span class="eng"><?=$value['publisher']?></span></div>
+													<div class="d-block">출시일 : <span class="num"><?=$value['release_date']?></span></div>
+												</div>
+												<? 
+													switch($value['price_info']['status']){
+														case "0":
+												?>
+												<div class="card-text">
+													<div class="d-flex justify-content-between align-items-center">
+														<div class="">
+															<span class="badge bg-danger font-15 num p-2"><?=$value['price_info']['discount']?> %</span>
+														</div>
+														<div class="">
+															<div class="d-block"><s class="font-14"><span class="currency">\</span> <span class=" num"><?=number_format($value['price_info']['consumer_price'])?></span></s></div>
+															<div class="d-block"><span class="currency">\</span> <strong class="num"><?=number_format($value['price_info']['price'])?></strong></div>
+														</div>
+													</div>
+												</div>
+												<?	break;
+														case "9":
+												?>
+												<p class="card-text">판매예정<p>
+												<?
+														break;
+													}
+												?>
+											</div>
+											<div class="card-footer m-0 p-1">
+												<div class="float-start">
+													<span class="badge badge-dark-lighten font-14"><?=$value['platform']?></span>
+												</div>
+												<div class="float-end">
+												</div>
+											</div>
+										</div>
+									</div>
+									<?
+										}
+									?>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- end row-->
+
+				<div class="row">
+					<div class="col-6">
+						 <div class="card">
+							<div class="card-header">
+								공지사항
+							</div>
+							<div class="card-body">
+								<div class="list-group">
+									<a href="#" class="list-group-item list-group-item-action">
+										<div class="d-flex w-100 justify-content-between">
+											<h5 class="mb-1">[상품출시]</h5>
+											<small>2022-02-10</small>
+										</div>
+										<p class="mb-1">[시리어스 샘: 시베리아 대소동 한국어판] 판매 안내</p>
+									</a>
+									<a href="#" class="list-group-item list-group-item-action">
+										<div class="d-flex w-100 justify-content-between">
+											<h5 class="mb-1">[프로모션]</h5>
+											<small>2022-02-10</small>
+										</div>
+										<p class="mb-1">[쉐도우 워리어 3 한국어판] 예약 판매 및 프로모션 안내</p>
+									</a>
+								</div>
+							</div>
+						 </div>
+					</div>
+					<div class="col-6">
+						 <div class="card">
+							<div class="card-body">
+								제휴배너
+							</div>
+						 </div>
+					</div>
+				</div>
+				<!-- end row-->
+			</div>
+			<!-- container -->
+		</div>
+		<!-- end content -->
+
+		<!-- Footer Start -->
+		<? include_once($_SERVER['DOCUMENT_ROOT'].'/frontend/inc/footer.html');?>
+		<!-- end Footer -->
+	</div>
+	<!-- ============================================================== -->
+	<!-- End Page content -->
+	<!-- ============================================================== -->
+</div>
+
+<!-- bundle -->
+<script src="<?=$document_root?>/assets/js/vendor.min.js"></script>
+<script src="<?=$document_root?>/assets/js/app.min.js"></script>
+
+<script src="<?=$document_root?>/assets/js/main.js"></script>
+
+</body>
+</html>

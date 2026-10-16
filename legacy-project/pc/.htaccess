@@ -1,0 +1,445 @@
+#php_value max_input_vars 3000
+
+<FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>
+
+RewriteEngine On
+RewriteBase /
+
+#RewriteCond %{REQUEST_URI} !^/intro/work.html$
+#RewriteCond %{REQUEST_URI} !^/_Admin2_/$
+#RewriteRule $ /intro/work.html [R=302,L]
+
+#RewriteCond %{HTTP_HOST} ^www.directgames.co.kr [NC]
+#RewriteCond %{HTTP_HOST} ^directgames.co.kr [NC]
+#RewriteRule ^(.*)$ https://directg.net/$1 [L,R=301]
+
+RewriteCond %{REQUEST_SCHEME} ^http$ [NC]
+RewriteCond %{HTTP_HOST} !^image.directg.net [NC]
+RewriteCond %{HTTP_HOST} (directg\.net|www\.directg\.net) [NC]
+RewriteCond %{REQUEST_URI} !^/_Admin2_/api/postman/postman_gateway.php$
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+#RewriteCond %{HTTPS} on
+#RewriteCond %{HTTP_HOST} www.directgames.co.kr
+#RewriteRule ^(.*)$ https://directg.net/$1 [L,R=301]
+
+ErrorDocument 404 https://directg.net/404.html
+#ErrorDocument 403 http://directgames.co.kr/403.html
+#ErrorDocument 301 http://directgames.co.kr/301.html
+#ErrorDocument 408 https://directg.net/408.html
+
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^http(s)?://(m\.)?directgames.co.kr [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?directgames.co.kr [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?h2interactive.co.kr [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?directg.net [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?gamepara.com [NC]
+RewriteCond %{HTTP_REFERER} !^https://www.directg.net [NC]
+RewriteCond %{HTTP_REFERER} !^https://directgames.co.kr [NC]
+RewriteCond %{HTTP_REFERER} !^http://dev.directgames.co.kr [NC]
+RewriteCond %{HTTP_REFERER} !^https://m.directgames.co.kr [NC]
+RewriteCond %{HTTP_REFERER} !^http://m.directgames.co.kr [NC]
+RewriteCond %{HTTP_REFERER} !^http://image.directg.net [NC]
+RewriteCond %{HTTP_REFERER} !^https://directg.net [NC]
+RewriteCond %{HTTP_REFERER} !^http://directg.net [NC]
+RewriteCond %{HTTP_REFERER} !^http://h2interactive.co.kr [NC]
+RewriteCond %{HTTP_REFERER} !^http://mail.h2interactive.co.kr [NC]
+RewriteCond %{HTTP_REFERER} !^https://mail.h2int.com [NC]
+RewriteCond %{HTTP_REFERER} !^http://naver.com [NC]
+RewriteCond %{HTTP_REFERER} !^http://mail.daum.net [NC]
+RewriteCond %{HTTP_REFERER} !^https://mail.daum.net [NC]
+RewriteCond %{HTTP_REFERER} !^https://mail.naver.com [NC]
+RewriteCond %{HTTP_REFERER} !^http://mail.naver.com [NC]
+RewriteCond %{HTTP_REFERER} !^http://google.com [NC]
+RewriteCond %{HTTP_REFERER} !^https://mail3.nate.com [NC]
+RewriteCond %{HTTP_REFERER} !^https://m.mail.nate.com [NC]
+RewriteCond %{HTTP_REFERER} !^http://m.mail.daum.net [NC]
+RewriteCond %{HTTP_REFERER} !^https://ezwel.directg.net [NC]
+RewriteCond %{HTTP_REFERER} !^https://m.ezwel.directg.net [NC]
+RewriteCond %{HTTP_REFERER} !^https://app.mail.naver.com [NC]
+RewriteCond %{HTTP_REFERER} !^http://mine58.megaplug.kr [NC]
+RewriteCond %{HTTP_REFERER} !^http://outlook.live.com [NC]
+RewriteCond %{HTTP_REFERER} !^https://outlook.live.com [NC]
+RewriteCond %{HTTP_REFERER} !^http://125.209.214.38 [NC]
+RewriteCond %{HTTP_REFERER} !^http://192.168.0.109 [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?naver.com [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?nate.com [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?daum.net [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.co.kr [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.com [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?facebook.com [NC]
+RewriteRule \.(gif|jpg|jpeg|png|GIF|JPG|JPEG|PNG|ICO|ico|css|CSS|SVG|svg)$ - [NC,F,L]
+
+<FilesMatch "\.(jpg|jpeg|png|gif|swf|css|js|ico|eot|ttf|woff|woff2|svg)$">
+    Header set Cache-Control "max-age=5184000, public"
+</FilesMatch>
+
+
+# compress text, html, javascript, css, xml:
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE application/xml
+AddOutputFilterByType DEFLATE application/xhtml+xml
+AddOutputFilterByType DEFLATE application/rss+xml
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
+AddOutputFilterByType DEFLATE image/svg+xml
+AddOutputFilterByType DEFLATE font/woff
+AddOutputFilterByType DEFLATE font/woff2
+AddOutputFilterByType DEFLATE application/x-font-woff
+AddOutputFilterByType DEFLATE application/x-font-woff2
+AddOutputFilterByType DEFLATE image/x-icon
+
+# Or, compress certain file types by extension:
+<files *.html>
+SetOutputFilter DEFLATE
+</files>
+
+<Files xmlrpc.php>
+order deny,allow
+deny from all
+</Files>
+
+<Files *> 
+order allow,deny 
+allow from all 
+deny from 52.81.180.*
+deny from 52.81.179.*
+deny from 52.81.178.*
+deny from 58.8.0.0/14
+deny from 61.90.0.0/15
+deny from 45.187.77.*
+deny from 102.66.228.*
+deny from 43.231.21.*
+deny from 37.120.183.*
+deny from 199.249.230.*
+deny from 103.114.96.0/22
+deny from 103.115.24.0/22
+deny from 103.115.72.0/22
+deny from 103.115.82.0/23
+deny from 103.115.100.0/23
+deny from 103.115.116.0/22
+deny from 103.115.132.0/22
+deny from 103.115.156.0/22
+deny from 103.115.240.0/22
+deny from 103.115.252.0/22
+deny from 103.117.11.0/24
+deny from 103.117.108.0/22
+deny from 103.117.142.0/23
+deny from 103.117.148.0/22
+deny from 103.117.192.0/22
+deny from 103.117.228.0/22
+deny from 103.119.206.0/24
+deny from 104.244.72.0/21
+deny from 109.70.100.*
+deny from 23.129.64.*
+deny from 199.249.230.*
+deny from 185.220.101.*
+deny from 193.218.118.*
+deny from 185.56.249.*
+deny from 185.220.102.*
+deny from 185.31.175.*
+deny from 165.16.66.*
+deny from 194.32.107.*
+deny from 5.255.97.*
+deny from 88.135.40.*
+deny from 104.222.43.*
+deny from 157.119.188.*
+deny from 144.202.0.0/20
+deny from 144.202.18.0/24
+deny from 144.202.32.0/19
+deny from 144.202.64.0/18
+deny from 144.202.128.0/17
+deny from 192.241.203.0/24
+deny from 192.241.204.0/24
+deny from 192.241.209.0/24
+deny from 192.241.213.0/24
+deny from 192.241.216.0/24
+deny from 192.241.218.0/24
+deny from 104.222.43.0/24
+deny from 207.140.224.0/19
+deny from 209.141.32.0/19
+deny from 137.220.56.0/21
+deny from 144.202.32.0/19
+deny from 108.61.242.0/24
+deny from 192.30.80.0/21
+deny from 54.36.176.0/24
+deny from 54.37.160.0/24
+deny from 192.177.160.0/24
+deny from 192.177.163.0/24
+deny from 192.177.165.0/24
+deny from 192.177.186.0/24
+deny from 192.177.188.0/24
+deny from 172.121.142.0/24
+deny from 166.88.122.0/24
+deny from 156.227.14.0/24
+deny from 142.252.198.0/24
+deny from 142.252.223.0/24
+deny from 142.252.26.0/24
+deny from 136.0.95.0/24
+deny from 23.94.0.0/24
+deny from 23.94.100.0/24
+deny from 23.94.104.0/24
+deny from 23.94.105.0/24
+deny from 23.94.107.0/24
+deny from 23.94.108.0/23
+deny from 23.94.111.0/24
+deny from 23.94.112.0/21
+deny from 23.94.12.0/24
+deny from 23.94.120.0/24
+deny from 23.94.121.0/24
+deny from 23.94.122.0/24
+deny from 23.94.124.0/23
+deny from 23.94.13.0/24
+deny from 23.94.130.0/24
+deny from 23.94.131.0/24
+deny from 23.94.132.0/23
+deny from 23.94.134.0/24
+deny from 23.94.136.0/22
+deny from 23.94.14.0/24
+deny from 23.94.141.0/24
+deny from 23.94.142.0/24
+deny from 23.94.144.0/24
+deny from 23.94.145.0/24
+deny from 23.94.146.0/23
+deny from 23.94.148.0/22
+deny from 23.94.15.0/24
+deny from 23.94.152.0/21
+deny from 23.94.16.0/22
+deny from 23.94.160.0/23
+deny from 23.94.162.0/24
+deny from 23.94.163.0/24
+deny from 23.94.164.0/22
+deny from 23.94.168.0/23
+deny from 23.94.170.0/24
+deny from 23.94.171.0/24
+deny from 23.94.172.0/24
+deny from 23.94.173.0/24
+deny from 23.94.174.0/24
+deny from 23.94.175.0/24
+deny from 23.94.176.0/22
+deny from 23.94.180.0/23
+deny from 23.94.182.0/23
+deny from 23.94.184.0/21
+deny from 23.94.193.0/24
+deny from 23.94.196.0/24
+deny from 23.94.199.0/24
+deny from 23.94.2.0/23
+deny from 23.94.20.0/23
+deny from 23.94.200.0/22
+deny from 23.94.204.0/23
+deny from 23.94.206.0/24
+deny from 23.94.208.0/24
+deny from 23.94.212.0/24
+deny from 23.94.213.0/24
+deny from 23.94.214.0/23
+deny from 23.94.217.0/24
+deny from 23.94.219.0/24
+deny from 23.94.220.0/24
+deny from 23.94.222.0/24
+deny from 23.94.223.0/24
+deny from 23.94.23.0/24
+deny from 23.94.232.0/24
+deny from 23.94.234.0/23
+deny from 23.94.236.0/22
+deny from 23.94.242.0/23
+deny from 23.94.244.0/23
+deny from 23.94.246.0/24
+deny from 23.94.247.0/24
+deny from 23.94.248.0/22
+deny from 23.94.252.0/24
+deny from 23.94.253.0/24
+deny from 23.94.254.0/24
+deny from 23.94.255.0/24
+deny from 23.94.26.0/23
+deny from 23.94.28.0/22
+deny from 23.94.32.0/24
+deny from 23.94.33.0/24
+deny from 23.94.34.0/24
+deny from 23.94.35.0/24
+deny from 23.94.36.0/23
+deny from 23.94.38.0/24
+deny from 23.94.4.0/22
+deny from 23.94.40.0/23
+deny from 23.94.42.0/24
+deny from 23.94.43.0/24
+deny from 23.94.45.0/24
+deny from 23.94.47.0/24
+deny from 23.94.48.0/21
+deny from 23.94.56.0/23
+deny from 23.94.58.0/24
+deny from 23.94.59.0/24
+deny from 23.94.60.0/24
+deny from 23.94.62.0/24
+deny from 23.94.63.0/24
+deny from 23.94.64.0/21
+deny from 23.94.72.0/24
+deny from 23.94.73.0/24
+deny from 23.94.74.0/24
+deny from 23.94.75.0/24
+deny from 23.94.76.0/24
+deny from 23.94.77.0/24
+deny from 23.94.79.0/24
+deny from 23.94.8.0/22
+deny from 23.94.80.0/22
+deny from 23.94.84.0/24
+deny from 23.94.85.0/24
+deny from 23.94.86.0/23
+deny from 23.94.88.0/23
+deny from 23.94.92.0/22
+deny from 23.94.96.0/23
+deny from 23.94.99.0/24
+deny from 23.95.100.0/22
+deny from 23.95.104.0/24
+deny from 23.95.105.0/24
+deny from 23.95.106.0/23
+deny from 23.95.108.0/22
+deny from 23.95.112.0/20
+deny from 23.95.128.0/19
+deny from 23.95.16.0/24
+deny from 23.95.160.0/20
+deny from 23.95.17.0/24
+deny from 23.95.176.0/22
+deny from 23.95.18.0/24
+deny from 23.95.181.0/24
+deny from 23.95.182.0/24
+deny from 23.95.183.0/24
+deny from 23.95.184.0/22
+deny from 23.95.188.0/23
+deny from 23.95.19.0/24
+deny from 23.95.190.0/24
+deny from 23.95.191.0/24
+deny from 23.95.192.0/23
+deny from 23.95.194.0/24
+deny from 23.95.195.0/24
+deny from 23.95.196.0/24
+deny from 23.95.197.0/24
+deny from 23.95.198.0/23
+deny from 23.95.2.0/23
+deny from 23.95.200.0/24
+deny from 23.95.201.0/24
+deny from 23.95.202.0/23
+deny from 23.95.204.0/24
+deny from 23.95.206.0/24
+deny from 23.95.207.0/24
+deny from 23.95.208.0/24
+deny from 23.95.209.0/24
+deny from 23.95.21.0/24
+deny from 23.95.211.0/24
+deny from 23.95.215.0/24
+deny from 23.95.216.0/22
+deny from 23.95.22.0/24
+deny from 23.95.220.0/23
+deny from 23.95.223.0/24
+deny from 23.95.224.0/20
+deny from 23.95.24.0/21
+deny from 23.95.240.0/24
+deny from 23.95.241.0/24
+deny from 23.95.243.0/24
+deny from 23.95.244.0/24
+deny from 23.95.245.0/24
+deny from 23.95.248.0/24
+deny from 23.95.249.0/24
+deny from 23.95.250.0/24
+deny from 23.95.252.0/23
+deny from 23.95.255.0/24
+deny from 23.95.32.0/22
+deny from 23.95.36.0/24
+deny from 23.95.37.0/24
+deny from 23.95.38.0/23
+deny from 23.95.4.0/22
+deny from 23.95.40.0/24
+deny from 23.95.41.0/24
+deny from 23.95.42.0/23
+deny from 23.95.46.0/24
+deny from 23.95.47.0/24
+deny from 23.95.56.0/23
+deny from 23.95.58.0/24
+deny from 23.95.59.0/24
+deny from 23.95.60.0/22
+deny from 23.95.64.0/23
+deny from 23.95.69.0/24
+deny from 23.95.70.0/24
+deny from 23.95.71.0/24
+deny from 23.95.72.0/21
+deny from 23.95.8.0/21
+deny from 23.95.81.0/24
+deny from 23.95.82.0/23
+deny from 23.95.84.0/22
+deny from 23.95.89.0/24
+deny from 23.95.90.0/23
+deny from 23.95.92.0/23
+deny from 23.95.94.0/24
+deny from 23.95.95.0/24
+deny from 23.95.96.0/22
+deny from 45.146.131.0/24
+deny from 45.199.132.0/24
+deny from 172.121.142.0/24
+deny from 5.188.62.0/24
+deny from 203.189.227.0/24
+deny from 138.0.230.0/24
+deny from 23.128.248.0/24
+deny from 185.129.61.0/24
+deny from 58.79.143.0/24
+deny from 8.45.41.0/24
+deny from 198.235.24.0/24
+deny from 205.210.31.0/24
+deny from 216.247.110.0/24
+deny from 8.31.2.0/24
+deny from 134.195.100.0/23
+deny from 104.16.0.0/12
+deny from 218.234.149.0/24
+deny from 27.255.82.0/24
+deny from 160.202.163.0/24
+deny from 173.245.48.0/20
+deny from 103.21.244.0/22
+deny from 103.22.200.0/22
+deny from 103.31.4.0/22
+deny from 141.101.64.0/18
+deny from 108.162.192.0/18
+deny from 190.93.240.0/20
+deny from 188.114.96.0/20
+deny from 197.234.240.0/22
+deny from 198.41.128.0/17
+deny from 162.158.0.0/15
+deny from 104.16.0.0/13
+deny from 104.24.0.0/14
+deny from 172.64.0.0/13
+deny from 131.0.72.0/22
+deny from 49.50.129.0/24
+deny from 49.50.136.0/24
+deny from 14.186.178.0/24
+deny from 14.162.225.0/24
+
+order allow,deny 
+allow from all 
+SetEnvIf GEOIP_COUNTRY_CODE RU BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE NL BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE DE BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE TH BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE IN BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE BR BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE BD BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE FR BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE IT BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE ID BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE MU BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE SC BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE ES BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE SG BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE AR BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE TR BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE GB BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE MX BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE VN BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE HK BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE TW BlockCountry
+SetEnvIf GEOIP_COUNTRY_CODE LC BlockCountry
+Deny from env=BlockCountry
+</Files>

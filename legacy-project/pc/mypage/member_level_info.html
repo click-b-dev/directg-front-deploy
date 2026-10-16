@@ -1,0 +1,77 @@
+<?
+	header("Content-Type:text/html; charset=utf-8"); 
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title = "회원등급 안내";
+	$aside_menu['member_level_info'] = "text-primary fw-bold";
+?>
+<!DOCTYPE HTML>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+
+<title><?=$page_title?></title>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<!-- Begin page -->
+<div class="wrapper overflow-visible">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0 font-14">
+				<div class="col-12">
+					<h3>※ 다이렉트 게임즈 회원 등급별 혜택 안내</h2>
+					<table class="table table-bordered table-centered text-center align-middle text-nowrap my-3">
+						<thead class="align-middle">
+						<tr>
+							<th>회원 등급</th>
+							<th>등급 기준</th>
+							<th>포인트 혜택</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td>일반</td>
+							<td class="text-start">등급 산정일 기준 최근 6개월간 순수 구매 총액이 5천원 미만</td>
+							<td>0%</td>
+						</tr>
+						<tr>
+							<td>정회원</td>
+							<td class="text-start">등급 산정일 기준 최근 6개월간 순수 구매 총액이 5천원 이상 20만원 미만 회원</td>
+							<td>1%</td>
+						</tr>
+						<tr>
+							<td>VIP</td>
+							<td class="text-start">등급 산정일 기준 최근 6개월간 순수 구매 총액이 20만원 이상</td>
+							<td>3%</td>
+						</tr>
+						</tbody>
+					</table>
+					<p> - 등급 심사일: 매 월 영업일 기준 첫째날</p>
+					<p> - 등급 산정일: 매 월 말일 기준 최근 6개월</p>
+					<p> - 순수 구매 총액은 제품키 활성화가 완료된 주문의 결제 금액에서 포인트로 결제한 금액은 제외됩니다.</p>
+					<p>※ 회원 등급 기준 및 혜택은 당사의 사정에 의해 사전 예고 없이 변경될 수 있으며, 부당한 방법으로 획득한 고객 등급은 사후 심사를 통해 조정될 수 있습니다.</p>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+</body>
+</html>

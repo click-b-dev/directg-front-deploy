@@ -1,0 +1,335 @@
+<?
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+header("Content-Type:text/html; charset=utf-8"); 
+
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+
+$page_title="타임딜";
+
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$goods = new Goods($conn);
+	
+	//타임딜 상품정보 조회
+	$product_code="50005634";
+	$goods_item_info = $goods->getGoodsItemDetail($product_code);
+	
+	//지역제한 안내문구
+	$goods_item_description = $goods->getGoodsOptionDescription($product_code);
+	
+	//타임딜 진행일정 조회
+	$timedeal_schedule = $goods->getTimedealSchedule($product_code);
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<style>
+.countdown{
+	background-color : #000000;
+	font-size:50px;
+	font-weight:bold;
+	border-radius:5px;
+	padding:0px 8px 0px 8px;
+}
+
+.top_banner{
+	background-image:url('https://image.directg.net/R7PayUdWBZ');
+	background-repeat:no-repeat;
+	background-size : cover;
+	height:165px;
+	display:flex;
+	justify-content:end;
+	align-items:center;
+	padding-right:50px;
+}
+
+.timedeal_info{
+	color:#d43f3a;
+	line-height:140%;
+	font-weight:bold;
+	font-size:14px;
+}
+
+@font-face {
+	font-family: 'GmarketSans';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+}
+
+.timedeal_price{
+	font-family:"GmarketSans";
+	background-image:url('https://image.directg.net/p7PgALO8wy');
+	background-size : cover;
+	font-style:italic;
+	height:70px;
+	align-items:baseline;
+	justify-content:space-between;
+}
+
+.price{
+	flex:2;
+}
+.price, .price span{
+	font-family:"GmarketSans";
+	font-size:18px;
+}
+
+.price span{
+	text-decoration:line-through;
+	font-style:italic;
+}
+
+.sale_price{
+	font-family:"GmarketSans";
+	font-size:28px;
+	color:#ffa72b;
+	flex:3;
+}
+
+.discount_rate{
+	font-family:"GmarketSans";
+	font-size:55px;
+	font-style:normal;
+	width:125px;
+	text-align:center;
+}
+.goods_image{
+	position:relative;
+	color:#FFFFFF;
+}
+.discount_rate span{
+	font-family:"GmarketSans";
+	font-size:18px;
+	font-style:italic;
+}
+.goods_page{
+	position:absolute;
+	bottom:0;
+	width:100%;
+	background-color:#000000;
+	opacity:0.8;
+	text-align:center;
+	line-height:2;
+}
+.bottom_banner{
+	margin:50px 0;
+	text-align:center;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main>
+			<?
+				if($goods_item_info['is_view']=="N"){
+			?>
+			<div class="row mt-3">
+				<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show" role="alert">
+					<strong>타임딜 진행기간이 아닙니다.</strong>
+				</div>
+			</div>
+			<?
+				}else{
+			?>
+			<div class="row">
+				<div class="col-12 mb-5">
+					<div class="top_banner">
+						<img src="https://image.directg.net/P7PaBshmEs" style="position:absolute;transform:translate(0,-220%);">
+
+						<div id="countdown_banner">
+							<div style="">
+								<span id="given_date"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="d-grid gap-3" style="grid-template-columns: 460px auto">
+				<div class="left">
+					<a href="/game/timedeal_view.html?sku=<?=$goods_item_info['goods_sku']?>">
+						<div class="flex-fill mr-50 goods_image">
+							<div>
+								<img src="/upload/product/<?=$goods_item_info['product_code']?>/header/header.jpg">
+							</div>
+							<div class="goods_page">
+								<span class="font-14">게임정보 바로가기 <i class="fa fa-arrow-right"></i></span>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="right ps-3">
+					<div class="d-flex flex-column">
+						<div class="d-flex flex-row align-items-center">
+							<div class="flex-fill"><h4 class="font-18"><?=$goods_item_info['product_name']?></h4></div>
+							<div class="px-2"><img src="https://image.directg.net/A7PbXeIpxX"></div>
+							<div class="px-2">
+							<?php
+									switch($goods_item_info['product_platform']){
+										case 1:
+										echo "<img src='/assets/images/platform/Platform_logo_steam.png' class='w-100'>";
+										break;
+										case 34:	//epic
+											echo "<img src='/assets/images/platform/Platform_logo_epic.png' class='w-100'>";
+										break;
+									}
+								?>
+							</div>
+							<div class="px-2"><img src="/assets/images/game/age_15.png"></div>
+						</div>
+						<div class="timedeal_msg text-danger py-2"><?=$goods_item_description['region_msg']?></div>
+						
+						<div class="timedeal_price d-flex py-2">
+							<div class="price" style="text-align:center;">정상가 <span><?=number_format($goods_item_info['consumer_price'])?></span>원</div>
+							<div style="text-align:center;margin:0 10px;font-size:18px;"><i class="fa fa-long-arrow-right"></i></div>
+							<div class="sale_price" style="">할인가 <?=number_format($timedeal_schedule['timedeal_price'])?>원</div>
+							<div class="discount_rate"><?=round(($timedeal_schedule['timedeal_srp']-$timedeal_schedule['timedeal_price'])*100/$timedeal_schedule['timedeal_srp'],0)?><span>%off</span></div>
+						</div>
+						
+						<div class="cart mt-3">
+							<div class="d-grid">
+								<button type="button" class="btn btn-warning btn-lg btn-block btn-warning btn_cart rounded-0 font-16" data-sku="<?=$game['goods_sku']?>" data-timedealNo=""><i class="fa fa-shopping-cart"></i> 장바구니</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row mb-3">
+				<div class="col-5">
+					
+				</div>
+				<div class="col-7">
+					
+				</div>
+			</div>
+			
+			<hr class="my-5"/>
+			
+			<div class="row">
+				<div class="col-12">
+					<div class="text-warning font-14">
+						<h5>※ 유의사항</h5>
+						<ul>
+						<?php
+							if(DATE("Y-m-d")=="2025-02-12"){
+						?>
+							<li class="font-red">2월 13일(목)부터 <a href="https://directg.net/mypage/v2/mypage_event_gift.html" target="_blank">[마이페이지 - 사은품]</a>에서 배송정보 입력이 가능합니다.</li>
+							<li class="font-red">2월 18일(화)까지 배송정보 입력이 완료되지 않을 경우, 주문 취소 처리되니 기한 내 입력해 주시기 바랍니다.</li>
+							<li class="font-red">Xbox 무선 컨트롤러는 실물로 배송되며, 게임은 제품 코드(키)는 실물로 배송되지 않는 디지털 상품입니다.</li>
+							<li class="font-red">Xbox 무선 컨트롤러는 2월 19일(수)에 발송 예정이며, 제품 코드(키)는 2월 20일(목)에 발송 예정입니다.</li>
+							<li class="font-red"><a href="https://directg.net/event/purchase_event_202502.html" target="_blank">[포인트 + 랜덤 게임 이벤트]</a> 사은품은 2월 21일(금) 출시 이후 수령하실 수 있습니다.</li>
+							<li class="font-red">Xbox 무선 컨트롤러는 실물로 배송되며, 게임은 제품 코드(키)는 실물로 배송되지 않는 디지털 상품입니다.</li>
+						<?php
+							}
+						?>
+							<li>타임딜 상품은 다이렉트 게임즈 포인트 할인 적용이 불가하며, 포인트 적립 대상에서 제외됩니다.</li>
+							<li>타임딜 상품은 가상계좌 결제수단을 지원하지 않습니다.</li>
+							<li>타임딜 상품은 한정 시간으로 준비되며, 시간 초과 시 할인 적용이 안 될 수 있습니다. 최종 결제 금액을 확인해 주시기 바랍니다.</li>
+							<li>타임딜 상품은 한정 수량으로 준비되며, 수량 소진 시 제품 코드(키)가 지급되지 않을 수 있습니다.</li>
+							<li>타임딜 상품, 기간, 가격(할인율)은 사정에 따라 사전 고지 없이 변경 또는 종료 될 수 있습니다.</li>
+							<li>사용하지 않는 플랫폼, PC 사양 및 호환 문제 등은 환불 사유에 해당하지 않습니다. 상품 페이지 내 정보를 반드시 확인해 주시기 바랍니다.</li>
+							<li>다이렉트 게임즈 환불정책에 따라 주문일로부터 7일이 경과하거나, 제품 코드(키) 활성화 및 수신이 완료된 경우에는 주문 취소 및 환불이 불가합니다.</li>
+							<li>부적절한 방법으로 참여가 확인되는 경우, 주문은 모두 취소되며 법적인 처벌을 받을 수 있습니다.</li>
+						</ul>
+					</div>
+					
+					<hr/>
+					<div class="bottom_banner">
+						<img src="https://directg.net/upload/event/<?=$bottom_banner?>">
+					</div>
+				</div>
+			</div>
+			<?
+				}
+			?>
+		</main>
+	</div>
+	
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<div id="cart-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="primary-header-modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" style="max-width:900px">
+		<div class="modal-content border border-3 border-start border-end-0 border-top-0 border-bottom-0 border-primary">
+			<div class="modal-header">
+				<h4 class="modal-title" id="topModalLabel">장바구니</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+			</div>
+			<div class="modal-body p-2 rounded-0">
+				<div id="cart_result" class="p-0"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-sm btn-light shadow-none font-14" id="btn_model_close" data-bs-dismiss="modal">쇼핑 계속하기</button>
+				<button type="button" class="btn btn-sm btn-primary shadow-none font-14" id="btn_cart_move">장바구니 바로가기</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script type="text/javascript" src="/assets/js/jquery.countdownTimer.js"></script>
+<script>
+	$(function(){
+		$('#given_date').countdowntimer({
+			regexpMatchFormat: "([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})",
+			regexpReplaceWith: "<span class='countdown'>$1</span> <span class='countdown'>$2</span> <span class='countdown'>$3</span> <span class='countdown'>$4</span>",
+			startDate : "<?php echo date('Y/m/d H:i:s'); ?>",
+			dateAndTime : "<?=date('Y/m/d H:i:s',$timedeal_schedule['timedeal_end'])?>",
+			size : "xl"
+		});
+		
+		//장바구니 추가
+		$(".btn_cart").bind("click",function(){
+			var index = $(".btn_cart").index(this);
+			var goods_sku = $(".btn_cart").eq(index).attr("data-sku");
+			var timedeal_no = $('.btn_cart').eq(index).attr("data-timedealNo");
+			var m_id = "<?=$_SESSION['member']['m_id']?>";
+			
+			if(m_id==""){
+				alert("로그인을 하셔야 이용이 가능합니다.");
+				loading.close();
+				return false;
+			}else{
+				$.ajax({
+					'url': '/order/cart_proc.php',
+					'type': 'POST',
+					'data':{mode:"add_timedeal_cart",goods_sku:goods_sku,timedeal_no:timedeal_no},
+					'success': function (data) {
+						$("#cart_result").html(data);
+						$("#cart-modal").modal("show");
+					},
+					'error':function(data){
+						alert(data);
+					}
+				});
+			}
+		});
+	});
+
+</script>
+
+</body>
+</html>

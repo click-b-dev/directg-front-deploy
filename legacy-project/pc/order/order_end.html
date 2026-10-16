@@ -1,0 +1,371 @@
+<?
+ini_set('display_errors', '0');
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+$page_title = "주문완료";
+
+$settle_no = filter_input(INPUT_GET, 'settle_no', FILTER_SANITIZE_STRING);
+$wait = filter_input(INPUT_GET, 'wait', FILTER_SANITIZE_STRING);
+if($wait>0){
+	sleep(1);
+}
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$order = new Order($conn);
+	$goods = new Goods($conn);
+	
+	//주문조회
+	$order_info = $order->getOrder($settle_no);
+	
+	//주문상품목록
+	$order_item_list = $order->getOrderItem($settle_no);
+	
+	//결제로그조회
+	switch($order_info['pg_provider']){
+		case "kcp":
+			$payment_log = $order->getKcpLog($settle_no);
+		break;
+		case "naverpay":
+		break;
+		case "payco":
+		break;
+		case "toss":
+		break;
+	}
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+$payment_method_label = array(
+	"SC0010"=>"신용카드",
+	"SC0030"=>"계좌이체",
+	"SC0040"=>"가상계좌",
+	"SC0060"=>"휴대폰",
+	"PAYCO"=>"페이코",
+	"toss_bank"=>"퀵계좌이체(토스)",
+	"POINT"=>"네이버포인트",
+	"DG0000"=>"전액할인",
+	"toss_pay"=>"토스페이머니"
+);
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container">
+		<main class="mb-5">
+			<div class="row g-0 my-3">
+				<div class="col-12">
+					<div class="mb-4">
+						<ul class="nav nav-pills nav-fill">
+							<li class="nav-item rounded-0 border-start border-top border-bottom py-4">
+								<h4 class="list-group-item-heading mb-0">01 장바구니</h4>
+							</li>
+							<li class="nav-item rounded-0 border-start border-top border-bottom py-4">
+								<h4 class="list-group-item-heading mb-0">02 주문하기</h4>
+							</li>
+							<li class="nav-item rounded-0 border-start border-top border-bottom py-4">
+								<h4 class="list-group-item-heading mb-0">03 결제하기</h4>
+							</li>
+							<li class="nav-item rounded-0 bg-primary border-primary py-4">
+								<h4 class="list-group-item-heading fw-bold mb-0">04 주문완료</h4>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12">
+					<p class="h4 text-center bg-primary py-4 text-white fw-bold"><?=$order_info['payment_method']=="SC0040"?"가상계좌(무통장입금) 결제 주문건은 기간 내에 입금 확인 후 주문이 완료됩니다.":"주문이 완료되었습니다."?></p>
+				</div>
+			</div>
+
+			<?if($order_info['payment_method']=="SC0040"){?>
+			<div class="row mb-3">
+				<div class="col-12">
+					<h3 class="pt-2 mb-3">가상계좌 입금 안내</h3>
+					<span class="font-14">※ 아래의 지정된 계좌정보로 입금마감 전 입금해 주시기 바랍니다. 기입하신 입금자명으로 입금해야 결제가 정상 진행됩니다.</span>
+					
+					<table class="table table-centered border-primary border border-2 border-start-0 border-end-0 mt-2">
+					<colgroup>
+						<col width="15%"/>
+						<col width="*"/>
+					</colgroup>
+					<tbody class="border-top-2 border-primary ">
+						<tr class="border-light-subtle">
+							<td class="text-center py-3 bg-transparent">결제금액</td>
+							<td class="py-3 bg-transparent"><?=number_format($payment_log['amount'])?> 원</td>
+						</tr>
+						<tr class="border-light-subtle">
+							<td class="text-center py-3 bg-transparent">입금자</td>
+							<td class="py-3 bg-transparent"><?=$payment_log['va_name']?></td>
+						</tr>
+						<tr class="border-light-subtle">
+							<td class="text-center py-3 bg-transparent">입금계좌정보</td>
+							<td class="py-3 bg-transparent"><?=$payment_log['bank_name']?> <?=$payment_log['account']?></td>
+						</tr>
+						<tr class="border-light-subtle">
+							<td class="text-center py-3 bg-transparent">예금주</td>
+							<td class="py-3 bg-transparent"><?=$payment_log['depositor']?></td>
+						</tr>
+						<tr class="border-light-subtle">
+							<td class="text-center py-3 bg-transparent">입금마감일시</td>
+							<td class="py-3 bg-transparent"><?=substr($payment_log['va_date'],0,4)?>-<?=substr($payment_log['va_date'],4,2)?>-<?=substr($payment_log['va_date'],6,2)?> <?=substr($payment_log['va_date'],8,2)?>:<?=substr($payment_log['va_date'],10,2)?></td>
+						</tr>
+					</tbody>
+					</table>
+				</div>
+			</div>
+			<? } ?>
+		
+			<div class="row">
+				<div class="col-12">
+					<h3 class="pt-2 mb-3">주문정보</h3>
+					<table class="table table-bordered table-centered caption-top mb-4 shadow-none" id="order_table" cellspacing="0">
+						<caption class="font-14 text-white">상품수 ( 총 <?=count($order_item_list)?> 개 )</caption>
+						<thead class="font-15">
+							<tr class="">
+								<th scope="col" class="text-center fw-500 py-2" >주문번호</th>
+								<th scope="col" class="text-center fw-500 py-2">상품정보</th>
+								<th scope="col" class="text-center fw-500 py-2" style="width:150px;">가격정보</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?
+								$total_price = 0;
+								foreach($order_item_list as $key=>$value){
+									$goods_data = $goods->getGoodsItemDetail($value['product_code']);
+							?>
+							<tr>
+								<td class="text-center"><?=$value['ordno']?></td>
+								<td class="p-0">
+									<div class="card rounded-0 border-0 bg-grey">
+										<div class="row g-0">
+											<div class="col-md-2 rounded-0">
+												<div class="position-relative">
+													<img src="/upload/product/<?=$value['product_code']?>/header/header.jpg" class="img-fluid rounded-0 w-100 h-100">
+													<div class="position-absolute bottom-0 start-0">
+														<?
+															switch($goods_data['game_type']){
+																case "game":
+																	switch($goods_data['display_type']){
+																		case "basic":
+														?>
+														<span class="badge bg-info rounded-0 font-12 py-2">기본게임</span>
+														<?
+																		break;
+																		case "edition":
+														?>
+														<span class="badge bg-primary rounded-0 font-12 py-2">에디션</span>
+														<?
+																		break;
+																		case "multi":
+														?>
+														<span class="badge bg-warning rounded-0 font-12 py-2">멀티팩</span>
+														<?
+																		break;
+																	}
+																break;
+																case "dlc":
+														?>
+														<span class="badge bg-content rounded-0 font-12 py-2">DLC</span>
+														<?
+																break;
+																case "music":
+														?>
+														<span class="badge bg-content rounded-0 font-12 py-2">Music</span>
+														<?
+																break;
+																case "holomodels":
+																	switch($goods_data['display_type']){
+																		case "holomodels":
+														?>
+														<span class="badge bg-success rounded-0 font-12 py-2">본체</span>
+														<?
+																		break;
+																		case "holomodelsdlc":
+														?>
+														<span class="badge bg-content rounded-0 font-12 py-2">DLC</span>
+														<?
+																		break;
+																		case "holomodelsedition":
+														?>
+														<span class="badge bg-primary rounded-0 font-12 py-2">에디션</span>
+														<?
+																		break;
+																	}
+																break;
+
+															}
+														?>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-1">
+												<div class="text-center align-content-center h-100">
+												<?
+													switch($goods_data['product_platform']){
+														case "1":
+															echo '<img class="mx-auto d-block rounded-0" src="/assets/images/platform/steam.svg">';
+														break;
+														case "34":
+															echo '<img class="mx-auto d-block rounded-0" src="/assets/images/platform/epic_w.svg">';
+														break;
+														case "35":
+															echo '<img class="mx-auto d-block rounded-0" src="/assets/images/platform/rockstar_2.svg">';
+														break;
+														case "51":
+															echo '<img class="mx-auto d-block rounded-0 w-75" src="/assets/images/platform/holomodels.svg">';
+														break;
+														case"":
+															echo '';
+														break;
+													}
+												?>
+												</div>
+											</div>
+											<div class="col-md-9">
+												<div class="row g-0 overflow-hidden flex-md-row shadow-sm position-relative">
+													<div class="p-2 d-flex flex-column position-static align-content-start">
+														<div class="mb-2 text-body-secondary">
+															<?if($value['delivery_type']=='1'){?><span class="badge badge-outline-success rounded-2 font-11 fw-500">코드발송</span><?}?>
+															<?if($value['delivery_type']=='2'){?><span class="badge badge-outline-post rounded-2 font-11 fw-500">택배발송</span><?}?>
+															<?if($value['delivery_type']=='3'){?><span class="badge badge-outline-code-post rounded-2 font-11 fw-500">코드+택배발송</span><?}?>
+														</div>
+														<h5 class="mb-2 text-white"><?=$value['product_name']?></h5>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+								<td class="text-center align-middle">
+									<div class="d-flex">
+										<div class="d-grid grid-2 col-12">
+											<div class="d-flex flex-row justify-content-between mb-2">
+												<span class="badge bg-primary align-self-center px-3 py-2 font-14 num minus"><?=round(($value['goods_price']-$value['price'])*100/$value['goods_price'],0)?> %</span>
+												<div class="d-flex flex-column align-items-end">
+													<s class="text-muted font-11 num won"> <?=number_format($value['goods_price'])?></s>
+													<span class="text-white fw-bold font-14 num won"> <?=number_format($value['price'])?></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<?
+									$total_goods_price+=$value['price'];
+								}
+							?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<div class="row mb-3">
+				<div class="col-12">
+					<h3 class="pt-2 mb-3">결제정보</h3>
+					
+					<table class="table table-centered border-primary border border-2 border-start-0 border-end-0">
+					<colgroup>
+						<col width="15%"/>
+						<col width="*"/>
+					</colgroup>
+					<tbody class="border-top-2 border-primary ">
+						<tr class="border-light-subtle ">
+							<td class="text-center py-3 bg-transparent">결제번호</td>
+							<td class="py-3 bg-transparent"><?=$order_info['settle_no']?></td>
+						</tr>
+						<tr class="border-light-subtle">
+							<td class="text-center py-3 bg-transparent">결제수단</td>
+							<td class="py-3 bg-transparent"><?=$payment_method_label[$order_info['payment_method']]?></td>
+						</tr>
+						<tr class="border-light-subtle">
+							<td class="text-center py-3 bg-transparent">결제상태</td>
+							<td class="py-3 bg-transparent"><?=$order->getCheckoutStatus($order_info['step'])?></td>
+						</tr>
+						<tr class="border-light-subtle">
+							<td class="text-center py-3 bg-transparent"><?=$order_info['payment_method']=="SC0040"?"주문":"결제"?>일자</td>
+							<td class="py-3 bg-transparent"><?=$order_info['payment_date']?></td>
+						</tr>
+						<tr class="border-light-subtle">
+							<td class="text-center py-3 bg-transparent">총 주문 금액</td>
+							<td class="py-3 bg-transparent"><?=number_format($total_goods_price)?> 원</td>
+						</tr>
+						<?if($order_info['use_emoney']>0){?>
+						<tr class="border-light-subtle">
+							<td class="text-center py-3 bg-transparent">포인트 할인</td>
+							<td class="py-3 bg-transparent"><?=number_format($order_info['use_emoney'])?> 원</td>
+						</tr>
+						<?}?>
+						<tr class="">
+							<td class="text-center py-3 bg-transparent">총 결제금액</td>
+							<td class="py-3 bg-transparent"><?=number_format($order_info['total_price'])?> 원</td>
+						</tr>
+					</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<div class="d-grid gap-3 d-flex justify-content-center">
+				<a href="/index.php" class="btn btn-secondary btn-lg rounded-0 fs-4 w-25 py-3 shadow-none" type="button">쇼핑 계속하기</a>
+				<a href="/mypage/mypage_order_view.html?settle_no=<?=$order_info['settle_no']?>" class="btn btn-primary btn-lg rounded-0 fs-4 w-25 py-3 shadow-none" type="button"><i class="mdi mdi-home"></i> 주문내역 확인하기</a>
+			</div>
+			
+			<!--기획 고정 배너2-->
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_banner.html');?>
+			<!--End 기획 고정 배너 배너2-->
+
+		</main>
+	</div>
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+
+<script>
+gtag('event', 'purchase', {
+	transaction_id: '<?=$order_info["settle_no"]?>',
+	value: <?=$order_info["total_price"]?>,
+	currency: 'KRW',
+	items: [
+		<?php
+			foreach($order_item_list as $value){
+				$goods_data = $goods->getGoodsItemDetail($value["product_code"]);
+		?>
+		{
+			item_id: '<?=$goods_data["goods_sku"]?>',
+			item_name: '<?=$value["product_name"]?>',
+			price: <?=$value["price"]?>,
+			quantity: 1
+		},
+		<?php
+			}
+		?>
+	]
+});
+</script>
+</body>
+</html>

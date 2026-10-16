@@ -1,0 +1,32 @@
+<?
+	$page_url = explode("/",$_SERVER['REQUEST_URI']);
+
+	switch($page_url['2']){
+		case "customer_support.html": //고객센터 메인
+			$left_menu_active1 = "link-light";
+			$left_menu_active2 = "link-light";
+		break;
+		case "notice.html": //공지사항
+			$left_menu_active1 = "link-white fw-bold active";
+			$left_menu_active2 = "link-light";
+		break;
+		case "faq.html": //자주묻는질문
+			$left_menu_active1 = "link-light";
+			$left_menu_active2 = "fw-bold active";
+		break;
+	}
+?>
+<div class="aside col-sm-2 pt-3">
+	<div class="d-flex flex-column bg_left_menu">
+		<a href="<?=$document_root?>/customer/customer_support.html" class="text-start py-1 bg-primary text-white"><h4 class="ps-3">고객센터</h4></a>
+
+		<ul class="nav flex-column m-2">
+			<li class="nav-item">
+				<a href="<?=$document_root?>/customer/notice.html" class="nav-link <?=$left_menu_active1?>">공지사항</a>
+			</li>
+			<li class="nav-item">
+				<a href="<?=$document_root?>/customer/faq.html" class="nav-link <?=$left_menu_active2?>">자주묻는질문</a>
+			</li>
+		</ul>
+	</div>
+</div>

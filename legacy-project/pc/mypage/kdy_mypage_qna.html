@@ -1,0 +1,198 @@
+<?php
+if ($_SERVER['REMOTE_ADDR'] <> "112.216.231.146") {
+	header( "HTTP/1.1 301 Moved Permanently" );
+	header( 'Location: https://directg.net/index.php' );
+	exit;
+}
+// ------------------------------------------------------------
+
+header("Content-Type:text/html; charset=utf-8"); 
+//ini_set('display_errors', '1');
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+$search_goods_name = filter_input(INPUT_GET, 'search_goods_name', FILTER_SANITIZE_STRING);
+
+$page_title = "문의 내역";
+$aside_menu['qna'] = "text-primary fw-bold";
+
+if(empty($page)){
+	$page="1";
+}
+
+foreach($_GET as $key=>$value){
+	if($key<>"page" ){
+		if($value<>""){
+			$param.="&".$key."=".$value;
+		}
+	}
+}
+
+try{
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$mypage = new Mypage($conn_dgkr);
+	$parsedown= new Parsedown();
+
+	$where = array();
+	$where[] = "user_id='{$_SESSION['member']['m_id']}'";
+	$where_query = implode(" AND ", $where);
+	$orderby = "reg_date DESC";
+
+	$qna_list = $mypage->getqnaList($page,$where_query,$orderby,$param);
+	$list = $qna_list->resultset->fetchAll();
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+$qnaGubun = array(
+	"6"=>"계정, 회원, 인증",
+	"7"=>"한글, 제공 콘텐츠",
+	"1"=>"게임 설치, 플레이",
+	"2"=>"주문, 결제",
+	"4"=>"주문취소 및 환불",
+	"3"=>"기타",
+	"5"=>"제품 코드(키) 오류",
+	"8"=>"할인, 가격",
+	"9"=>"이용방법",
+);
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<div class="wrapper overflow-visible">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0 font-14">
+				<div class="col-12">
+					<div class="card mb-0 shadow-none rounded-0 text-center">
+						<div class="card-header border-bottom accordion align-content-center text-nowrap">
+							<div class="row fw-bold">
+								<div class="col-2">구분</div>
+								<div class="col-6">제목</div>
+								<div class="col-2">작성일자</div>
+								<div class="col-2">답변여부</div>
+							</div>
+						</div>
+						<div class="card-body py-0 text-nowrap">
+					<?php
+						$i=0;
+						foreach($list as $value){
+					?>
+							<div class="row border-top py-2 align-items-center">
+								<div class="col-2"><?=$qnaGubun[$value['gubun']]?></div>
+								<div class="col-6 text-start text-wrap"><?=$value['subject']?></div>
+								<div class="col-2"><?=$value['reg_date']?></div>
+								<div class="col-2">
+								<?php
+									if($value['is_answer']=="Y"){
+								?>
+									<button class="btn btn-sm btn-primary font-14 w-75 btn-show-answer" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?=$i?>" aria-expanded="false" aria-controls="#collapse-<?=$i?>" data-idx="<?=$value['idx']?>">답변보기</button>
+								<?php
+									} else {
+								?>
+									<button class="btn btn-sm btn-dark font-14 w-75" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?=$i?>" aria-expanded="false" aria-controls="#collapse-<?=$i?>" data-idx="<?=$value['idx']?>">답변대기중</button>
+								<?php
+									}
+								?>
+								</div>
+							</div>
+
+							<div id="collapse-<?=$i?>" class="collapse text-start">
+								<div class="card-body mb-3">
+									<h4>문의내용</h4>
+										<div class="card p-3 shadow-none rounded-0 text-wrap">
+											<?=htmlspecialchars_decode($parsedown->text($value['contents']))?>
+										</div>
+									<hr>
+									<h4>답변</h4>
+										<div class="card p-3 shadow-none rounded-0 text-wrap">
+									<?php
+										if($value['is_answer']=="Y"){
+											echo htmlspecialchars_decode($value['answer']);
+										} else {
+											echo "답변 대기중 입니다.";
+										}
+									?>
+										</div>
+								</div>
+							</div>
+					<?php
+							$i++;
+						}
+
+						if($qna_list->total_results=="0"){
+					?>
+						<div class="p-3">등록된 문의가 없습니다.</div>
+					<?
+						}
+					?>
+						</div>
+					</div>
+				</div>
+				<div id="pagination" class="mt-4"><?echo $qna_list->links_html;?></div>
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<!-- bundle -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 모든 답변보기 버튼 선택
+        const answerButtons = document.querySelectorAll('.btn-show-answer');
+
+        answerButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // 1. data-bs-target 값 가져오기 (#collapse-0 등)
+                const targetId = this.getAttribute('data-bs-target');
+                const targetElement = document.querySelector(targetId);
+                
+                // 2. 고유 인덱스 번호 가져오기 (data-idx)
+                const inquiryIdx = this.getAttribute('data-idx');
+
+                // 3. 상태 확인 (이미 열려있는 상태라면 로그를 남기지 않음)
+                // Bootstrap은 클릭 시점에 aria-expanded가 즉시 변하므로 이를 활용
+                const isExpanding = this.getAttribute('aria-expanded') === 'true';
+
+                if (isExpanding) {
+            		$.ajax({
+            			url : "./mypage_qna_proc.php",
+            			type: "POST",
+            			data : {
+                            idx: inquiryIdx,
+                            mode: "view"
+                        }
+            		});
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

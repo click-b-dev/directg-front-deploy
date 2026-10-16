@@ -1,0 +1,393 @@
+<?php
+	ini_set('display_errors', '0');
+	header("Content-Type:text/html; charset=utf-8"); 
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	
+	$page_title = "모든게임";
+	$sub_title = "";
+	$aside['product_type'] = "game";
+
+	$aside['wishlist'] = "Y";
+
+	$result_per_page = 60;
+
+	$aside['product_type'] = "game";
+	$price_arr = array(
+		"1"=>array("min"=>0,"max"=>5000,"msg"=>'<span class="won"> 5,000 미만</span>'),
+		"2"=>array("min"=>5000,"max"=>10000,"msg"=>'<span class="won"> 5,000 이상</span> ~ <span class="won"> 10,000 미만</span>'),
+		"3"=>array("min"=>10000,"max"=>20000,"msg"=>'<span class="won"> 10,000 이상</span> ~ <span class="won"> 20,000 미만</span>'),
+		"4"=>array("min"=>20000,"max"=>30000,"msg"=>'<span class="won"> 20,000 이상</span> ~ <span class="won"> 30,000 미만</span>'),
+		"5"=>array("min"=>30000,"max"=>50000,"msg"=>'<span class="won"> 30,000 이상</span> ~ <span class="won"> 50,000 미만</span>')
+	);
+	$platform = filter_input(INPUT_GET, 'platform', FILTER_SANITIZE_STRING);
+	$genre_code = filter_input(INPUT_GET, 'genre_code', FILTER_SANITIZE_STRING);
+	$category_code = filter_input(INPUT_GET, 'category_code', FILTER_SANITIZE_STRING);
+	
+	//정렬순서
+	$sort = filter_input(INPUT_GET, 'sort', FILTER_SANITIZE_STRING);
+	
+	$is_preorder = filter_input(INPUT_GET, 'is_preorder', FILTER_SANITIZE_STRING);
+	$is_bonus = filter_input(INPUT_GET, 'is_bonus', FILTER_SANITIZE_STRING);
+	$is_repay = filter_input(INPUT_GET, 'is_repay', FILTER_SANITIZE_STRING);
+	$is_promotion = filter_input(INPUT_GET, 'is_promotion', FILTER_SANITIZE_STRING);
+	$is_soldout = filter_input(INPUT_GET, 'is_soldout', FILTER_SANITIZE_STRING);
+
+	$game_type = filter_input(INPUT_GET, 'game_type', FILTER_SANITIZE_STRING);
+	$game_type_basic = filter_input(INPUT_GET, 'game_type_basic', FILTER_SANITIZE_STRING);
+	$game_type_edition = filter_input(INPUT_GET, 'game_type_edition', FILTER_SANITIZE_STRING);
+	$game_type_dlc = filter_input(INPUT_GET, 'game_type_dlc', FILTER_SANITIZE_STRING);
+	$game_type_music = filter_input(INPUT_GET, 'game_type_music', FILTER_SANITIZE_STRING);
+	$game_type_bundle = filter_input(INPUT_GET, 'game_type_bundle', FILTER_SANITIZE_STRING);
+	
+	$platform_1 = filter_input(INPUT_GET, 'platform_1', FILTER_SANITIZE_STRING);
+	$platform_34 = filter_input(INPUT_GET, 'platform_34', FILTER_SANITIZE_STRING);
+	$platform_35 = filter_input(INPUT_GET, 'platform_35', FILTER_SANITIZE_STRING);
+
+	$interface_korean = filter_input(INPUT_GET, 'interface_korean', FILTER_SANITIZE_STRING);
+	$spoken_korean = filter_input(INPUT_GET, 'spoken_korean', FILTER_SANITIZE_STRING);
+	$exclusive_korean = filter_input(INPUT_GET, 'exclusive_korean', FILTER_SANITIZE_STRING);
+
+	$genre_code_arr = [];
+	for($i=1; $i<=10; $i++){
+		$genre_code_arr[$i] = filter_input(INPUT_GET, 'genre_code_'.$i, FILTER_SANITIZE_STRING);
+	}
+	
+	for($j=1; $j<=COUNT($price_arr); $j++){
+		$search_price[$j] = filter_input(INPUT_GET, 'search_price_'.$j, FILTER_SANITIZE_STRING);
+	}
+
+	$min_price = filter_input(INPUT_GET, 'min_price', FILTER_SANITIZE_STRING);
+	$max_price = filter_input(INPUT_GET, 'max_price', FILTER_SANITIZE_STRING);
+
+	$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+
+	if(!$page){
+		$page=1;
+	}
+
+	$where = [];
+	$filter_where = [];
+	$type_where = [];
+	$platform_where = [];
+	$korean_where = [];
+	$genre_where = [];
+	$price_where = [];
+	
+	$param = "";
+	$add_where = "";
+
+	$filter_str = " ( ";
+	$filter_chk = false;
+
+	$type_str = " ( ";
+	$type_chk = false;
+
+	$platform_str = " ( ";
+	$platform_chk = false;
+
+	$korean_str = " ( ";
+	$korean_chk = false;
+
+	$genre_str = " ( match(a.genre) AGAINST(";
+	$genre_chk = false;
+
+	$price_str = " ( ";
+	$price_chk = false;
+
+	$where[] = " find_in_set(a.game_type,'game,dlc,music,bundle')";
+
+	try{
+		$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+
+		$goods= new Goods($conn);
+		$promotion = new Promotion($conn);
+		$mypage = new Mypage2($conn);
+		$draw = new Draw($conn);
+
+		if($is_bonus=="Y"){
+			$filter_where[] = " a.is_bonus='".$is_bonus."'";
+			$checked['is_bonus']['Y'] = "checked";
+			$filter_chk = true;
+		}
+		if($is_preorder=="Y"){
+			$filter_where[] = " a.is_preorder='".$is_preorder."'";
+			$checked['is_preorder']['Y'] = "checked";
+			$filter_chk = true;
+		}
+
+		if($is_soldout=="Y"){
+			$where[] = " a.soldout!='".$is_soldout."'";
+			$checked['is_soldout']['Y'] = "checked";
+		}
+		
+		$filter_str .= implode(' OR ', $filter_where);
+		$filter_str .= " ) ";
+		
+		if($filter_chk===true){
+			$where[]=$filter_str;
+		}
+
+		if($game_type_basic!=""){
+			$type_where[] = " (a.game_type='game' and a.display_type='basic') ";
+			$checked['game_type']['basic'] = "checked";
+			$type_chk = true;
+		}
+
+		if($game_type_edition!=""){
+			$type_where[] = " (a.game_type='game' and a.display_type='edition') ";
+			$checked['game_type']['edition'] = "checked";
+			$type_chk = true;
+		}
+
+		if($game_type_dlc!=""){
+			$type_where[] = " a.game_type='dlc' ";
+			$checked['game_type']['dlc'] = "checked";
+			$type_chk = true;
+		}
+
+		if($game_type_music!=""){
+			$type_where[] = " a.game_type='music' ";
+			$checked['game_type']['music'] = "checked";
+			$type_chk = true;
+		}
+
+		if($game_type_bundle!=""){
+			$type_where[] = " a.game_type='bundle' ";
+			$checked['game_type']['bundle'] = "checked";
+			$type_chk = true;
+		}
+
+		$type_str .= implode(' OR ', $type_where);
+		$type_str .= " ) ";
+		
+		if($type_chk===true){
+			$where[]=$type_str;
+		}
+
+		if($platform!=""){
+			$platform_where[] = " a.product_platform='".$platform."' ";
+			$checked['platform'][$platform] = "checked";
+			$platform_chk = true;
+		}
+		
+		if($platform_1!=""){
+			$platform_where[] = " a.product_platform='1' ";
+			$checked['platform']['1'] = "checked";
+			$platform_chk = true;
+		}
+
+		if($platform_34!=""){
+			$platform_where[] = " a.product_platform='34' ";
+			$checked['platform']['34'] = "checked";
+			$platform_chk = true;
+		}
+
+		if($platform_35!=""){
+			$platform_where[] = " a.product_platform='35' ";
+			$checked['platform']['35'] = "checked";
+			$platform_chk = true;
+		}
+
+		$platform_str .= implode(' OR ', $platform_where);
+		$platform_str .= " ) ";
+
+		if($platform_chk===true){
+			$where[]=$platform_str;
+		}
+
+		if($interface_korean=="Y"){
+			$korean_where[] = " a.interface_korean='".$interface_korean."'";
+			$checked['interface_korean']['Y'] = "checked";
+			$korean_chk = true;
+		}
+
+		if($spoken_korean=="Y"){
+			$korean_where[] = " a.spoken_korean='".$spoken_korean."'";
+			$checked['spoken_korean']['Y'] = "checked";
+			$korean_chk = true;
+		}
+
+		if($exclusive_korean=="Y"){
+			$korean_where[] = " a.exclusive_korean='".$exclusive_korean."'";
+			$checked['exclusive_korean']['Y'] = "checked";
+			$korean_chk = true;
+		}
+
+		$korean_str .= implode(' OR ', $korean_where);
+		$korean_str .= " ) ";
+
+		if($korean_chk===true){
+			$where[]=$korean_str;
+		}
+
+		$genre_code_arr[0]=$genre_code; //25-09-24(수) 17:08 [이종석] 장르를 선택해서 들어온 경우 기본값으로 $genre_code_arr[0]을 세팅
+		for($i=0;$i<=10;$i++){
+			if($genre_code_arr[$i]){
+				$genre_where[] = " '".$genre_code_arr[$i]."* '";
+				$checked['genre_code'][$genre_code_arr[$i]] = "checked";
+				$genre_chk = true;
+			}
+		}
+
+		$genre_str .= implode(' ', $genre_where);
+		$genre_str .= " IN BOOLEAN MODE) ) ";
+
+		if($genre_chk===true){
+			$where[]=$genre_str;
+		}
+
+		if($category_code){ //25-09-24(수) 17:08 [이종석] 카테고리를 선택해서 들어온 경우 해당 category_code
+			$where[] = " match(a.category) AGAINST('+".$category_code."'  in boolean mode)";
+		}
+
+		if($is_promotion=="Y"){
+			$search_option["is_promotion"]="할인프로모션";
+			$checked['is_promotion']['Y'] = "checked";
+		}
+
+		//가격 필터링
+		if($min_price>0){
+			$price_where[] = " COALESCE(c.sale_price, a.price) >= '".$min_price."' ";
+			$price_chk = true;
+		}
+		if($max_price>0){
+			$price_where[] = " COALESCE(c.sale_price, a.price) <= '".$max_price."' ";
+			$price_chk = true;
+		}
+
+		$price_str .= implode(' AND ', $price_where);
+		$price_str .= " ) ";
+
+		if($price_chk===true){
+			$where[]=$price_str;
+		}
+	
+		foreach($where as $value){
+			$add_where.= " and ".$value;
+		}
+
+		foreach($_GET as $key=>$value){
+			if($key<>"page" ){
+				if($value<>""){
+					if(is_array($value)){
+						foreach($value as $sub_value){
+							$param.="&".$key."[]=".$sub_value;
+						}
+					}else{
+						$param.="&".$key."=".$value;
+					}
+					
+				}
+			}
+		}
+		
+		switch($sort){
+			case "release": //출시일순
+				$orderby = "a.release_date desc";
+			break;
+			case "name": //가나다순
+				$orderby = "a.product_name asc";
+			break;
+			case "name_en": //ABC순
+				$orderby = "a.product_name_en asc";
+			break;
+			case "pricedown": //낮은가격순
+				$orderby = "price asc";
+			break;
+			case "priceup": //높은 가격순
+				$orderby = "price desc";
+			break;
+			case "discount":
+				$orderby = "discount desc";
+			break;
+			default:
+				$orderby = "a.release_date desc";
+				$sort = "release";
+			break;
+		}
+		
+		$selected['sort'][$sort] = "selected";
+		$goods_list = $goods->getGoodsList2($page,$add_where,$orderby,$param,$result_per_page);
+	}catch (PDOException $e){
+		echo 'Error!: '.$e->getMessage();
+		die();
+	}
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="" name="author" />
+<meta name="amazonbot" content="noarchive">
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<link href="/assets/css/card-list.css?d=<?=time()?>" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<div class="container my-3 pb-5">
+		<main>
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/game_filter.html');?>
+			<section id="content" class="content rounded-0">
+				<div class="row g-3 mb-3">
+					<div class="col-12">
+						<div class="d-flex align-items-center align-self-center justify-content-between bg-table-dark border">
+							<div>
+								<a href="game_list.html?<?=$_SERVER['QUERY_STRING']?>" class="text-decoration-none">
+									<img src="/assets/images/icon/list.svg" class="svg-off m-3">
+								</a>
+								<a href="game_thumb.html?<?=$_SERVER['QUERY_STRING']?>" class="text-decoration-none">
+									<img src="/assets/images/icon/thumb.svg" class="svg-off m-3">
+								</a>
+								<a href="game_grid.html?<?=$_SERVER['QUERY_STRING']?>" class="text-decoration-none">
+									<img src="/assets/images/icon/grid.svg" class="svg-on m-3">
+								</a>
+							</div>
+							<div class="d-flex me-2 text-nowrap" role="search">
+								<span class="align-content-center px-3 font-14"> 총 <strong><?=number_format($goods_list->total_results)?></strong>개</span>
+								<select name="sort" id="sort" class="form-select form-select-lg rounded-0 shadow-none bg-table-dark me-3" aria-label="정렬순서">
+									<option >::: 정렬순서 :::</option>
+									<option value="release" <?=$selected['sort']['release']?>>출시일순</option>
+									<option value="name" <?=$selected['sort']['name']?>>가나다순</option>
+									<option value="name_en" <?=$selected['sort']['name_en']?>>ABC순</option>
+									<option value="pricedown" <?=$selected['sort']['pricedown']?>>낮은가격순</option>
+									<option value="priceup" <?=$selected['sort']['priceup']?>>높은가격순</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="grid_list">
+					<?php
+						if($goods_list->success == true){
+							$result = $goods_list->resultset->fetchAll();
+							//함수 출력으로 변경
+							$draw->drawGrid($result, $_SESSION['member']['m_no']);
+						}
+					?>
+				</div>
+				<div id="pagination" class="mt-4"><?echo $goods_list->links_html;?></div>
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/cart.html');?>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<!-- bundle -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+</body>
+</html>

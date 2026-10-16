@@ -1,0 +1,175 @@
+<?php
+	ini_set( "display_errors", 1 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+	$search_goods_name = filter_input(INPUT_GET, 'search_goods_name', FILTER_SANITIZE_STRING);
+
+	$page_title="포인트 내역";
+
+	if(empty($page)){
+		$page="1";
+	}
+
+	foreach($_GET as $key=>$value){
+		if($key<>"page" ){
+			if($value<>""){
+				$param.="&".$key."=".$value;
+			}
+		}
+	}
+
+	try{
+		$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+		$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		$mypage = new Mypage($conn_dgkr);
+
+		$where = array();
+		$where[]="m_no='{$_SESSION['member']['m_no']}'";
+		$where_query = implode(" AND ", $where);
+		$orderby = "regdt DESC";
+
+		$point_list = $mypage->getPointList($page,$where_query,$orderby,$param);
+		$list = $point_list->resultset->fetchAll();
+
+		$member_emoney = $mypage->getMemberEmoney($_SESSION['member']['m_no']);
+
+	}catch (PDOException $e){
+		echo 'Error!: '.$e->getMessage();
+		die();
+	}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+<style>
+.won::before {
+	content: "\20a9";
+}
+</style>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub">
+	<div class="section pt-2 full">
+		<div class="col-12 mb-1">
+			<div class="card shadow-none rounded-0">
+				<div class="card-body p-2 overflow-auto">
+					고객님께서 보유하신 포인트는 <?=number_format($member_emoney)?>원 입니다.
+				</div>
+			</div>
+		</div>
+
+		<div class="col-12">
+			<table class="table table-light table-bordered table-centered mb-1 text-center align-middle">
+				<thead class="align-middle table-dark">
+					<tr>
+						<th class="w-25">날짜</th>
+						<th class="text-nowrap">적립/사용</th>
+						<th>사유</th>
+						<th class="w-25">포인트</th>
+					</tr>
+				</thead>
+				<tbody id="point_table_body">
+					<?
+						if(!is_array($list)){
+					?>
+					<tr>
+						<td colspan="6" class="text-center">적립금 내역이 없습니다.</td>
+					</tr>
+					<?
+						}else{
+							foreach($list as $value){
+					?>
+					<tr>
+						<td><?=$value['regdt']?></td>
+						<td class="no-wrap text-nowrap"><?=($value['emoney_type']=="+"?"적립":($value['emoney_type']=="-"?"사용":""))?></td>
+						<td class="text-start"><?=$value['memo']?></td>
+						<td class="">
+							<div class="d-flex justify-content-between">
+								<span class="won"></span>
+								<span class="amount text-nowrap fs-5"><?=number_format($value['amt_delta'])?></span>
+							</div>
+						</td>
+					</tr>
+					<?
+						}
+					}
+					?>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-12">
+			<input type="button" class="btn <?=$page>=$point_list->total_pages?"btn-secondary":"btn-primary"?> btn-lg btn-block" value="<?=$page>=$point_list->total_pages?"마지막 페이지":"더보기"?>" name="btn_more" id="btn_more" data-page="<?=$page?>">
+		</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+<!-- Base Js File -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="/assets/js/base.js"></script>
+
+
+<script>
+$(document).ready(function() {
+	$('#btn_more').on('click', function(e) {
+		e.preventDefault();
+		const page = parseInt($(this).data('page')) + 1;
+		$.get('./ajax_point.php', {'page' : page,page_num:"10"}, function (data) {
+			if (page >= <?=$point_list->total_pages?>) {
+				$('#point_table_body').append(data);
+				$('#btn_more').data('page', page);
+				$('#btn_more').val("마지막 페이지");
+				$('#btn_more').removeClass("btn-primary")
+				$('#btn_more').addClass("btn-secondary")
+			} else {
+				$('#point_table_body').append(data);
+				$('#btn_more').data('page', page);
+			}
+		});
+	});
+});
+</script>
+
+</body>
+
+</html>

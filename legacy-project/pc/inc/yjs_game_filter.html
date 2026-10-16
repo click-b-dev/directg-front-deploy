@@ -1,0 +1,262 @@
+<div id="topbar" class="rounded-0 mb-3">
+	<div class="d-flex flex-column flex-shrink-0 bg-table-dark border">
+		<form method="get" action="<?=$_SERVER['PHP_SELF']?>">
+			<input type="hidden" name="q" value="<?=$q?>">
+			<input type="hidden" name="sort" value="<?=$sort?>">
+			<div class="d-flex ps-3">
+				<div class="col-1 fw-bold fs-5 align-content-center">배송유형</div>
+				<div class="col-11 fs-5 align-content-center filter d-flex justify-content-between">
+					<div>
+						<input type="checkbox" class="btn-check" id="delivery_type_1" name="delivery_type_1" value="1" <?=$checked['delivery_type']['1']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="delivery_type_1">코드발송</label>
+						
+						<input type="checkbox" class="btn-check" id="delivery_type_2" name="delivery_type_2" value="2" <?=$checked['delivery_type']['2']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="delivery_type_2">택배발송</label>
+						
+						<input type="checkbox" class="btn-check" id="delivery_type_3" name="delivery_type_3" value="3" <?=$checked['delivery_type']['3']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="delivery_type_3">코드+택배발송</label>
+						
+					</div>
+					<div class="me-4 d-flex align-items-center">
+						<div class="me-4">
+							<button class="btn btn-lg btn-primary" type="submit" id="btn_filter">검 색</button>
+							<button class="btn btn-lg btn-light" type="button" id="btn_reset">
+								<img src="/assets/images/icon/rotate.svg">
+							</button>
+						</div>
+						<div class="d-flex flex-column justify-content-center" id="btn_filter_close" data-bs-toggle="collapse" href="#filter_body" role="button" aria-expanded="true" aria-controls="filter_body">
+							<img class="chevron chevron-top" src="/assets/images/icon/bytesize_chevron-top.svg">
+							<img class="chevron chevron-top" src="/assets/images/icon/bytesize_chevron-top.svg">
+							<img class="chevron chevron-down" src="/assets/images/icon/bytesize_chevron-down.svg">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="d-flex ps-3">
+			</div>
+			<div id="filter_body" class="collapse show">
+				<hr class="my-0 mx-3">
+				<div class="d-flex ps-3">
+					<div class="col-1 fw-bold fs-5 align-content-center">검색필터</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<input type="checkbox" class="btn-check" id="is_preorder" name="is_preorder" value="Y" <?=$checked['is_preorder'][$is_preorder]?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="is_preorder">예약구매</label>
+						<input type="checkbox" class="btn-check" id="is_bonus" name="is_bonus" value="Y" <?=$checked['is_bonus'][$is_bonus]?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="is_bonus">특전</label>
+						
+						<input type="checkbox" class="btn-check is_promotion <?=$aside['promotion']!="false"?'':'d-none'?>" id="is_promotion" name="is_promotion" value="Y" <?=$checked['is_promotion'][$is_promotion]?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2 <?=$aside['promotion']!="false"?'':'d-none'?>" for="is_promotion">프로모션</label>
+						<input type="checkbox" class="btn-check is_soldout" id="is_soldout" name="is_soldout" value="Y" <?=$checked['is_soldout'][$is_soldout]?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="is_soldout">품절상품 제외</label>
+					</div>
+				</div>
+				<hr class="my-0 mx-3 <?=$aside['product_type']!="accessories"?'':'d-none'?>">
+				<div class="d-flex ps-3 <?=$aside['product_type']!="accessories"?'':'d-none'?>">
+					<div class="col-1 fw-bold fs-5 align-content-center">상품유형</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<input type="checkbox" class="btn-check" id="game_type_basic" name="game_type_basic" value="basic" <?=$checked['game_type']['basic']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="game_type_basic">기본게임</label>
+						<input type="checkbox" class="btn-check" id="game_type_edition" name="game_type_edition" value="edition" <?=$checked['game_type']['edition']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="game_type_edition">에디션</label>
+						<input type="checkbox" class="btn-check" id="game_type_dlc" name="game_type_dlc" value="dlc" <?=$checked['game_type']['dlc']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="game_type_dlc">DLC</label>
+						<input type="checkbox" class="btn-check" id="game_type_music" name="game_type_music" value="music" <?=$checked['game_type']['music']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="game_type_music">사운드트랙</label>
+						<input type="checkbox" class="btn-check" id="game_type_bundle" name="game_type_bundle" value="bundle" <?=$checked['game_type']['bundle']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="game_type_bundle">번들</label>
+					</div>
+				</div>
+				<hr class="my-0 mx-3 <?=$aside['platform']!="false"?'':'d-none'?>">
+				<div class="d-flex ps-3 <?=$aside['platform']!="false"?'':'d-none'?>">
+					<div class="col-1 fw-bold fs-5 align-content-center">플랫폼</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<input type="checkbox" class="btn-check" id="platform_1" name="platform_1" value="1" <?=$checked['platform']['1']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="platform_1">Steam</label>
+						<input type="checkbox" class="btn-check" id="platform_34" name="platform_34" value="34" <?=$checked['platform']['34']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="platform_34">Epic Games</label>
+						<input type="checkbox" class="btn-check" id="platform_35" name="platform_35" value="35" <?=$checked['platform']['35']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="platform_35">Rockstar Games</label>
+					</div>
+				</div>
+				<hr class="my-0 mx-3 <?=$aside['korean']!="false"?'':'d-none'?>">
+				<div class="d-flex ps-3 <?=$aside['korean']!="false"?'':'d-none'?>">
+					<div class="col-1 fw-bold fs-5 align-content-center">한국어지원</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<input type="checkbox" class="btn-check" id="interface_korean" name="interface_korean" value="Y" <?=$checked['interface_korean'][$interface_korean]?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="interface_korean">자막 한국어지원</label>
+						<input type="checkbox" class="btn-check" id="spoken_korean" name="spoken_korean" value="Y" <?=$checked['spoken_korean'][$spoken_korean]?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="spoken_korean">음성 한국어지원</label>
+						<input type="checkbox" class="btn-check" id="exclusive_korean" name="exclusive_korean" value="Y" <?=$checked['exclusive_korean'][$exclusive_korean]?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="exclusive_korean">독점 한국어지원</label>
+					</div>
+				</div>
+				<hr class="my-0 mx-3 <?=$aside['genre']!="false"?'':'d-none'?>">
+				<div class="d-flex ps-3 <?=$aside['genre']!="false"?'':'d-none'?>">
+					<div class="col-1 fw-bold fs-5 align-content-center">장르</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<input type="checkbox" class="btn-check" id="genre_code_1" name="genre_code_1" value="G0001" <?=$checked['genre_code']['G0001']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="genre_code_1">액션</label>
+						<input type="checkbox" class="btn-check" id="genre_code_2" name="genre_code_2" value="G0002" <?=$checked['genre_code']['G0002']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="genre_code_2">어드벤처</label>
+						<input type="checkbox" class="btn-check" id="genre_code_3" name="genre_code_3" value="G0003" <?=$checked['genre_code']['G0003']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="genre_code_3">RPG</label>
+						<input type="checkbox" class="btn-check" id="genre_code_4" name="genre_code_4" value="G0004" <?=$checked['genre_code']['G0004']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="genre_code_4">전략</label>
+						<input type="checkbox" class="btn-check" id="genre_code_5" name="genre_code_5" value="G0005" <?=$checked['genre_code']['G0005']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="genre_code_5">시뮬레이션</label>
+						<input type="checkbox" class="btn-check" id="genre_code_6" name="genre_code_6" value="G0006" <?=$checked['genre_code']['G0006']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="genre_code_6">스포츠</label>
+						<input type="checkbox" class="btn-check" id="genre_code_7" name="genre_code_7" value="G0007" <?=$checked['genre_code']['G0007']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="genre_code_7">캐주얼</label>
+						<input type="checkbox" class="btn-check" id="genre_code_10" name="genre_code_10" value="G0010" <?=$checked['genre_code']['G0010']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="genre_code_10">레이싱</label>
+						<input type="checkbox" class="btn-check" id="genre_code_8" name="genre_code_8" value="G0008" <?=$checked['genre_code']['G0008']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="genre_code_8">인디</label>
+						<input type="checkbox" class="btn-check" id="genre_code_9" name="genre_code_9" value="G0009" <?=$checked['genre_code']['G0009']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="genre_code_9">앞서 해보기</label>
+					</div>
+				</div>
+				<hr class="my-0 mx-3 <?=$aside['category']!="false"?'':'d-none'?>">
+				<div class="d-flex ps-3 <?=$aside['category']!="false"?'':'d-none'?>">
+					<div class="col-1 fw-bold fs-5 align-content-center">플레이어 수</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<input type="checkbox" class="btn-check" id="category_code_1" name="category_code_1" value="C0001001" <?=$checked['category_code']['C0001001']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_1">싱글 플레이어</label>
+						<input type="checkbox" class="btn-check" id="category_code_2" name="category_code_2" value="C0001002" <?=$checked['category_code']['C0001002']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_2">멀티 플레이어</label>
+						<input type="checkbox" class="btn-check" id="category_code_3" name="category_code_3" value="C0001003" <?=$checked['category_code']['C0001003']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_3">온라인 PvP</label>
+						<input type="checkbox" class="btn-check" id="category_code_4" name="category_code_4" value="C0001004" <?=$checked['category_code']['C0001004']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_4">온라인 협동</label>
+						<input type="checkbox" class="btn-check" id="category_code_5" name="category_code_5" value="C0001005" <?=$checked['category_code']['C0001005']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_5">LAN PvP</label>
+						<input type="checkbox" class="btn-check" id="category_code_6" name="category_code_6" value="C0001006" <?=$checked['category_code']['C0001006']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_6">LAN 협동</label>
+						<input type="checkbox" class="btn-check" id="category_code_7" name="category_code_7" value="C0001007" <?=$checked['category_code']['C0001007']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_7">협동</label>
+						<input type="checkbox" class="btn-check" id="category_code_8" name="category_code_8" value="C0001008" <?=$checked['category_code']['C0001008']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_8">MMO</label>
+						<input type="checkbox" class="btn-check" id="category_code_9" name="category_code_9" value="C0001009" <?=$checked['category_code']['C0001009']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_9">플랫폼간 멀티플레이어</label>
+						<input type="checkbox" class="btn-check" id="category_code_10" name="category_code_10" value="C0001011" <?=$checked['category_code']['C0001011']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_10">4인 로컬 플레이</label>
+						<input type="checkbox" class="btn-check" id="category_code_11" name="category_code_11" value="C0001012" <?=$checked['category_code']['C0001012']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_11">로컬 멀티플레이어</label>
+						<input type="checkbox" class="btn-check" id="category_code_12" name="category_code_12" value="C0001013" <?=$checked['category_code']['C0001013']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_12">비동기 멀티플레이어</label>
+						<input type="checkbox" class="btn-check" id="category_code_13" name="category_code_13" value="C0001014" <?=$checked['category_code']['C0001014']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_13">대규모 멀티플레이어</label>
+					</div>
+				</div>
+				<div class="d-flex ps-3 <?=$aside['category']!="false"?'':'d-none'?>">
+					<div class="col-1 fw-bold fs-5 align-content-center">화면 및 디스플레이</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<input type="checkbox" class="btn-check" id="category_code_14" name="category_code_14" value="C0002001" <?=$checked['category_code']['C0002001']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_14">싱글 HDR 사용 가능</label>
+						<input type="checkbox" class="btn-check" id="category_code_15" name="category_code_15" value="C0002002" <?=$checked['category_code']['C0002002']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_15">스크린 공유 및 분할 PvP</label>
+						<input type="checkbox" class="btn-check" id="category_code_16" name="category_code_16" value="C0002003" <?=$checked['category_code']['C0002003']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_16">스크린 공유 및 분할 협동</label>
+						<input type="checkbox" class="btn-check" id="category_code_17" name="category_code_17" value="C0002004" <?=$checked['category_code']['C0002004']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_17">공유/분할 화면</label>
+					</div>
+				</div>
+				<div class="d-flex ps-3 <?=$aside['category']!="false"?'':'d-none'?>">
+					<div class="col-1 fw-bold fs-5 align-content-center">VR 및 컨트롤러 지원</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<input type="checkbox" class="btn-check" id="category_code_18" name="category_code_18" value="C0003001" <?=$checked['category_code']['C0003001']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_18">VR 전용</label>
+						<input type="checkbox" class="btn-check" id="category_code_19" name="category_code_19" value="C0003002" <?=$checked['category_code']['C0003002']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_19">VR 지원</label>
+						<input type="checkbox" class="btn-check" id="category_code_20" name="category_code_20" value="C0003003" <?=$checked['category_code']['C0003003']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_20">추적되는 컨트롤러 지원</label>
+						<input type="checkbox" class="btn-check" id="category_code_21" name="category_code_21" value="C0003004" <?=$checked['category_code']['C0003004']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_21">컨트롤러 완벽 지원</label>
+						<input type="checkbox" class="btn-check" id="category_code_22" name="category_code_22" value="C0003005" <?=$checked['category_code']['C0003005']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_22">컨트롤러 일부 지원</label>
+					</div>
+				</div>
+				<div class="d-flex ps-3 <?=$aside['category']!="false"?'':'d-none'?>">
+					<div class="col-1 fw-bold fs-5 align-content-center">게임 서비스 및 기능</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<input type="checkbox" class="btn-check" id="category_code_23" name="category_code_23" value="C0004001" <?=$checked['category_code']['C0004001']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_23">코멘터리 제공</label>
+						<input type="checkbox" class="btn-check" id="category_code_24" name="category_code_24" value="C0004002" <?=$checked['category_code']['C0004002']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_24">추가적인 고품질 오디오</label>
+						<input type="checkbox" class="btn-check" id="category_code_25" name="category_code_25" value="C0004003" <?=$checked['category_code']['C0004003']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_25">레벨 에디터 포함</label>
+						<input type="checkbox" class="btn-check" id="category_code_26" name="category_code_26" value="C0004004" <?=$checked['category_code']['C0004004']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_26">다운로드 가능한 콘텐츠</label>
+					</div>
+				</div>
+				<div class="d-flex ps-3 <?=$aside['category']!="false"?'':'d-none'?>">
+					<div class="col-1 fw-bold fs-5 align-content-center">접근성 기능</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<input type="checkbox" class="btn-check" id="category_code_27" name="category_code_27" value="C0005001" <?=$checked['category_code']['C0005001']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_27">텍스트 크기 조절</label>
+						<input type="checkbox" class="btn-check" id="category_code_28" name="category_code_28" value="C0005002" <?=$checked['category_code']['C0005002']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_28">자막 옵션</label>
+						<input type="checkbox" class="btn-check" id="category_code_29" name="category_code_29" value="C0005003" <?=$checked['category_code']['C0005003']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_29">색상 대체</label>
+						<input type="checkbox" class="btn-check" id="category_code_30" name="category_code_30" value="C0005004" <?=$checked['category_code']['C0005004']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_30">카메라 움직임 조정</label>
+						<input type="checkbox" class="btn-check" id="category_code_31" name="category_code_31" value="C0005005" <?=$checked['category_code']['C0005005']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_31">음량 개별 조정</label>
+						<input type="checkbox" class="btn-check" id="category_code_32" name="category_code_32" value="C0005006" <?=$checked['category_code']['C0005006']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_32">스테레오 사운드</label>
+						<input type="checkbox" class="btn-check" id="category_code_33" name="category_code_33" value="C0005007" <?=$checked['category_code']['C0005007']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_33">서라운드 사운드</label>
+						<input type="checkbox" class="btn-check" id="category_code_34" name="category_code_34" value="C0005008" <?=$checked['category_code']['C0005008']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_34">게임 메뉴 음성 안내</label>
+						<input type="checkbox" class="btn-check" id="category_code_35" name="category_code_35" value="C0005009" <?=$checked['category_code']['C0005009']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_35">퀵타임 이벤트 없이 플레이 가능</label>
+						<input type="checkbox" class="btn-check" id="category_code_36" name="category_code_36" value="C0005010" <?=$checked['category_code']['C0005010']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_36">텍스트 채팅 음성 변환</label>
+						<input type="checkbox" class="btn-check" id="category_code_37" name="category_code_37" value="C0005011" <?=$checked['category_code']['C0005011']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_37">키보드 전용 옵션</label>
+						<input type="checkbox" class="btn-check" id="category_code_38" name="category_code_38" value="C0005012" <?=$checked['category_code']['C0005012']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_38">마우스 전용 옵션</label>
+						<input type="checkbox" class="btn-check" id="category_code_39" name="category_code_39" value="C0005013" <?=$checked['category_code']['C0005013']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_39">터치 전용 옵션</label>
+						<input type="checkbox" class="btn-check" id="category_code_40" name="category_code_40" value="C0005014" <?=$checked['category_code']['C0005014']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_40">난이도 조정</label>
+						<input type="checkbox" class="btn-check" id="category_code_41" name="category_code_41" value="C0005015" <?=$checked['category_code']['C0005015']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_42">수시 저장</label>
+					</div>
+				</div>
+				
+				<div class="d-flex ps-3 <?=$aside['category']!="false"?'':'d-none'?>">
+					<div class="col-1 fw-bold fs-5 align-content-center">플레이스테이션 액세서리</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<input type="checkbox" class="btn-check" id="category_code_43" name="category_code_43" value="P0003001" <?=$checked['category_code']['P0003001']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_43">무선 컨트롤러</label>
+						<input type="checkbox" class="btn-check" id="category_code_44" name="category_code_44" value="P0003002" <?=$checked['category_code']['P0003002']?>>
+						<label class="btn btn-outline-secondary fs-5 rounded-5 my-2" for="category_code_44">고급 컨트롤러</label>
+					</div>
+				</div>
+				<hr class="my-0 mx-3 <?=$aside['cost']!="false"?'':'d-none'?>">
+				<div class="d-flex ps-3 <?=$aside['cost']!="false"?'':'d-none'?>">
+					<div class="col-1 fw-bold fs-5 align-content-center">가격</div>
+					<div class="col-11 fs-5 align-content-center filter">
+						<?php
+							foreach($price_arr as $key=>$value){
+						?>
+						<button type="button" class="btn btn-outline-secondary fs-5 rounded-5 my-2" id="search_price_<?=$key?>" name="search_price" value="<?=$key?>" data-minprice="<?=$value['min']?>" data-maxprice="<?=$value['max']?>"><?=$value['msg']?></button>
+						<?php
+							}
+						?>
+						<div class="row my-3">
+							<div class="col-3">
+								<input type="number" class="form-control" name="min_price" id="min_price" value="<?=$min_price?>" placeholder="직접입력" autocomplete="off">
+							</div>
+							~
+							<div class="col-3">
+								<input type="number" class="form-control" name="max_price" id="max_price" value="<?=$max_price?>" placeholder="직접입력" autocomplete="off">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

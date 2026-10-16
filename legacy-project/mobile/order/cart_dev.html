@@ -1,0 +1,312 @@
+<?
+	ini_set( "display_errors", 0 );
+	header("Content-Type:text/html; charset=utf-8");
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+	$page_title="장바구니";
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$order = new Order($conn);
+	
+	//장바구니 조회
+	$cart_list = $order->getCartList($_SESSION['member']['m_no']);
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icon/192x192.png">
+<link rel="manifest" href="/manifest.json?1">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css?t=<?=date('YmdHis')?>">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css?t=<?=date('YmdHis')?>">
+<style>
+.form-check-input{
+	width:1.5rem;
+	height:1.5rem;
+}
+
+#btn-order-wrap{
+	width:100%;
+	position:fixed;
+	bottom:56px;
+	left:0;
+	align-items: center;
+	justify-content: center;
+	padding:0 16px;
+	text-align:center;
+}
+</style>
+</head>
+<body class="dark-mode-active">
+
+<!-- App Header -->
+<div class="appHeader bg-primary text-light mt-0">
+	<div class="left">
+		<a href="#" class="headerButton goBack" data-rel="back">
+			<ion-icon name="chevron-back-outline"></ion-icon>
+		</a>
+	</div>
+	<div class="pageTitle"><?=$page_title?></div>
+	<div class="right">
+		<a href="#" class="headerButton toggle-searchbox" >
+			<div class="col">
+				<img src="/assets/images/icon/search_icon_white.svg">
+			</div>
+		</a>
+	</div>
+</div>
+<!-- * App Header -->
+<!-- Search Component -->
+<div id="search" class="appHeader">
+	<form class="search-form" method="GET" action="/game/game_search.html">
+		<div class="form-group searchbox bg-black">
+			<input type="text" class="form-control" id="q" name="q"  value="<?=$q?>" placeholder="Search...">
+			<i class="input-icon">
+				<ion-icon name="search-outline"></ion-icon>
+			</i>
+			<a href="#" class="ms-1 close toggle-searchbox">
+				<ion-icon name="close-circle"></ion-icon>
+			</a>
+		</div>
+	</form>
+</div>
+<!-- * Search Component -->
+
+<!-- Dialog Clear -->
+<div class="modal fade dialogbox" id="DialogClear" data-bs-backdrop="static" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Empty Cart</h5>
+			</div>
+			<div class="modal-body">
+				All items will be deleted.
+			</div>
+			<div class="modal-footer">
+				<div class="btn-inline">
+					<a href="#" class="btn btn-text-secondary" data-bs-dismiss="modal">CLOSE</a>
+					<a href="#" class="btn btn-text-primary" data-bs-dismiss="modal">DELETE</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- * Dialog Clear -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="full-height">
+	<div class="section pt-2">
+		<?
+			if(empty($cart_list)){
+				echo "<div class='text-center font-16 mt-5'>장바구니가 비었습니다.</div>";
+			}else{
+		?>
+		<p class="mb-1">장바구니 상품수 ( <?=count($cart_list)?>/20 )</p>
+		<form class="form-horizontal needs-validation" name="orderFrm" id="orderFrm" method="POST" action="order.html" novalidate>
+			<!-- item -->
+			<?
+				$total_goods_price = 0;
+				foreach($cart_list as $key=>$value){
+			?>
+			<div class="card cart-item mb-2 rounded-0">
+				<div class="card-header bg-secondary">
+					<div class="d-flex justify-content-between">
+						<?if($value['selected']=="1"){?>
+						<input type="checkbox" class="form-check-input shadow-none" name="goods_sku[]" value="<?=$value['goods_sku']?>" checked>
+						<?}else{?>
+						<input type="checkbox" class="form-check-input shadow-none" name="goods_sku[]" value="<?=$value['goods_sku']?>">
+						<?}?>
+						<a href="javascript:void(0);" class="btn_cart_del btn btn-sm btn-secondary px-1 mx-0 text-center" data-sku="<?=$value['goods_sku']?>"><i class="bi bi-trash-fill mx-0"></i></a>
+					</div>
+				</div>
+				<img src="<?=$value['domain']?>/upload/product/<?=$value['product_code']?>/header/header.jpg?t=<?=time()?>" alt="product" class="card-img-top rounded-0">
+				<div class="card-body">
+					<h5 class="card-title fs-4 fw-normal mb-2"><?=$value['product_name']?></h5>
+					<p class="card-text">
+						<?if(is_array($value['promotion'])){?>
+						<span class="badge bg-danger align-self-center px-3 py-3 font-16 num fw-bold rounded-2"><?=$value['promotion']['discount_rate']?> %</span>
+						<strong class="ms-1 font-16 num fw-bold price" data="<?=$value['promotion']['sale_price']?>">&#8361; <?=number_format($value['promotion']['sale_price'])?></strong>
+						<s class="ms-1 font-12 num consumer_price" data="<?=$value['consumer_price']?>">&#8361; <?=number_format($value['consumer_price'])?></s>
+						<?}else{?>
+						<?if($value['discount']>0){?><span class="badge bg-primary align-self-center px-3 py-3 font-16 num fw-bold rounded-2"><?=$value['discount']?> %</span><?}?>
+						<strong class="ms-1 font-16 num fw-bold price" data="<?=$value['price']?>">&#8361; <?=number_format($value['price'])?></strong>
+						<s class="ms-1 font-12 num consumer_price" data="<?=$value['consumer_price']?>"><?if($value['discount']>0){?>&#8361; <?=number_format($value['consumer_price'])?><?}?></s>
+						<?}?>
+					</p>
+				</div>
+			</div>
+			<?
+					if($value['selected']=="1"){
+						$total_goods_price+=$value['consumer_price'];
+						if($value['promotion']['sale_price']>0){
+							$total_price+=$value['promotion']['sale_price'];
+						}else{
+							$total_price+=$value['price'];
+						}
+					}
+				}
+			?>
+			<div class="section mt-2 mb-2">
+				<div class="card">
+					<ul class="listview flush transparent simple-listview">
+						<li>총 상품 가격 <span class="num font-14">&#8361;  <span  id="total_goods_price"><?=number_format($total_goods_price)?></span></span></li>
+						<li>총 할인 <span class="num font-14 text-danger" >- &#8361;  <span id="total_discount_price"><?=number_format($total_goods_price-$total_price)?></span></span></li>
+						<li>총 결제 금액 <span class="num fs-4 fw-bold">&#8361;  <span id="total_price"><?=number_format($total_price)?></span></span></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="section inset mb-2">
+				<div id="btn-order-wrap" class="wide-block full">
+					<button type="button" class="btn btn-primary btn-lg btn-block" id="btn_select_order">주문하기</button>
+				</div>
+			</div>
+		</form>
+	<?
+		}
+	?>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+<script>
+$(document).ready(function(){
+	//getOrderPrice();
+	
+	$("input[name='goods_sku[]']").change(function() {
+		if ($(this).is(":checked")) {
+		// 체크되었을 때 동작
+			//alert($(this).val()+" 선택");
+			$.ajax({
+				'url': '/order/cart_proc.php',
+				'type': 'POST',
+				'data':{mode:"cart_item_select",goods_sku:$(this).val()},
+				'success': function (data){
+					//console.log(data);
+					//location.reload();
+					getOrderPrice();
+				},
+				'error':function(data){
+					alert(data);
+				}
+			});
+		}else{
+		// 체크 해제되었을 때 동작
+			$.ajax({
+				'url': '/order/cart_proc.php',
+				'type': 'POST',
+				'data':{mode:"cart_item_deselect",goods_sku:$(this).val()},
+				'success': function (data){
+					//console.log(data);
+					//location.reload();
+					getOrderPrice();
+				},
+				'error':function(data){
+					alert(data);
+				}
+			});
+		}
+		//getOrderPrice();
+	});
+	
+	$(".btn_cart_del").bind("click",function(){
+		var index = $(".btn_cart_del").index(this);
+		var goods_sku = $(".btn_cart_del").eq(index).attr("data-sku");
+
+		if(confirm("해당 상품을 장바구니에서 삭제하시겠습니까?")){
+			$.ajax({
+				'url': '/order/cart_proc.php',
+				'type': 'POST',
+				'data':{mode:"del_cart",goods_sku:goods_sku},
+				'success': function (data){
+					//console.log(data);
+					location.reload();
+				},
+				'error':function(data){
+					alert(data);
+				}
+			});
+		}
+	});
+	
+	$("#btn_select_order").bind("click",function(){
+		if(addCommas($("#total_price").text())==0){
+			alert("구매할 상품을 선택해 주세요.");
+			return;
+		}
+		
+		$("#orderFrm").submit();
+		
+	});
+	
+	function getOrderPrice(){
+		var total_goods_price = 0;
+		var total_discount_price = 0;
+		var total_price = 0;
+		$("input[name='goods_sku[]']").each(function(i) {
+			if($("input[name='goods_sku[]']").eq(i).is(":checked")){
+			total_goods_price+= parseInt($(".consumer_price").eq(i).attr("data"));
+			total_discount_price+= parseInt($(".consumer_price").eq(i).attr("data")-$(".price").eq(i).attr("data"));
+			total_price+= parseInt($(".price").eq(i).attr("data"));
+			}
+		});
+		
+		$("#total_goods_price").text(addCommas(total_goods_price));
+		$("#total_discount_price").text(addCommas(total_discount_price));
+		$("#total_price").text(addCommas(total_price));
+	}
+	
+	function addCommas(amount) {
+		return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+});
+</script>
+
+</body>
+
+</html>

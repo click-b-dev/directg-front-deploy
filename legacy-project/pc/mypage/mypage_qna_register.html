@@ -1,0 +1,135 @@
+<?
+header("Content-Type:text/html; charset=utf-8"); 
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+$page_title = "문의 하기";
+$aside_menu['qna_ragister'] = "text-primary fw-bold";
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<div class="wrapper overflow-visible">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0 font-14">
+
+				<div class="col-12">
+					<form enctype="multipart/form-data" id="frm" name="frm" method="post" action="mypage_qna_proc.php" class="">
+						<input type="hidden" id="mode" name="mode" value="register">
+						<div class="card mb-0 shadow-none rounded-0">
+							<div class="card-body">
+								<div class="row mb-3">
+									<label for="qna_type" class="col-2 align-content-center text-center">문의 구분</label>
+									<div class="col-10 p-2">
+										<select name="gubun" id="gubun" class="form-control rounded-0 font-14" required>
+											<option value="">:::선택:::</option>
+											<option value="1">게임 설치, 플레이</option>
+											<option value="2">주문, 결제</option>
+											<option value="5">제품 코드(키) 오류</option>
+											<option value="7">한글, 제공 콘텐츠</option>
+											<option value="6">계정, 회원, 인증</option>
+											<option value="4">취소, 환불</option>
+											<option value="8">할인, 가격</option>
+											<option value="9">이용방법</option>
+											<option value="3">기타</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="subject" class="col-2 align-content-center text-center">제목</label>
+									<div class="col-10">
+										<input type="text" class="form-control rounded-0 font-14" id="subject" name="subject" required>
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="contents" class="col-2 align-content-center text-center">내용</label>
+									<div class="col-10">
+										<textarea id="contents" name="contents" class="form-control rounded-0 font-14" rows="10"><?=$notice_data['contents']?></textarea>
+									</div>
+								</div>
+
+								<?php
+									for($i=1;$i<=3;$i++) {
+								?>
+								<div class="row mb-3">
+									<label for="upload_file_<?=$i?>" class="col-2 align-content-center text-center">첨부파일 <?=$i?></label>
+									<div class="col-10">
+										<input type="file" class="form-control rounded-0 font-14" id="upload_file_<?=$i?>" name="upload_file[]" >
+										첨부파일은 최대 2MB입니다. (사용가능 파일 형식 - jpg / gif / png )
+									</div>
+								</div>
+								<?php
+									}
+								?>
+
+							</div>
+						</div>
+						<div class="row">
+							<div class="text-center">
+								<button type="submit" class="btn btn-primary btn-lg shadow-none m-3">확인</button>
+								<a href="./mypage_qna.html" class="btn btn-danger btn-lg shadow-none m-3">취소</a>
+							</div>
+						</div>
+					</form>
+				</div>
+
+
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<!-- bundle -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script>
+$(document).ready(function() {
+	$('#frm').on('submit', function(e) {
+		e.preventDefault();
+		var formData = new FormData(this);
+		$.LoadingOverlay("show");
+		$.ajax({
+			url: $(this).attr('action'),
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false,
+			dataType: 'json',
+			success: function(data) {
+				$.LoadingOverlay("hide");
+				alert(data.error_msg);
+				location.reload();
+			},
+			error: function(xhr, status, error) {
+				console.log(xhr);
+				console.log(status);
+				console.log(error);
+				alert('고객문의 등록 중 오류가 발생했습니다. ' + error);
+			}
+		});
+	});
+});
+</script>
+</body>
+</html>

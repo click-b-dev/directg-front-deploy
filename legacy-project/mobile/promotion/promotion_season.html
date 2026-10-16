@@ -1,0 +1,816 @@
+<?
+ini_set( "display_errors", 0 );
+error_reporting(E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_PARSE | E_USER_ERROR | E_USER_WARNING);
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+header('Content-Type:text/html; charset=utf-8'); 
+
+/*
+if($_SERVER['REMOTE_ADDR']<>"112.216.231.146"){
+	msg("프로모션 기간이 아닙니다.", "/");
+	exit;
+}
+*/
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$goods = new Goods($conn);
+	$promotion = new Promotion($conn);
+	$parsedown= new Parsedown();
+	
+	//노출여부가 Y인 대규모 프로모션을 가져온다.
+	$promotion_season = $promotion->getPromotionSeason();
+	
+	$page_title=$promotion_season['promotion_season_name'];
+	
+	$promotion_season_start = date('Y-m-d H:i:s',$promotion_season['promotion_season_start']);
+	$promotion_season_end = date('Y-m-d H:i:s',$promotion_season['promotion_season_end']);
+	
+	//페이지 접근제한확인
+	if(date('Y-m-d H:i:s')>=$promotion_season_start && date('Y-m-d H:i:s')<$promotion_season_end){
+		$is_view = "Y";
+	}else{
+		$is_view = "N";
+	}
+	
+	if($is_view=="N"){
+		if($_SERVER['REMOTE_ADDR']<>"112.216.231.146"){
+			echo '<script>alert("프로모션 기간이 아닙니다.");location.href="https://m.directg.net/index.php";</script>';
+			exit;
+		}else{
+			echo '<script>alert("프로모션 기간이 아닙니다.");</script>';
+		}
+	}
+	
+	$promotion_recommand_goods = explode("|",$promotion_season['promotion_season_recommand']);
+	$promotion_best_goods = explode("|",$promotion_season['promotion_season_best']);
+	$promotion_max_discount_goods = explode("|",$promotion_season['promotion_max_discount']);
+	$promotion_price_5000_goods = explode("|",$promotion_season['promotion_price_5000']);
+	$promotion_price_10000_goods = explode("|",$promotion_season['promotion_price_10000']);
+	$promotion_add_repay_goods = explode("|",$promotion_season['promotion_add_repay']);
+	
+	//진행중인 이벤트 노출 지정
+	$event_add_where = " AND show_promotion = 'Y'"; // 관리자에 설정된 이벤트만 노출 260518 KDY
+	$event_list = $promotion->getPromotionEventList($event_add_where);
+	
+	
+	//DG 추천게임
+	$promotion_recommand = array();
+	
+	foreach($promotion_recommand_goods as $key=>$value){
+		$promotion_recommand[$key] = array(
+			"title_info"=>$goods->getGoodsOptionTitleInfo($value),
+			"option_info"=>$goods->getGoodsItemDetail($value),
+		);
+	}
+	
+	//프로모션 인기게임
+	$promotion_best = array();
+	
+	foreach($promotion_best_goods as $key=>$value){
+		$promotion_best[$key] = array(
+			"title_info"=>$goods->getGoodsOptionTitleInfo($value),
+			"option_info"=>$goods->getGoodsItemDetail($value),
+		);
+	}
+	
+	//역대 최대할인
+	$promotion_max_discount = array();
+	
+	foreach($promotion_max_discount_goods as $key=>$value){
+		$promotion_max_discount[$key] = array(
+			"title_info"=>$goods->getGoodsOptionTitleInfo($value),
+			"option_info"=>$goods->getGoodsItemDetail($value),
+		);
+	}
+
+	//추가 포인트
+	$promotion_add_repay = array();
+	
+	foreach($promotion_add_repay_goods as $key=>$value){
+		$promotion_add_repay[$key] = array(
+			"title_info"=>$goods->getGoodsOptionTitleInfo($value),
+			"option_info"=>$goods->getGoodsItemDetail($value),
+		);
+	}
+	
+	//5천원 미만 게임
+	$promotion_price_5000 = array();
+	
+	foreach($promotion_price_5000_goods as $key=>$value){
+		$promotion_price_5000[$key] = array(
+			"title_info"=>$goods->getGoodsOptionTitleInfo($value),
+			"option_info"=>$goods->getGoodsItemDetail($value),
+		);
+	}
+	
+	//1만원 미만 게임
+	$promotion_price_10000 = array();
+	
+	foreach($promotion_price_10000_goods as $key=>$value){
+		$promotion_price_10000[$key] = array(
+			"title_info"=>$goods->getGoodsOptionTitleInfo($value),
+			"option_info"=>$goods->getGoodsItemDetail($value),
+		);
+	}
+	
+	
+	$where = [];
+	
+	$where[] = " a.game_type='game' and a.display_type='basic' and c.promotion_start='".$promotion_season_start."' and c.promotion_end<='".$promotion_season_end."'";
+	foreach($where as $value){
+		$add_where.= " and ".$value;
+	}
+	$orderby = "a.release_date desc";
+	$promotion_list = $promotion->getPromotionSeasonGame("1",$add_where,$orderby,$param,'20');
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link href="https://directg.net/promotion/promotion_season.html" rel="canonical" />
+<link rel="icon" type="image/png" href="/favicon/favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon/android-icon-192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+
+<style>
+.event_contents ul{
+	padding-left:1rem;
+	margin-bottom:0;
+}
+
+.event_contents li{
+	font-size:12px;
+}
+
+</style>
+
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsuleSub" class="full-height">
+	<?if($promotion_season['promotion_season_banner_mobile']<>"#"){?>
+	<div class="section full">
+		<div class="wide-block pt-1 px-2">
+			<a href="<?=$promotion_season['promotion_season_banner_link']?>"><img src="<?=$promotion_season['promotion_season_banner_mobile']?>" class="img-fluid" alt=" <?=$page_title?>"></a>
+		</div>
+	</div>
+	<?}?>
+	
+	<!--DG 추천게임-->
+	<div class="section full mb-3">
+		<div class="section-title py-2 px-2">
+			<div class="d-flex justify-content-between align-items-end w-100">
+				<h2 class="mb-0 font-16">DG 추천게임</h2>
+			</div>
+		</div>
+		<div class="carousel-multiple splide px-2" id="promotion_recommand">
+			<div class="splide__track">
+				<ul class="splide__list">
+					<?
+						foreach($promotion_recommand as $recommand){
+							if($recommand['option_info']['promotion']['sale_price']>0){
+								$recommand['option_info']['discount'] =$recommand['option_info']['promotion']['discount_rate'];
+								$recommand['option_info']['price'] =$recommand['option_info']['promotion']['sale_price'];
+								$recommand['option_info']['is_promotion']="Y";
+								$recommand['option_info']['promotion_label']="bg-danger";
+							}else{
+								$recommand['option_info']['is_promotion']="N";
+								$recommand['option_info']['promotion_label']="bg-cprimary";
+							}
+					?>
+					<li class="splide__slide">
+						<div class="card product-card">
+							<div class="card-header rounded-0 text-truncate ps-1"><?=$recommand['title_info']['title_name']?></div>
+							<div class="card-img position-relative rounded-0">
+								<a href="/game/game_view.html?product_id=<?=$recommand['title_info']['sku']?>"><img src="<?=$recommand['title_info']['domain']?>/upload/title/<?=$recommand['title_info']['title_id']?>/hero/hero_capsule.jpg" class="imaged w-100 square" alt="<?=$recommand['title_info']['title_name']?> image"></a>
+							</div>
+							<div class="card-body px-2">
+								<div class="d-flex justify-content-between align-items-center" style="min-height:32px">
+									<div class="">
+										<?if($recommand['option_info']['discount']>0){?>
+										<span class="badge <?=$recommand['option_info']['promotion_label']?> rounded-1 percent">-<?=$recommand['option_info']['discount']?>%</span>
+										<?}?>
+									</div>
+									<div class="card-price">
+										<?if($recommand['option_info']['discount']>0){?>
+										<div class="old-price"><s class="won"> <?=number_format($recommand['option_info']['consumer_price'])?></s></div>
+										<?}?>
+										<div class="current-price text-white won">  <?=number_format($recommand['option_info']['price'])?></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<?}?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!--프로모션 인기게임-->
+	<div class="section full mb-3">
+		<div class="section-title py-2 px-2">
+			<div class="d-flex justify-content-between align-items-end w-100">
+				<h2 class="mb-0 font-16">프로모션 인기게임</h2>
+			</div>
+		</div>
+		<div class="carousel-multiple splide px-2" id="promotion_best">
+			<div class="splide__track">
+				<ul class="splide__list">
+					<?
+						$ranking = 1;
+						foreach($promotion_best as $best){
+							if($best['option_info']['promotion']['sale_price']>0){
+								$best['option_info']['discount'] =$best['option_info']['promotion']['discount_rate'];
+								$best['option_info']['price'] =$best['option_info']['promotion']['sale_price'];
+								$best['option_info']['is_promotion']="Y";
+								$best['option_info']['promotion_label']="bg-danger";
+							}else{
+								$best['option_info']['is_promotion']="N";
+								$best['option_info']['promotion_label']="bg-cprimary";
+							}
+							
+							switch($best['option_info']['display_type']){
+								case "basic":
+									$best['option_info']['option_gubun'] = "<span class='badge bg-info rounded-0 font-11 py-1 px-2'>기본게임</span>";
+								break;
+								case "edition":
+									$best['option_info']['option_gubun'] = "<span class='badge bg-primary rounded-0 font-11 py-1 px-2'>에디션</span>";
+								break;
+								
+							}
+							
+							switch($best['option_info']['game_type']){
+								case "game":
+									$best['option_info']['view_url'] = "/game/game_view.html?product_id=".$best['title_info']['sku'];
+								break;
+								case "dlc":
+									$best['option_info']['option_gubun'] = "<span class='badge bg-ccontent rounded-0 font-11 py-1 px-2'>DLC</span>";
+									$best['option_info']['view_url'] = "/game/dlc_view.html?sku=".$best['option_info']['goods_sku'];
+								break;
+								case "bundle":
+									$best['option_info']['view_url'] = "/game/bundle_view.html?sku=".$best['option_info']['goods_sku'];
+									$best['option_info']['option_gubun'] = "<span class='badge bg-success rounded-0 font-11 py-1 px-2'>번들</span>";
+								break;
+							}
+					?>
+					<li class="splide__slide">
+						<div class="card product-card">
+							<div class="card-header rounded-0 text-truncate ps-1"><?=$best['option_info']['product_name']?></div>
+							<div class="card-img position-relative rounded-0">
+								<div class="position-absolute top-0 start-0">
+									<div class="bg-secondary text-dark text-center" style="width:32px;height:32px;background:#313E4F !important "><span class="badge rounded-0 font-14 my-1"><?=$ranking?></span></div>
+								</div>
+								<a href="<?=$best['option_info']['view_url']?>"><img src="<?=$best['option_info']['domain']?>/upload/product/<?=$best['option_info']['product_code']?>/header/header.jpg" class="imaged w-100 square" alt="<?=$best['option_info']['product_name']?> image"></a>
+								<div class="position-absolute bottom-0 start-0"><?=$best['option_info']['option_gubun']?></div>
+							</div>
+							<div class="card-badge bg-grey d-flex flex-row align-items-center">
+								<span class="badge badge-outline-success rounded-2">코드발송</span>
+								<?if($best['option_info']['is_preorder']=="Y"){?><span class="badge rounded-2 badge-outline-warning">예약구매</span><?}?>
+								<?if($best['option_info']['is_bonus']=="Y"){?><span class="badge rounded-2 badge-outline-info">특전</span><?}?>
+							</div>
+							<div class="card-body px-2">
+								<div class="d-flex justify-content-between align-items-center" style="min-height:32px">
+									<div>
+										<?if($best['option_info']['discount']>0){?>
+										<span class="badge <?=$best['option_info']['promotion_label']?> rounded-1 percent">-<?=$best['option_info']['discount']?>%</span>
+										<?}?>
+									</div>
+									<div class="card-price">
+										<?if($best['option_info']['discount']>0){?>
+										<div class="old-price"><s class="won"> <?=number_format($best['option_info']['consumer_price'])?></s></div>
+										<?}?>
+										<div class="current-price text-white won">  <?=number_format($best['option_info']['price'])?></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<?	$ranking++;
+						}
+					?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!--진행중인 이벤트-->
+	<div class="section full mb-3">
+		<div class="section-title py-2 px-2">
+			<div class="d-flex justify-content-between align-items-center w-100">
+				<h2 class="mb-0 font-16">진행중인 이벤트</h2>
+				<a href="/event/event.html" class="btn btn-outline-primary btn-allview">전체보기</a>
+			</div>
+		</div>
+		<div class="wide-block full px-2 bg-transparent border-0">
+			<?
+				foreach($event_list as $value){
+			?>
+			<div class="card product-card mb-2 bg-transparent">
+				<a href="<?=$value['event_link_url']?>" target="<?=$value['event_link_target']?>"><img src="<?=$value['event_banner']?>" class="card-img-top rounded-0" alt="<?=$value['subject']?>"></a>
+				<div class="card-body p-1">
+					<h5 class="card-title font-14">■ <?=$value['subject']?></h5>
+					<div class="event_contents"><?=$parsedown->text(htmlspecialchars_decode($value['contents'],ENT_NOQUOTES))?></div>
+				</div>
+			</div>
+			<?}?>
+		</div>
+	</div>
+	
+	<!--역대 최대할인-->
+	<div class="section full mb-3">
+		<div class="section-title py-2 px-2">
+			<div class="d-flex justify-content-between align-items-end w-100">
+				<h2 class="mb-0 font-16">역대 최대할인</h2>
+				<a href="<?=$promotion_season['promotion_max_discount_link']?>" class="btn btn-outline-primary btn-allview">전체보기</a>
+			</div>
+		</div>
+		<div class="carousel-multiple splide px-2" id="promotion_max_discount">
+			<div class="splide__track">
+				<ul class="splide__list">
+					<?
+						foreach($promotion_max_discount as $max_discount){
+							if($max_discount['option_info']['promotion']['sale_price']>0){
+								$max_discount['option_info']['discount'] =$max_discount['option_info']['promotion']['discount_rate'];
+								$max_discount['option_info']['price'] =$max_discount['option_info']['promotion']['sale_price'];
+								$max_discount['option_info']['is_promotion']="Y";
+								$max_discount['option_info']['promotion_label']="bg-danger";
+							}else{
+								$max_discount['option_info']['is_promotion']="N";
+								$max_discount['option_info']['promotion_label']="bg-primary";
+							}
+							
+							switch($max_discount['option_info']['display_type']){
+								case "basic":
+									$max_discount['option_info']['option_gubun'] = "<span class='badge bg-info rounded-0 font-11 py-1 px-2'>기본게임</span>";
+								break;
+								case "edition":
+									$max_discount['option_info']['option_gubun'] = "<span class='badge bg-primary rounded-0 font-11 py-1 px-2'>에디션</span>";
+								break;
+							}
+					?>
+					<li class="splide__slide">
+						<div class="card product-card">
+							<div class="card-header rounded-0 text-truncate"><?=$max_discount['option_info']['product_name']?></div>
+							<div class="card-img position-relative rounded-0">
+								<a href="/game/game_view.html?product_id=<?=$max_discount['title_info']['sku']?>"><img src="<?=$max_discount['option_info']['domain']?>/upload/product/<?=$max_discount['option_info']['product_code']?>/header/header.jpg" class="imaged w-100 square" alt="<?=$max_discount['option_info']['product_name']?> image"></a>
+								<div class="position-absolute bottom-0 start-0"><?=$max_discount['option_info']['option_gubun']?></div>
+							</div>
+							<div class="card-badge bg-grey d-flex flex-row align-items-center">
+								<span class="badge badge-outline-success rounded-2">코드발송</span>
+								<?if($max_discount['option_info']['is_preorder']=="Y"){?><span class="badge rounded-2 badge-outline-warning">예약구매</span><?}?>
+								<?if($max_discount['option_info']['is_bonus']=="Y"){?><span class="badge rounded-2 badge-outline-info">특전</span><?}?>
+							</div>
+							<div class="card-body px-2">
+								<div class="d-flex justify-content-between align-items-center" style="min-height:32px">
+									<div>
+										<?if($max_discount['option_info']['discount']>0){?>
+										<span class="badge <?=$max_discount['option_info']['promotion_label']?> rounded-1 percent">-<?=$max_discount['option_info']['discount']?>%</span>
+										<?}?>
+									</div>
+									<div class="card-price">
+										<?if($max_discount['option_info']['discount']>0){?>
+										<div class="old-price"><s class="won"> <?=number_format($max_discount['option_info']['consumer_price'])?></s></div>
+										<?}?>
+										<div class="current-price text-white won"> <?=number_format($max_discount['option_info']['price'])?></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<?}?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!--추가 포인트 적립-->
+	<div class="section full mb-3">
+		<div class="section-title py-2 px-2">
+			<div class="d-flex justify-content-between align-items-end w-100">
+				<h2 class="mb-0 font-16">추가 포인트 적립</h2>
+				<a href="<?=$promotion_season['promotion_add_repay_link']?>" class="btn btn-outline-primary btn-allview">전체보기</a>
+			</div>
+		</div>
+		<div class="carousel-multiple splide px-2" id="promotion_add_repay">
+			<div class="splide__track">
+				<ul class="splide__list">
+					<?
+						foreach($promotion_add_repay as $add_repay){
+							if($add_repay['option_info']['promotion']['sale_price']>0){
+								$add_repay['option_info']['discount'] =$add_repay['option_info']['promotion']['discount_rate'];
+								$add_repay['option_info']['price'] =$add_repay['option_info']['promotion']['sale_price'];
+								$add_repay['option_info']['is_promotion']="Y";
+								$add_repay['option_info']['promotion_label']="bg-danger";
+							}else{
+								$add_repay['option_info']['is_promotion']="N";
+								$add_repay['option_info']['promotion_label']="bg-primary";
+							}
+							
+							switch($add_repay['option_info']['display_type']){
+								case "basic":
+									$add_repay['option_info']['option_gubun'] = "<span class='badge bg-info rounded-0 font-11 py-1 px-2'>기본게임</span>";
+								break;
+								case "edition":
+									$add_repay['option_info']['option_gubun'] = "<span class='badge bg-primary rounded-0 font-11 py-1 px-2'>에디션</span>";
+								break;
+							}
+					?>
+					<li class="splide__slide">
+						<div class="card product-card">
+							<div class="card-header rounded-0 text-truncate"><?=$add_repay['option_info']['product_name']?></div>
+							<div class="card-img position-relative rounded-0">
+								<a href="/game/game_view.html?product_id=<?=$add_repay['title_info']['sku']?>"><img src="<?=$add_repay['option_info']['domain']?>/upload/product/<?=$add_repay['option_info']['product_code']?>/header/header.jpg" class="imaged w-100 square" alt="<?=$add_repay['option_info']['product_name']?> image"></a>
+								<div class="position-absolute bottom-0 start-0"><?=$add_repay['option_info']['option_gubun']?></div>
+							</div>
+							<div class="card-badge bg-grey d-flex flex-row align-items-center">
+								<span class="badge badge-outline-success rounded-2">코드발송</span>
+								<?if($add_repay['option_info']['is_preorder']=="Y"){?><span class="badge rounded-2 badge-outline-warning">예약구매</span><?}?>
+								<?if($add_repay['option_info']['is_bonus']=="Y"){?><span class="badge rounded-2 badge-outline-info">특전</span><?}?>
+							</div>
+							<div class="card-body px-2">
+								<div class="d-flex justify-content-between align-items-center" style="min-height:32px">
+									<div>
+										<?if($add_repay['option_info']['discount']>0){?>
+										<span class="badge <?=$add_repay['option_info']['promotion_label']?> rounded-1 percent">-<?=$add_repay['option_info']['discount']?>%</span>
+										<?}?>
+									</div>
+									<div class="card-price">
+										<?if($add_repay['option_info']['discount']>0){?>
+										<div class="old-price"><s class="won"> <?=number_format($add_repay['option_info']['consumer_price'])?></s></div>
+										<?}?>
+										<div class="current-price text-white won"> <?=number_format($add_repay['option_info']['price'])?></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<?}?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!--5천원 미만 게임-->
+	<div class="section full mb-3">
+		<div class="section-title py-2 px-2">
+			<div class="d-flex justify-content-between align-items-end w-100">
+				<h2 class="mb-0 font-16">5천원 미만 게임</h2>
+				<a href="/promotion/promotion_ing_thumb.html?min_price=0&max_price=5000" class="btn btn-outline-primary btn-allview">전체보기</a>
+			</div>
+		</div>
+		<div class="carousel-multiple splide px-2" id="promotion_price_5000">
+			<div class="splide__track">
+				<ul class="splide__list">
+					<?
+						foreach($promotion_price_5000 as $price_5000){
+							if($price_5000['option_info']['promotion']['sale_price']>0){
+								$price_5000['option_info']['discount'] =$price_5000['option_info']['promotion']['discount_rate'];
+								$price_5000['option_info']['price'] =$price_5000['option_info']['promotion']['sale_price'];
+								$price_5000['option_info']['is_promotion']="Y";
+								$price_5000['option_info']['promotion_label']="bg-danger";
+							}else{
+								$price_5000['option_info']['is_promotion']="N";
+								$price_5000['option_info']['promotion_label']="bg-primary";
+							}
+							
+							switch($price_5000['option_info']['display_type']){
+								case "basic":
+									$price_5000['option_info']['option_gubun'] = "<span class='badge bg-info rounded-0 font-11 py-1 px-2'>기본게임</span>";
+								break;
+								case "edition":
+									$price_5000['option_info']['option_gubun'] = "<span class='badge bg-primary rounded-0 font-11 py-1 px-2'>에디션</span>";
+								break;
+							}
+					?>
+					<li class="splide__slide">
+						<div class="card product-card">
+							<div class="card-header rounded-0 text-truncate"><?=$price_5000['option_info']['product_name']?></div>
+							<div class="card-img position-relative rounded-0">
+								<a href="/game/game_view.html?product_id=<?=$price_5000['title_info']['sku']?>"><img src="<?=$price_5000['option_info']['domain']?>/upload/product/<?=$price_5000['option_info']['product_code']?>/header/header.jpg" class="imaged w-100 square" alt="<?=$price_5000['option_info']['product_name']?> image"></a>
+								<div class="position-absolute bottom-0 start-0"><?=$price_5000['option_info']['option_gubun']?></div>
+							</div>
+							<div class="card-badge bg-grey d-flex flex-row align-items-center">
+								<span class="badge badge-outline-success rounded-2">코드발송</span>
+								<?if($price_5000['option_info']['is_preorder']=="Y"){?><span class="badge rounded-2 badge-outline-warning">예약구매</span><?}?>
+								<?if($price_5000['option_info']['is_bonus']=="Y"){?><span class="badge rounded-2 badge-outline-info">특전</span><?}?>
+							</div>
+							<div class="card-body px-2">
+								<div class="d-flex justify-content-between align-items-center" style="min-height:32px">
+									<div>
+										<?if($price_5000['option_info']['discount']>0){?>
+										<span class="badge <?=$price_5000['option_info']['promotion_label']?> rounded-1 percent">-<?=$price_5000['option_info']['discount']?>%</span>
+										<?}?>
+									</div>
+									<div class="card-price">
+										<?if($price_5000['option_info']['discount']>0){?>
+										<div class="old-price"><s class="won"> <?=number_format($price_5000['option_info']['consumer_price'])?></s></div>
+										<?}?>
+										<div class="current-price text-white won">  <?=number_format($price_5000['option_info']['price'])?></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<?}?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!--1만원 미만 게임-->
+	<div class="section full mb-3">
+		<div class="section-title py-2 px-2">
+			<div class="d-flex justify-content-between align-items-end w-100">
+				<h2 class="mb-0 font-16">1만원 미만 게임</h2>
+				<a href="/promotion/promotion_ing_thumb.html?min_price=5000&max_price=10000" class="btn btn-outline-primary btn-allview">전체보기</a>
+			</div>
+		</div>
+		<div class="carousel-multiple splide px-2" id="promotion_price_10000">
+			<div class="splide__track">
+				<ul class="splide__list">
+					<?
+						foreach($promotion_price_10000 as $price_10000){
+							if($price_10000['option_info']['promotion']['sale_price']>0){
+								$price_10000['option_info']['discount'] =$price_10000['option_info']['promotion']['discount_rate'];
+								$price_10000['option_info']['price'] =$price_10000['option_info']['promotion']['sale_price'];
+								$price_10000['option_info']['is_promotion']="Y";
+								$price_10000['option_info']['promotion_label']="bg-danger";
+							}else{
+								$price_10000['option_info']['is_promotion']="N";
+								$price_10000['option_info']['promotion_label']="bg-primary";
+							}
+							
+							switch($price_10000['option_info']['display_type']){
+								case "basic":
+									$price_10000['option_info']['option_gubun'] = "<span class='badge bg-info rounded-0 font-11 py-1 px-2'>기본게임</span>";
+								break;
+								case "edition":
+									$price_10000['option_info']['option_gubun'] = "<span class='badge bg-primary rounded-0 font-11 py-1 px-2'>에디션</span>";
+								break;
+							}
+					?>
+					<li class="splide__slide">
+						<div class="card product-card">
+							<div class="card-header rounded-0 text-truncate"><?=$price_10000['option_info']['product_name']?></div>
+							<div class="card-img position-relative rounded-0">
+								<a href="/game/game_view.html?product_id=<?=$price_10000['title_info']['sku']?>"><img src="<?=$price_10000['option_info']['domain']?>/upload/product/<?=$price_10000['option_info']['product_code']?>/header/header.jpg" class="imaged w-100 square" alt="<?=$price_10000['option_info']['product_name']?> image"></a>
+								<div class="position-absolute bottom-0 start-0"><?=$price_10000['option_info']['option_gubun']?></div>
+							</div>
+							<div class="card-badge bg-grey d-flex flex-row align-items-center">
+								<span class="badge badge-outline-success rounded-2">코드발송</span>
+								<?if($price_10000['option_info']['is_preorder']=="Y"){?><span class="badge rounded-2 badge-outline-warning">예약구매</span><?}?>
+								<?if($price_10000['option_info']['is_bonus']=="Y"){?><span class="badge rounded-2 badge-outline-info">특전</span><?}?>
+							</div>
+							<div class="card-body px-2">
+								<div class="d-flex justify-content-between align-items-center" style="min-height:32px">
+									<div>
+										<?if($price_10000['option_info']['discount']>0){?>
+										<span class="badge <?=$price_10000['option_info']['promotion_label']?> rounded-1 percent">-<?=$price_10000['option_info']['discount']?>%</span>
+										<?}?>
+									</div>
+									<div class="card-price">
+										<?if($price_10000['option_info']['discount']>0){?>
+										<div class="old-price"><s class="won"> <?=number_format($price_10000['option_info']['consumer_price'])?></s></div>
+										<?}?>
+										<div class="current-price text-white won">  <?=number_format($price_10000['option_info']['price'])?></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<?}?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!--프로모션 게임 목록-->
+	<div class="section full mb-3">
+		<div class="section-title py-2 px-2">
+			<div class="d-flex justify-content-between align-items-end w-100">
+				<h2 class="mb-0 font-16">프로모션 게임 목록</h2>
+				<a href="/promotion/promotion_ing_thumb.html" class="btn btn-outline-primary btn-allview">전체보기</a>
+			</div>
+		</div>
+		<div class="wide-block full px-2">
+			<div class="row row-col-5 row-cols-md-2 g-0 justify-content-center">
+			<?
+				if($promotion_list->success == true){
+					$result = $promotion_list->resultset->fetchAll();
+
+					$count = 0;
+					foreach($result as $value){
+						//대표상품정보 
+						$title_info = $goods->getGoodsOptionTitleInfo($value['product_code']);
+			?>
+				<div class="col-6">
+					<div class="card product-card m-0 mb-2">
+						<div class="card-header rounded-0 text-truncate"><?=$value['product_name']?></div>
+						<div class="card-img position-relative rounded-0">
+							<a href="/game/game_view.html?product_id=<?=$title_info['sku']?>"><img src="<?=$value['domain']?>/upload/product/<?=$value['product_code']?>/header/header.jpg" class="imaged w-100 square" alt="<?=$value['product_name']?> image"></a>
+							<div class="position-absolute bottom-0 start-0"><span class='badge bg-info rounded-0 font-11 py-1 px-2'>기본게임</span></div>
+						</div>
+						<div class="card-body px-2">
+							<div class="d-flex justify-content-between align-items-center" style="min-height:32px">
+								<div>
+									<?if($value['discount_rate']>0){?>
+									<span class="badge bg-danger rounded-1 percent">-<?=$value['discount_rate']?>%</span>
+									<?}?>
+								</div>
+								<div class="card-price">
+									<?if($value['discount_rate']>0){?>
+									<div class="old-price"><s class="won"> <?=number_format($value['consumer_price'])?></s></div>
+									<?}?>
+									<div class="current-price text-white won">  <?=number_format($value['price'])?></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<?
+					}
+				}
+			?>
+			</div>
+		</div>
+	</div>
+	
+	<section class="mb-3">
+		<div><a href="/promotion/promotion_ing_thumb.html"><img src="https://image.directg.net/k843QVx2Jq" class="w-100"></a></div>
+	</section>
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/plugins/splide/splide-extension-grid.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<script src="/assets/js/base.js?20250813"></script>
+
+<script>
+$(document).ready(function(){
+	var promotion_recommand = document.getElementById("promotion_recommand");
+	if(promotion_recommand!=null){
+		var splide1 = new Splide( '#promotion_recommand', {
+		grid: {
+				gap : {
+					row: '1rem',
+					col: '1rem',
+				},
+		},
+			perPage    : 2,
+			perMove    : 1,
+			pagination: false,
+			arrows: false,
+			drag: true,
+			flickMaxPages: 1
+		} );
+
+		splide1.mount(window.promotion_recommand.Extensions);
+	}
+	
+	var promotion_best= document.getElementById("promotion_best");
+	if(promotion_best!=null){
+		var splide2 = new Splide( '#promotion_best', {
+		grid: {
+				gap : {
+					row: '1rem',
+					col: '1rem',
+				},
+		},
+			perPage    : 2,
+			perMove    : 1,
+			pagination: false,
+			arrows: false,
+			drag: true,
+			flickMaxPages: 1
+		} );
+
+		splide2.mount(window.promotion_best.Extensions);
+	}
+	
+	var promotion_max_discount= document.getElementById("promotion_max_discount");
+	if(promotion_max_discount!=null){
+		var splide3 = new Splide( '#promotion_max_discount', {
+		grid: {
+				gap : {
+					row: '1rem',
+					col: '1rem',
+				},
+		},
+			perPage    : 2,
+			perMove    : 1,
+			pagination: false,
+			arrows: false,
+			drag: true,
+			flickMaxPages: 1
+		} );
+
+		splide3.mount(window.promotion_max_discount.Extensions);
+	}
+	
+	var promotion_add_repay= document.getElementById("promotion_add_repay");
+	if(promotion_add_repay!=null){
+		var splide6 = new Splide( '#promotion_add_repay', {
+		grid: {
+				gap : {
+					row: '1rem',
+					col: '1rem',
+				},
+		},
+			perPage    : 2,
+			perMove    : 1,
+			pagination: false,
+			arrows: false,
+			drag: true,
+			flickMaxPages: 1
+		} );
+
+		splide6.mount(window.promotion_add_repay.Extensions);
+	}
+	
+	var promotion_price_5000= document.getElementById("promotion_price_5000");
+	if(promotion_price_5000!=null){
+		var splide4 = new Splide( '#promotion_price_5000', {
+		grid: {
+				gap : {
+					row: '1rem',
+					col: '1rem',
+				},
+		},
+			perPage    : 2,
+			perMove    : 1,
+			pagination: false,
+			arrows: false,
+			drag: true,
+			flickMaxPages: 1
+		} );
+
+		splide4.mount(window.promotion_price_5000.Extensions);
+	}
+	
+	var promotion_price_10000= document.getElementById("promotion_price_10000");
+	if(promotion_price_10000!=null){
+		var splide5 = new Splide( '#promotion_price_10000', {
+		grid: {
+				gap : {
+					row: '1rem',
+					col: '1rem',
+				},
+		},
+			perPage    : 2,
+			perMove    : 1,
+			pagination: false,
+			arrows: false,
+			drag: true,
+			flickMaxPages: 1
+		} );
+
+		splide5.mount(window.promotion_price_10000.Extensions);
+	}
+});
+</script>
+</body>
+</html>

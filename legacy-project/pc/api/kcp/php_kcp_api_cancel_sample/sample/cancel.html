@@ -1,0 +1,29 @@
+﻿<!DOCTYPE>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes, target-densitydpi=medium-dpi">   
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">    
+</head>
+<body>
+<form name="cancel_info" method="post" action="./kcp_api_page.php">
+    <div class="container">
+        <div class="form-group border p-3 mt-5">
+            요청구분 : <select name="mod_type">
+                                    <option value="STSC"selected>취소</option>
+                                    <option value="STPC">부분취소</option>
+                     </select>
+                     <br><br>
+            거래번호 : <input type="text" class="form-control mb-3" name="tno" value="">
+            변경사유 : <input type="text" class="form-control mb-3" name="mod_desc" value="">
+            변경요청 금액 (부분취소 시 필수) : <input type="text" class="form-control mb-3" name="mod_mny" value="">
+            변경처리 이전 금액 (부분취소 시 필수) : <input type="text" class="form-control mb-3" name="rem_mny" value="">
+            <div class="d-grid gap-2 d-md-block">
+            <button class="btn btn-primary d-block mx-auto" type="submit">취소요청</button>
+			</div>
+        </div>
+    </div>
+    <input type="hidden" name="site_cd"  value="T0000" />
+</form>
+</body>
+</html>

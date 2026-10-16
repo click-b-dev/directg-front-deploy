@@ -1,0 +1,698 @@
+<?php
+header("Content-Type:text/html; charset=utf-8"); 
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+$settle_no = filter_input(INPUT_GET, 'settle_no', FILTER_SANITIZE_STRING);
+
+$page_title = "주문 상세보기";
+$aside_menu['order_wating'] = "text-primary fw-bold";
+
+try{
+	//리뉴얼DB
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	//기존DB
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$goods = new Goods($conn);
+	$order = new Order($conn);
+	$mypage = new Mypage($conn);
+
+	$order_data = $mypage->getOrderV2($_SESSION['member']['m_no'],$settle_no);
+	$item_data = $mypage->getOrderItemV2($settle_no);
+	
+	//배송지정보
+	$order_address_data = $order->getOrderAddress($settle_no);
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<style>
+.tr_0 td, .tr_0 th {
+	background-color:#111111;
+}
+</style>
+<div class="wrapper overflow-visible">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0">
+				<!--
+				<div class="row">
+					<div class="col-12">
+						<div class="alert alert-light font-14 bg-body rounded-0 " role="alert">
+							<ul class="list-group list-group-flush p-0">
+								<li class="list-group-item border-0 "><span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> 디지털상품은 활성화(수신)되지 않은 제품 코드(키)에 한하여 구입 후 7일 이내에 주문취소 요청이 가능합니다.</span></li>
+								<li class="list-group-item border-0 "><span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> 실물배송상품은 상품 수령일로부터 7일 이내에 교환/반품 요청이 가능합니다.</span></li>
+								<li class="list-group-item border-0 "><span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> [특전제공] 상품은 개발사/퍼블리셔 정책에 따라 출시 후 예고 없이 특전지급이 중단될 수 있습니다.</span></li>
+								<li class="list-group-item border-0 "><span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> 주문완료 후 가급적 빠른 시일 내에 제품 코드(키)를 활성화 하시고, 플랫폼에 등록해주시기 바랍니다.</span></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				-->
+				<div class="row mb-3">
+					<div class="col-12">
+						<table class="table table-bordered table-centered mb-0 text-center align-middle text-nowrap">
+							<colgroup>
+								<col width="10%"/>
+								<col width="20%"/>
+								<col width="*"/>
+								<col width="8%"/>
+								<col width="8%"/>
+								<col width="8%"/>
+								<col width="8%"/>
+							</colgroup>
+							<thead class="font-14">
+								<tr>
+									<th class="text-center">주문번호</th>
+									<th class="text-center" colspan="2">주문상품정보</th>
+									<th class="text-center">주문금액</th>
+									<th class="text-center">진행상태</th>
+									<th class="text-center">코드수령</th>
+									<th class="text-center">취소상태</th>
+								</tr>
+							</thead>
+							<tbody class="font-14">
+							<?php
+								$i=0;
+								foreach($item_data as $value){
+									$total_price+=$value['price'];
+									$option_item_info = $goods->getGoodsItemDetail($value['product_code']);
+									$shipment_info = $order->getOrderShipment($settle_no,$value['ordno']);
+									switch($value['delivery_type']){
+										case "1":
+											switch($value['order_system']){
+												case "Asset":
+													$order_item_asset[$value['ordno']] = $order->getOrderItemAsset($value['ordno']);
+												break;
+												case "Ztorm":
+													$order_item_ztorm[$value['ordno']] = $order->getOrderItemZtorm($value['ordno']);
+												break;
+												case "Genba":
+													$order_item_genba[$value['ordno']] = $order->getOrderItemGenba($value['ordno']);
+												break;
+												case "Vaultn":
+													$order_item_vaultn[$value['ordno']] = $order->getOrderItemVaultn($value['ordno']);
+												break;
+											}
+										break;
+										case "2":
+											$order_item_delivery[$value['ordno']] = $order->getOrderItemDelivery($value['ordno']);
+										break;
+										case "3":
+											switch($value['order_system']){
+												case "Asset":
+													$order_item_asset[$value['ordno']] = $order->getOrderItemAsset($value['ordno']);
+												break;
+												case "Ztorm":
+													$order_item_ztorm[$value['ordno']] = $order->getOrderItemZtorm($value['ordno']);
+												break;
+												case "Genba":
+													$order_item_genba[$value['ordno']] = $order->getOrderItemGenba($value['ordno']);
+												break;
+												case "Vaultn":
+													$order_item_vaultn[$value['ordno']] = $order->getOrderItemVaultn($value['ordno']);
+												break;
+											}
+											
+											$order_item_delivery[$value['ordno']] = $order->getOrderItemDelivery($value['ordno']);
+										break;
+									}
+							?>
+								<tr>
+									<td class="text-center"><?=$value['ordno']?></td>
+										<td class="text-center p-0">
+										<div class="d-flex">
+											<div class="position-relative col-9">
+												<img src="<?=$option_item_info['domain']?>/upload/product/<?=$option_item_info['product_code']?>/header/header.jpg" class="img-fluid rounded-0">
+												<div class="position-absolute bottom-0 start-0">
+													<? 
+														switch($option_item_info['game_type']){
+															case "game":
+																switch($option_item_info['display_type']){
+																	case "basic":
+													?>
+													<span class="badge bg-info rounded-0 font-12 py-2">기본게임</span>
+													<?
+																	break;
+																	case "edition":
+													?>
+													<span class="badge bg-primary rounded-0 font-12 py-2">에디션</span>
+													<?
+																	break;
+																	case "multi":
+													?>
+													<span class="badge bg-warning rounded-0 font-12 py-2">멀티팩</span>
+													<?
+																	break;
+																}
+															break;
+															case "dlc":
+													?>
+													<span class="badge bg-content rounded-0 font-12 py-2">DLC</span>
+													<?
+															break;
+															case "music":
+													?>
+													<span class="badge bg-content rounded-0 font-12 py-2">Music</span>
+													<?
+															break;
+															case "bundle":
+													?>
+													<span class="badge bg-success rounded-0 font-12 py-2">번들</span>
+													<?
+															break;
+															case "holomodels":
+																switch($option_item_info['display_type']){
+																	case "holomodels":
+													?>
+													<span class="badge bg-success rounded-0 font-12 py-2">본체</span>
+													<?
+																	break;
+																	case "holomodelsdlc":
+													?>
+													<span class="badge bg-content rounded-0 font-12 py-2">DLC</span>
+													<?
+																	break;
+																	case "holomodelsedition":
+													?>
+													<span class="badge bg-primary rounded-0 font-12 py-2">에디션</span>
+													<?
+																	break;
+																}
+															break;
+														}
+													?>
+												</div>
+											</div>
+											<div class="text-center align-content-center align-self-center col-3">
+											<?
+												switch($option_item_info['product_platform']){
+													case "1":
+														echo '<img class="mx-auto d-block rounded-0" src="/assets/images/platform/steam.svg">';
+													break;
+													case "34":
+														echo '<img class="mx-auto d-block rounded-0" src="/assets/images/platform/epic_w.svg">';
+													break;
+													case "35":
+														echo '<img class="mx-auto d-block rounded-0" src="/assets/images/platform/rockstar_2.svg">';
+													break;
+													case "51":
+														echo '<img class="mx-auto d-block rounded-0 w-75" src="/assets/images/platform/holomodels.svg">';
+													break;
+													default:
+														echo '';
+													break;
+												}
+											?>
+											</div>
+										</div>
+									</td>
+									<td class="text-start">
+										<div class="mb-1">
+											<?if($value['delivery_type']=='1'){?><span class="badge badge-outline-success">코드발송</span><?}?>
+											<?if($value['delivery_type']=='2'){?><span class="badge badge-outline-post">택배발송</span><?}?>
+											<?if($value['delivery_type']=='3'){?><span class="badge badge-outline-code-post">코드+택배발송</span><?}?>
+										</div>
+										<span class="d-block text-wrap"><?=$value['product_name']?></span>
+									</td>
+									<td class="text-center">
+										<?=number_format($value['price'])?> 원
+									</td>
+									<td class="text-center">
+									<?php
+										if($value['status']=="8" || $value['status']=="9"){
+									?>
+										<span class="badge bg-danger font-12 py-2"><?=($value['status']=="8")?"취소대기":"취소완료"?></span>
+									<?
+										} else if($value['status']=="2"){
+									?>
+											<?if($value['delivery_type']=="1"){?>
+												<span class="badge bg-dark font-12 py-2"><?=($value['is_actv']=="1")?"구매확정":"주문완료"?></span>
+											<?}?>
+											<?if($value['delivery_type']!="1"){?>
+												<span class="badge bg-dark font-12 py-2"><?=$order->getShipmentStatus($shipment_info['shipment_status'])?></span>
+											<?}?>
+									<?php
+										}
+									?>
+									<?php if($value['status']=="1" && $value['send_status']=="fail"){ ?>
+										<span class="badge bg-danger font-12 py-2">발송오류</span>
+									<?php } ?>
+									</td>
+									<td class="text-center">
+										<?if($value['is_actv']=="1"){?>
+										<button type="button" class="btn btn-info btn_licence_view font-12" data-bs-toggle="modal" data-bs-target="#licenceModal" data-ordno="<?=$value['ordno']?>" data-settleno="<?=$settle_no?>" data-ordersystem="<?=$value['order_system']?>">키확인</button>
+										<?}else{
+												if($value['delivery_type']=="1" || $value['delivery_type']=="3"){
+													if($value['status']=="2"){
+										?>
+										<button type="button" class="btn btn-primary btn_activate font-12" data-bs-toggle="modal" data-bs-target="#activateModal" data-ordno="<?=$value['ordno']?>" data-settleno="<?=$settle_no?>" data-ordersystem="<?=$value['order_system']?>">활성화</button>
+										<?
+													} else if($value['status']=="1") {
+										?>
+
+										<?php
+													}
+												}else{
+													echo $order->getShipmentStatus($order_item_delivery[$value['ordno']]['0']['shipment_status']);
+												}
+											}
+										?>
+									</td>
+									<td class="text-center">
+									</td>
+								</tr>
+							<?
+								}
+							?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<?
+					if(is_array($order_address_data) && $order_address_data['zipcode']<>""){
+				?>
+				<div class="row">
+					<div class="col-12 mb-3">
+						<div class="card shadow-none rounded-0" id="address_info">
+							<div class="card-header bg-card font-14">
+								<div class="d-flex align-items-center">
+									<h5 class="text-white fw-bold">배송지 정보</h5>
+									<div class="d-flex ms-auto"><button class="btn btn-secondary btn-sm font-12" data-bs-toggle="modal" data-bs-target="#addressModal" data-bs-whatever="@getbootstrap">배송지 수정</button></div>
+								</div>
+							</div>
+							<div class="card-body">
+								<table class="table table-bordered table-sm mb-0">
+									<thead class="font-13">
+										<tr>
+											<th class="bg-body-secondary text-center py-2">우편번호</th>
+											<th class="bg-body-secondary text-center py-2">주소</th>
+											<th class="bg-body-secondary text-center py-2">주문자</th>
+											<th class="bg-body-secondary text-center py-2">휴대폰번호</th>
+										</tr>
+									</thead>
+									<tbody class="font-12">
+									<tr>
+										<td class="text-center py-2"><?=$order_address_data['zipcode']?></td>
+										<td class="text-start py-2"><?=$order_address_data['address']?> <?=$order_address_data['address_detail']?></td>
+										<td class="text-center py-2"><?=$order_address_data['name']?></td>
+										<td class="text-center py-2"><?=$order_address_data['tel']?></td>
+									</tr>
+									<tr>
+										<th class="bg-body-secondary text-center py-2">배송요청 메시지</th>
+										<td class="py-2" colspan="3"><?=$order_address_data['msg']?></td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<?
+					}
+				?>
+				<div class="row">
+					<div class="col-6">
+						<div class="card shadow-none rounded-0" id="order_info">
+							<div class="card-header text-white fw-bold bg-card font-14">주문 정보</div>
+							<div class="card-body font-14">
+								<dl class="row g-2 mb-0">
+									<dt class="col-sm-3">결제번호</dt>
+									<dd class="col-sm-9"><?=$order_data['settle_no']?> </dd>
+									<dt class="col-sm-3">총 주문금액</dt>
+									<dd class="col-sm-9"><?=number_format($total_price)?> 원</dd>
+									<dt class="col-sm-3">총 할인금액</dt>
+									<dd class="col-sm-9">
+										<span><?=number_format($order_data['use_emoney']+$order_data['use_cash']+$order_data['member_dc'])?> 원</span>
+										<div>(포인트 할인 <?=number_format($order_data['use_emoney'])?> 원 + 캐시할인 <?=number_format($order_data['use_cash'])?> 원 + 회원 즉시할인 <?=number_format($order_data['member_dc'])?> 원)</div>
+									</dd>
+									<dt class="col-sm-3">최종 결제금액</dt>
+									<dd class="col-sm-9"><?=number_format($order_data['total_price'])?> 원</dd>
+								</dl>
+							</div>
+						</div>
+					</div>
+					<div class="col-6">
+						<div class="card shadow-none rounded-0" id="settle_info">
+							<div class="card-header text-white fw-bold bg-card font-14">결제 정보</div>
+							<div class="card-body font-14">
+								<dl class="row g-2 mb-0">
+									<dt class="col-sm-3">결제PG</dt>
+									<dd class="col-sm-9"><?=$order_data['pg_provider']?></dd>
+									<dt class="col-sm-3">결제수단</dt>
+									<dd class="col-sm-9"><?=$order->getPaymentMethod($order_data['payment_method'])?></dd>
+									<dt class="col-sm-3">결제상태</dt>
+									<dd class="col-sm-9">
+										<?=$order->getCheckoutStatus($order_data['step'])?>
+
+										<?php
+											if($order_data['step']=="1"){
+										?>
+										<button type="button" class="btn btn-danger btn-sm btn_order_cancel font-12" data-bs-toggle="modal" data-bs-target="#orderCancelModal" data-todo="주문취소요청" data-paymethod="<?=$order_data['payment_method']?>" data-settleno="<?=$order_data['settle_no']?>">취소요청</button>
+										<?php
+											}
+										?>
+									</dd>
+									<dt class="col-sm-3">주문일자</dt>
+									<dd class="col-sm-9"><?=$order_data['payment_date']?></dd>
+									<?php
+										if($order_data['payment_method']=="SC0040"){
+											$kcp_data = $mypage->getKcpLog($settle_no);
+									?>
+									<dt class="col-sm-3">입금은행</dt>
+									<dd class="col-sm-9"><?=$kcp_data['bank_name']?>
+									<dt class="col-sm-3">계좌번호</dt>
+									<dd class="col-sm-9"><?=$kcp_data['account']?>
+									<dt class="col-sm-3">예금주</dt>
+									<dd class="col-sm-9"><?=$kcp_data['depositor']?>
+									<dt class="col-sm-3">마감기한</dt>
+									<dd class="col-sm-9"><?=date('m월 d일 H:i', strtotime($kcp_data['va_date']))?>
+									<?php
+										
+										} else if ($order_data['payment_method']=="PAYCO") {
+											$payco_data = $mypage->getPaycoLog($settle_no);
+											if($payco_data['paymentCompletionYn']=='N'){
+												$payments = json_decode($payco_data['paymentDetails']);
+												foreach($payments as $payment){
+													if($payment->paymentMethodName=="무통장입금"){
+									?>
+									<dt class="col-sm-3">입금은행</dt>
+									<dd class="col-sm-9"><?=$payment->nonBankbookSettleInfo->bankName?>
+									<dt class="col-sm-3">계좌번호</dt>
+									<dd class="col-sm-9"><?=$payment->nonBankbookSettleInfo->accountNo?>
+									<dt class="col-sm-3">마감기한</dt>
+									<dd class="col-sm-9"><?=date('m월 d일', strtotime($payment->nonBankbookSettleInfo->paymentExpirationYmd))?>
+									<?php
+													}
+												}
+											}
+										}
+									?>
+									<dt class="col-sm-3">구매영수증</dt>
+									<dd class="col-sm-9">
+										<!--<a class="btn btn-secondary shadow-none btn-sm" href="https://bill.payco.com/outseller/receipt/<?=$settle_log['orderNo']?>" target="_blank">고객용 영수증 보기</a>-->
+										<!--$bill_url = "https://partner.kcp.co.kr/bill/card?cmd=card_bill&tno=".$settle_log['tno']."&order_no=".$settle_log['settle_no']."&trade_mony=".$settle_log['amount'];-->
+									</dd>
+								</dl>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<div class="modal" id="orderCancelModal" tabindex="-1" role="dialog" aria-labelledby="orderCancelModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" style="width:650px">
+		<div class="modal-content border border-3 border-start border-end-0 border-top-0 border-bottom-0 border-danger">
+			<div class="modal-header justify-content-between">
+				<h4 class="modal-title" id="orderCancelModalLabel"></h4>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body font-14">
+				<form class="form-horizontal" name="modalFrm" id="modalFrm" method="post">
+					<input type="hidden" name="mode" id="mode" value="vbank_order_cancel">
+					<input type="hidden" name="settle_no" id="settle_no" value="<?=$settle_no?>" >
+					<input type="hidden" class="form-control input-sm" id="order_status" name="order_status" readonly>
+					<div class="form-group mb-3">
+						<label for="settleno" class="control-label mb-1">결제번호</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control input-sm" id="settleno" name="settleno" readonly>
+						</div>
+					</div>
+				</form>
+				<div>
+					<p>※ 주문 취소 후에는 이 주문건의 계좌번호로 입금이 불가능 합니다.</p>
+				</div>
+				<div class="overlay" style="display:none">
+					<i class="fa fa-refresh fa-spin"></i>
+				</div>
+			</div>
+			<div class="modal-footer text-center">
+				<button type="button" class="btn btn-danger mx-3 font-14" id="btn_order_cancel" >취소요청</button>
+				<button type="button" class="btn btn-secondary mx-3 font-14" data-bs-dismiss="modal">취소</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="addressModalLabel">배송지 수정</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form name="addressFrm" id="addressFrm">
+					<div class="mb-3 row">
+						<label for="zipcode" class="col-sm-2 col-form-label font-14">우편번호</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="zipcode" name="zipcode" value="<?=$order_address_data['zipcode']?>" readonly>
+						</div>
+						<div class="col-sm-3">
+							<button type="button" class="btn btn-secondary" id="btn_zipcode">우편번호 검색</button>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="address" class="col-sm-2 col-form-label font-14">주소</label>
+						<div class="col-sm-10">
+						<input type="text" class="form-control" id="address" name="address" value="<?=$order_address_data['address']?>" readonly>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="address_detail" class="col-sm-2 col-form-label font-14">상세주소</label>
+						<div class="col-sm-10">
+						<input type="text" class="form-control" id="address_detail" name="address_detail" value="<?=$order_address_data['address_detail']?>">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-2 col-form-label font-14">주문자 이름</label>
+						<div class="col-sm-3">
+						<input type="text" class="form-control" id="name" name="name" value="<?=$order_address_data['name']?>" maxlength="20">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="tel" class="col-sm-2 col-form-label font-14">주문자 휴대폰번호</label>
+						<div class="col-sm-3">
+						<input type="text" class="form-control" id="tel" name="tel" value="<?=$order_address_data['tel']?>" maxlength="20">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="msg" class="col-sm-2 col-form-label font-14">배송 요청메세지</label>
+						<div class="col-sm-10">
+							<textarea name="msg" id="msg" class="form-control" rows="3" maxlength="120"><?=$order_address_data['msg']?></textarea>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="edit_address">배송지 저장</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- bundle -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+	//주문취소 팝업
+	$('#orderCancelModal').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget) // Button that triggered the modal
+		var todo = button.data('todo') // Extract info from data-* attributes
+		var settleno = button.data('settleno');
+		var is_lic_actv = button.data("actv");
+		var modal = $(this);
+
+		if(is_lic_actv=="1"){
+			alert("제품키를 활성화한 주문은 주문취소가 불가능합니다.");
+			modal('hide');
+		}else{
+			modal.find('.modal-title').text(todo);
+			modal.find('.modal-body input[name="order_status"]').val(todo);
+			modal.find('.modal-body input[name="settleno"]').val(settleno);
+		}
+	});
+	
+	
+	//주문취소요청 처리
+	$(document).on("click","#orderCancelModal #btn_order_cancel",function(){
+		$.LoadingOverlay("show");
+		var postData = $("#modalFrm").serializeArray();
+		$.ajax({
+			url : "order_cancel_proc.php",
+			type: "POST",
+			data : postData,
+			success:function(data){
+				$.LoadingOverlay("hide");
+				if(data.error_code=="OK"){
+					alert(data.error_msg);
+					location.reload();
+				}
+			},
+			error: function(data) {
+				alert(data.error_msg);
+			}
+		});
+	});
+
+
+	$('.btn_delivery_search').bind("click",function(){
+		var index = $('.btn_delivery_search').index(this);
+		var tracking_no = $('.btn_delivery_search').eq(index).attr("data-trackingno");
+		var delivery_code = $('.btn_delivery_search').eq(index).attr("data-deliverycode");
+		var $form = $('<form></form>');
+
+		if(delivery_code=="002"){
+			$form.attr('action', 'https://service.epost.go.kr/trace.RetrieveDomRigiTraceList.comm');
+			$form.attr('method', 'post');
+			$form.attr('target', '_blank');
+			$form.appendTo('body');
+
+			var sid1 = $('<input type="hidden" value="'+tracking_no+'" name="sid1">');
+			$form.append(sid1);
+		}else{
+			$form.attr('action', 'https://trace.cjlogistics.com/web/detail.jsp');
+			$form.attr('method', 'post');
+			$form.attr('target', '_blank');
+			$form.appendTo('body');
+
+			//var fsp_action = $('<input type="hidden" value="PARC_ACT_002" name="fsp_action">');
+			//var fsp_cmd = $('<input type="hidden" value="retrieveInvNoACT2" name="fsp_cmd">');
+			var invc_no = $('<input type="hidden" value="'+tracking_no+'" name="slipno">');
+			$form.append(invc_no);
+		}
+		$form.submit();
+	});
+
+	//배송지 수정
+	$(document).on("click", "#edit_address", function(){
+		const name=$("#name").val();
+		const zipcode=$("#zipcode").val();
+		const address=$("#address").val();
+		const address_detail=$("#address_detail").val();
+		const tel=$("#tel").val();
+		const msg=$("#msg").val();
+		const settle_no="<?=$settle_no?>";
+		
+		$.LoadingOverlay("show");
+		$.ajax({
+			url : "mypage_proc.php",
+			type: "POST",
+			data : {mode:"edit_address",name:name,zipcode:zipcode,address:address,address_detail:address_detail,tel:tel,msg:msg,settle_no:settle_no},
+			success:function(data){
+				$.LoadingOverlay("hide");
+				location.reload();
+			},
+			error: function(data) {
+				alert(data);
+			}
+		});
+	});
+	
+	$('#licenceModal').on('hide.bs.modal', function (event) {
+		$("#licenceModal #licence_result").html("");
+		$("#licenceModal #ordno").text("");
+	});
+
+	$("#btn_zipcode").bind("click",function(){
+		sample4_execDaumPostcode();
+	});
+
+});
+
+</script>
+
+<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+<script type="text/javascript">
+	//본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+	function sample4_execDaumPostcode() {
+		new daum.Postcode({
+			oncomplete: function(data) {
+				 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+				// 각 주소의 노출 규칙에 따라 주소를 조합한다.
+				// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+				var fullAddr = ''; // 최종 주소 변수
+				var extraAddr = ''; // 조합형 주소 변수
+
+				// 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+				if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+					fullAddr = data.roadAddress;
+
+				} else { // 사용자가 지번 주소를 선택했을 경우(J)
+					fullAddr = data.jibunAddress;
+				}
+
+				// 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+				if(data.userSelectedType === 'R'){
+					//법정동명이 있을 경우 추가한다.
+					if(data.bname !== ''){
+						extraAddr += data.bname;
+					}
+					// 건물명이 있을 경우 추가한다.
+					if(data.buildingName !== ''){
+						extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+					}
+					// 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+					fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+				}
+
+				// 우편번호와 주소 정보를 해당 필드에 넣는다.
+				document.getElementById('zipcode').value = data.zonecode; //5자리 새우편번호 사용
+				document.getElementById('address').value = fullAddr;
+
+				// 커서를 상세주소 필드로 이동한다.
+				document.getElementById('address_detail').focus();
+			},
+			 onclose: function(state) {
+					//state는 우편번호 찾기 화면이 어떻게 닫혔는지에 대한 상태 변수 이며, 상세 설명은 아래 목록에서 확인하실 수 있습니다.
+					if(state === 'FORCE_CLOSE'){
+						//사용자가 브라우저 닫기 버튼을 통해 팝업창을 닫았을 경우, 실행될 코드를 작성하는 부분입니다.
+
+					} else if(state === 'COMPLETE_CLOSE'){
+						//사용자가 검색결과를 선택하여 팝업창이 닫혔을 경우, 실행될 코드를 작성하는 부분입니다.
+						//oncomplete 콜백 함수가 실행 완료된 후에 실행됩니다.
+						return false;
+					}
+				}
+
+		}).open();
+	}
+</script>
+
+</body>
+</html>

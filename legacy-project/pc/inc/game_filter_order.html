@@ -1,0 +1,29 @@
+<div class="row g-3 mb-3">
+	<div class="col-12">
+		<div class="d-flex align-items-center align-self-center justify-content-between bg-table-dark border">
+			<div>
+				<a href="<?=$page_name?>_list.html?<?=$_SERVER['QUERY_STRING']?>" class="text-decoration-none">
+					<img src="/assets/images/icon/list.svg" class="svg-<?=$page_type=="list"?"on":"off"?> m-3">
+				</a>
+				<a href="<?=$page_name?>_thumb.html?<?=$_SERVER['QUERY_STRING']?>" class="text-decoration-none">
+					<img src="/assets/images/icon/thumb.svg" class="svg-<?=$page_type=="thumb"?"on":"off"?> m-3">
+				</a>
+				<a href="<?=$page_name?>_grid.html?<?=$_SERVER['QUERY_STRING']?>" class="text-decoration-none">
+					<img src="/assets/images/icon/grid.svg" class="svg-<?=$page_type=="grid"?"on":"off"?> m-3">
+				</a>
+			</div>
+			<div class="d-flex me-2 text-nowrap" role="search">
+				<span class="align-content-center px-3 font-14"> 총 <strong><?=number_format($goods_list->total_results)?></strong>개</span>
+				<select name="sort" id="sort" class="form-select form-select-lg rounded-0 shadow-none bg-table-dark me-3" aria-label="정렬순서">
+					<option >::: 정렬순서 :::</option>
+					<option value="release" <?=$selected['sort']['release']?>>출시일순</option>
+					<option value="name" <?=$selected['sort']['name']?>>가나다순</option>
+					<option value="name_en" <?=$selected['sort']['name_en']?>>ABC순</option>
+					<option value="pricedown" <?=$selected['sort']['pricedown']?>>낮은가격순</option>
+					<option value="priceup" <?=$selected['sort']['priceup']?>>높은가격순</option>
+					<option value="discount" <?=$selected['sort']['discount']?>>높은할인율순</option>
+				</select>
+			</div>
+		</div>
+	</div>
+</div>

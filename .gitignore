@@ -1,0 +1,19 @@
+node_modules
+
+# local tooling state
+.omc
+
+# build outputs
+dist
+.next
+out
+build
+
+# generated framework files
+next-env.d.ts
+**/routeTree.gen.ts
+**/.DS_Store
+**/.tanstack
+
+# build caches
+**/*.tsbuildinfo

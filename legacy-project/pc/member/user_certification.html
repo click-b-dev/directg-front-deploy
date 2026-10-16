@@ -1,0 +1,119 @@
+<?
+	header("Content-Type:text/html; charset=utf-8"); 
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+	$m_id = filter_input(INPUT_POST, 'm_id', FILTER_SANITIZE_STRING);
+	$token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
+
+	include_once($_SERVER["DOCUMENT_ROOT"].'/../log4php/vendor/autoload.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/../log4php/src/main/php/Logger.php');
+	Logger::configure($_SERVER["DOCUMENT_ROOT"] .'/../log4php/config_findpassword.xml');
+	$logger = Logger::getLogger('findpassword');
+	$log_post = $_POST;
+	unset($log_post['m_pwd'],$log_post['m_pwd_re']);
+	$logger->info($log_post);
+
+	$page_title="비밀번호 재설정";
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<style>
+main{
+	min-height:450px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<main>
+		<div class="container text-center">
+			<div class="row justify-content-md-center mt-5">
+				<div class="col-md-auto">
+					<div class="row justify-content-center">
+						<div class="col-12">
+							<div class="card shadow-none rounded-0">
+								<div class="mb-1 border-bottom">
+									<h4 class="fs-4 text-center py-3 fw-bold my-0">비밀번호 찾기 - 인증번호 입력</h4>
+								</div>
+								<div class="card-body p-4">
+									<p class="text-muted mb-4 text-start">받으신 안내메일의 인증번호를 입력해 주세요.</p>
+									<form name="memberFrm" id="memberFrm" method="post" action="/member/join_proc.php" class="needs-validation p-2">
+										<input type="hidden" name="mode" value="authConfirm">
+										<input type="hidden" name="email" value="<?=$m_id?>">
+										<input type="hidden" name="token" value="<?=$token?>">
+										<div class="g-3 row">
+											<div class="col-12 text-start">
+												<label for="auth_code" class="form-label font-14">인증번호</label>
+												<input class="form-control form-control-lg rounded-0" type="text" id="auth_code" name="auth_code" placeholder="메일로 전송받은 인증번호" required>
+											</div>
+											<div class="col-12">
+												<button class="btn btn-lg btn-primary shadow-none">확인</button>
+											</div>
+										</div>
+									</form>
+									<form name="passwordResetFrm" id="passwordResetFrm" method="post" action="find_password_reset.html">
+										<input type="hidden" name="auth_code">
+										<input type="hidden" name="token">
+										<input type="hidden" name="m_id" value="<?=$m_id?>">
+									</form>
+								</div> 
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script>
+$(document).ready(function() {
+	$('#memberFrm').on('submit', function(e) {
+		e.preventDefault();
+		const postData = $('#memberFrm').serializeArray();
+		$.ajax({
+			url: '/member/join_proc.php',
+			type: 'POST',
+			data: postData,
+			dataType: 'json',
+			success: function(data) {
+				//console.log(data);
+				if(data.error_code=="0"){
+					alert(data.msg);
+					$("#passwordResetFrm input[name='auth_code']").val(data.auth_code);
+					$("#passwordResetFrm input[name='token']").val(data.token);
+					$("#passwordResetFrm").submit();
+				} else {
+					alert(data.msg);
+					
+				}
+			},
+			error: function(xhr, status, error) {
+				//console.log(xhr);
+				//console.log(status);
+				//console.log(error);
+				alert('비밀번호찾기 중 오류가 발생했습니다. ' + error);
+			}
+		});
+	});
+});
+
+</script>
+</body>
+</html>

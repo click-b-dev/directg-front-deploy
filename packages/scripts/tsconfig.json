@@ -1,0 +1,10 @@
+{
+  "extends": "@click-b/config/tsconfig/base",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "allowJs": true,
+    "noEmit": true,
+    "paths": { "@/*": ["./src/*"] }
+  },
+  "include": ["src"]
+}

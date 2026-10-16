@@ -1,0 +1,119 @@
+.content-page{
+	/*background-color:#071125;*/
+}
+
+.page-title{
+	font-size:20px;
+}
+
+.footer{
+	background-color:#343a40;
+}
+
+.fw-400{
+	font-weight:400;
+}
+
+.border-dg{
+	border-color:#44BADC;
+}
+
+header{
+	background-color:#071125;
+}
+
+.text_link{
+	color:#44BADC;
+}
+
+.form-control{
+	background-color:#071125;
+}
+
+.border-nav{
+	border-top: 1px solid rgba(206,212,218,0.1);
+}
+
+.border-searchinput{
+	border-color:#0C7CED;
+	border-width: 2px;
+	border-style:solid;
+}
+
+header .btn-link{
+	color:#CED4DA;
+}
+
+header .nav-link{
+	color:#CED4DA;
+}
+
+header .nav{
+	border-color:#000000;
+	border-width: 1px;
+	border-style:solid;
+	border-collapse:collapse;
+}
+
+.border-black{
+	border-color:#000000;
+	border-width: 1px;
+	border-style:solid;
+}
+
+.fw-600{
+	font-weight:600;
+}
+
+.topnav{
+	background-color:#101C36;
+	border-bottom:1px solid #000000;
+}
+
+.navbar .nav-item{
+	border:1px solid rgba(206,212,218,0.1);
+	border-collapse:collapse;
+}
+
+.bg_card{
+	background-color: #37404a;
+}
+
+s {
+	color:#CED4DA;
+}
+
+.text-purple{
+	color:#A655B2;
+}
+
+.border-purple{
+	border-color:#A655B2 !important;
+}
+
+.card .card-header{
+	background-color:#303D4E;
+}
+
+.card .card-footer{
+	background-color:#303D4E;
+	color:#ffffff;
+	border:0;
+}
+
+.modal-content{
+	background:#303D4E;
+}
+
+
+footer{
+	background-color:#191919;
+}
+
+.btn_cart{
+	color:#44BADC;
+}
+
+.btn_wishlist{
+	color:#FA6767;
+}

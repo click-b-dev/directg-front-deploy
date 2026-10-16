@@ -1,0 +1,279 @@
+<?
+	ini_set( "display_errors", 0 );
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+	$page_title="회원가입";
+
+	$is_private = filter_input(INPUT_POST, 'is_private', FILTER_SANITIZE_STRING);
+	$is_agreement = filter_input(INPUT_POST, 'is_agreement', FILTER_SANITIZE_STRING);
+
+	$is_mailling = filter_input(INPUT_POST, 'is_mailling', FILTER_SANITIZE_STRING);
+	$is_sms = filter_input(INPUT_POST, 'is_sms', FILTER_SANITIZE_STRING);
+	$is_event = filter_input(INPUT_POST, 'is_event', FILTER_SANITIZE_STRING);
+
+	if($is_private<>"Y" && $is_agreement<>"Y"){
+		echo "잘못된 접근입니다.";
+		exit;
+	}
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/mobile/assets/img/icon/192x192.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<div class="appHeader mt-0 bg-primary text-light">
+	<div class="left">
+		<a href="#" class="headerButton goBack">
+			<ion-icon name="chevron-back-outline"></ion-icon>
+		</a>
+	</div>
+	<div class="pageTitle">회원가입</div>
+	<div class="right">
+	</div>
+</div>
+<!-- * App Header -->
+<div class="extraHeader p-0">
+	<div class="form-wizard-section">
+		<a href="#" class="button-item">
+			<strong>1</strong>
+			<p class="font-12">가입방법 선택</p>
+		</a>
+		<a href="#" class="button-item">
+			<strong>2</strong>
+			<p class="font-12">약관동의</p>
+		</a>
+		<a href="#" class="button-item active text-primary">
+			<ion-icon name="checkmark-outline" role="img" class="md hydrated bg-primary rounded-3" aria-label="checkmark outline"></ion-icon>
+			<p class="font-12">정보입력</p>
+		</a>
+		<a href="#" class="button-item">
+			<strong>4</strong>
+			<p class="font-12">가입완료</p>
+		</a>
+	</div>
+</div>
+
+<!-- App Capsule -->
+<div id="appCapsule" class="extra-header-active mt-0">
+	<div class="section full">
+		<div class="card mb-3" id="email_login">
+			<div class="card-header text-center">
+				<h5 class="card-title">정보입력</h5>
+			</div>
+			<div class="card-body">
+				<form class="needs-validation mb-0" id="form_auth" name="form_auth" method="POST">
+					<input type="hidden" id="mode" name="mode" value="join">
+					<input type="hidden" id="is_mailling" name="is_mailling" value="<?=$is_mailling?>">
+					<input type="hidden" id="is_sms" name="is_sms" value="<?=$is_sms?>">
+					<input type="hidden" id="is_event" name="is_event" value="<?=$is_event?>">
+					<input type="hidden" id="id_chk" name="id_chk" value="">
+					<input type="hidden" id="visitorId" name="visitorId" value="">
+
+					<div class="g-3 row">
+						<div class="col-12">
+							<label class="form-label font-14" for="m_id">아이디(이메일)</label>
+							<div class="input-group">
+								<input placeholder="아이디(이메일)를 입력해주세요." id="m_id" class="form-control rounded-0" type="email" name="m_id" required autocomplete="off">
+								<button type="button" class="btn btn-secondary shadow-none rounded-0" id="btn_id_chk" name="btn_id_chk">아이디 중복확인</button>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="password-field position-relative">
+								<label class="form-label font-14" for="m_pwd">비밀번호</label>
+								<div class="password-field position-relative">
+									<input placeholder="비밀번호를 입력해 주세요" id="m_pwd" class="form-control rounded-0" type="password" name="m_pwd" required autocomplete="off">
+								</div>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="password-field position-relative">
+								<label class="form-label font-14" for="m_pwd_re">비밀번호 확인</label>
+								<div class="password-field position-relative">
+									<input placeholder="비밀번호를 입력해 주세요" id="m_pwd_re" class="form-control rounded-0" type="password" name="m_pwd_re" required autocomplete="off">
+								</div>
+							</div>
+						</div>
+						<div class="d-grid col-12">
+							<div id="hcaptcha-container"></div>
+							<button type="submit" class="btn btn-lg btn-primary">회원가입</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+<script type="text/javascript" src="/assets/js/fingerprint2.js"></script>
+
+<script src="/assets/js/hcaptcha_common.js"></script>
+<script src='https://js.hcaptcha.com/1/api.js?onload=onHcaptchaLoad&render=explicit' async defer></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.0/dist/loadingoverlay.min.js"></script>
+
+<script type="text/javascript">
+	$("#btn_id_chk").bind("click",function(){
+		const id = $("#m_id").val();
+
+		if($("#m_id").val()==""){
+			alert("아이디를 입력하세요.");
+			return;
+		}else{
+			$.ajax({
+				'url': 'join_proc.php',
+				'type': 'POST',
+				'dataType':'json',
+				'data':{mode:"idChk",m_id:id},
+				'success': function(data){
+					console.log(data);
+					if(data.error_code=="1"){
+						alert(data.msg);
+						$("#id_chk").val("");
+						$("#m_id").val("");
+						return;
+					}else{
+						$("#id_chk").val("1");
+						alert("등록이 가능한 아이디입니다.");
+						return;
+					}
+				},
+				'error':function(data){
+					console.log(data);
+					alert("에러입니다.");
+				}
+			});
+		}
+	});
+	
+	/* 예제 */
+	window.onload=function(){
+		Fingerprint2.get(function(components) {
+			var murmur = Fingerprint2.x64hash128(components.map(function (pair) { return pair.value }).join(), 31);
+			$("#visitorId").val(murmur);
+		});
+	}
+	
+	$(document).ready(function() {
+		$('#form_auth').on('submit', function(e) {
+			e.preventDefault();
+
+			const pwd = $("#m_pwd").val();
+			const num = pwd.search(/[0-9]/g);
+			const eng = pwd.search(/[a-z]/ig);
+			const spe = pwd.search(/[`~!#$%^&*()|\\\'\_";:\/?]/gi);
+			const spe2 = pwd.match(/[^0-9a-z`~!#$%\^&*\(\)|\\\'\_\";:\/?]/gi);
+			const spa = checkSpace(pwd);
+			const form = this;
+
+			if($("#id_chk").val()==""){
+				alert("아이디 중복확인을 하세요.");
+				return false;
+			}
+
+			if(pwd.length<8 || pwd.length>16){
+				alert("비밀번호는 영문소문자, 숫자, 특수문자를 포함 8자리 이상 ~ 16이하로 입력해주세요.");
+				return false;
+			}
+
+			if(num < 0 || eng <0 || spe <0){
+				alert("비밀번호는 영문소문자, 숫자, 특수문자를 포함 8자리 이상 ~ 16이하로 입력해주세요.");
+				return false;
+			}
+
+			if(spa){
+				alert("비밀번호는 공백없이 입력해주세요.");
+				return false;
+			}
+
+			if(spe2){
+				alert("비밀번호에 사용할 수 없는 문자가 포함되어 있습니다.");
+				return false;
+			}
+
+			if($("#m_pwd").val() != $("#m_pwd_re").val()){
+				alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+				return false;
+			}
+
+			runCaptcha();
+		});
+	});
+	
+	function checkSpace(str){
+		if(str.search(/\s/)!=-1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+</script>
+
+<script>
+function onCaptchaSuccess(token) {
+	var form = document.form_auth;
+	var postData = $('#form_auth').serializeArray();
+	postData.push({ name: 'h-captcha-response', value: token });
+
+	$.ajax({
+		url: '/member/join_proc.php',
+		type: 'POST',
+		data: postData,
+		dataType: 'json',
+		success: function(data) {
+			if (data.error_code == 0) {
+				form.action = '/member/join_step4.html';
+				form.submit();
+			} else if (data.error_code == 2) {
+				alert(data.msg);
+				form.action = '/member/join_step4.html';
+				form.submit();
+			} else {
+				$.LoadingOverlay("hide", true);
+				alert(data.msg);
+				hcaptcha.reset(hcaptchaWidgetID);
+			}
+		},
+		error: function() {
+			$.LoadingOverlay("hide", true);
+			alert("회원가입 중 오류가 발생했습니다.");
+			hcaptcha.reset(hcaptchaWidgetID);
+		}
+	});
+}
+</script>
+</body>
+
+</html>

@@ -1,0 +1,7924 @@
+{
+    "data": [
+        {
+            "name": [
+                "Disco Elysium: The Final Cut"
+            ],
+            "url": [
+                "/game/disco-elysium-the-final-cut/"
+            ],
+            "metascore": [
+                "97"
+            ]
+        },
+        {
+            "name": [
+                "Grand Theft Auto V"
+            ],
+            "url": [
+                "/game/grand-theft-auto-v/"
+            ],
+            "metascore": [
+                "96"
+            ]
+        },
+        {
+            "name": [
+                "Baldur's Gate 3"
+            ],
+            "url": [
+                "/game/baldurs-gate-3/"
+            ],
+            "metascore": [
+                "96"
+            ]
+        },
+        {
+            "name": [
+                "Persona 5 Royal"
+            ],
+            "url": [
+                "/game/persona-5-royal/"
+            ],
+            "metascore": [
+                "95"
+            ]
+        },
+        {
+            "name": [
+                "BioShock Infinite"
+            ],
+            "url": [
+                "/game/bioshock-infinite/"
+            ],
+            "metascore": [
+                "94"
+            ]
+        },
+        {
+            "name": [
+                "Elden Ring"
+            ],
+            "url": [
+                "/game/elden-ring/"
+            ],
+            "metascore": [
+                "94"
+            ]
+        },
+        {
+            "name": [
+                "The Witcher 3: Wild Hunt"
+            ],
+            "url": [
+                "/game/the-witcher-3-wild-hunt/"
+            ],
+            "metascore": [
+                "93"
+            ]
+        },
+        {
+            "name": [
+                "Half-Life: Alyx"
+            ],
+            "url": [
+                "/game/half-life-alyx/"
+            ],
+            "metascore": [
+                "93"
+            ]
+        },
+        {
+            "name": [
+                "Divinity: Original Sin II"
+            ],
+            "url": [
+                "/game/divinity-original-sin-ii/"
+            ],
+            "metascore": [
+                "93"
+            ]
+        },
+        {
+            "name": [
+                "God of War"
+            ],
+            "url": [
+                "/game/god-of-war/"
+            ],
+            "metascore": [
+                "93"
+            ]
+        },
+        {
+            "name": [
+                "Red Dead Redemption 2"
+            ],
+            "url": [
+                "/game/red-dead-redemption-2/"
+            ],
+            "metascore": [
+                "93"
+            ]
+        },
+        {
+            "name": [
+                "Beat Saber"
+            ],
+            "url": [
+                "/game/beat-saber/"
+            ],
+            "metascore": [
+                "93"
+            ]
+        },
+        {
+            "name": [
+                "Hades"
+            ],
+            "url": [
+                "/game/hades/"
+            ],
+            "metascore": [
+                "93"
+            ]
+        },
+        {
+            "name": [
+                "Street Fighter 6"
+            ],
+            "url": [
+                "/game/street-fighter-6/"
+            ],
+            "metascore": [
+                "92"
+            ]
+        },
+        {
+            "name": [
+                "Elden Ring: Shadow of the Erdtree"
+            ],
+            "url": [
+                "/game/elden-ring-shadow-of-the-erdtree/"
+            ],
+            "metascore": [
+                "92"
+            ]
+        },
+        {
+            "name": [
+                "Okami HD"
+            ],
+            "url": [
+                "/game/okami-hd/"
+            ],
+            "metascore": [
+                "92"
+            ]
+        },
+        {
+            "name": [
+                "Undertale"
+            ],
+            "url": [
+                "/game/undertale/"
+            ],
+            "metascore": [
+                "92"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy XIV: Endwalker"
+            ],
+            "url": [
+                "/game/final-fantasy-xiv-endwalker/"
+            ],
+            "metascore": [
+                "92"
+            ]
+        },
+        {
+            "name": [
+                "Out of the Park Baseball 17"
+            ],
+            "url": [
+                "/game/out-of-the-park-baseball-17/"
+            ],
+            "metascore": [
+                "92"
+            ]
+        },
+        {
+            "name": [
+                "Metaphor: ReFantazio"
+            ],
+            "url": [
+                "/game/metaphor-refantazio/"
+            ],
+            "metascore": [
+                "92"
+            ]
+        },
+        {
+            "name": [
+                "The Witcher 3: Wild Hunt - Blood and Wine"
+            ],
+            "url": [
+                "/game/the-witcher-3-wild-hunt-blood-and-wine/"
+            ],
+            "metascore": [
+                "92"
+            ]
+        },
+        {
+            "name": [
+                "UFO 50"
+            ],
+            "url": [
+                "/game/ufo-50/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Against the Storm"
+            ],
+            "url": [
+                "/game/against-the-storm/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Microsoft Flight Simulator"
+            ],
+            "url": [
+                "/game/microsoft-flight-simulator/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "I Was a Teenage Exocolonist"
+            ],
+            "url": [
+                "/game/i-was-a-teenage-exocolonist/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Overwatch"
+            ],
+            "url": [
+                "/game/overwatch/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Chained Echoes"
+            ],
+            "url": [
+                "/game/chained-echoes/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Tekken 8"
+            ],
+            "url": [
+                "/game/tekken-8/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Metal Gear Solid V: The Phantom Pain"
+            ],
+            "url": [
+                "/game/metal-gear-solid-v-the-phantom-pain/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Kentucky Route Zero - Act III"
+            ],
+            "url": [
+                "/game/kentucky-route-zero-act-iii/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Forza Horizon 5"
+            ],
+            "url": [
+                "/game/forza-horizon-5/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Crusader Kings III"
+            ],
+            "url": [
+                "/game/crusader-kings-iii/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Fez"
+            ],
+            "url": [
+                "/game/fez/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Resident Evil 4"
+            ],
+            "url": [
+                "/game/resident-evil-4/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Animal Well"
+            ],
+            "url": [
+                "/game/animal-well/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Disco Elysium"
+            ],
+            "url": [
+                "/game/disco-elysium/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Caves of Qud"
+            ],
+            "url": [
+                "/game/caves-of-qud/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Dark Souls II"
+            ],
+            "url": [
+                "/game/dark-souls-ii/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Spelunky 2"
+            ],
+            "url": [
+                "/game/spelunky-2/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Satisfactory"
+            ],
+            "url": [
+                "/game/satisfactory/"
+            ],
+            "metascore": [
+                "91"
+            ]
+        },
+        {
+            "name": [
+                "Balatro"
+            ],
+            "url": [
+                "/game/balatro/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy XIV: Shadowbringers"
+            ],
+            "url": [
+                "/game/final-fantasy-xiv-shadowbringers/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Slay the Princess"
+            ],
+            "url": [
+                "/game/slay-the-princess/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Factorio"
+            ],
+            "url": [
+                "/game/factorio/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Spelunky"
+            ],
+            "url": [
+                "/game/spelunky/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Shin Megami Tensei V: Vengeance"
+            ],
+            "url": [
+                "/game/shin-megami-tensei-v-vengeance/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Tetris Effect"
+            ],
+            "url": [
+                "/game/tetris-effect/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Stephen's Sausage Roll"
+            ],
+            "url": [
+                "/game/stephens-sausage-roll/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Ghost Trick: Phantom Detective"
+            ],
+            "url": [
+                "/game/ghost-trick-phantom-detective/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "VIDEOVERSE"
+            ],
+            "url": [
+                "/game/videoverse/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Hi-Fi Rush"
+            ],
+            "url": [
+                "/game/hi-fi-rush/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "God of War: Ragnarok"
+            ],
+            "url": [
+                "/game/god-of-war-ragnarok/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Bayonetta"
+            ],
+            "url": [
+                "/game/bayonetta/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Thank Goodness You're Here!"
+            ],
+            "url": [
+                "/game/thank-goodness-youre-here/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "DAVE THE DIVER"
+            ],
+            "url": [
+                "/game/dave-the-diver/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "The Stanley Parable: Ultra Deluxe"
+            ],
+            "url": [
+                "/game/the-stanley-parable-ultra-deluxe/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Brothers: A Tale of Two Sons"
+            ],
+            "url": [
+                "/game/brothers-a-tale-of-two-sons/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Dota 2"
+            ],
+            "url": [
+                "/game/dota-2/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Into the Breach"
+            ],
+            "url": [
+                "/game/into-the-breach/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Chicory: A Colorful Tale"
+            ],
+            "url": [
+                "/game/chicory-a-colorful-tale/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "The Legend of Heroes: Trails from Zero"
+            ],
+            "url": [
+                "/game/the-legend-of-heroes-trails-from-zero/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "Kentucky Route Zero - Act IV"
+            ],
+            "url": [
+                "/game/kentucky-route-zero-act-iv/"
+            ],
+            "metascore": [
+                "90"
+            ]
+        },
+        {
+            "name": [
+                "The Witcher 3: Wild Hunt - Hearts of Stone"
+            ],
+            "url": [
+                "/game/the-witcher-3-wild-hunt-hearts-of-stone/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy VII Rebirth"
+            ],
+            "url": [
+                "/game/final-fantasy-vii-rebirth/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Alan Wake II"
+            ],
+            "url": [
+                "/game/alan-wake-ii/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Resident Evil 2"
+            ],
+            "url": [
+                "/game/resident-evil-2/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Devil May Cry 5"
+            ],
+            "url": [
+                "/game/devil-may-cry-5/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Neon White"
+            ],
+            "url": [
+                "/game/neon-white/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Like a Dragon: Infinite Wealth"
+            ],
+            "url": [
+                "/game/like-a-dragon-infinite-wealth/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Dark Souls III"
+            ],
+            "url": [
+                "/game/dark-souls-iii/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Pillars of Eternity"
+            ],
+            "url": [
+                "/game/pillars-of-eternity/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Rocksmith 2014 Edition"
+            ],
+            "url": [
+                "/game/rocksmith-2014-edition/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Pizza Tower"
+            ],
+            "url": [
+                "/game/pizza-tower/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Dead Cells"
+            ],
+            "url": [
+                "/game/dead-cells/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "There is no game : Wrong dimension"
+            ],
+            "url": [
+                "/game/there-is-no-game-wrong-dimension/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Slay the Spire"
+            ],
+            "url": [
+                "/game/slay-the-spire/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "F1 2017"
+            ],
+            "url": [
+                "/game/f1-2017/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Kynseed"
+            ],
+            "url": [
+                "/game/kynseed/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Psychonauts 2"
+            ],
+            "url": [
+                "/game/psychonauts-2/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Cyberpunk 2077: Phantom Liberty"
+            ],
+            "url": [
+                "/game/cyberpunk-2077-phantom-liberty/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Resident Evil 4: Separate Ways"
+            ],
+            "url": [
+                "/game/resident-evil-4-separate-ways/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Out of the Park Baseball 15"
+            ],
+            "url": [
+                "/game/out-of-the-park-baseball-15/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Quake II - Enhanced Edition"
+            ],
+            "url": [
+                "/game/quake-ii-enhanced-edition/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Destiny 2: The Final Shape"
+            ],
+            "url": [
+                "/game/destiny-2-the-final-shape/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Horizon Forbidden West: Complete Edition"
+            ],
+            "url": [
+                "/game/horizon-forbidden-west-complete-edition/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Nuclear Throne"
+            ],
+            "url": [
+                "/game/nuclear-throne/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Cuphead in the Delicious Last Course"
+            ],
+            "url": [
+                "/game/cuphead-in-the-delicious-last-course/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Lone Echo"
+            ],
+            "url": [
+                "/game/lone-echo/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "NORCO"
+            ],
+            "url": [
+                "/game/norco/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Rez Infinite"
+            ],
+            "url": [
+                "/game/rez-infinite/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Persona 3 Reload"
+            ],
+            "url": [
+                "/game/persona-3-reload/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "It Takes Two"
+            ],
+            "url": [
+                "/game/it-takes-two/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Return of the Obra Dinn"
+            ],
+            "url": [
+                "/game/return-of-the-obra-dinn/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Ghost of Tsushima: Director's Cut"
+            ],
+            "url": [
+                "/game/ghost-of-tsushima-directors-cut/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Stardew Valley"
+            ],
+            "url": [
+                "/game/stardew-valley/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "What Remains of Edith Finch"
+            ],
+            "url": [
+                "/game/what-remains-of-edith-finch/"
+            ],
+            "metascore": [
+                "89"
+            ]
+        },
+        {
+            "name": [
+                "Asgard's Wrath"
+            ],
+            "url": [
+                "/game/asgards-wrath/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "XCOM 2: War of the Chosen"
+            ],
+            "url": [
+                "/game/xcom-2-war-of-the-chosen/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "DUSK"
+            ],
+            "url": [
+                "/game/dusk/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Lorelei and the Laser Eyes"
+            ],
+            "url": [
+                "/game/lorelei-and-the-laser-eyes/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Sekiro: Shadows Die Twice"
+            ],
+            "url": [
+                "/game/sekiro-shadows-die-twice/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Crusader Kings II: The Old Gods"
+            ],
+            "url": [
+                "/game/crusader-kings-ii-the-old-gods/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Cocoon"
+            ],
+            "url": [
+                "/game/cocoon/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Tony Hawk's Pro Skater 1 + 2"
+            ],
+            "url": [
+                "/game/tony-hawks-pro-skater-1-plus-2/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Dragon's Dogma 2"
+            ],
+            "url": [
+                "/game/dragons-dogma-2/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "AI: The Somnium Files - nirvanA Initiative"
+            ],
+            "url": [
+                "/game/ai-the-somnium-files-nirvana-initiative/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Streets of Rage 4: Mr. X Nightmare"
+            ],
+            "url": [
+                "/game/streets-of-rage-4-mr-x-nightmare/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Ori and the Will of the Wisps"
+            ],
+            "url": [
+                "/game/ori-and-the-will-of-the-wisps/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Pentiment"
+            ],
+            "url": [
+                "/game/pentiment/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Dead Cells: Return to Castlevania"
+            ],
+            "url": [
+                "/game/dead-cells-return-to-castlevania/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Rogue Legacy 2"
+            ],
+            "url": [
+                "/game/rogue-legacy-2/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "XCOM 2"
+            ],
+            "url": [
+                "/game/xcom-2/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Cuphead"
+            ],
+            "url": [
+                "/game/cuphead/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Celeste"
+            ],
+            "url": [
+                "/game/celeste/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Halo 3"
+            ],
+            "url": [
+                "/game/halo-3/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "The Talos Principle 2"
+            ],
+            "url": [
+                "/game/the-talos-principle-2/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Ori and the Blind Forest: Definitive Edition"
+            ],
+            "url": [
+                "/game/ori-and-the-blind-forest-definitive-edition/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "KILL KNIGHT"
+            ],
+            "url": [
+                "/game/kill-knight/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Marvel's Spider-Man: Miles Morales"
+            ],
+            "url": [
+                "/game/marvels-spider-man-miles-morales/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Granblue Fantasy Versus: Rising"
+            ],
+            "url": [
+                "/game/granblue-fantasy-versus-rising/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Hearthstone: Heroes of Warcraft"
+            ],
+            "url": [
+                "/game/hearthstone-heroes-of-warcraft/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Unity of Command II"
+            ],
+            "url": [
+                "/game/unity-of-command-ii/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "The Crimson Diamond"
+            ],
+            "url": [
+                "/game/the-crimson-diamond/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Apex Legends"
+            ],
+            "url": [
+                "/game/apex-legends/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "The Stanley Parable"
+            ],
+            "url": [
+                "/game/the-stanley-parable/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Shogun Showdown"
+            ],
+            "url": [
+                "/game/shogun-showdown/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Guacamelee! Gold Edition"
+            ],
+            "url": [
+                "/game/guacamelee-gold-edition/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Sid Meier's Civilization VI"
+            ],
+            "url": [
+                "/game/sid-meiers-civilization-vi/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Battlefield 1"
+            ],
+            "url": [
+                "/game/battlefield-1/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Starcraft II: Legacy of the Void"
+            ],
+            "url": [
+                "/game/starcraft-ii-legacy-of-the-void/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "F1 2020"
+            ],
+            "url": [
+                "/game/f1-2020/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Kingdom Come: Deliverance II"
+            ],
+            "url": [
+                "/game/kingdom-come-deliverance-ii/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Monster Hunter: World"
+            ],
+            "url": [
+                "/game/monster-hunter-world/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "World of Warcraft: Legion"
+            ],
+            "url": [
+                "/game/world-of-warcraft-legion/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Pillars of Eternity II: Deadfire"
+            ],
+            "url": [
+                "/game/pillars-of-eternity-ii-deadfire/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "DOOM Eternal"
+            ],
+            "url": [
+                "/game/doom-eternal/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "HYPER DEMON"
+            ],
+            "url": [
+                "/game/hyper-demon/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Owlboy"
+            ],
+            "url": [
+                "/game/owlboy/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "MULLET MADJACK"
+            ],
+            "url": [
+                "/game/mullet-madjack/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Night in the Woods"
+            ],
+            "url": [
+                "/game/night-in-the-woods/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Ori and the Blind Forest"
+            ],
+            "url": [
+                "/game/ori-and-the-blind-forest/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Forza Horizon 4"
+            ],
+            "url": [
+                "/game/forza-horizon-4/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Halls of Torment"
+            ],
+            "url": [
+                "/game/halls-of-torment/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Keep Driving"
+            ],
+            "url": [
+                "/game/keep-driving/"
+            ],
+            "metascore": [
+                "88"
+            ]
+        },
+        {
+            "name": [
+                "Uncharted: Legacy of Thieves Collection"
+            ],
+            "url": [
+                "/game/uncharted-legacy-of-thieves-collection/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Subnautica"
+            ],
+            "url": [
+                "/game/subnautica/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Mouthwashing"
+            ],
+            "url": [
+                "/game/mouthwashing/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy XIV: Stormblood"
+            ],
+            "url": [
+                "/game/final-fantasy-xiv-stormblood/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Hitman 3"
+            ],
+            "url": [
+                "/game/hitman-3/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "NBA 2K18"
+            ],
+            "url": [
+                "/game/nba-2k18/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Indiana Jones and the Great Circle"
+            ],
+            "url": [
+                "/game/indiana-jones-and-the-great-circle/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "RimWorld"
+            ],
+            "url": [
+                "/game/rimworld/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Sea of Stars"
+            ],
+            "url": [
+                "/game/sea-of-stars/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Steins;Gate"
+            ],
+            "url": [
+                "/game/steins-gate/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Crypt of the NecroDancer"
+            ],
+            "url": [
+                "/game/crypt-of-the-necrodancer/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Tactical Breach Wizards"
+            ],
+            "url": [
+                "/game/tactical-breach-wizards/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Legends of Runeterra"
+            ],
+            "url": [
+                "/game/legends-of-runeterra/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Five Nights at Freddy's: Into the Pit"
+            ],
+            "url": [
+                "/game/five-nights-at-freddys-into-the-pit/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Crusader Kings III: Roads to Power"
+            ],
+            "url": [
+                "/game/crusader-kings-iii-roads-to-power/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "The Swapper"
+            ],
+            "url": [
+                "/game/the-swapper/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Baba Is You"
+            ],
+            "url": [
+                "/game/baba-is-you/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Mini Motorways"
+            ],
+            "url": [
+                "/game/mini-motorways/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Year Walk"
+            ],
+            "url": [
+                "/game/year-walk/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Immortality"
+            ],
+            "url": [
+                "/game/immortality/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "TowerFall Ascension"
+            ],
+            "url": [
+                "/game/towerfall-ascension/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Hollow Knight"
+            ],
+            "url": [
+                "/game/hollow-knight/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "OlliOlli World"
+            ],
+            "url": [
+                "/game/olliolli-world/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Deathloop"
+            ],
+            "url": [
+                "/game/deathloop/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "The Witness"
+            ],
+            "url": [
+                "/game/the-witness/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Raw Data"
+            ],
+            "url": [
+                "/game/raw-data/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Astral Ascent"
+            ],
+            "url": [
+                "/game/astral-ascent/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Diablo III: Reaper of Souls"
+            ],
+            "url": [
+                "/game/diablo-iii-reaper-of-souls/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy VI Pixel Remaster"
+            ],
+            "url": [
+                "/game/final-fantasy-vi-pixel-remaster/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Divinity: Original Sin"
+            ],
+            "url": [
+                "/game/divinity-original-sin/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Unavowed"
+            ],
+            "url": [
+                "/game/unavowed/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Dead Space"
+            ],
+            "url": [
+                "/game/dead-space/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Return to Monkey Island"
+            ],
+            "url": [
+                "/game/return-to-monkey-island/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Silent Hill 2"
+            ],
+            "url": [
+                "/game/silent-hill-2/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Minishoot' Adventures"
+            ],
+            "url": [
+                "/game/minishoot-adventures/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Monster Hunter: World - Iceborne"
+            ],
+            "url": [
+                "/game/monster-hunter-world-iceborne/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "F1 2019"
+            ],
+            "url": [
+                "/game/f1-2019/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "INSIDE"
+            ],
+            "url": [
+                "/game/inside/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Europa Universalis IV"
+            ],
+            "url": [
+                "/game/europa-universalis-iv/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Persona 4 Golden"
+            ],
+            "url": [
+                "/game/persona-4-golden/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Sunless Skies"
+            ],
+            "url": [
+                "/game/sunless-skies/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Total War: WARHAMMER II"
+            ],
+            "url": [
+                "/game/total-war-warhammer-ii/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Marvel's Spider-Man Remastered"
+            ],
+            "url": [
+                "/game/marvels-spider-man-remastered/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "ANTONBLAST"
+            ],
+            "url": [
+                "/game/antonblast/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Hex: Shards of Fate"
+            ],
+            "url": [
+                "/game/hex-shards-of-fate/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "World of Warcraft: Warlords of Draenor"
+            ],
+            "url": [
+                "/game/world-of-warcraft-warlords-of-draenor/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Turbo Overkill"
+            ],
+            "url": [
+                "/game/turbo-overkill/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "West of Loathing"
+            ],
+            "url": [
+                "/game/west-of-loathing/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Iconoclasts"
+            ],
+            "url": [
+                "/game/iconoclasts/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Teenage Mutant Ninja Turtles: Shredder's Revenge - Dimension Shellshock"
+            ],
+            "url": [
+                "/game/teenage-mutant-ninja-turtles-shredders-revenge-2023/"
+            ],
+            "metascore": [
+                "87"
+            ]
+        },
+        {
+            "name": [
+                "Armored Core VI: Fires of Rubicon"
+            ],
+            "url": [
+                "/game/armored-core-vi-fires-of-rubicon/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Forza Horizon 3"
+            ],
+            "url": [
+                "/game/forza-horizon-3/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Tales From The Borderlands: Episode 5 - The Vault of the Traveler"
+            ],
+            "url": [
+                "/game/tales-from-the-borderlands-episode-5-the-vault-of/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Marvel vs. Capcom Fighting Collection: Arcade Classics"
+            ],
+            "url": [
+                "/game/marvel-vs-capcom-fighting-collection-arcade/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Gone Home"
+            ],
+            "url": [
+                "/game/gone-home/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Pac-Man Championship Edition DX +"
+            ],
+            "url": [
+                "/game/pac-man-championship-edition-dx/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Neva"
+            ],
+            "url": [
+                "/game/neva/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Oddworld: Abe's Oddysee - New 'n' Tasty"
+            ],
+            "url": [
+                "/game/oddworld-abes-oddysee-new-n-tasty/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Minds Beneath Us"
+            ],
+            "url": [
+                "/game/minds-beneath-us/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy XIV: Heavensward"
+            ],
+            "url": [
+                "/game/final-fantasy-xiv-heavensward/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Out of the Park Baseball 14"
+            ],
+            "url": [
+                "/game/out-of-the-park-baseball-14/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Warhammer 40K: Rogue Trader - Void Shadows"
+            ],
+            "url": [
+                "/game/warhammer-40k-rogue-trader-void-shadows/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Dragon Quest III HD-2D Remake"
+            ],
+            "url": [
+                "/game/dragon-quest-iii-hd-2d-remake/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Astebreed"
+            ],
+            "url": [
+                "/game/astebreed/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Kentucky Route Zero"
+            ],
+            "url": [
+                "/game/kentucky-route-zero/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Rise of the Tomb Raider"
+            ],
+            "url": [
+                "/game/rise-of-the-tomb-raider/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Diablo IV"
+            ],
+            "url": [
+                "/game/diablo-iv/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Total War: WARHAMMER"
+            ],
+            "url": [
+                "/game/total-war-warhammer/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Vampire Survivors"
+            ],
+            "url": [
+                "/game/vampire-survivors/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Monster Hunter Rise: Sunbreak"
+            ],
+            "url": [
+                "/game/monster-hunter-rise-sunbreak/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Saints Row IV"
+            ],
+            "url": [
+                "/game/saints-row-iv/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Monster Hunter Rise"
+            ],
+            "url": [
+                "/game/monster-hunter-rise/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Death Stranding"
+            ],
+            "url": [
+                "/game/death-stranding/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Destiny 2: The Witch Queen"
+            ],
+            "url": [
+                "/game/destiny-2-the-witch-queen/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Yakuza 0"
+            ],
+            "url": [
+                "/game/yakuza-0/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Ratchet & Clank: Rift Apart"
+            ],
+            "url": [
+                "/game/ratchet-and-clank-rift-apart/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "The Binding of Isaac: Rebirth"
+            ],
+            "url": [
+                "/game/the-binding-of-isaac-rebirth/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Titanfall"
+            ],
+            "url": [
+                "/game/titanfall/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Gears of War 4"
+            ],
+            "url": [
+                "/game/gears-of-war-4/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Valfaris"
+            ],
+            "url": [
+                "/game/valfaris/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Panzer Corps 2"
+            ],
+            "url": [
+                "/game/panzer-corps-2/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Her Story"
+            ],
+            "url": [
+                "/game/her-story/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Starcraft II: Heart of the Swarm"
+            ],
+            "url": [
+                "/game/starcraft-ii-heart-of-the-swarm/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Dishonored 2"
+            ],
+            "url": [
+                "/game/dishonored-2/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "The Legend of Heroes: Trails to Azure"
+            ],
+            "url": [
+                "/game/the-legend-of-heroes-trails-to-azure/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Riven"
+            ],
+            "url": [
+                "/game/riven/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Lonely Mountains: Snow Riders"
+            ],
+            "url": [
+                "/game/lonely-mountains-snow-riders/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Mass Effect Legendary Edition"
+            ],
+            "url": [
+                "/game/mass-effect-legendary-edition/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Homeworld Remastered Collection"
+            ],
+            "url": [
+                "/game/homeworld-remastered-collection/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Returnal"
+            ],
+            "url": [
+                "/game/returnal/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "CrossCode"
+            ],
+            "url": [
+                "/game/crosscode/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Wolfenstein II: The New Colossus"
+            ],
+            "url": [
+                "/game/wolfenstein-ii-the-new-colossus/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Tomb Raider"
+            ],
+            "url": [
+                "/game/tomb-raider/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Nioh 2: The Complete Edition"
+            ],
+            "url": [
+                "/game/nioh-2-the-complete-edition/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "HROT"
+            ],
+            "url": [
+                "/game/hrot/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Total War: WARHAMMER III"
+            ],
+            "url": [
+                "/game/total-war-warhammer-iii/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "F1 2016"
+            ],
+            "url": [
+                "/game/f1-2016/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Devotion"
+            ],
+            "url": [
+                "/game/devotion/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Sons of the Forest"
+            ],
+            "url": [
+                "/game/sons-of-the-forest/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Arco"
+            ],
+            "url": [
+                "/game/arco/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Desperados III"
+            ],
+            "url": [
+                "/game/desperados-iii/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Pony Island"
+            ],
+            "url": [
+                "/game/pony-island/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Citizen Sleeper 2: Starward Vector"
+            ],
+            "url": [
+                "/game/citizen-sleeper-2-starward-vector/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Chants of Sennaar"
+            ],
+            "url": [
+                "/game/chants-of-sennaar/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy VII Remake Intergrade"
+            ],
+            "url": [
+                "/game/final-fantasy-vii-remake-intergrade/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "PlayerUnknown's Battlegrounds"
+            ],
+            "url": [
+                "/game/playerunknowns-battlegrounds/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Thumper"
+            ],
+            "url": [
+                "/game/thumper/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Monster Train"
+            ],
+            "url": [
+                "/game/monster-train/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "XCOM: Enemy Within Expansion"
+            ],
+            "url": [
+                "/game/xcom-enemy-within-expansion/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Wildermyth"
+            ],
+            "url": [
+                "/game/wildermyth/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Titanfall 2"
+            ],
+            "url": [
+                "/game/titanfall-2/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Heroes of the Storm"
+            ],
+            "url": [
+                "/game/heroes-of-the-storm/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Path of Exile"
+            ],
+            "url": [
+                "/game/path-of-exile/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "ENDER LILIES: Quietus of the Knights"
+            ],
+            "url": [
+                "/game/ender-lilies-quietus-of-the-knights/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Football Manager 2019"
+            ],
+            "url": [
+                "/game/football-manager-2019/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Day of the Tentacle Remastered"
+            ],
+            "url": [
+                "/game/day-of-the-tentacle-remastered/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Assassin's Creed Odyssey"
+            ],
+            "url": [
+                "/game/assassins-creed-odyssey/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Cyberpunk 2077"
+            ],
+            "url": [
+                "/game/cyberpunk-2077/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "DiRT Rally"
+            ],
+            "url": [
+                "/game/dirt-rally/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Rocket League"
+            ],
+            "url": [
+                "/game/rocket-league/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Injustice 2"
+            ],
+            "url": [
+                "/game/injustice-2/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "F1 2021"
+            ],
+            "url": [
+                "/game/f1-2021/"
+            ],
+            "metascore": [
+                "86"
+            ]
+        },
+        {
+            "name": [
+                "Inscryption"
+            ],
+            "url": [
+                "/game/inscryption/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Risk of Rain 2"
+            ],
+            "url": [
+                "/game/risk-of-rain-2/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "The Talos Principle"
+            ],
+            "url": [
+                "/game/the-talos-principle/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Cities: Skylines"
+            ],
+            "url": [
+                "/game/cities-skylines/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "World of Warcraft: The War Within"
+            ],
+            "url": [
+                "/game/world-of-warcraft-the-war-within/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Buckshot Roulette"
+            ],
+            "url": [
+                "/game/buckshot-roulette/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Deep Rock Galactic"
+            ],
+            "url": [
+                "/game/deep-rock-galactic/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Closer the Distance"
+            ],
+            "url": [
+                "/game/closer-the-distance/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Guilty Gear -Strive-"
+            ],
+            "url": [
+                "/game/guilty-gear-strive-/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Wasteland 3"
+            ],
+            "url": [
+                "/game/wasteland-3/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Legend of Grimrock II"
+            ],
+            "url": [
+                "/game/legend-of-grimrock-ii/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Dragon Age: Inquisition"
+            ],
+            "url": [
+                "/game/dragon-age-inquisition/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Tales from the Borderlands: A Telltale Game Series"
+            ],
+            "url": [
+                "/game/tales-from-the-borderlands-a-telltale-game-series/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Hearthstone: Heroes of Warcraft - Whispers of the Old Gods"
+            ],
+            "url": [
+                "/game/hearthstone-heroes-of-warcraft-whispers-of-the-old/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Among Us"
+            ],
+            "url": [
+                "/game/among-us/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "BlazBlue: Chrono Phantasma Extend"
+            ],
+            "url": [
+                "/game/blazblue-chrono-phantasma-extend/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Starfield"
+            ],
+            "url": [
+                "/game/starfield/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Paradigm"
+            ],
+            "url": [
+                "/game/paradigm/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "The Sims 4: Realm of Magic"
+            ],
+            "url": [
+                "/game/the-sims-4-realm-of-magic/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Battlerite"
+            ],
+            "url": [
+                "/game/battlerite/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Bit.Trip Presents...Runner2: Future Legend of Rhythm Alien"
+            ],
+            "url": [
+                "/game/bit-trip-presents-runner2-future-legend-of-rhyt/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "One Btn Bosses"
+            ],
+            "url": [
+                "/game/one-btn-bosses/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Core Keeper"
+            ],
+            "url": [
+                "/game/core-keeper/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy XV: Royal Edition"
+            ],
+            "url": [
+                "/game/final-fantasy-xv-royal-edition/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Metro Exodus: Enhanced Edition"
+            ],
+            "url": [
+                "/game/metro-exodus-enhanced-edition/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "The Forgotten City"
+            ],
+            "url": [
+                "/game/the-forgotten-city/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Frostpunk 2"
+            ],
+            "url": [
+                "/game/frostpunk-2/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "The Binding of Isaac: Afterbirth"
+            ],
+            "url": [
+                "/game/the-binding-of-isaac-afterbirth/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Chaos Reborn"
+            ],
+            "url": [
+                "/game/chaos-reborn/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Huntdown"
+            ],
+            "url": [
+                "/game/huntdown/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Control"
+            ],
+            "url": [
+                "/game/control/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Solium Infernum"
+            ],
+            "url": [
+                "/game/solium-infernum/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Dust: An Elysian Tail"
+            ],
+            "url": [
+                "/game/dust-an-elysian-tail/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "South Park: The Stick of Truth"
+            ],
+            "url": [
+                "/game/south-park-the-stick-of-truth/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Kunitsu-Gami: Path of the Goddess"
+            ],
+            "url": [
+                "/game/kunitsu-gami-path-of-the-goddess/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "World of Goo 2"
+            ],
+            "url": [
+                "/game/world-of-goo-2/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Tunic"
+            ],
+            "url": [
+                "/game/tunic/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Shadow Tactics: Blades of the Shogun"
+            ],
+            "url": [
+                "/game/shadow-tactics-blades-of-the-shogun/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "DmC: Devil May Cry"
+            ],
+            "url": [
+                "/game/dmc-devil-may-cry/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "In Stars And Time"
+            ],
+            "url": [
+                "/game/in-stars-and-time/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "The Cosmic Wheel Sisterhood"
+            ],
+            "url": [
+                "/game/the-cosmic-wheel-sisterhood/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Dragon Quest Builders 2"
+            ],
+            "url": [
+                "/game/dragon-quest-builders-2/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Shovel Knight"
+            ],
+            "url": [
+                "/game/shovel-knight/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Assetto Corsa"
+            ],
+            "url": [
+                "/game/assetto-corsa/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Valkyria Chronicles"
+            ],
+            "url": [
+                "/game/valkyria-chronicles/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Galactic Civilizations III: Crusade"
+            ],
+            "url": [
+                "/game/galactic-civilizations-iii-crusade/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "The Wolf Among Us: Episode 1 - Faith"
+            ],
+            "url": [
+                "/game/the-wolf-among-us-episode-1-faith/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Robo Recall"
+            ],
+            "url": [
+                "/game/robo-recall/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "SteamWorld Dig 2"
+            ],
+            "url": [
+                "/game/steamworld-dig-2/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Mega Man Legacy Collection"
+            ],
+            "url": [
+                "/game/mega-man-legacy-collection/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "A Space For The Unbound"
+            ],
+            "url": [
+                "/game/a-space-for-the-unbound/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Football Manager 2022"
+            ],
+            "url": [
+                "/game/football-manager-2022/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Oxygen Not Included"
+            ],
+            "url": [
+                "/game/oxygen-not-included/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Torn Away"
+            ],
+            "url": [
+                "/game/torn-away/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "STASIS: BONE TOTEM"
+            ],
+            "url": [
+                "/game/stasis-bone-totem/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "BattleBlock Theater"
+            ],
+            "url": [
+                "/game/battleblock-theater/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Dragon Ball FighterZ"
+            ],
+            "url": [
+                "/game/dragon-ball-fighterz/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Death's Door"
+            ],
+            "url": [
+                "/game/deaths-door/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "AMID EVIL"
+            ],
+            "url": [
+                "/game/amid-evil/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Batman: The Enemy Within - Episode 5: Same Stitch"
+            ],
+            "url": [
+                "/game/batman-the-enemy-within-episode-5-same-stitch/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Full Metal Furies"
+            ],
+            "url": [
+                "/game/full-metal-furies/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Rogue Legacy"
+            ],
+            "url": [
+                "/game/rogue-legacy/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "The Rise of the Golden Idol"
+            ],
+            "url": [
+                "/game/the-rise-of-the-golden-idol/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Football Manager 2014"
+            ],
+            "url": [
+                "/game/football-manager-2014/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "System Shock: Enhanced Edition"
+            ],
+            "url": [
+                "/game/system-shock-enhanced-edition/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Atelier Ryza 3: Alchemist of the End & the Secret Key"
+            ],
+            "url": [
+                "/game/atelier-ryza-3-alchemist-of-the-end-and-the-secret/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Worldless"
+            ],
+            "url": [
+                "/game/worldless/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Sid Meier's Civilization V: Brave New World"
+            ],
+            "url": [
+                "/game/sid-meiers-civilization-v-brave-new-world/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Football Manager 2021"
+            ],
+            "url": [
+                "/game/football-manager-2021/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Death Stranding: Director's Cut"
+            ],
+            "url": [
+                "/game/death-stranding-directors-cut/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Total War: Three Kingdoms"
+            ],
+            "url": [
+                "/game/total-war-three-kingdoms/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "The Last Door: Season 2"
+            ],
+            "url": [
+                "/game/the-last-door-season-2/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Thronebreaker: The Witcher Tales"
+            ],
+            "url": [
+                "/game/thronebreaker-the-witcher-tales/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Shadow Gambit: The Cursed Crew"
+            ],
+            "url": [
+                "/game/shadow-gambit-the-cursed-crew/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Chime Sharp"
+            ],
+            "url": [
+                "/game/chime-sharp/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Trials Evolution: Gold Edition"
+            ],
+            "url": [
+                "/game/trials-evolution-gold-edition/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Outer Wilds"
+            ],
+            "url": [
+                "/game/outer-wilds/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Starcraft Remastered"
+            ],
+            "url": [
+                "/game/starcraft-remastered/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Prince of Persia: The Lost Crown"
+            ],
+            "url": [
+                "/game/prince-of-persia-the-lost-crown/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Planescape: Torment - Enhanced Edition"
+            ],
+            "url": [
+                "/game/planescape-torment-enhanced-edition/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Manifold Garden"
+            ],
+            "url": [
+                "/game/manifold-garden/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "Papers, Please"
+            ],
+            "url": [
+                "/game/papers-please/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "DOOM"
+            ],
+            "url": [
+                "/game/doom/"
+            ],
+            "metascore": [
+                "85"
+            ]
+        },
+        {
+            "name": [
+                "DiRT Rally 2.0"
+            ],
+            "url": [
+                "/game/dirt-rally-20/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "1000xRESIST"
+            ],
+            "url": [
+                "/game/1000xresist/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Tactics Ogre: Reborn"
+            ],
+            "url": [
+                "/game/tactics-ogre-reborn/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Middle-earth: Shadow of Mordor"
+            ],
+            "url": [
+                "/game/middle-earth-shadow-of-mordor/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Atelier Ryza 2: Lost Legends & the Secret Fairy"
+            ],
+            "url": [
+                "/game/atelier-ryza-2-lost-legends-and-the-secret-fairy/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "OlliOlli World: VOID Riders"
+            ],
+            "url": [
+                "/game/olliolli-world-void-riders/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "If Found..."
+            ],
+            "url": [
+                "/game/if-found/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Dynasty Warriors: Origins"
+            ],
+            "url": [
+                "/game/dynasty-warriors-origins/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Horizon Zero Dawn: Complete Edition"
+            ],
+            "url": [
+                "/game/horizon-zero-dawn-complete-edition/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Planet Coaster"
+            ],
+            "url": [
+                "/game/planet-coaster/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Rakuen"
+            ],
+            "url": [
+                "/game/rakuen/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Humanity"
+            ],
+            "url": [
+                "/game/humanity/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "The Sims 4: Island Living"
+            ],
+            "url": [
+                "/game/the-sims-4-island-living/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Hearthstone: Heroes of Warcraft - Goblins Vs. Gnomes"
+            ],
+            "url": [
+                "/game/hearthstone-heroes-of-warcraft-goblins-vs-gnomes/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "The Case of the Golden Idol"
+            ],
+            "url": [
+                "/game/the-case-of-the-golden-idol/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Tales From The Borderlands: Episode 1 - Zer0 Sum"
+            ],
+            "url": [
+                "/game/borderlands-a-telltale-game-series/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Sprint Vector"
+            ],
+            "url": [
+                "/game/sprint-vector/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Destiny 2: Forsaken"
+            ],
+            "url": [
+                "/game/destiny-2-forsaken/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Shovel Knight Pocket Dungeon"
+            ],
+            "url": [
+                "/game/shovel-knight-pocket-dungeon/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Gorogoa"
+            ],
+            "url": [
+                "/game/gorogoa/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Darkest Dungeon"
+            ],
+            "url": [
+                "/game/darkest-dungeon/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "80 Days"
+            ],
+            "url": [
+                "/game/80-days/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Red Matter 2"
+            ],
+            "url": [
+                "/game/red-matter-2/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Hearthstone: Heroes of Warcraft - The Grand Tournament"
+            ],
+            "url": [
+                "/game/hearthstone-heroes-of-warcraft-the-grand/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Metro Redux"
+            ],
+            "url": [
+                "/game/metro-redux/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Eliza"
+            ],
+            "url": [
+                "/game/eliza/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Enter the Gungeon"
+            ],
+            "url": [
+                "/game/enter-the-gungeon/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Total War: WARHAMMER II - Rise of the Tomb Kings"
+            ],
+            "url": [
+                "/game/total-war-warhammer-ii-rise-of-the-tomb-kings/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Little Goody Two Shoes"
+            ],
+            "url": [
+                "/game/little-goody-two-shoes/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Nine Sols"
+            ],
+            "url": [
+                "/game/nine-sols/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Mass Effect 3: Citadel"
+            ],
+            "url": [
+                "/game/mass-effect-3-citadel/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Europa Universalis IV: Wealth of Nations"
+            ],
+            "url": [
+                "/game/europa-universalis-iv-wealth-of-nations/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Infernax"
+            ],
+            "url": [
+                "/game/infernax/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "MOTHERGUNSHIP: FORGE"
+            ],
+            "url": [
+                "/game/mothergunship-forge/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Frostpunk"
+            ],
+            "url": [
+                "/game/frostpunk/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Football Manager 2020"
+            ],
+            "url": [
+                "/game/football-manager-2020/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Nex Machina: Death Machine"
+            ],
+            "url": [
+                "/game/nex-machina-death-machine/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Streets of Rage 4"
+            ],
+            "url": [
+                "/game/streets-of-rage-4/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Assassin's Creed IV: Black Flag"
+            ],
+            "url": [
+                "/game/assassins-creed-iv-black-flag/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Griftlands"
+            ],
+            "url": [
+                "/game/griftlands/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Hyper Light Drifter"
+            ],
+            "url": [
+                "/game/hyper-light-drifter/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Hitman - Episode 2: Sapienza"
+            ],
+            "url": [
+                "/game/hitman-episode-2-sapienza/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Teenage Mutant Ninja Turtles: Shredder's Revenge"
+            ],
+            "url": [
+                "/game/teenage-mutant-ninja-turtles-shredders-revenge/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Gerda: A Flame in Winter"
+            ],
+            "url": [
+                "/game/gerda-a-flame-in-winter/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Magic: The Gathering Arena"
+            ],
+            "url": [
+                "/game/magic-the-gathering-arena/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Gordian Quest"
+            ],
+            "url": [
+                "/game/gordian-quest/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Lair of the Clockwork God"
+            ],
+            "url": [
+                "/game/lair-of-the-clockwork-god/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Tales of Arise"
+            ],
+            "url": [
+                "/game/tales-of-arise/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Fuga: Melodies of Steel"
+            ],
+            "url": [
+                "/game/fuga-melodies-of-steel/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy IX"
+            ],
+            "url": [
+                "/game/final-fantasy-ix/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Risk of Rain Returns"
+            ],
+            "url": [
+                "/game/risk-of-rain-returns/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "ElecHead"
+            ],
+            "url": [
+                "/game/elechead/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Diablo IV: Vessel of Hatred"
+            ],
+            "url": [
+                "/game/diablo-iv-vessel-of-hatred/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Guacamelee! 2"
+            ],
+            "url": [
+                "/game/guacamelee-2/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Viewfinder"
+            ],
+            "url": [
+                "/game/viewfinder/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "SOMA"
+            ],
+            "url": [
+                "/game/soma/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Tom Clancy's The Division 2"
+            ],
+            "url": [
+                "/game/tom-clancys-the-division-2/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "NieR: Automata"
+            ],
+            "url": [
+                "/game/nier-automata/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Broken Sword - Shadow of the Templars: Reforged"
+            ],
+            "url": [
+                "/game/broken-sword-shadow-of-the-templars-reforged/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "The Darkside Detective: A Fumble in the Dark"
+            ],
+            "url": [
+                "/game/the-darkside-detective-a-fumble-in-the-dark/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Nioh: Complete Edition"
+            ],
+            "url": [
+                "/game/nioh-complete-edition/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "ICEY"
+            ],
+            "url": [
+                "/game/icey/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Grim Fandango Remastered"
+            ],
+            "url": [
+                "/game/grim-fandango-remastered/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Age of Empires II: Definitive Edition"
+            ],
+            "url": [
+                "/game/age-of-empires-ii-definitive-edition/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Spiritfarer"
+            ],
+            "url": [
+                "/game/spiritfarer/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Anomaly Agent"
+            ],
+            "url": [
+                "/game/anomaly-agent/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Thimbleweed Park"
+            ],
+            "url": [
+                "/game/thimbleweed-park/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Fallout 4"
+            ],
+            "url": [
+                "/game/fallout-4/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Mediterranea Inferno"
+            ],
+            "url": [
+                "/game/mediterranea-inferno/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Patrick's Parabox"
+            ],
+            "url": [
+                "/game/patricks-parabox/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "NeverAwake"
+            ],
+            "url": [
+                "/game/neverawake/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "FIFA 17"
+            ],
+            "url": [
+                "/game/fifa-17/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Momodora: Moonlit Farewell"
+            ],
+            "url": [
+                "/game/momodora-moonlit-farewell/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Telling Lies"
+            ],
+            "url": [
+                "/game/telling-lies/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Project CARS 2"
+            ],
+            "url": [
+                "/game/project-cars-2/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "This Way Madness Lies"
+            ],
+            "url": [
+                "/game/this-way-madness-lies/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "The Wolf Among Us: Episode 5 - Cry Wolf"
+            ],
+            "url": [
+                "/game/the-wolf-among-us-episode-5-cry-wolf/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "The End Is Nigh"
+            ],
+            "url": [
+                "/game/the-end-is-nigh/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Crow Country"
+            ],
+            "url": [
+                "/game/crow-country/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "SpeedRunners"
+            ],
+            "url": [
+                "/game/speedrunners/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Unsighted"
+            ],
+            "url": [
+                "/game/unsighted/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Triangle Strategy"
+            ],
+            "url": [
+                "/game/triangle-strategy/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy XVI"
+            ],
+            "url": [
+                "/game/final-fantasy-xvi/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "GRIS"
+            ],
+            "url": [
+                "/game/gris/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Shovel Knight: King of Cards"
+            ],
+            "url": [
+                "/game/shovel-knight-king-of-cards/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Assassin's Creed Origins"
+            ],
+            "url": [
+                "/game/assassins-creed-origins/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Football Manager 2024"
+            ],
+            "url": [
+                "/game/football-manager-2024/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Dark Souls Remastered"
+            ],
+            "url": [
+                "/game/dark-souls-remastered/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Yoku's Island Express"
+            ],
+            "url": [
+                "/game/yokus-island-express/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Ultimate General: Gettysburg"
+            ],
+            "url": [
+                "/game/ultimate-general-gettysburg/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Ravenswatch"
+            ],
+            "url": [
+                "/game/ravenswatch/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Genshin Impact"
+            ],
+            "url": [
+                "/game/genshin-impact/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Prodeus"
+            ],
+            "url": [
+                "/game/prodeus/"
+            ],
+            "metascore": [
+                "84"
+            ]
+        },
+        {
+            "name": [
+                "Berserk Boy"
+            ],
+            "url": [
+                "/game/berserk-boy/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Two Point Hospital"
+            ],
+            "url": [
+                "/game/two-point-hospital/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "SUPERHOT VR"
+            ],
+            "url": [
+                "/game/superhot-vr/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Grim Dawn"
+            ],
+            "url": [
+                "/game/grim-dawn/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy XII: The Zodiac Age"
+            ],
+            "url": [
+                "/game/final-fantasy-xii-the-zodiac-age/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Gunpoint"
+            ],
+            "url": [
+                "/game/gunpoint/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Detention"
+            ],
+            "url": [
+                "/game/detention/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Call of Duty: Black Ops 6"
+            ],
+            "url": [
+                "/game/call-of-duty-black-ops-6/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Bloodstained: Ritual of the Night"
+            ],
+            "url": [
+                "/game/bloodstained-ritual-of-the-night/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Everhood"
+            ],
+            "url": [
+                "/game/everhood/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "SMITE"
+            ],
+            "url": [
+                "/game/smite/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Life is Strange 2: Episode 5 - Wolves"
+            ],
+            "url": [
+                "/game/life-is-strange-2-episode-5-wolves/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Laika: Aged Through Blood"
+            ],
+            "url": [
+                "/game/laika-aged-through-blood/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy X / X-2 HD Remaster"
+            ],
+            "url": [
+                "/game/final-fantasy-x-x-2-hd-remaster/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Forgive Me Father 2"
+            ],
+            "url": [
+                "/game/forgive-me-father-2/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy IV Pixel Remaster"
+            ],
+            "url": [
+                "/game/final-fantasy-iv-pixel-remaster/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Valkyria Chronicles 4"
+            ],
+            "url": [
+                "/game/valkyria-chronicles-4/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Guild Wars 2: Path of Fire"
+            ],
+            "url": [
+                "/game/guild-wars-2-path-of-fire/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "I Expect You To Die 2: The Spy And The Liar"
+            ],
+            "url": [
+                "/game/i-expect-you-to-die-2-the-spy-and-the-liar/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Hellblade: Senua's Sacrifice"
+            ],
+            "url": [
+                "/game/hellblade-senuas-sacrifice/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Crash Bandicoot 4: It's About Time"
+            ],
+            "url": [
+                "/game/crash-bandicoot-4-its-about-time/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Age of Wonders 4"
+            ],
+            "url": [
+                "/game/age-of-wonders-4/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Blasphemous 2"
+            ],
+            "url": [
+                "/game/blasphemous-2/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Life is Strange"
+            ],
+            "url": [
+                "/game/life-is-strange/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Kena: Bridge of Spirits"
+            ],
+            "url": [
+                "/game/kena-bridge-of-spirits/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "WHAT THE GOLF?"
+            ],
+            "url": [
+                "/game/what-the-golf/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Call of Duty: Black Ops 4"
+            ],
+            "url": [
+                "/game/call-of-duty-black-ops-4/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Octopath Traveler II"
+            ],
+            "url": [
+                "/game/octopath-traveler-ii/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Deus Ex: Mankind Divided"
+            ],
+            "url": [
+                "/game/deus-ex-mankind-divided/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Bleed 2"
+            ],
+            "url": [
+                "/game/bleed-2/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Parkitect"
+            ],
+            "url": [
+                "/game/parkitect/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "This War of Mine"
+            ],
+            "url": [
+                "/game/this-war-of-mine/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Devil Daggers"
+            ],
+            "url": [
+                "/game/devil-daggers/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Strange Horticulture"
+            ],
+            "url": [
+                "/game/strange-horticulture/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Red Dead Redemption Featuring Undead Nightmare"
+            ],
+            "url": [
+                "/game/red-dead-redemption-featuring-undead-nightmare/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "The Blackwell Epiphany"
+            ],
+            "url": [
+                "/game/blackwell-epiphany/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "The Elder Scrolls Online: Summerset"
+            ],
+            "url": [
+                "/game/the-elder-scrolls-online-summerset/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Hogwarts Legacy"
+            ],
+            "url": [
+                "/game/hogwarts-legacy/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "One Finger Death Punch 2"
+            ],
+            "url": [
+                "/game/one-finger-death-punch-2/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "ENDER MAGNOLIA: Bloom in the Mist"
+            ],
+            "url": [
+                "/game/ender-magnolia-bloom-in-the-mist/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Cassette Beasts"
+            ],
+            "url": [
+                "/game/cassette-beasts/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "The Forest (2014)"
+            ],
+            "url": [
+                "/game/the-forest-2014/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Project CARS"
+            ],
+            "url": [
+                "/game/project-cars/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Total War: WARHAMMER II - Curse of the Vampire Coast"
+            ],
+            "url": [
+                "/game/total-war-warhammer-ii-curse-of-the-vampire-coast/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Two Point Campus"
+            ],
+            "url": [
+                "/game/two-point-campus/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Unpacking"
+            ],
+            "url": [
+                "/game/unpacking/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Sorry We're Closed"
+            ],
+            "url": [
+                "/game/sorry-were-closed/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Observer: System Redux"
+            ],
+            "url": [
+                "/game/observer-system-redux/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Little Nightmares II"
+            ],
+            "url": [
+                "/game/little-nightmares-ii/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy XIV Online: A Realm Reborn"
+            ],
+            "url": [
+                "/game/final-fantasy-xiv-online-a-realm-reborn/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Destiny 2"
+            ],
+            "url": [
+                "/game/destiny-2/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Age of Mythology: Retold"
+            ],
+            "url": [
+                "/game/age-of-mythology-retold/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "TEVI"
+            ],
+            "url": [
+                "/game/tevi/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Hitman"
+            ],
+            "url": [
+                "/game/hitman/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "The Plucky Squire"
+            ],
+            "url": [
+                "/game/the-plucky-squire/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Betrayal At Club Low"
+            ],
+            "url": [
+                "/game/betrayal-at-club-low/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Metal Gear Rising: Revengeance"
+            ],
+            "url": [
+                "/game/metal-gear-rising-revengeance/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "The Riftbreaker"
+            ],
+            "url": [
+                "/game/the-riftbreaker/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "30 Birds"
+            ],
+            "url": [
+                "/game/30-birds/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Starseed Pilgrim"
+            ],
+            "url": [
+                "/game/starseed-pilgrim/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Monaco: What's Yours Is Mine"
+            ],
+            "url": [
+                "/game/monaco-whats-yours-is-mine/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Trials Rising"
+            ],
+            "url": [
+                "/game/trials-rising/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Cat Quest III"
+            ],
+            "url": [
+                "/game/cat-quest-iii/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Trials Rising"
+            ],
+            "url": [
+                "/game/trials-rising/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Yakuza: Like a Dragon"
+            ],
+            "url": [
+                "/game/yakuza-like-a-dragon/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Between Horizons"
+            ],
+            "url": [
+                "/game/between-horizons/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Crisis Core: Final Fantasy VII Reunion"
+            ],
+            "url": [
+                "/game/crisis-core-final-fantasy-vii-reunion/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Hardspace: Shipbreaker"
+            ],
+            "url": [
+                "/game/hardspace-shipbreaker/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Jusant"
+            ],
+            "url": [
+                "/game/jusant/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Sunlight"
+            ],
+            "url": [
+                "/game/sunlight/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "The Sexy Brutale"
+            ],
+            "url": [
+                "/game/the-sexy-brutale/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Helldivers"
+            ],
+            "url": [
+                "/game/helldivers/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "V Rising"
+            ],
+            "url": [
+                "/game/v-rising/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Prison Architect"
+            ],
+            "url": [
+                "/game/prison-architect/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Ape Out"
+            ],
+            "url": [
+                "/game/ape-out/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Valdis Story: Abyssal City"
+            ],
+            "url": [
+                "/game/valdis-story-abyssal-city/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Katana ZERO"
+            ],
+            "url": [
+                "/game/katana-zero/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "World of Warcraft: Shadowlands"
+            ],
+            "url": [
+                "/game/world-of-warcraft-shadowlands/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Freedom Planet"
+            ],
+            "url": [
+                "/game/freedom-planet/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Shadow Tactics: Blades of the Shogun - Aiko's Choice"
+            ],
+            "url": [
+                "/game/shadow-tactics-blades-of-the-shogun-aikos-choice/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "The Great Ace Attorney Chronicles"
+            ],
+            "url": [
+                "/game/the-great-ace-attorney-chronicles/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "FANTASIAN Neo Dimension"
+            ],
+            "url": [
+                "/game/fantasian-neo-dimension/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Subsurface Circular"
+            ],
+            "url": [
+                "/game/subsurface-circular/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Total War: WARHAMMER III - Forge of the Chaos Dwarfs"
+            ],
+            "url": [
+                "/game/total-war-warhammer-iii-forge-of-the-chaos-dwarfs/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Atelier Sophie 2: The Alchemist of the Mysterious Dream"
+            ],
+            "url": [
+                "/game/atelier-sophie-2-the-alchemist-of-the-mysterious/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "The Legend of Heroes: Trails in the Sky the 3rd"
+            ],
+            "url": [
+                "/game/the-legend-of-heroes-trails-in-the-sky-the-3rd/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "ABZU"
+            ],
+            "url": [
+                "/game/abzu/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "The Messenger"
+            ],
+            "url": [
+                "/game/the-messenger/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "SANABI"
+            ],
+            "url": [
+                "/game/sanabi/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Pistol Whip"
+            ],
+            "url": [
+                "/game/pistol-whip/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Hypnospace Outlaw"
+            ],
+            "url": [
+                "/game/hypnospace-outlaw/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Grounded"
+            ],
+            "url": [
+                "/game/grounded/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Disc Room"
+            ],
+            "url": [
+                "/game/disc-room/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Pathfinder: Wrath of the Righteous"
+            ],
+            "url": [
+                "/game/pathfinder-wrath-of-the-righteous/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Lies of P"
+            ],
+            "url": [
+                "/game/lies-of-p/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Helldivers 2"
+            ],
+            "url": [
+                "/game/helldivers-2/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Green Hell VR"
+            ],
+            "url": [
+                "/game/green-hell-vr/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Beacon Pines"
+            ],
+            "url": [
+                "/game/beacon-pines/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Life is Strange: Episode 5 - Polarized"
+            ],
+            "url": [
+                "/game/life-is-strange-episode-5/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Demeo"
+            ],
+            "url": [
+                "/game/demeo/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Broforce"
+            ],
+            "url": [
+                "/game/broforce/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "A Highland Song"
+            ],
+            "url": [
+                "/game/a-highland-song/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Marvel's Midnight Suns"
+            ],
+            "url": [
+                "/game/marvels-midnight-suns/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Roadwarden"
+            ],
+            "url": [
+                "/game/roadwarden/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Steel Division: Normandy 44"
+            ],
+            "url": [
+                "/game/steel-division-normandy-44/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Hearts of Iron IV"
+            ],
+            "url": [
+                "/game/hearts-of-iron-iv/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Tales From Off-Peak City Vol. 1"
+            ],
+            "url": [
+                "/game/tales-from-off-peak-city-vol-1/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Duskers"
+            ],
+            "url": [
+                "/game/duskers/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "ROBOBEAT"
+            ],
+            "url": [
+                "/game/robobeat/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Door Kickers"
+            ],
+            "url": [
+                "/game/door-kickers/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Resident Evil 7: biohazard"
+            ],
+            "url": [
+                "/game/resident-evil-7-biohazard/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Resident Evil Village"
+            ],
+            "url": [
+                "/game/resident-evil-village/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Forza Motorsport"
+            ],
+            "url": [
+                "/game/forza-motorsport/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Crown Trick"
+            ],
+            "url": [
+                "/game/crown-trick/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "F1 2018"
+            ],
+            "url": [
+                "/game/f1-2018/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "DOOMBLADE"
+            ],
+            "url": [
+                "/game/doomblade/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Dragon Ball: Sparking! Zero"
+            ],
+            "url": [
+                "/game/dragon-ball-sparking-zero/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "THRESHOLD (Julien Eveille)"
+            ],
+            "url": [
+                "/game/threshold-julien-eveille/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Snufkin: Melody of Moominvalley"
+            ],
+            "url": [
+                "/game/snufkin-melody-of-moominvalley/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Crusader Kings III: The Royal Court"
+            ],
+            "url": [
+                "/game/crusader-kings-iii-the-royal-court/"
+            ],
+            "metascore": [
+                "83"
+            ]
+        },
+        {
+            "name": [
+                "Invisible, Inc."
+            ],
+            "url": [
+                "/game/invisible-inc/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Dark Souls II: Crown of the Ivory King"
+            ],
+            "url": [
+                "/game/dark-souls-ii-crown-of-the-ivory-king/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Command & Conquer Remastered Collection"
+            ],
+            "url": [
+                "/game/command-and-conquer-remastered-collection/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Killer Frequency"
+            ],
+            "url": [
+                "/game/killer-frequency/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "SnowRunner"
+            ],
+            "url": [
+                "/game/snowrunner/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Elder Scrolls Online: Necrom"
+            ],
+            "url": [
+                "/game/the-elder-scrolls-online-necrom/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Chivalry 2"
+            ],
+            "url": [
+                "/game/chivalry-2/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Dark Souls III: The Ringed City"
+            ],
+            "url": [
+                "/game/dark-souls-iii-the-ringed-city/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Hitman 2"
+            ],
+            "url": [
+                "/game/hitman-2/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "L.A. Noire: The VR Case Files"
+            ],
+            "url": [
+                "/game/la-noire-the-vr-case-files/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Banner Saga 2"
+            ],
+            "url": [
+                "/game/the-banner-saga-2/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Kentucky Route Zero - Act II"
+            ],
+            "url": [
+                "/game/kentucky-route-zero-act-ii/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Not For Broadcast"
+            ],
+            "url": [
+                "/game/not-for-broadcast/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Hatsune Miku: Project Diva MegaMix+"
+            ],
+            "url": [
+                "/game/hatsune-miku-project-diva-megamix-plus/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Kentucky Route Zero - Act II"
+            ],
+            "url": [
+                "/game/kentucky-route-zero-act-ii/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Football Manager 2018"
+            ],
+            "url": [
+                "/game/football-manager-2018/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Tom Clancy's Splinter Cell: Blacklist"
+            ],
+            "url": [
+                "/game/tom-clancys-splinter-cell-blacklist/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Sam & Max Save the World Remastered"
+            ],
+            "url": [
+                "/game/sam-and-max-save-the-world-remastered/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "SUPERHOT"
+            ],
+            "url": [
+                "/game/superhot/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Yakuza 6: The Song of Life"
+            ],
+            "url": [
+                "/game/yakuza-6-the-song-of-life/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Tekken 7"
+            ],
+            "url": [
+                "/game/tekken-7/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Sokobond"
+            ],
+            "url": [
+                "/game/sokobond/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Mortal Kombat 11"
+            ],
+            "url": [
+                "/game/mortal-kombat-11/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Wylde Flowers"
+            ],
+            "url": [
+                "/game/wylde-flowers/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "One Step From Eden"
+            ],
+            "url": [
+                "/game/one-step-from-eden/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Tiny Terry's Turbo Trip"
+            ],
+            "url": [
+                "/game/tiny-terrys-turbo-trip/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Yakuza Kiwami 2"
+            ],
+            "url": [
+                "/game/yakuza-kiwami-2/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Antichamber"
+            ],
+            "url": [
+                "/game/antichamber/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Murder of Sonic the Hedgehog"
+            ],
+            "url": [
+                "/game/the-murder-of-sonic-the-hedgehog/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Hearthstone: Heroes of Warcraft - Blackrock Mountain"
+            ],
+            "url": [
+                "/game/hearthstone-heroes-of-warcraft-blackrock-mountain/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Danganronpa: Trigger Happy Havoc"
+            ],
+            "url": [
+                "/game/dangan-ronpa/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Moving Out 2"
+            ],
+            "url": [
+                "/game/moving-out-2/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Backfirewall_"
+            ],
+            "url": [
+                "/game/backfirewall/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Stray"
+            ],
+            "url": [
+                "/game/stray/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Eastward"
+            ],
+            "url": [
+                "/game/eastward/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "A Plague Tale: Requiem"
+            ],
+            "url": [
+                "/game/a-plague-tale-requiem/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Star Ocean: The Second Story R"
+            ],
+            "url": [
+                "/game/star-ocean-the-second-story-r/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Coral Island"
+            ],
+            "url": [
+                "/game/coral-island/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Star Ocean: The Second Story R"
+            ],
+            "url": [
+                "/game/star-ocean-the-second-story-r/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Assassin's Creed Valhalla"
+            ],
+            "url": [
+                "/game/assassins-creed-valhalla/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Warhammer 40,000: Space Marine II"
+            ],
+            "url": [
+                "/game/warhammer-40000-space-marine-ii/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Hero's Hour"
+            ],
+            "url": [
+                "/game/heros-hour/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Metro Exodus"
+            ],
+            "url": [
+                "/game/metro-exodus/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Talos Principle: Road To Gehenna"
+            ],
+            "url": [
+                "/game/the-talos-principle-road-to-gehenna/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Outer Worlds"
+            ],
+            "url": [
+                "/game/the-outer-worlds/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Stellaris: Utopia"
+            ],
+            "url": [
+                "/game/stellaris-utopia/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "King's Quest Chapter 1: A Knight to Remember"
+            ],
+            "url": [
+                "/game/kings-quest-chapter-1-a-knight-to-remember/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Life and Suffering of Sir Brante"
+            ],
+            "url": [
+                "/game/the-life-and-suffering-of-sir-brante/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Cult of the Lamb"
+            ],
+            "url": [
+                "/game/cult-of-the-lamb/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Children of Morta"
+            ],
+            "url": [
+                "/game/children-of-morta/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Subnautica: Below Zero"
+            ],
+            "url": [
+                "/game/subnautica-below-zero/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Banner Saga 3"
+            ],
+            "url": [
+                "/game/the-banner-saga-3/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Endless Legend"
+            ],
+            "url": [
+                "/game/endless-legend/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Pyre"
+            ],
+            "url": [
+                "/game/pyre/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Ramp"
+            ],
+            "url": [
+                "/game/the-ramp/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Batbarian: Testament of the Primordials"
+            ],
+            "url": [
+                "/game/batbarian-testament-of-the-primordials/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Last Spell"
+            ],
+            "url": [
+                "/game/the-last-spell/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Romancing SaGa 2: Revenge of the Seven"
+            ],
+            "url": [
+                "/game/romancing-saga-2-revenge-of-the-seven/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Creaks"
+            ],
+            "url": [
+                "/game/creaks/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Kero Blaster"
+            ],
+            "url": [
+                "/game/keroblaster/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Gloomhaven"
+            ],
+            "url": [
+                "/game/gloomhaven/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "VIDEOBALL"
+            ],
+            "url": [
+                "/game/videoball/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Vale: Shadow of the Crown"
+            ],
+            "url": [
+                "/game/the-vale-shadow-of-the-crown/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Magical Delicacy"
+            ],
+            "url": [
+                "/game/magical-delicacy/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Wolf Among Us: Episode 3 - A Crooked Mile"
+            ],
+            "url": [
+                "/game/the-wolf-among-us-episode-3-a-crooked-mile/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Outer Wilds: Echoes of the Eye"
+            ],
+            "url": [
+                "/game/outer-wilds-echoes-of-the-eye/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Sims 4: Eco Lifestyle"
+            ],
+            "url": [
+                "/game/the-sims-4-eco-lifestyle/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Wandersong"
+            ],
+            "url": [
+                "/game/wandersong/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Paranormasight: The Seven Mysteries of Honjo"
+            ],
+            "url": [
+                "/game/paranormasight-the-seven-mysteries-of-honjo/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Shadows Over Loathing"
+            ],
+            "url": [
+                "/game/shadows-over-loathing/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Super Hydorah"
+            ],
+            "url": [
+                "/game/super-hydorah/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Archvale"
+            ],
+            "url": [
+                "/game/archvale/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Life is Strange 2: Episode 4 - Faith"
+            ],
+            "url": [
+                "/game/life-is-strange-2-episode-4-faith/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "We Were Here Expeditions: The FriendShip"
+            ],
+            "url": [
+                "/game/we-were-here-expeditions-the-friendship/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Final Fantasy V Pixel Remaster"
+            ],
+            "url": [
+                "/game/final-fantasy-v-pixel-remaster/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Nightmare Reaper"
+            ],
+            "url": [
+                "/game/nightmare-reaper/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Remnant II: The Awakened King"
+            ],
+            "url": [
+                "/game/remnant-ii-the-awakened-king/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Arranger: A Role-Puzzling Adventure"
+            ],
+            "url": [
+                "/game/arranger-a-role-puzzling-adventure/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Tainted Grail: Conquest"
+            ],
+            "url": [
+                "/game/tainted-grail-conquest/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Mortal Kombat 1"
+            ],
+            "url": [
+                "/game/mortal-kombat-1/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Lost in Play"
+            ],
+            "url": [
+                "/game/lost-in-play/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Roots of Pacha"
+            ],
+            "url": [
+                "/game/roots-of-pacha/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Technobabylon"
+            ],
+            "url": [
+                "/game/technobabylon/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "World of Warcraft: Dragonflight"
+            ],
+            "url": [
+                "/game/world-of-warcraft-dragonflight/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "FIFA 15"
+            ],
+            "url": [
+                "/game/fifa-15/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Filament"
+            ],
+            "url": [
+                "/game/filament/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "FIFA 15"
+            ],
+            "url": [
+                "/game/fifa-15/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Forza Motorsport 7"
+            ],
+            "url": [
+                "/game/forza-motorsport-7/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "ETHER One"
+            ],
+            "url": [
+                "/game/ether-one/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Vanishing of Ethan Carter"
+            ],
+            "url": [
+                "/game/the-vanishing-of-ethan-carter/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "UnMetal"
+            ],
+            "url": [
+                "/game/unmetal/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Samurai Warriors 4 DX"
+            ],
+            "url": [
+                "/game/samurai-warriors-4-dx/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Duelyst"
+            ],
+            "url": [
+                "/game/duelyst/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Counter-Strike 2"
+            ],
+            "url": [
+                "/game/counter-strike-2/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Circuit Superstars"
+            ],
+            "url": [
+                "/game/circuit-superstars/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Goodbye Volcano High"
+            ],
+            "url": [
+                "/game/goodbye-volcano-high/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Age of Wonders III - Golden Realms"
+            ],
+            "url": [
+                "/game/age-of-wonders-iii-golden-realms/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Chicken Police - Paint it RED!"
+            ],
+            "url": [
+                "/game/chicken-police-paint-it-red/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Monster Hunter Stories 2: Wings of Ruin"
+            ],
+            "url": [
+                "/game/monster-hunter-stories-2-wings-of-ruin/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "The Sims 4: Growing Together"
+            ],
+            "url": [
+                "/game/the-sims-4-growing-together/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Warhammer: Vermintide 2"
+            ],
+            "url": [
+                "/game/warhammer-vermintide-2/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Gears 5"
+            ],
+            "url": [
+                "/game/gears-5/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Turnip Boy Robs a Bank"
+            ],
+            "url": [
+                "/game/turnip-boy-robs-a-bank/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Wargroove"
+            ],
+            "url": [
+                "/game/wargroove/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Sakuna: Of Rice and Ruin"
+            ],
+            "url": [
+                "/game/sakuna-of-rice-and-ruin/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Prey"
+            ],
+            "url": [
+                "/game/prey/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Dark Souls II: Crown of the Sunken King"
+            ],
+            "url": [
+                "/game/dark-souls-2-crown-of-the-sunken-king/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Zet Zillions"
+            ],
+            "url": [
+                "/game/zet-zillions/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Resident Evil HD Remaster"
+            ],
+            "url": [
+                "/game/resident-evil-hd-remaster/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Loop Hero"
+            ],
+            "url": [
+                "/game/loop-hero/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Ace Attorney Investigations Collection"
+            ],
+            "url": [
+                "/game/ace-attorney-investigations-collection/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "30XX"
+            ],
+            "url": [
+                "/game/30xx/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Citizen Sleeper"
+            ],
+            "url": [
+                "/game/citizen-sleeper/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Metro: Last Light"
+            ],
+            "url": [
+                "/game/metro-last-light/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Rising Storm"
+            ],
+            "url": [
+                "/game/rising-storm/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Lethal League"
+            ],
+            "url": [
+                "/game/lethal-league/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Diplomacy is Not an Option"
+            ],
+            "url": [
+                "/game/diplomacy-is-not-an-option/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Darkest Dungeon: The Crimson Court"
+            ],
+            "url": [
+                "/game/darkest-dungeon-the-crimson-court/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "A Short Hike"
+            ],
+            "url": [
+                "/game/a-short-hike/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "She Remembered Caterpillars"
+            ],
+            "url": [
+                "/game/she-remembered-caterpillars/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Lil' Guardsman"
+            ],
+            "url": [
+                "/game/lil-guardsman/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Pro Evolution Soccer 2015"
+            ],
+            "url": [
+                "/game/pro-evolution-soccer-2015/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "ISLANDERS"
+            ],
+            "url": [
+                "/game/islanders/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "OlliOlli2: Welcome to Olliwood"
+            ],
+            "url": [
+                "/game/olliolli2/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Fell Seal: Arbiter's Mark"
+            ],
+            "url": [
+                "/game/fell-seal-arbiters-mark/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Broken Age: Act 1"
+            ],
+            "url": [
+                "/game/broken-age-act-1/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "WildStar"
+            ],
+            "url": [
+                "/game/wildstar/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Welcome to Elk"
+            ],
+            "url": [
+                "/game/welcome-to-elk/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Wargroove 2"
+            ],
+            "url": [
+                "/game/wargroove-2/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Among Us VR"
+            ],
+            "url": [
+                "/game/among-us-vr/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Crypt Custodian"
+            ],
+            "url": [
+                "/game/crypt-custodian/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Cyber Shadow"
+            ],
+            "url": [
+                "/game/cyber-shadow/"
+            ],
+            "metascore": [
+                "82"
+            ]
+        },
+        {
+            "name": [
+                "Wreckfest"
+            ],
+            "url": [
+                "/game/wreckfest/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Victoria 3"
+            ],
+            "url": [
+                "/game/victoria-3/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "World of Warcraft Classic"
+            ],
+            "url": [
+                "/game/world-of-warcraft-classic/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Starbound"
+            ],
+            "url": [
+                "/game/starbound/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Doki Doki Literature Club Plus!"
+            ],
+            "url": [
+                "/game/doki-doki-literature-club-plus/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Nidhogg"
+            ],
+            "url": [
+                "/game/nidhogg/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Battlefield 4"
+            ],
+            "url": [
+                "/game/battlefield-4/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Yuppie Psycho"
+            ],
+            "url": [
+                "/game/yuppie-psycho/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Torment: Tides of Numenera"
+            ],
+            "url": [
+                "/game/torment-tides-of-numenera/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Rusty's Retirement"
+            ],
+            "url": [
+                "/game/rustys-retirement/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Quadrilateral Cowboy"
+            ],
+            "url": [
+                "/game/quadrilateral-cowboy/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Star Wars Pinball VR"
+            ],
+            "url": [
+                "/game/star-wars-pinball-vr/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "GRIME"
+            ],
+            "url": [
+                "/game/grime/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Shin Megami Tensei: Persona 3 Portable"
+            ],
+            "url": [
+                "/game/shin-megami-tensei-persona-3-portable/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Quake Remastered"
+            ],
+            "url": [
+                "/game/quake-remastered/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Shadowrun: Hong Kong"
+            ],
+            "url": [
+                "/game/shadowrun-hong-kong/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "War Thunder"
+            ],
+            "url": [
+                "/game/war-thunder/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Rainbow Billy: The Curse of the Leviathan"
+            ],
+            "url": [
+                "/game/rainbow-billy-the-curse-of-the-leviathan/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Vampire Therapist"
+            ],
+            "url": [
+                "/game/vampire-therapist/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Guild Wars 2: End of Dragons"
+            ],
+            "url": [
+                "/game/guild-wars-2-end-of-dragons/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Ninja Gaiden 2 Black"
+            ],
+            "url": [
+                "/game/ninja-gaiden-2-black/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Sunless Sea"
+            ],
+            "url": [
+                "/game/sunless-sea/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "The Walking Dead: Season Two Episode 3 - In Harm's Way"
+            ],
+            "url": [
+                "/game/the-walking-dead-season-two-episode-three/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Football Manager 2016"
+            ],
+            "url": [
+                "/game/football-manager-2016/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "Granblue Fantasy: Relink"
+            ],
+            "url": [
+                "/game/granblue-fantasy-relink/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        },
+        {
+            "name": [
+                "The Sims 4: Seasons"
+            ],
+            "url": [
+                "/game/the-sims-4-seasons/"
+            ],
+            "metascore": [
+                "81"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+<?php
+$isMobile = "";
+$arrMobileAgent =array();
+
+$arrMobileAgent = array('iPhone','Mobile','UP.Browser','Android','BlackBerry','Windows CE','Nokia','webOS','Opera Mini','SonyEricsson','opera mobi','Windows Phone','IEMobile','POLARIS','lgtelecom','NATEBrowser','AppleWebKit');
+$arrExAgent = array('Macintosh','OpenBSD','SunOS','X11','QNX','BeOS', 'OS\/2','Windows NT');
+if(preg_match('/('.implode('|',$arrMobileAgent).')/i', $_SERVER['HTTP_USER_AGENT']) && !preg_match('/('.implode('|',$arrExAgent).')/i', $_SERVER['HTTP_USER_AGENT'])){
+	$isMobile = true;
+	if(preg_match('/(AppleWebKit)/i',$_SERVER['HTTP_USER_AGENT']) && preg_match('/(Windows;)/i',$_SERVER['HTTP_USER_AGENT'])) $isMobile = false;
+	if(preg_match('/(Windows CE)/i',$_SERVER['HTTP_USER_AGENT']) && !preg_match('/(compatible;)/i',$_SERVER['HTTP_USER_AGENT']) && !preg_match('/(IEMobile)/i',$_SERVER['HTTP_USER_AGENT'])) $isMobile = false;
+	if(preg_match('/(AppleWebKit)/i',$_SERVER['HTTP_USER_AGENT']) && preg_match('/(Linux;)/i',$_SERVER['HTTP_USER_AGENT']) && !strpos($_SERVER['HTTP_USER_AGENT'], 'Mobile')) $isMobile = false;
+}
+
+if(preg_match('/(iPhone|iPod|iPad|Android|Windows CE|BlackBerry|Symbian|Windows Phone|webOS|Opera Mni|Opera Mobi|POLARIS|IEMobile|lgtelecom|nokia|SonyEricsson|LG)/i',$_SERVER['HTTP_USER_AGENT'])){
+	$isMobile = true;
+}else{
+	$isMobile = false;
+}
+
+if($_SERVER['REMOTE_ADDR']=="112.216.231.146"){
+	header( "HTTP/1.1 301 Moved Permanently" );
+	header( 'Location: https://directg.net/index.php');
+	exit;
+}else{
+	header( "HTTP/1.1 301 Moved Permanently" );
+	header( 'Location: https://directg.net/index.php' );
+	exit;
+}
+?>

@@ -1,0 +1,35 @@
+import type { Metadata, Viewport } from "next";
+import Script from "next/script";
+
+import {
+  MobileServiceGuideSteamStepScreen,
+  STEAM_STEPS,
+} from "@screens/mobile-service-guide-steam-step";
+
+/** legacy mobile guide_steam_step4.html: width=device-width, scale 1 고정, viewport-fit=cover, theme-color #000. */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  minimumScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
+  themeColor: "#000000",
+};
+
+export const metadata: Metadata = STEAM_STEPS["4"].meta;
+
+/** legacy step은 bottom_menu 미포함 → `/m/layout` 전역 하단바를 숨겨 시각 parity 유지. */
+const STEP_STYLE = `.appBottomMenu{display:none !important;}`;
+
+export default function MobileServiceGuideSteamStep4Page() {
+  return (
+    <>
+      <style>{STEP_STYLE}</style>
+      <Script
+        src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"
+        strategy="afterInteractive"
+      />
+      <MobileServiceGuideSteamStepScreen step={STEAM_STEPS["4"]} />
+    </>
+  );
+}

@@ -1,0 +1,721 @@
+html,body,h1,h2,h3,h4,h5,p,div,span{
+	font-family: "Noto Sans KR", sans-serif;
+	font-size:16px;
+}
+
+body.dark-mode-active .appHeader{
+	margin-top:0;
+	background: #071125;
+}
+
+.appHeaderSub{
+	margin-top:0px;
+}
+
+.appHeader .pageTitle .logo {
+	max-height: 30px;
+}
+
+.appHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 56px;
+	padding: 0 8px;
+}
+
+.appHeader .left,.appHeader .right {
+	height: 56px;
+	display: flex;
+	align-items: center;
+	position: unset;
+}
+
+.appHeader .pageTitle {
+	flex: 1;
+	text-align: center;
+	font-size: 17px;
+	font-weight: 500;
+	padding: 0 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+body.dark-mode-active .extraHeader{
+	background:#101C36;
+	border-top: 1px solid rgb(206 212 218 / 10%);
+	border-bottom:1px solid rgb(206 212 218 / 10%);
+	z-index:1000;
+}
+
+body.dark-mode-active .appFooter{
+	padding:0;
+	text-align:left;
+	background:#343a40;
+	line-height:1.25rem;
+}
+
+body.dark-mode-active .divider{
+	background:#464f5b;
+}
+
+#sidebarPanel .modal-body{
+	margin-top: 3rem;
+	margin-bottom: 0px;
+	background-color: #071125;
+}
+
+#sidebarPanel .side-button{
+
+}
+
+.profileBox .in{
+	height: 3rem;
+	padding: 0;
+}
+
+body.dark-mode-active .link-listview>li a:after{
+	background-image: none;
+}
+
+#appCapsule{
+	margin-top:0;
+	background:#071125;
+	color:#ffffff;
+}
+
+#appCapsuleSub{
+	margin-top:56px;
+	background:#071125;
+	color:#ffffff;
+	padding-bottom:56px;
+}
+
+.appBottomMenu .item .action-button{
+	background:transparent;
+}
+
+.section-title h2{
+	color:#FFFFFF;
+	font-size:0.875rem;
+}
+
+.section-title2{
+	color:#CED4DA;
+	border-bottom: 1px solid rgba(0,0,0,.125);
+	font-size:1.25rem;
+	font-weight:bold;
+}
+
+.section .card{
+	background:#303D4E;
+}
+
+.section .card-body{
+	color:rgba(255,255,255,0.75);
+	background:#303D4E;
+}
+
+.splide .splide__list{
+	padding-bottom:0;
+}
+
+.carousel-slider .splide__list{
+	padding:0.5rem;
+}
+
+.fs-7{
+	font-size:0.5rem !important;
+}
+
+.fs-6{
+	font-size:0.75rem !important;
+}
+
+.fs-5{
+	font-size:0.9375rem !important;
+}
+
+.fs-4{
+	font-size:1.125rem !important;
+}
+
+.fs-3{
+	font-size:1.5rem !important;
+}
+
+.fs-2{
+	font-size:1.875rem !important;
+}
+
+.fs-1{
+	font-size:2.25rem !important;
+}
+
+.fs-20{
+	font-size:1.25rem !important;
+}
+.fs-19{
+	font-size:1.1875rem !important;
+}
+.fs-18{
+	font-size:1.125rem !important;
+}
+.fs-17{
+	font-size:1.0625rem !important;
+}
+.fs-16{
+	font-size:1rem !important;
+}
+.fs-15{
+	font-size:0.9375rem !important;
+}
+.fs-14{
+	font-size:0.875rem !important;
+}
+.fs-13{
+	font-size:0.8125rem !important;
+}
+.fs-12{
+	font-size:0.75rem !important;
+}
+.fs-11{
+	font-size:0.6875rem !important;
+}
+.fs-10{
+	font-size:0.625rem !important;
+}
+.fs-9{
+	font-size:0.5625rem !important;
+}
+.fs-8{
+	font-size:0.5rem !important;
+}
+
+
+.font-16{
+	font-size:1rem !important;
+}
+
+.font-14{
+	font-size:14px !important;
+}
+
+.font-13{
+	font-size:13px !important;
+}
+
+.font-12{
+	font-size:12px !important;
+}
+
+.font-11{
+	font-size:11px !important;
+}
+
+.font-10{
+	font-size:10px !important;
+}
+
+.fw-800{
+	font-weight:800;
+}
+
+.fw-600{
+	font-weight:600;
+}
+
+.fw-500{
+	font-weight:500;
+}
+
+.fw-400{
+	font-weight:400;
+}
+
+.fw-300{
+	font-weight:300;
+}
+
+.fw-200{
+	font-weight:200;
+}
+
+.mt-30{
+	margin-top: 1.875rem;
+}
+
+.mb-30{
+	margin-bottom: 1.875rem;
+}
+.ms-30{
+	margin-left: 1.875rem;
+}
+.me-30{
+	margin-right: 1.875rem;
+}
+
+.p-25{
+	padding: 0.25rem;
+}
+
+
+.bg-content{
+	background:#A655B2 !important;
+}
+
+.text-content{
+	color:#A655B2 !important;
+}
+
+.badge-outline-content {
+	color: #A655B2 ;
+	border: 1px solid #A655B2 ;
+	background-color: transparent;
+}
+
+.btn-content {
+	color: #fff;
+	background-color: #A655B2;
+	border-color: #A655B2;
+}
+
+.btn-outline-content {
+	color: #A655B2;
+	border-color: #A655B2;
+}
+
+
+.old-price{
+	font-family:'Tahoma';
+	font-size:11px;
+	font-weight:400;
+}
+
+.platform-img{
+	width:70px;
+}
+
+.percent{
+	font-family:'Tahoma';
+	font-size:14px;
+	font-weight:500;
+}
+
+#sidebarPanel .side-button .icon{
+	padding:0.25rem;
+}
+
+#sidebarPanel .side-button .icon-top{
+	margin-bottom:0.25rem;
+}
+
+#sidebarPanel .side-button img{
+	height: 80%;
+	margin-right: 0.5rem;
+}
+
+
+
+body.dark-mode-active .table tr{
+	border-color:#E1E1E1;
+}
+
+.invoice .invoice-detail .table{
+	border-top:1px solid #E1E1E1;
+}
+
+.button.goTop{
+	bottom:120px;
+}
+
+.dg_bg{
+background: #101c36;
+}
+
+.extraHeader2{
+	top:56px;
+}
+
+.chip-label{
+	font-size:0.875em;
+}
+
+.post-body p, .post-body div, post-body b, post-body span{
+	font-size:14px;
+}
+
+body.dark-mode-active .offcanvas {
+    background: #0F1C2F;
+}
+
+.offcanvas.action-sheet .offcanvas-header {
+    padding: 2px 20px;
+    display: block;
+    min-height: auto;
+    box-shadow: none;
+    border-bottom: 1px solid #E1E1E1;
+}
+
+.offcanvas-title{
+	font-size:14px;
+	padding:0.5rem;
+}
+
+.offcanvas-body{
+	padding:0.5rem;
+}
+
+.offcanvas.action-sheet .offcanvas-body .action-sheet-content {
+    padding: 0.5rem;
+    max-height: 460px;
+    overflow: auto;
+}
+
+.percent{
+	font-family:"Tahoma";
+	letter-spacing:-0.02em;
+	font-size:14px;
+	font-weight:600;
+}
+
+.price{
+	font-family:"Tahoma";
+	letter-spacing:-0.02em;
+}
+
+.num{
+	font-family:"Tahoma";
+}
+
+.price .old-price {
+    font-size: 11px;
+	color: #8195a6;
+   /* text-decoration: line-through;*/
+}
+
+.price .current-price{
+	font-family:tahoma;
+	font-size:14px;
+	font-weight:600;
+}
+
+#offcanvas_filter{
+	width:80%;
+}
+
+.fw-semibold {
+	font-weight: 600!important;
+}
+
+.border-opacity-25 {
+	 --bs-border-opacity: 0.25;
+	 border-color: rgba(255,255,255,0.25) !important;
+}
+
+.border-opacity-10 {
+	 --bs-border-opacity: 0.10;
+	 border-color: rgba(255,255,255,0.1) !important;
+}
+
+.opacity-30{
+	opacity: 30%;
+}
+
+.adbox-320-50 img {
+	width: 320px;
+	height: 50px;
+}
+
+.adbox-320-100 img {
+	width: 320px;
+	height: 100px;
+}
+
+.adbox-320-320 img {
+	width: 320px;
+	height: 320px;
+}
+
+.splide__pagination__page{
+	width:16px;
+	height:16px;
+}
+
+.modal-close ion-icon{
+	font-size:26px;
+}
+
+.offcanvas-title{
+	font-size:16px;
+}
+
+.offcanvas-header{
+	background:#0F1C2F;
+}
+
+.offcanvas-header .offcanvas-close ion-icon {
+	font-size: 26px;
+}
+
+.offcanvas-body{
+	background:#1B283B;
+}
+
+.offcanvas-bottom{
+	height:unset;
+}
+
+.bg-modal-header{
+	background:#37404A;
+	
+}
+
+.accordion .accordion-header .accordion-button{
+	font-size:14px;
+	color:#343a40;
+}
+
+.listview-title{
+	font-size:14px;
+}
+
+.listview a{
+	font-size:14px;
+}
+
+.accordion .accordion-item{
+	border-style: solid;
+	border-bottom-color:rgba(255,255,255,0.1);
+}
+
+.accordion-body{
+	color:#8195a6;
+}
+
+.accordion-body p{
+	font-size:14px;
+	margin-bottom:8px;
+}
+
+.platform_logo{
+	width: 6rem;
+}
+
+.p-1r{
+	padding: 1rem;
+}
+
+.p-05r{
+	padding: 0.5rem;
+}
+
+.p-075r{
+	padding: 0.75rem;
+}
+
+/* 모바일 푸터 리뉴얼 전용 스코핑 스타일 */
+.renewal-m-footer {
+	border-top: none !important;
+	letter-spacing: 0px;
+	background-color: #050C1A !important; /* 이미지의 딥다크 네이비 배경색 반영 */
+	margin-bottom: 0px !important;
+}
+
+/* 1. 브랜드 로고 (수정본) */
+.renewal-m-footer .footer-brand-logos {
+    gap: 12px;
+    padding: 24 0 24 0px;
+	background-color: #071125;
+	border-top: none;
+}
+
+/* 로고 버튼 (a 태그) 스타일 고정 */
+.renewal-m-footer .brand-logo-item {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 51px !important;
+    height: 51px !important;
+    min-width: 51px; /* 부모 flex 안에서 찌그러짐 방지 */
+    min-height: 51px;
+    border-radius: 50%;
+    text-decoration: none;
+    overflow: hidden;
+}
+
+/* 로고별 배경색 지정 (원하시는 색상값으로 변경하여 사용하세요) */
+.renewal-m-footer .brand-logo-item.bg-h2 {
+    background-color: #ffffff; /* 예: H2 로고 배경 (화이트) */
+}
+.renewal-m-footer .brand-logo-item.bg-h2mall {
+    background-color: #18B8FF; /* 예: H2 Mall 로고 배경 (스카이블루) */
+}
+.renewal-m-footer .brand-logo-item.bg-b2b {
+    background-color: #202020; /* 예: B2B/기타 로고 배경 (다크그레이) */
+}
+
+/* 내부 SVG 이미지 중앙 정렬 및 크기 제어 */
+.renewal-m-footer .brand-logo-item .logo-svg {
+    width: 60%;  /* 버튼 크기(51px) 대비 SVG의 적정 비율 (원하는 크기로 조절 가능) */
+    height: 60%;
+    margin: auto; /* 정중앙 고정 보라 */
+    display: block;
+}
+
+/* 2. CS 상단 버튼 */
+.renewal-m-footer .footer-cs-buttons {
+    border-top: 2px solid #464F5B;
+    border-bottom: 1px solid rgba(206, 212, 218, 0.25);
+	background-color: #050C1A;
+}
+.renewal-m-footer .cs-btn {
+    padding: 12px 0 12px 9px;
+	text-align: left !important;
+}
+.renewal-m-footer .cs-btn:first-child {
+    border-right: 1px solid rgba(206, 212, 218, 0.25);
+}
+.renewal-m-footer .cs-btn a {
+	color: #CED4DA;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+}
+.renewal-m-footer .cs-btn svg {
+    margin-left: 5px;
+    vertical-align: -1px;
+}
+
+/* 3. 정보 콘텐츠 영역 */
+.renewal-m-footer .footer-info-content {
+	background-color: #050C1A;
+}
+
+.renewal-m-footer .footer-info-content .cs-title {
+	padding-top: 18px;
+	padding-left: 9px;
+	font-size: 12px;
+    line-height: 17px;
+	font-weight: 600;
+	margin-bottom: 3px;
+	color: #6B7380;
+}
+
+.renewal-m-footer .footer-info-content .cs-phone {
+	padding-left: 9px;
+	margin-bottom: 4px;
+}
+
+.renewal-m-footer .cs-phone a {
+	line-height: 26px;
+	font-size: 18px;
+	font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+}
+.renewal-m-footer .footer-info-content .cs-email {
+	line-height: 17px;
+	font-size: 14px;
+	font-weight: 400;
+	color: #CED4DA;
+	padding-left: 9px;
+	margin-bottom: 12px;
+}
+.renewal-m-footer .footer-info-content .cs-hours {
+	line-height: 21px;
+	font-size: 12px;
+	font-weight: 400;
+	color: #CED4DA;
+	padding-left: 9px;
+	margin-bottom: 16px;
+	letter-spacing: -0.01em;
+}
+.renewal-m-footer .footer-info-content .cs-hours span{
+	color: #6B7380;
+	font-size: 12px;
+}
+.renewal-m-footer .footer-info-content .company-details {
+    color: #6B7380;
+    font-weight: 400;
+	font-size: 11px;
+	line-height: 16px;
+	padding-left: 9px;
+	margin-bottom: 13px;
+}
+
+.renewal-m-footer .footer-info-content .company-details2 {
+	color: #6B7380;
+    font-weight: 400;
+	font-size: 11px;
+	line-height: 13px;
+	padding-left: 8px;
+	padding-bottom: 20px;
+}
+
+/* 구분선 */
+.renewal-m-footer .footer-hr {
+    border-top: 1px solid rgba(206, 212, 218, 0.25);
+	width: 95.54%;
+	margin: 0px auto;
+	background-color: #050C1A;
+}
+
+.renewal-m-footer .footer-bottom-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 34px;
+    row-gap: 13px;
+    padding: 20px 0 25px 11px;
+    background-color: #050C1A;
+}
+
+.renewal-m-footer .footer-bottom-links a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 13px;
+    color: #CED4DA;
+}
+
+.renewal-m-footer .footer-bottom-links a + a::before {
+    content: "";
+    position: absolute;
+    left: -16.5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 15px;
+    background-color: rgba(206, 212, 218, 0.25);
+}
+
+.renewal-m-footer .footer-bottom-links .text-primary {
+    color: #3688FC !important;
+}
+
+.footer-sns-buttons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 13px !important;
+	padding-left: 9px;
+	padding-bottom: 21px;
+	background-color: #050C1A;
+}
+.footer-sns-buttons .btn-social-custom {
+    width: 31px !important;
+    height: 31px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px !important;
+    background-color: transparent !important;
+    box-sizing: content-box !important;
+}
+.footer-sns-buttons .btn-social-custom svg {
+    display: block; 
+}

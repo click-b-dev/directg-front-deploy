@@ -1,0 +1,68 @@
+<?
+$document_root= "/_Admin_";
+$page_title = "다이렉트 게임즈 관리자시스템";
+?>
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/_Admin_/inc/admin_head.php'); ?>
+<body class="loading authentication-bg" data-layout-config='{"leftSideBarTheme":"dark","layoutBoxed":false, "leftSidebarCondensed":false, "leftSidebarScrollable":false,"darkMode":false, "showRightSidebarOnStart": true}'>
+	<div class="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-xxl-4 col-lg-5">
+					<div class="card">
+
+						<!-- Logo -->
+						<div class="card-header pt-3 pb-3 text-center">
+							<a href="index.html">
+								<img src="/assets/images/logo/H2_DG_BI_nm_194x45_v2.png">
+							</a>
+						</div>
+
+						<div class="card-body p-4">
+
+							<form method="POST" action="login_ps.php">
+
+								<div class="mb-3">
+									<label for="admin_id" class="form-label">Email address</label>
+									<input class="form-control" type="email" id="admin_id"  name="admin_id" required="" placeholder="Enter your email">
+								</div>
+
+								<div class="mb-3">
+									<!--<a href="pages-recoverpw.html" class="text-muted float-end"><small>비밀번호찾기</small></a>-->
+									<label for="admin_pwd" class="form-label">Password</label>
+									<div class="input-group input-group-merge">
+										<input type="password" id="admin_pwd" name="admin_pwd" class="form-control" placeholder="Enter your password">
+										<div class="input-group-text" data-password="false">
+											<span class="password-eye"></span>
+										</div>
+									</div>
+								</div>
+
+								<div class="mb-3 mb-0 text-center">
+									<button class="btn btn-primary shadow-none" type="submit">로그인</button>
+								</div>
+
+							</form>
+						</div> <!-- end card-body -->
+					</div>
+					<!-- end card -->
+
+					<!-- end row -->
+
+				</div> <!-- end col -->
+			</div>
+			<!-- end row -->
+		</div>
+		<!-- end container -->
+	</div>
+	<!-- end page -->
+
+	<footer class="footer footer-alt">
+		2024 © H2 Interactive
+	</footer>
+
+	<!-- bundle -->
+	<script src="<?=$document_root?>/assets/js/vendor.min.js"></script>
+	<script src="<?=$document_root?>/assets/js/app.min.js"></script>
+
+</body>
+</html>

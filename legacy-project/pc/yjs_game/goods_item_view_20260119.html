@@ -1,0 +1,796 @@
+<?
+header("Content-Type:text/html; charset=utf-8"); 
+ini_set('display_errors', '0');
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$sku = filter_input(INPUT_GET, "sku", FILTER_SANITIZE_STRING);
+$product_id = filter_input(INPUT_GET, "product_id", FILTER_SANITIZE_STRING);
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$goods = new Goods($conn);
+	$parsedown= new Parsedown();
+	$mypage = new Mypage2($conn);
+	
+	//대표상품정보
+	$title_info = $goods->getTitleInfoSku($product_id);
+	
+	//대표상품 동영상정보
+	$youtube_list = $goods->getGoodsMediaList($title_info['title_id']);
+	
+	//옵션상품정보
+	$option_item_info = $goods->getGoodsItemDetailSku($sku);
+	
+	//옵션상품 스크린샷
+	$screenshot_list = $goods->getGoodsItemScreenshotList($option_item_info['product_code']);
+	
+	$media_sort = 0;
+	foreach($youtube_list as $key=>$value){
+		$media_list[$media_sort]['media_type'] = $value['media_type'];
+		$media_list[$media_sort]['media_id'] = $value['youtube_media_id'];
+		$media_list[$media_sort]['media_url'] = $value['media_url'];
+		$media_list[$media_sort]['media_thumb'] = "https://img.youtube.com/vi/".$value['youtube_media_id']."/mqdefault.jpg";
+		$media_sort++;
+	}
+	
+	foreach($screenshot_list as $key=>$value){
+		$media_list[$media_sort]['media_type'] = $value['file_type'];
+		$media_list[$media_sort]['media_id'] = $value['screenshot_num'];
+		if($value['domain']=="https://image.directg.net"){
+			$media_list[$media_sort]['media_url'] = "https://image.directg.net".$value['url'];
+			$media_list[$media_sort]['media_thumb'] = "https://image.directg.net".$value['thumbnail'];
+		}else{
+			$media_list[$media_sort]['media_url'] = $value['url'];
+			$media_list[$media_sort]['media_thumb'] = $value['thumbnail'];
+		}
+		
+		$media_sort++;
+	}
+	
+
+	
+	//상품정보 제공고시
+	$attribute_info = $goods->getAttributeInfo($title_info['title_id']);
+	
+	//옵션상품 상세설명
+	$goods_option_description = $goods->getGoodsOptionDescription($option_item_info['product_code']);
+	
+	//배송방법 정보
+	$goods_delivery_method_info = $goods->getGoodsDeliveryMethodInfo($title_info['title_id']);
+	
+	if($option_item_info['is_view']=="Y"){
+		$goods_status = "Y";
+	}else{
+		if($_SERVER['REMOTE_ADDR']<>"112.216.231.146"){
+			$goods_status = "N";
+			$goods_status_msg = "판매중인 상품이 아닙니다";
+		}else{
+			$goods_status = "Y";
+		}
+	}
+
+	if($_SESSION['member']['m_no']){
+		$wishlist = $mypage->getWishlistItem($_SESSION['member']['m_no'],$option_item_info['product_code']);
+		if($wishlist['idx']>0){
+			$wishlist_chk="Y";
+		} else {
+			$wishlist_chk="N";
+		}
+	} else {
+		$wishlist_chk="N";
+	}
+
+	$delivery_item_list = $goods->getGoodsItemDeliveryList($option_item_info['product_code']);
+	
+	//연령제한 확인
+	if($option_item_info['delivery_type']=="3"){
+		$is_age_check = "Y";
+		$age_limit  = 0;
+		foreach($delivery_item_list as $delivery_item){
+			if($age_limit<$delivery_item['age_limit']){
+				$age_limit = $delivery_item['age_limit'];
+			}
+		}
+	}else{
+		$is_age_check = "N";
+		$age_limit  = 0;
+	}
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+$page_title=$title_info['title_name'];
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- 오픈그래프 -->
+<meta property="og:title" content="<?=$title_info['title_name']?>" />
+<meta property="og:type" content="video.movie" />
+<meta property="og:url" content="http://directg.net/game/game_view.html?title_id=<?=$title_info['title_id']?>" />
+<meta property="og:image" content="https://directg.net/upload/title/<?=$title_info['title_id']?>/header/<?=$title_info['title_id']?>.jpg" />
+<meta property="og:description" content="<?=$goods_description['short_description']?>" />
+<meta property="og:site_name" content="다이렉트게임즈" />
+<!-- App favicon -->
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+<link href="/assets/css/vendor/splide.min.css" rel="stylesheet" type="text/css" />
+
+<style>
+
+.screenshot-thumbnail{
+	width: 112px;
+	height: 63px;
+	margin-right:4px;
+}
+
+#media_list{
+	overflow-x:scroll;
+}
+
+#description_html{
+	padding:1rem;
+}
+
+#description_html img{
+	max-width:100%;
+	
+}
+
+#description_html h1,#description_html h2,#description_html h3,#description_html h4,#description_html h5,#description_html h6{
+	font-size:14px;
+	font-weight:700;
+	color:#0dcaf0;
+}
+
+.bg-card{
+	background:#303D4E;
+}
+
+#requirements_html{
+	font-size:14px;
+}
+#requirements_html strong{
+	--bs-text-opacity: 0.5;
+}
+
+</style>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S69YNEJF27"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-S69YNEJF27');
+
+	gtag("event", "view_item", {
+	  currency: "KRW",
+	  items:<?=json_encode($ga4)?>
+	});
+</script>
+
+<script type="application/ld+json">
+/*
+[availability]
+가능한 제품 재고 옵션입니다. URL 접두사가 없는 닉네임도 지원됩니다(예: BackOrder).
+https://schema.org/BackOrder: 이월 주문된 상품입니다.
+https://schema.org/Discontinued: 단종된 상품입니다.
+https://schema.org/InStock: 상품 재고가 있습니다.
+https://schema.org/InStoreOnly: 매장에서만 구매할 수 있는 상품입니다.
+https://schema.org/LimitedAvailability: 상품 재고가 한정적입니다.
+https://schema.org/OnlineOnly: 온라인에서만 구매할 수 있는 상품입니다.
+https://schema.org/OutOfStock: 현재 재고가 없는 상품입니다.
+https://schema.org/PreOrder: 선주문할 수 있는 상품입니다.
+https://schema.org/PreSale: 이 상품은 정식 버전 출시 전에 주문 및 배송이 가능합니다.
+https://schema.org/SoldOut: 매진된 상품입니다.
+
+[itemCondition]
+판매용 상품의 상태입니다. URL 접두사가 없는 닉네임도 지원됩니다(예: NewCondition).
+
+https://schema.org/NewCondition: 신상품입니다.
+https://schema.org/RefurbishedCondition: 리퍼 상품입니다.
+https://schema.org/UsedCondition: 중고 상품입니다 (새 상품이 아님).
+
+[price] : 제품의 판매 가격입니다.
+*/
+/*
+[
+    {
+      "@context":"https://schema.org/",
+      "@type":"ProductGroup",
+      "name":"<?=$title_info['title_name']?>",
+      "description":"<?=$goods_description['short_description']?>",
+      "url":"https://directg.net/game/game_view.html?product_id=<?=$title_info['sku']?>",
+	  "productGroupID":"<?=$title_info['sku']?>",
+	  "brand": {
+          "@type": "Brand",
+          "name": "<?=$title_info['publisher']?>"
+        },
+		"hasVariant": [
+          {
+            "@type": "Product",
+            "sku": "44E01-M11000",
+            "image": "https://www.example.com/coat_small_green.jpg",
+            "name": "Small green coat",
+            "description": "Small wool green coat for the winter season",
+            "offers": {
+              "@type": "Offer",
+              "url": "https://directg.net/game/game_view.html?product_id=<?=$title_info['sku']?>&sku=<?=$goods_option['goods_sku']?>",
+              "priceCurrency": "USD",
+              "price": 39.99,
+              "itemCondition": "https://schema.org/NewCondition",
+              "availability": "https://schema.org/InStock",
+              "shippingDetails": { "@id": "#shipping_policy" },
+              "hasMerchantReturnPolicy": { "@id": "#return_policy" }
+            }
+          },
+		]
+    }
+]
+*/
+</script>
+</head>
+<body>
+<div class="wrapper">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	
+	<main>
+		<div class="container my-3 pb-5">
+			<?
+				if($goods_status=="N"){
+			?>
+				<div class="row mt-3">
+					<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show" role="alert">
+						<strong>Error - </strong> <?=$goods_status_msg?>
+					</div>
+				</div>
+			<?
+				}else{
+			?>
+			<div class="row g-2">
+				<div class="col-11">
+					<div class="mb-3 py-2">
+						<div class="h3 text-white fw-bold mb-0"><?=$option_item_info['product_name']?></div>
+						<small class="eng text-secondary font-16">(<?=$option_item_info['product_name_en']?>)</small>
+					</div>
+				</div>
+				<div class="col-1">
+					<!--
+					<div class="dropdown">
+						<button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">페이지 공유하기</button>
+						<ul class="dropdown-menu dropdown-menu-dark">
+							<li><a class="dropdown-item" href="#">페이스북</a></li>
+							<li><a class="dropdown-item" href="#">X(구 트위터)</a></li>
+							<li><a class="dropdown-item" href="#">카카오</a></li>
+							<li><a class="dropdown-item" href="#">네이버블로그</a></li>
+						</ul>
+					</div>
+					-->
+				</div>
+			</div>
+			
+			<div class="d-grid justify-content-between" style="grid-template-columns: 812px 460px">
+				<div class="content-left">
+					<?
+						if(is_array($media_list)){
+							if(count($media_list)>0){
+					?>
+					<section id="media" class="mb-3">
+						<div class="row g-0">
+							<div class="col-12 ">
+								<div class="ratio ratio-16x9 mb-2" id="media_block">
+									<? if($media_list['0']['media_type']=="video"){?>
+									<iframe id="media_frame" src="<?=$media_list[0]['media_url']?>" title="YouTube video" allowfullscreen></iframe>
+									<?}else{?>
+									<img id="media_frame" src="<?=$media_list[0]['media_url']?>" class="w-100 img-fluid">
+									<?}?>
+								</div>
+								<div id="media_list" class="overflow-x-scroll custom-scroll mb-0 py-3">
+									<div class="d-flex flex-row justify-content-start flex-nowrap">
+										<?
+											foreach($media_list as $value){
+										?>
+										<div class="position-relative" style="cursor:pointer">
+											<img src="<?=$value['media_thumb']?>" class="screenshot-thumbnail media_change" alt="동영상 썸네일" data-mediaid="<?=$value['media_id']?>" data-mediatype="<?=$value['media_type']?>" data-mediaurl="<?=$value['media_url']?>">
+											<?if($value['media_type']=="video"){?>
+											<div class="position-absolute top-50 start-50 translate-middle">
+												<div class="text-red fs-1">
+													<i class="fa-brands fa-youtube"></i>
+												</div>
+											</div>
+											<?}?>
+										</div>
+										<?
+											}
+										?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+					<?
+							}
+						}
+					?>
+					
+					<div class="card mb-3 rounded-0 bg-card border-0">
+						<div class="row g-0">
+							<div class="col-3">
+								<img src="<?=$option_item_info['domain']?>/upload/product/<?=$option_item_info['product_code']?>/header/header.jpg" class="img-fluid rounded-0 h-100" alt="<?=$option_item_info['product_name']?>">
+							</div>
+							<div class="col-9">
+								<div class="card-header p-1">
+									<div class="d-flex flex-row justify-content-between align-items-center">
+										<h5 class="font-14 ms-3 py-1"><?=$option_item_info['product_name']?></h5> 
+									</div>
+								</div>
+								<div class="card-body p-2 border-0 border-bottom">
+									<?if($option_item_info['promotion']['sale_price']>0){?>
+									<div class="d-flex flex-row g-0 justify-content-between">
+										<div class="ps-2"><span class="text-primary font-14">프로모션 종료일: <?=$option_item_info['promotion']['promotion_end']?></span></div>
+									</div>
+									<?}else{?>
+										<div>&nbsp;</div>
+									<?}?>
+								</div>
+								<div class="card-footer p-0 border-0 px-2 py-0">
+									<div class="d-flex flex-row align-items-center justify-content-between">
+										<div class="px-2 py-2">
+											<div class="d-flex flew-row align-items-center">
+												<?if($option_item_info['discount']>0){?>
+												<span class="badge bg-primary font-12 px-3 py-2 num me-3 minus"><?=$option_item_info['discount']?> %</span>
+												<s class="font-11 num me-2 won"> <?=number_format($option_item_info['consumer_price'])?></s>
+												<?}?>
+												<strong class="font-14 num fw-bold won"> <?=number_format($option_item_info['price'])?></strong>
+											</div>
+										</div>
+										<div class="px-1">
+											<div class="d-grid gap-1 d-flex justify-content-end">
+												<button type="button" class="btn btn-sm shadow-none font-14 fw-bold btn_wishlist <?=($wishlist_chk=='Y')?"":"btn_wishlist_off"?>" data-sku="<?=$option_item_info['goods_sku']?>">
+													<img src="/assets/images/icon/wishlist-icon_<?=$wishlist_chk=="Y"?"y":"n"?>.svg">
+												</button>
+												<?if($option_item_info['soldout']=="N"){?>
+												<button type="button" class="btn btn-sm shadow-none font-14 fw-bold btn_cart text-nowrap" data-sku="<?=$option_item_info['goods_sku']?>">
+													<img src="/assets/images/icon/basket-icon-white.svg" class="me-1"> 장바구니
+												</button>
+												<?}else{?>
+												<span class="badge bg-secondary fw-bold font-14 py-2 px-2">품절</span>
+												<?}?>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row row-cols-1 g-0">
+						<div class="col-12">
+							<div class="alert alert-light text-warning border-0 fw-400 font-14 px-3 rounded-0" role="alert">
+								<p class="mb-2">※ 해당 상품은 실물로 배송되는 상품이 포함되거나, 단품으로 배송되는 상품입니다.</p>
+								<p class="mb-2">※ 실물로 배송되는 상품이 포함되거나, 단품으로 배송되는 상품들은 적립금이 지급되지 않습니다. (주문결제 시 사용은 가능)</p>
+								<p class="mb-2">※ 이미지는 실제와 다소 차이가 있을 수 있습니다.</p>
+								<p class="mb-2">※ 영업일 오후 2시 이전 결제 완료된 주문 건은 당일 발송되며, 이후 주문은 익일(주말 및 공휴일 제외) 발송됩니다.</p>
+							</div>
+						</div>
+					</div>
+					
+					<section id="goods_description" class="mb-4">
+						<div class="card shadow-none rounded-0 border-0">
+							<div class="card-header text-white font-16 fw-bold bg-card py-3 border-0">상품설명</div>
+							<div class="card-body p-0 overflow-auto">
+								<div id="description_html" >
+									<?
+											if($option_item_info['is_package_view']=="Y"){
+												//옵션상품 구성정보
+												$query="select * from tbl_goods_option_bundle where product_code=:product_code order by unit_type asc,unit_name asc";
+												$stmt = $conn->prepare($query);
+												$params = array(
+													":product_code"=>$option_item_info['product_code']
+												);
+												$stmt->execute($params);
+
+												$goods_item_package_info= $stmt->fetchAll();
+												
+												foreach($goods_item_package_info as $package_info){
+													if($package_info['unit_type']=="1"){
+														echo "<hr/><h4>".$package_info['unit_name']." 게임정보</h4>";
+													}else{
+														echo "<h4>".$package_info['unit_name']." 상세설명</h4>";
+													}
+													
+													if($package_info['unit_code']>'0'){
+														$query="select description from tbl_goods_item_description where product_code=:product_code";
+														$stmt = $conn->prepare($query);
+														$params = array(
+															":product_code"=>$package_info['unit_code']
+														);
+														$stmt->execute($params);
+
+														$goods_item_description = $stmt->fetch();
+														echo $parsedown->text($goods_item_description['description']);
+													}
+												}
+											}else{
+											echo $parsedown->text($goods_option_description['description']);
+											}
+									?>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<section id="trade_terms" class="mb-4">
+						<div class="card shadow-none rounded-0 border-0">
+							<div class="card-header text-white font-16 fw-bold bg-card py-3 border-0">거래조건에 관한 정보</div>
+							<div class="p-2">
+								<table class="table table-bordered mb-0">
+									<colgroup>
+										<col width="310">
+										<col width="*">
+									</colgroup>
+									<tbody class="font-14">
+									<tr>
+										<th class="text-white text-opacity-75">재화 등의 배송방법에 관한 정보</th>
+										<td><?=$goods_delivery_method_info['DELIVERY_TYPE']?> (<?=$goods_delivery_method_info['METHOD_NAME']?>)</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75">주문 이후 예상되는 배송기간</th>
+										<td>대금지급일(결제완료일)로부터 3영업일 이내에 발송,<br>(단, 예약 판매 상품이 포함된 경우 별도의 공지를 통해 안내)</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75">제품하자·오배송 등에 따른 청약철회 등의 경우 청약철회 등의 기한 및 통신판매업자가 부담하는 반품비용 등에 관한 정보</th>
+										<td>전자상거래 등에서의 소비자보호에 관한 법률 등에 의한 제품의 하자 또는 오배송 등으로 인한 청약철회의 경우에는 상품 수령 후 3개월 이내, 그 사실을 안 날 또는 알 수 있었던 날로부터 30일 이내에 청약철회를 할 수 있으며, 반품 비용은 통신판매업자가 부담합니다.</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75">제품하자가 아닌 소비자의 단순변심에 따른 청약철회 시 소비자가 부담하는 반품비용 등에 관한 정보</th>
+										<td>단순변심에 따른 청약철회 시 재화의 반환에 필요한 비용은 소비자가 부담합니다.<br>(전자상거래 등에서의 소비자보호에 관한 법률 제18조 제9항)</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75">제품하자가 아닌 소비자의 단순변심에 따른 청약철회가 불가능한 경우 그 구체적 사유와 근거</th>
+										<td>전자상거래 등에서의 소비자보호에 관한 법률 등에 의한 청약철회 제한 사유에 해당하는 경우 및 기타 객관적으로 이에 준하는 것으로 인정되는 경우 청약철회가 제한될 수 있습니다.</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75">재화 등의 교환·반품·보증 조건 및 품질보증기준</th>
+										<td>소비자분쟁해결기준(공정거래위원회 고시) 및 관계법령에 따릅니다.</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75">재화 등의 A/S 관련 전화번호</th>
+										<td>소니인터랙티브엔터테이먼트코리아(SIEK): 02-6677-7771 / 080-723-7235</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75">대금을 환불받기 위한 방법과 환불이 지연될 경우 지연배상금을 지급받을 수 있다는 지연배상금 지급의 구체적인 조건·절차</th>
+										<td>주문취소 및 대금의 환불은 [마이페이지 &gt; 주문내역] 메뉴에서 신청할 수 있으며, 전자상거래 등에서의 소비자보호에 관한 법률에 따라 소비자의 청약철회 후 판매자가 재화 등을 반환 받은 날로부터 3영업일 이내에 지급받은 대금의 환급을 정당한 사유 없이 지연하는 때에는 소비자는 지연기간에 대해서 연 15%의 지연배상금을 판매자에게 청구할 수 있습니다.</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75 ">소비자피해보상의 처리, 재화 등에 대한 불만 처리 및 소비자와 사업자 사이의 분쟁처리에 관한 사항</th>
+										<td>소비자분쟁해결기준(공정거래위원회 고시) 및 관계법령에 따릅니다.</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75 ">거래에 관한 약관의 내용 또는 확인할 수 있는 방법</th>
+										<td >홈페이지 하단에 이용약관 및 개인정보처리방침 링크에서 확인할 수 있습니다.</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</section>
+					
+					<section id="legal_notice" class="mb-4">
+						<div class="card shadow-none rounded-0 border-0">
+							<div class="card-header text-white font-16 fw-bold bg-card py-3 border-0">교환/반품 정보</div>
+							<div class="p-2">
+								<table class="table table-bordered mb-0">
+									<colgroup>
+										<col width="180">
+										<col width="*">
+									</colgroup>
+									<tbody class="font-14">
+									<tr>
+										<th class="text-white text-opacity-75">교환/반품 비용</th>
+										<td>배송비 편도 3,000원 (최초 배송비 무료인 경우 6,000원 부과)</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75">교환/반품 주소지</th>
+										<td>
+											[07583] 서울특별시 강서구 강서로56가길 35(등촌동, 에이치투아이앤티빌딩) 5층 (주)에이치투인터렉티브
+										</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75">교환/반품 연락처</th>
+										<td>1544-2367</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75">교환/반품 가능기간</th>
+										<td>
+											<ul style="padding-inline-start: 20px;">
+												<li>단순변심: 상품 수령일로부터 7일 이내 (배송비: 구매자 부담)<br>
+													(단, 제품 코드(키) 상품이 포함된 경우는 디지털 상품 환불정책에 따라 구입일로부터 7일)</li>
+												<li>제품의 하자 또는 오배송: 상품 수령일로부터 3개월 이내, 그 사실을 안 날 또는 알 수 있었던 날로부터 30일 이내 (배송비: 판매자 부담)</li>
+											</ul>
+										</td>
+									</tr>
+									<tr>
+										<th class="text-white text-opacity-75">교환/반품 불가기준</th>
+										<td>
+											<ul style="padding-inline-start: 20px;">
+												<li>교환/반품 가능기간이 경과된 경우</li>
+												<li>구매자 귀책으로 상품 등이 멸실 또는 훼손된 경우</li>
+												<li>포장을 개봉하였거나, 포장이 훼손되어 상품 등의 가치가 현저히 상실된 경우(단, 상품 내용 확인을 위해 포장 등을 훼손한 경우는 제외)</li>
+												<li>구매자의 사용 또는 일부 소비에 의하여 상품 등의 가치가 현저히 감소한 경우</li>
+												<li>시간의 경과에 의해 재판매가 곤란할 정도로 상품 등의 가치가 현저히 감소한 경우</li>
+											</ul>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</section>
+				</div>
+				<div class="content-right">
+					<?
+						//스팀 API정보에서 게임정보만 가져오기
+						
+						if($option_item_info['steam_appid']>0){
+							$json_path =  "/home/dgkrshop/www/upload/apps/apps_".$option_item_info['steam_appid'].".json";
+							if(file_exists($json_path)){
+								$json_string = file_get_contents($json_path);
+								$json_data = json_decode($json_string, true);
+								
+								$header_image = $json_data[$option_item_info['steam_appid']]['data']['header_image'];
+								$game_name = $json_data[$option_item_info['steam_appid']]['data']['name'];
+								$release_date = $json_data[$option_item_info['steam_appid']]['data']['release_date']['date'];
+								$developer = $json_data[$option_item_info['steam_appid']]['data']['developers'];
+								$publisher = $json_data[$option_item_info['steam_appid']]['data']['publishers'];
+								$genres = $json_data[$option_item_info['steam_appid']]['data']['genres'];
+								$categories = $json_data[$option_item_info['steam_appid']]['data']['categories'];
+							}
+						}
+						
+						if($option_item_info['delivery_type']=="3" && $option_item_info['steam_appid']>0){
+					?>
+					<section id="game_info" class="mb-4">
+						<div class="card shadow-none rounded-0 border-0">
+							<div class="card-header text-white fw-500 font-16 bg-card border-0">관련상품 게임정보</div>
+							<div class="card-body px-3">
+								<dl class="row g-2 mb-0">
+									<dt class="col-sm-3 font-14">게임명</dt>
+									<dd class="col-sm-9"><?=$game_name?></dd>
+									<dt class="col-sm-3 font-14">출시일</dt> 
+									<dd class="col-sm-9"><span class="num font-14"><?=$release_date?></span></dd>
+									<dt class="col-sm-3 font-14">개발사</dt> 
+									<dd class="col-sm-9"><span class="eng font-14"><?=implode(",",$developer)?></span></dd>
+									<dt class="col-sm-3 font-14">퍼블리셔</dt> 
+									<dd class="col-sm-9"><span class="eng font-14"><?=implode(",",$publisher)?></span></dd>
+
+									<?if($title_info['spoken_korean']=="Y" || $title_info['interface_korean']=="Y"){?>
+									<dt class="col-sm-3 font-14">한국어지원</dt>
+									<dd class="col-sm-9">
+										<div class="d-flex flex-row flex-wrap align-items-start">
+											<?if($title_info['spoken_korean']=="Y"){?><div class="me-2"><span class="badge bg-label font-12 fw-400 px-2">음성 한국어</span></div><?}?>
+											<?if($title_info['interface_korean']=="Y"){?><div class=""><span class="badge bg-label font-12 fw-400 px-2">인터페이스/자막 한글</span></div><?}?>
+										</div>
+									</dd>
+									<?}?>
+									<dt class="col-sm-3 font-14">장르</dt>
+									<dd class="col-sm-9">
+										<div class="d-flex flex-row flex-wrap mb-2">
+											<?
+												foreach($genres as $genre){
+											?>
+												<div class="me-2"><span class='badge bg-label font-12 fw-400 px-2'><?=$genre['description']?></span></div>
+											<?
+												}
+											?>
+										</div>
+									</dd>
+									<dt class="col-sm-3 font-14">카테고리</dt>
+									<dd class="col-sm-9">
+										<div class="d-flex flex-row flex-wrap align-content-around">
+											<?
+												foreach($categories as $category){
+											?>
+												<div class="me-2 mb-3"><span class='badge bg-label font-12 fw-400 px-2'><?=$category['description']?></span></div>
+											<?
+												}
+											?>
+										</div>
+									</dd>
+								</dl>
+							</div>
+						</div>
+						<div class="card shadow-none my-4 rounded-0 border-0 bg-none">
+							<div class="d-flex flex-row flex-wrap mb-2">
+								<?
+									if($title_info['age_limit']=="10"){
+								?>
+								<img src="/assets/images/game/age_all.png" class='me-2'>
+								<?
+									}else{
+										if($title_info['age_limit']<>""){
+								?>
+								<img src="/assets/images/game/age_<?=$title_info['age_limit']?>.png" class='me-2'>
+								<?	}
+									}
+								?>
+								<?
+									$game_rate_array = array();
+									 for ($i = 0; $i < mb_strlen($title_info['game_rate'],"UTF-8"); $i++) {
+										$char = mb_substr($title_info['game_rate'], $i, 1, 'UTF-8');
+										if($char=="1"){
+											echo "<img src='/assets/images/game/grade".($i+1).".png' class='me-2'>";
+										}
+										
+									}
+								?>
+							</div>
+						</div>
+					</section>
+					<?}?>
+
+					<section id="goods_legal_info" class="mb-4">
+						<div class="card shadow-none rounded-0 border-0">
+							<div class="card-header text-white fw-500 font-16 bg-card border-0">
+								상품 정보 제공 고시<br/>
+								<small class="font-12 fw-300">[전자상거래에 관한 상품정보 제공에 관한 고시] 항목에 의거 등록된 정보입니다.</small>
+							</div>
+							<ul class="list-group py-2 font-14">
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2 ">품명</span> <?=$attribute_info['product_name']?></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2 ">모델명</span> <?=$attribute_info['model_name']?></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2 ">KC 인증정보</span> <a href="https://www.rra.go.kr/ko/license/A_b_popup_keyno.do?key_no=<?=$attribute_info['kc_safety_infomartion']?>" target="_blank"><?=$attribute_info['kc_safety_infomartion']?></a></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2 ">정격전압</span> <?=$attribute_info['rated_voltage']?></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2 ">소비전력</span> <?=$attribute_info['power']?></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2 ">동일모델의 출시년월</span> <?=$attribute_info['manufacturing_date']?></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2 ">제조자 및 수입자</span><?=$attribute_info['manufacturer']?></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2 ">제조국</span> <?=$attribute_info['manufacture_country']?></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2 ">크기(mm)</span> <?=$attribute_info['size']?></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2 ">무게(kg)</span> <?=$attribute_info['weight']?></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2">주요사양</span> <?=$attribute_info['main_requirements']?></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2">품질보증기준</span> <br/><?=$attribute_info['warranty_service']?></li>
+								<li class="list-group-item border-0 bg-transparent py-2"><span class="text-white text-opacity-50 pe-2">A/S 책임자(전화번호)</span> <?=$attribute_info['as_information']?></li>
+							</ul>
+						</div>
+					</section>
+				</div>
+			</div>
+			<?}?>
+		</div>
+	</main>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<div id="cart-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="primary-header-modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" style="max-width:900px">
+		<div class="modal-content border border-3 border-start border-end-0 border-top-0 border-bottom-0 border-primary">
+			<div class="modal-header">
+				<h4 class="modal-title" id="topModalLabel">장바구니</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+			</div>
+			<div class="modal-body p-2 rounded-0">
+				<div id="cart_result" class="p-0"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-sm btn-secondary shadow-none font-14" id="btn_model_close" data-bs-dismiss="modal">쇼핑 계속하기</button>
+				<button type="button" class="btn btn-sm btn-primary shadow-none font-14" id="btn_cart_move">장바구니 바로가기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="wishlist-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="primary-header-modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" style="max-width:900px">
+		<div class="modal-content border border-3 border-start border-end-0 border-top-0 border-bottom-0 border-primary">
+			<div class="modal-header">
+				<h4 class="modal-title" id="topModalLabel">위시리스트</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+			</div>
+			<div class="modal-body p-2 rounded-0">
+				<div id="wishlist_result" class="p-0"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-sm btn-dark shadow-none font-14" id="btn_model_close" data-bs-dismiss="modal">쇼핑 계속하기</button>
+				<button type="button" class="btn btn-sm btn-primary shadow-none font-14" id="btn_wishlist_move">위시리스트 바로가기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+<script src="/assets/js/vendor/splide.min.js"></script>
+<script src="/assets/js/vendor/splide-extension-grid.min.js"></script>
+
+<script type="text/javascript" src="/assets/js/timer_library.js"></script>
+<script>
+$(document).ready(function(){
+	//유튜브 재상영상 변경
+	$(".media_change").bind("click",function(){
+		var index = $(".media_change").index(this);
+		var youtube_media_id = $(".media_change").eq(index).attr("data-mediaid");
+		var media_type=$(".media_change").eq(index).attr("data-mediatype");
+		if(media_type=="video"){
+			var media_url="//youtube.com/embed/"+youtube_media_id;
+			$("#media_block").html('<iframe id="media_frame" src="'+media_url+'" title="YouTube video" allowfullscreen></iframe>');
+			
+		}else{
+			var media_url=$(".media_change").eq(index).attr("data-mediaurl");
+			$("#media_block").html('<img src="'+media_url+'" class="w-100 img-fluid">');
+		}
+		
+	});
+
+	//장바구니 추가
+	$(".btn_cart").bind("click",function(){
+		var index = $(".btn_cart").index(this);
+		var goods_sku = $(".btn_cart").eq(index).attr("data-sku");
+
+		$.ajax({
+			'url': '/order/cart_proc.php',
+			'type': 'POST',
+			'data':{mode:"add_cart",goods_sku:goods_sku},
+			'success': function (data) {
+				$("#cart_result").html(data);
+				$("#cart-modal").modal("show");
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+
+	//위시리스트 추가
+	$(document).on("click", ".btn_wishlist", function(){
+		const goods_sku = $(this).data("sku");
+		const $btn = $(this);
+
+		$.ajax({
+			'url': '/order/wishlist_proc.php',
+			'type': 'POST',
+			'data':{mode:"add_wishlist",goods_sku:goods_sku},
+			'success': function (data) {
+				const $response = $(data);
+				if ($response.filter("#fail").length==0) {
+					$btn.removeClass("btn_wishlist_off");
+					$btn.find("img").attr("src", "/assets/images/icon/wishlist-icon_y.svg");
+				}
+				$("#wishlist-modal #topModalLabel").text("위시리스트");
+				$("#wishlist_result").html(data);
+				$("#wishlist-modal").modal("show");
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+	
+	$("#wishlist-modal #btn_wishlist_move").bind("click",function(){
+		location.href="/mypage/mypage_wishlist.html";
+	});
+
+	$("#cart-modal #btn_model_close").bind("click",function(){
+		$("#cart-modal").modal("hide");
+	});
+
+	$("#cart-modal #btn_cart_move").bind("click",function(){
+		location.href="/order/cart.html";
+	});
+});
+</script>
+</body>
+</html>

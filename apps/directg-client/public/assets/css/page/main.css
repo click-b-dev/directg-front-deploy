@@ -1,0 +1,156 @@
+.slick-slide {
+	margin-left:18px;
+	margin-right:18px;
+	transition: all ease-in-out .3s;
+	opacity: .5;
+	width:100%;
+	overflow:hidden;
+}
+
+.slick-current {
+  opacity: 1;
+}
+
+.slick-dots li button{
+	color:#ffffff;
+	width:50px;
+	height:15px;
+}
+
+.slick-dots li.slick-active button:before{
+	color:#ffffff;
+	content:"";
+}
+
+.slick-dots .slick-active{
+	background:#ffffff;
+	opacity: .5;
+}
+
+.slick-dots li{
+	color:#ffffff;
+	border:1px solid;
+	width:50px;
+	height:15px;
+	border-radius:5px;
+}
+
+.banner-prev{
+	position: absolute;
+	left:15%;
+	top:45%;
+	color:#ffffff;
+	z-index:1000;
+	opacity: .5;
+}
+
+.banner-next{
+	position: absolute;
+	color:#ffffff;
+	right:15%;
+	top:45%;
+	opacity: .5;
+}
+
+.caption{
+	position: absolute;
+	top:0;
+	padding:64px;
+	color: #ffffff;
+}
+
+.caption2{
+	position: absolute;
+	top:0;
+	padding:64px;
+	color: #ffffff;
+}
+
+#card-carousel{
+	grid-column: 1 / span 12;
+}
+
+.ticker-wrapper.has-js {
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 56px;
+	display: block;
+	background-color: rgba(0, 0, 0, 0.3);;
+	border:1px solid #3688fc;
+}
+
+.ticker {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	position: relative;
+	overflow: hidden;
+	background-color: rgba(0, 0, 0, 0.3);;
+	
+}
+.ticker-title {
+	padding:0.75rem 1rem;
+	color: #0c7ced;
+	font-weight: bold;
+	font-size:20px;
+	text-transform: uppercase;
+	width:15%;
+	background-color: rgba(0, 0, 0, 0.3);;
+	text-align:center;
+}
+.ticker-content {
+	margin: 0px;
+	padding:16px 1rem;
+	position: absolute;
+	color: #ffffff;
+	overflow: hidden;
+	white-space: nowrap;
+	line-height: 1.5rem;
+	font-size:16px;
+	background-color: rgba(0, 0, 0, 0.3);;
+}
+
+.ticker-content a {
+	text-decoration: none;	
+	color: #ffffff;
+}
+.ticker-content a:hover {
+	text-decoration: none;	
+}
+.ticker-swipe {
+	padding-top: 16px;
+	position: absolute;
+	top: 0px;
+	display: block;
+	width: 90%;
+	height: 34px; 
+	background-color: rgba(0, 0, 0, 0.3);;
+}
+.ticker-swipe span {
+	margin-left: 1px;
+	background-color: #ffffff;
+	height: 16px;
+	width: 1px;
+	display: block;
+	background-color: rgba(0, 0, 0, 0.3);;
+}
+.ticker-controls {
+	padding: 0px;
+	list-style-type: none;
+	float: left;
+}
+.ticker-controls li {
+	padding: 0px;
+	margin-left: 5px;
+	float: left;
+	cursor: pointer;
+	height: 16px;
+	width: 16px;
+	display: block;
+}
+
+.b-example-divider {
+    width: 100%;
+    height: 50px;
+}

@@ -1,0 +1,393 @@
+<?
+	ini_set( "display_errors", 0 );
+
+	include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+$sku = filter_input(INPUT_GET, "sku", FILTER_SANITIZE_STRING);
+$product_id = filter_input(INPUT_GET, "product_id", FILTER_SANITIZE_STRING);
+
+try{
+	$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$goods = new Goods($conn);
+	$parsedown= new Parsedown();
+	
+	/*옵션상품 정보*/
+	$goods_item = $goods->getGoodsItemDetailSku($sku);
+
+	/*옵션상품 상세설명정보*/
+	$goods_description = $goods->getGoodsOptionDescription($goods_item['product_code']);
+
+	//echo $goods_item['product_code'];
+	
+	$package_list = $goods->getGoodsOptionPackageList($goods_item['product_code']);
+
+	foreach($package_list as $package_key=>$package){
+		$package_item[$package_key]['item_img'] = "/upload/apps/".$package['appid']."/header.jpg";
+		$package_item[$package_key]['item_name'] = $package['item_name'];
+		$package_item[$package_key]['item_type'] = $package['item_type'];
+		$package_item[$package_key]['release_date'] = $package['release_date'];
+		$package_item[$package_key]['item_code'] = $package['item_code'];
+		$package_item[$package_key]['appid'] = $package['appid'];
+	}
+	
+	if($goods_item['is_view']=="Y"){
+		if($goods_item['status']=="0"){
+			$goods_status = "Y";
+		}else{
+			$goods_status = "N";
+			$goods_status_msg = "판매중인 상품이 아닙니다";
+		}
+	}else{
+		$goods_status = "N";
+		$goods_status_msg = "판매중인 상품이 아닙니다";
+	}
+
+}catch (PDOException $e){  
+	echo 'Error!: '.$e->getMessage();  
+	die();  
+}
+
+$page_title="상세정보";
+
+?>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link href="https://directg.net/game/bundle_view.html?sku=<?=$sku?>" rel="canonical" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/dg_style.css">
+<link rel="stylesheet" href="/assets/css/styleguide.css">
+<style>
+
+.nav-pills .nav-link.active{
+	background:#464f5b;
+}
+
+.btn_wishlist{
+}
+
+.goods_detail_info{
+	font-size:12px;
+}
+
+.goods_detail_info p{
+	font-size:12px;
+}
+
+.goods_detail_info img{
+	width:100%;
+	height:auto;
+}
+
+.goods_detail_info ul{
+	margin-bottom:1rem;
+}
+
+.goods_detail_info video{
+	max-width:100%;
+	height:auto;
+}
+
+#appCapsuleSub{
+	padding-top:56px !important;
+}
+
+</style>
+</head>
+<body class="dark-mode-active">
+	<!-- App Header -->
+	<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+	<!-- * App Header -->
+	<!-- App Capsule -->
+	<?
+		if($goods_status=="N"){
+	?>
+	<div id="appCapsuleSub" class="full-height mt-0">
+		<div class="error-page">
+			<div class="icon-box text-danger">
+				<ion-icon name="alert-circle" role="img" class="md hydrated" aria-label="alert circle"></ion-icon>
+			</div>
+			<h1 class="title">ERROR</h1>
+			<div class="text mb-5">
+				<?=$goods_status_msg?>
+			</div>
+		</div>
+	</div>
+	<?}else{?>
+	<div id="appCapsuleSub" class="full-height mt-0">
+		<div class="card mb-2">
+			<img src="/upload/product/<?=$goods_item['product_code']?>/header/header.jpg" class="card-img-top rounded-0" alt="<?=$title_info['title_name']?>">
+		</div>
+		
+		<?
+			//기타 안내문구(지역제한 등등)
+			if($goods_description['region_msg']){
+		?>
+		<div class="section full mb-2">
+			<div class="wide-block px-2 mt-2">
+				<div class="alert alert-danger rounded-0" role="alert"><p class="text-break text-wrap font-14 mb-0"><?=$goods_description['region_msg']?></p></div>
+			</div>
+		</div>
+		<?
+			}
+		?>
+
+		<div class="section full mb-2">
+			<div class="wide-block p-0">
+				<ul class="listview simple-listview">
+					<li class="p-0">
+						<div class="item w-100">
+							<div class="card p-0 mb-0">
+								<h5 class="card-title fs-5 p-2 mb-0"><?=$goods_item['product_name']?></h5>
+								<div class="card-body p-0">
+									<div class="d-flex justify-content-between align-items-center p-1">
+										<div class=" p-0 text-center">
+											<?if($goods_item['promotion']['discount_rate']>0){?>
+												<span class="fs-5 badge bg-danger rounded-2 px-3 py-3 fw-bold minus"><?=$goods_item['promotion']['discount_rate']?> %</span>
+											<?}else{?>
+												<? if($goods_item['discount']>0){?>
+												<span class="fs-5 badge bg-primary rounded-2 px-3 py-3 fw-bold"><?=$goods_item['discount']?> %</span>
+												<?}?>
+											<?}?>
+										</div>
+										
+										<div class="price text-end">
+											<? if($goods_item['discount']>0 || $goods_item['promotion']['discount_rate']>0){?>
+											<s class="old-price font-12 text-secondary pe-1 won"> <?=number_format($goods_item['consumer_price'])?></s> 
+											<?}?>
+											<?if($goods_item['promotion']['sale_price']>0){?>
+												<span class="fs-5 current-price text-white won"> <?=number_format($goods_item['promotion']['sale_price'])?></span> 
+											<?}else{?>
+												<span class="fs-5 current-price text-white won"> <?=number_format($goods_item['price'])?></span> 
+											<?}?>
+										</div>
+									</div>
+								</div>
+								<div class="card-footer px-3">
+									<div class="d-flex d-row justify-content-between">
+										<button type="button" class="btn btn-sm shadow-none font-14 rounded-0 bg-danger btn_wishlist" data-sku="<?=$goods_item['goods_sku']?>"><ion-icon name="heart-outline"></ion-icon> 위시리스트</button>
+										<?if($goods_item['soldout']=="N"){?>
+											<button type="button" class="btn btn-sm shadow-none font-14 rounded-0 bg-primary btn_cart" data-sku="<?=$goods_item['goods_sku']?>"><ion-icon name="cart-outline"></ion-icon> 장바구니</button>
+										<?}else{?>
+											<span class="badge bg-secondary font-16 rounded-1">품절</span>
+										<?}?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+		<?if($goods_item['display_type']=="game_bundle" || $goods_item['display_type']=="dlc_bundle"  || $goods_item['display_type']=="etc_bundle"){?>
+		<div class="section full mb-2">
+			<div class="section-title">번들 상세정보</div>
+			<div class="wide-block p-0">
+				<ul class="listview simple-listview">
+					<?
+						foreach($package_list as $package){
+							$json_path =  "/home/dgkrshop/www/upload/apps/apps_".$package['appid'].".json";
+							$json_string = file_get_contents($json_path);
+							$json_data = json_decode($json_string, true);
+							$header_image = $json_data[$package['appid']]['data']['header_image'];
+							$about_the_game = $json_data[$package['appid']]['data']['about_the_game'];
+							$short_description = $json_data[$package['appid']]['data']['short_description'];
+							$release_date = $json_data[$package['appid']]['data']['release_date']['date'];
+							$developers = $json_data[$package['appid']]['data']['developers'];
+							$publishers = $json_data[$package['appid']]['data']['publishers'];
+							$ratings[] = $json_data[$package['appid']]['data']['ratings']['kgrb'];
+
+							echo "<li>";
+							echo "<div class='row'><div class='col-4'><img src='".$header_image."' class='img-fluid border-0'><p class='font-12 text-center pt-2 mb-0'>출시일: ".$release_date."</p></div>";
+							echo "<div class='col-8'>";
+							echo "<h4 class='font-12'>".$package['item_name']."</h4>";
+							echo "<div class='font-12'>".$short_description."</div>";
+							echo "</div>";
+							echo "</div></li>";
+						}
+					?>
+				</ul>
+			</div>
+		</div>
+		<?}?>
+
+		<div class="section full mb-2">
+			<div class="section-title">상세정보</div>
+			<div class="wide-block p-0">
+				<ul class="list-unstyled mb-0">
+					<li class="ps-2 py-2 border-bottom border-opacity-25">
+						<div class="mb-0">
+							<span class="text-secondary font-14">출시일</span> 
+							<p class="mb-0 font-14"><?=date("Y년 m월 d일", strtotime($goods_item['release_date']))?></p>
+						</div>
+					</li>
+					<li class="ps-2 py-2 border-bottom border-opacity-25">
+						<div class="mb-0">
+							<span class="text-secondary font-14">개발사</span> 
+							<p class="mb-0 font-14">
+							<?
+								foreach($developers as $developer_key=>$developer_text){
+									echo $developer_text;
+								}
+							?>
+							</p>
+						</div>
+					</li>
+					<li class="ps-2 py-2 border-bottom border-opacity-25">
+						<div class="mb-0 fs-5">
+							<span class="text-secondary font-14">퍼블리셔</span> 
+							<p class="mb-0 font-14">
+								<?
+									foreach($publishers as $publisher_key=>$publisher_text){
+										echo $publisher_text;
+									}
+								?>
+							</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="section full mb-2">
+			<div class="section-title">상품 정보 제공 고시</div>
+			<div class="wide-block p-0">
+				<ul class="list-unstyled mb-0">
+					<li class="ps-2 py-2 border-bottom border-opacity-25">
+						<div class="mb-0">
+							<span class="text-secondary font-14">제작자 또는 공급자</span>
+							<p class="mb-0 font-14">상세정보 개발사/퍼블리셔 참조</p>
+						</div>
+					</li>
+					<li class="ps-2 py-2 border-bottom border-opacity-25">
+						<div class="mb-0">
+							<span class="text-secondary font-14">이용조건/이용기간</span> 
+							<p class="mb-0 font-14">제품 코드 수신, 등록 후 <a href="https://store.steampowered.com/" target="_blank"><?=$goods->getPlatform($goods_item['product_platform'])?></a>의 서비스 종료까지</p>
+						</div>
+					</li>
+					<li class="ps-2 py-2 border-bottom border-opacity-25">
+						<div class="mb-0">
+							<span class="text-secondary font-14">상품 제공 방식</span>
+							<p class="mb-0 font-14">마이페이지를 통한 제품 코드 실시간 발송</p>
+						</div>
+					</li>
+					<li class="ps-2 py-2 border-bottom border-opacity-25">
+						<div class="mb-0">
+							<span class="text-secondary font-14">최소 시스템 사양, 필수 소프트웨어</span>
+							<p class="mb-0 font-14"><a href="#system_info">시스템 요구사항</a> 참조</p>
+						</div>
+					</li>
+					<li class="ps-2 py-2 border-bottom border- 1 border-opacity-25">
+						<div class="mb-0">
+							<span class="text-secondary font-14">청약철회 또는 계약의 해제 해지의 따른 효과</span>
+							<p class="mb-0 font-14"><a href="/service/refund_policy.html" target="_blank">환불정책안내</a> 참조 </p>
+						</div>
+					</li>
+					<li class="ps-2 py-2 border-bottom border- 1 border-opacity-25">
+						<div class="mb-0">
+							<span class="text-secondary font-14">소비자상담 관련 전화번호</span> 
+							<p class="mb-0 font-14">1544-2367</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- * App Capsule -->
+	<?}?>
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- App 장바구니 알림 -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/dialog_cart.html'); ?>
+<!-- * App 장바구니 알림 -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Splide -->
+<script src="/assets/js/plugins/splide/splide.min.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<script src="/assets/js/base.js"></script>
+
+<script>
+$(document).ready(function(){
+	//장바구니 담기(동기)
+	$(".btn_cart").bind("click",function(){
+		var index = $(".btn_cart").index(this);
+		var goods_sku = $(".btn_cart").eq(index).attr("data-sku");
+
+		$.ajax({
+			'url': '/order/cart_proc.php',
+			'dataType': 'json',
+			'type': 'POST',
+			'data':{mode:"add_cart",goods_sku:goods_sku},
+			'success': function (data) {
+				if(data.error_code=="0"){
+					$("#dialog_cart").modal("show");
+				}else{
+					$("#dialog_cart #msg").html(data.error_msg);
+					$("#dialog_cart").modal("show");
+				}
+				
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+	
+	//위시리스트 담기
+	$(".btn_wishlist").bind("click",function(){
+		var index = $(".btn_wishlist").index(this);
+		var goods_sku = $(".btn_wishlist").eq(index).attr("data-sku");
+
+		$.ajax({
+			'url': '/order/wishlist_proc.php',
+			'dataType': 'json',
+			'type': 'POST',
+			'data':{mode:"add_wishlist",goods_sku:goods_sku},
+			'success': function (data) {
+				if(data.error_code=="0"){
+					$("#dialog_wishlist").modal("show");
+				}else{
+					$("#dialog_wishlist #msg").html(data.error_msg);
+					$("#dialog_wishlist").modal("show");
+				}
+			},
+			'error':function(data){
+				alert(data);
+			}
+		});
+	});
+});
+</script>
+</body>
+</html>

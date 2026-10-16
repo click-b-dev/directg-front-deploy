@@ -1,0 +1,185 @@
+<div class="topnav shadow-none">
+	<div class="container">
+		<nav class="navbar navbar-dark navbar-expand-lg topnav-menu">
+			<div class="nav-item border-top-0 border-bottom-0 py-1 px-1">
+				<a class="nav-link text-secondary font-14" href="/game/game_list.html">모든상품</a>
+			</div>
+			<div class="nav-item dropdown border-top-0 border-bottom-0 border-start-0 py-1 px-1">
+				<a class="nav-link text-secondary font-14 dropdown-toggle arrow-none" href="#" id="topnav-platform" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					플랫폼별 <div class="arrow-down"></div>
+				</a>
+				<div class="dropdown-menu shadow-none" aria-labelledby="topnav-platform">
+					<a href="/game/game_platform.html?platform=1" class="dropdown-item">Steam</a>
+					<a href="/game/game_platform.html?platform=34" class="dropdown-item">Epic Games</a>
+					<a href="/game/game_platform.html?platform=35" class="dropdown-item">Rockstar Games</a>
+				</div>
+			</div>
+			<div class="nav-item dropdown border-top-0 border-bottom-0 border-start-0 py-1 px-1">
+				<a class="nav-link text-secondary font-14 dropdown-toggle arrow-none" href="#" id="topnav-genres" role="button" data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+					장르별 <div class="arrow-down"></div>
+				</a>
+				<div class="dropdown-menu shadow-none" aria-labelledby="topnav-genres">
+					<a href="/game/game_genre.html?genre_code=G0001001" class="dropdown-item">액션</a>
+					<a href="/game/game_genre.html?genre_code=G0001009" class="dropdown-item">어드벤처</a>
+					<a href="/game/game_genre.html?genre_code=G0001003" class="dropdown-item">RPG</a>
+					<a href="/game/game_genre.html?genre_code=G0001006" class="dropdown-item">시뮬레이션</a>
+					<a href="/game/game_genre.html?genre_code=G0001007" class="dropdown-item">전략</a>
+					<a href="/game/game_genre.html?genre_code=G0001002" class="dropdown-item">캐주얼</a>
+					<a href="/game/game_genre.html?genre_code=G0001011" class="dropdown-item">퍼즐</a>
+					<a href="/game/game_genre.html?genre_code=G0001008" class="dropdown-item">스포츠</a>
+					<a href="/game/game_genre.html?genre_code=G0001010" class="dropdown-item">레이싱</a>
+					<a href="/game/game_genre.html?genre_code=G0001005" class="dropdown-item">인디</a>
+					<a href="/game/game_genre.html?genre_code=G0001004" class="dropdown-item">앞서 해보기</a>
+				</div>
+			</div>
+			<div class="nav-item dropdown border-top-0 border-bottom-0 border-start-0 py-1 px-1 position-static">
+				<a class="nav-link text-secondary font-14 dropdown-toggle arrow-none " href="#" id="topnav-player" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					카테고리별 <div class="arrow-down"></div>
+				</a>
+				<div class="dropdown-menu shadow-none w-100 start-50 translate-middle-x bg-light" aria-labelledby="topnav-player">
+					<div class="row g-0 d-flex flex-row">
+						<div class="col-2 border-end border-secondary border-opacity-50" style="--bs-border-opacity: .5;">
+							<div class="p-2">
+								<div class="nav-group">
+									<strong class="navbar-text text-white">싱글플레이 지원</strong>
+									<ul class="nav flex-column">
+										<?
+											foreach($player_support_101 as $sub_value){
+										?>
+										<li class="nav-item border-0"><a class="nav-link text-secondary px-1" href="/game/game_category.html?category_code=<?=$sub_value['tag_code']?>" title="<?=$sub_value['tag_name']?>"><?=$sub_value['tag_name']?></a></li>
+										<?
+											}
+										?>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-2 border-end border-secondary border-opacity-50">
+							<div class="p-2">
+								<div class="nav-group">
+									<strong class="navbar-text text-white">멀티플레이 지원</strong>
+									<ul class="nav flex-column">
+										<?
+											foreach($player_support_201 as $sub_value){
+										?>
+										<li class="nav-item border-0"><a class="nav-link text-secondary px-1" href="/game/game_category.html?category_code=<?=$sub_value['tag_code']?>" title="<?=$sub_value['tag_name']?>"><?=$sub_value['tag_name']?></a></li>
+										<?
+											}
+										?>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-2 border-end border-secondary border-opacity-50">
+							<div class="p-2">
+								<div class="nav-group">
+									<strong class="navbar-text text-white">공유/화면분할 지원</strong>
+									<ul class="nav flex-column">
+										<?
+											foreach($player_support_202 as $sub_value){
+										?>
+										<li class="nav-item border-0"><a class="nav-link text-secondary px-1" href="/game/game_category.html?category_code=<?=$sub_value['tag_code']?>" title="<?=$sub_value['tag_name']?>"><?=$sub_value['tag_name']?></a></li>
+										<?
+											}
+										?>
+									</ul>
+								</div>
+								
+							</div>
+						</div>
+						<div class="col-2 border-end border-secondary border-opacity-50">
+							<div class="p-2">
+								<div class="nav-group">
+									<strong class="navbar-text text-white">컨트롤러 지원</strong>
+									<ul class="mt-1 nav flex-column">
+										<?
+											foreach($player_support_301 as $sub_value){
+										?>
+										<li class="nav-item border-0"><a class="nav-link text-secondary px-1" href="/game/game_category.html?category_code=<?=$sub_value['tag_code']?>" title="<?=$sub_value['tag_name']?>"><?=$sub_value['tag_name']?></a></li>
+										<?
+											}
+										?>
+									</ul>
+								</div>
+								
+								<div class="nav-group">
+									<strong class="navbar-text text-white">VR 지원</strong>
+									<ul class="mt-1 nav flex-column">
+										<?
+											foreach($player_support_302 as $sub_value){
+										?>
+										<li class="nav-item border-0"><a class="nav-link text-secondary px-1" href="/game/game_category.html?category_code=<?=$sub_value['tag_code']?>" title="<?=$sub_value['tag_name']?>"><?=$sub_value['tag_name']?></a></li>
+										<?
+											}
+										?>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-2 border-end border-secondary border-opacity-50">
+							<div class="p-2">
+								<div class="nav-group">
+									<strong class="navbar-text text-white">편의/접근성 지원</strong>
+									<ul class="mt-1 nav flex-column">
+										<?
+											foreach($player_support_401 as $sub_value){
+										?>
+										<li class="nav-item border-0"><a class="nav-link text-secondary px-1" href="/game/game_category.html?category_code=<?=$sub_value['tag_code']?>" title="<?=$sub_value['tag_name']?>"><?=$sub_value['tag_name']?></a></li>
+										<?
+											}
+										?>
+									</ul>
+								</div>
+								
+								<div class="nav-group">
+									<strong class="navbar-text text-white">크로스 플레이 지원</strong>
+									<ul class="mt-1 nav flex-column">
+										<?
+											foreach($player_support_402 as $sub_value){
+										?>
+										<li class="nav-item border-0"><a class="nav-link text-secondary px-1" href="/game/game_category.html?category_code=<?=$sub_value['tag_code']?>" title="<?=$sub_value['tag_name']?>"><?=$sub_value['tag_name']?></a></li>
+										<?
+											}
+										?>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-2"></div>
+					</div>
+				</div>
+			</div>
+			<!--<div class="nav-item dropdown border-top-0 border-bottom-0 border-start-0 py-1 px-1">
+				<a class="nav-link text-secondary font-14 dropdown-toggle arrow-none" href="#" id="topnav-publisher" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					퍼블리셔별 <div class="arrow-down"></div>
+				</a>
+				<div class="dropdown-menu shadow-none" aria-labelledby="topnav-publisher" style="max-width: 900px;">
+					<a href="/game/game_publisher.html?publisher_code=12" class="dropdown-item ">2K</a>
+					<a href="/game/game_publisher.html?publisher_code=93" class="dropdown-item ">SEGA</a>
+					<a href="/game/game_publisher.html?publisher_code=34" class="dropdown-item ">Capcom</a>
+					<a href="/game/game_publisher.html?publisher_code=30" class="dropdown-item ">Paradox Interactive</a>
+					<a href="/game/game_publisher.html?publisher_code=38" class="dropdown-item ">Bethesda Softworks</a>
+				</div>
+			</div>-->
+			<!--<div class="nav-item dropdown border-top-0 border-bottom-0 border-start-0 py-1 px-1">
+				<a class="nav-link text-secondary font-14" href="/game/game_upcoming.html"  role="button">할인게임</a>
+			</div>-->
+			<div class="nav-item dropdown border-top-0 border-bottom-0 border-start-0 py-1 px-1">
+				<a class="nav-link text-secondary font-14 dropdown-toggle arrow-none" href="#" id="topnav-korean" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					한국어지원 <div class="arrow-down"></div>
+				</a>
+				<div class="dropdown-menu shadow-none" aria-labelledby="topnav-korean" style="max-width: 900px;">
+					<a href="/game/game_list.html?interface_korean=Y" class="dropdown-item ">한국어자막지원</a>
+					<a href="/game/game_list.html?spoken_korean=Y" class="dropdown-item ">한국어음성지원</a>
+					<a href="/game/game_list.html?exclusive_korean=Y" class="dropdown-item ">독점/한글패치</a>
+				</div>
+			</div>
+			<div class="nav-item  dropdown border-top-0 border-bottom-0 border-start-0 py-1 px-1">
+				<a class="nav-link text-secondary font-14" href="/game/game_preorder.html"  role="button">예약구매</a>
+			</div>
+			<!--<div class="nav-item dropdown border-top-0 border-bottom-0 border-start-0 py-1 px-1">
+				<a class="nav-link text-secondary font-14" href="/game/game_upcoming.html"  role="button">판매예정</a>
+			</div>-->
+		</nav>
+	</div>
+</div>

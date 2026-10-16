@@ -1,0 +1,103 @@
+<div id="sidebar" class="rounded-0 bg-dark border mb-0">
+	<div class="d-flex flex-column flex-shrink-0">
+		<div class="bg-primary fw-bold fs-3 py-3 text-center border-bottom">마이페이지</div>
+		
+		<div class="p-3 bg-dark" id="mypageMember">
+			<div class="mb-2"><strong class="font-16">회원정보</strong></div>
+			<div class="list-group list-group-flush bg-dark">
+				<a href="/mypage/account_settings.html" class="list-group-item list-group-item-light bg-dark border-0 font-14 <?=$aside_menu['profile']?>">- 계정 설정</a>
+				<a href="/mypage/sns_login_connect.html" class="list-group-item list-group-item-action bg-dark border-0 font-14 <?=$aside_menu['sns_login']?>">- 간편로그인 연결</a>
+				<a href="/mypage/member_level_info.html" class="list-group-item list-group-item-action border-0 bg-dark font-14 <?=$aside_menu['member_level_info']?>">- 회원등급 안내</a>
+			</div>
+		</div>
+		
+		<hr class="my-0">
+		
+		<div class="p-3 bg-dark" id="mypageOrder">
+			<div class="mb-2"><strong class="font-16">주문정보</strong></div>
+			<div class="list-group list-group-flush bg-dark">
+				<a href="/mypage/mypage_order.html" class="list-group-item list-group-item-action list-group-item-dark bg-dark border-0 font-14 <?=$aside_menu['order']?>">- 디지털 상품 주문 내역</a>
+				<a href="/mypage/mypage_refund.html" class="list-group-item list-group-item-action list-group-item-dark bg-dark border-0 font-14 <?=$aside_menu['refund']?>">- 디지털 상품 취소 내역</a>
+				<a href="/mypage/mypage_retail_order.html" class="list-group-item list-group-item-action list-group-item-dark bg-dark border-0 font-14 <?=$aside_menu['retail_order']?>">- 실물 상품 주문 내역</a>
+				<a href="/mypage/mypage_retail_refund.html" class="list-group-item list-group-item-action list-group-item-dark bg-dark border-0 font-14 <?=$aside_menu['retail_refund']?>">- 실물 상품 취소 내역</a>
+				<a href="/mypage/mypage_wishlist.html" class="list-group-item list-group-item-action list-group-item-dark bg-dark border-0 font-14 <?=$aside_menu['wishlist']?>">- 위시리스트 내역</a>
+			</div>
+		</div>
+		
+		<hr class="my-0">
+		
+		<div class="p-3 bg-dark" id="mypageBenefits">
+			<div class="mb-2"><strong class="font-16">고객센터</strong></div>
+			<div class="list-group list-group-flush bg-dark">
+				<a href="/mypage/mypage_qna.html" class="list-group-item list-group-item-action list-group-item-dark bg-dark border-0 font-14 <?=$aside_menu['qna']?>">- 문의 내역</a>
+				<a href="/mypage/mypage_qna_register.html" class="list-group-item list-group-item-action list-group-item-dark bg-dark border-0 font-14 <?=$aside_menu['qna_ragister']?>">- 문의 하기</a>
+			</div>
+		</div>
+		
+		<hr class="my-0">
+		
+		<div class="p-3 bg-dark" id="mypageBenefits">
+			<div class="mb-2"><strong class="font-16">혜택정보</strong></div>
+			<div class="list-group list-group-flush bg-dark">
+				<a href="/mypage/mypage_point.html" class="list-group-item list-group-item-action list-group-item-dark bg-dark border-0 font-14 <?=$aside_menu['point']?>">- 포인트 내역</a>
+				<a href="/mypage/mypage_coupon.html" class="list-group-item list-group-item-action list-group-item-dark bg-dark border-0 font-14 <?=$aside_menu['coupon']?>">- 쿠폰 내역</a>
+				<a href="/mypage/mypage_gift.html" class="list-group-item list-group-item-action list-group-item-dark bg-dark border-0 font-14 <?=$aside_menu['gift']?>">- 사은품 내역</a>
+			</div>
+		</div>
+		
+		
+	</div>
+</div>
+
+<!--
+<ul class="side-nav">
+	<li class="side-nav-item">
+		<div class="side-nav-link px-3"><span>주문정보</span></div>
+		<div class=" " id="mypageOrder">
+			<ul class="side-nav-second-level">
+				<li class="ps-2">
+					<a href="/mypage/mypage_order.html" class="px-3">- 주문 내역</a>
+				</li>
+				<li class="ps-2">
+					<a href="/mypage/mypage_refund.html" class="px-3">- 취소 내역</a>
+				</li>
+				<li class="ps-2">
+					<a href="/mypage/mypage_wishlist.html" class="px-3">- 위시리스트 내역</a>
+				</li>
+			</ul>
+		</div>
+	</li>
+	<li class="side-nav-item">
+		<div class="side-nav-link px-3"><span>고객센터</span></div>
+		<div class=" " id="myageCustomer">
+			<ul class="side-nav-second-level">
+				<li class="ps-2">
+					<a href="/mypage/mypage_qna.html" class="px-3">- 문의 내역</a>
+				</li>
+				<li class="ps-2">
+					<a href="/mypage/mypage_qna_register.html" class="px-3">- 문의 하기</a>
+				</li>
+			</ul>
+		</div>
+	</li>
+	<li class="side-nav-item">
+		<div class="side-nav-link px-3"><span>혜택정보</span></div>
+		<div class=" " id="mypageBenefits">
+			<ul class="side-nav-second-level">
+				<li class="ps-2">
+					<a href="/mypage/member_point.html" class="px-3">- 포인트 내역</a>
+				</li>
+				<li class="ps-2">
+					<a href="/mypage/mypage_coupon.html" class="px-3">- 쿠폰 내역</a>
+				</li>
+				<li class="ps-2">
+					<a href="/mypage/mypage_event_gift.html" class="px-3">- 사은품 내역</a>
+				</li>
+				<li class="ps-2">
+					<a href="/mypage/mypage_supply_content.html" class="px-3">- 제공콘텐츠 내역</a>
+				</li>
+			</ul>
+		</div>
+	</li>
+</ul>
+-->

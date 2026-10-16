@@ -1,0 +1,260 @@
+<?php
+ini_set( "display_errors", 1 );
+error_reporting(E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_PARSE | E_USER_ERROR | E_USER_WARNING);
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+
+header('Content-Type:text/html; charset=utf-8'); 
+
+$page_title="타임딜";
+
+try{
+	$conn = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+	$query = "SELECT idx,subject,event_banner,start_dt,end_dt
+		FROM tbl_event
+		WHERE timedeal=:timedeal
+		ORDER BY start_dt DESC
+		LIMIT 1";
+
+	$stmt = $conn->prepare($query);
+	$params=array(
+		":timedeal"=>"Y"
+	);
+	$stmt->execute($params);
+	$event_data=  $stmt->fetch();
+
+	$bottom_banner = $event_data['event_banner'];
+	$start_dt = $event_data['start_dt'];
+	$end_dt = $event_data['end_dt'];
+	$idx = $event_data['idx'];
+
+	if($idx){
+		$goods_query = "SELECT a.goods_code,a.goods_nm,a.price,a.age_limit,a.open_graph,a.platform_code,a.game_rate,a.consumer_price,a.goods_info1,b.sale_price,b.discount_rate,a.asset_id,a.prod_tp,b.event_ea,b.order_ea
+		FROM tbl_goods a JOIN tbl_event_goods b ON a.goods_code=b.goods_code
+		WHERE b.event_no=:idx";
+
+		$stmt = $conn->prepare($goods_query);
+		$params=array(
+			":idx"=>$idx
+		);
+		$stmt->execute($params);
+		$goods_data=  $stmt->fetch();
+
+		$img = "https://directg.net/upload/product/".$goods_data['open_graph'];
+		$goods_name=$goods_data['goods_nm'];
+		$goods_info=$goods_data['goods_info1'];
+		$age_limit=$goods_data['age_limit'];
+		$goods_code=$goods_data['goods_code'];
+		$consumer_price=$goods_data['consumer_price'];
+		$sale_price=$goods_data['sale_price'];
+		$discount_rate=$goods_data['discount_rate'];
+		$asset_id=$goods_data['asset_id'];
+		$prod_tp=$goods_data['prod_tp'];
+		$event_ea=$goods_data['event_ea'];
+		$order_ea=$goods_data['order_ea'];
+
+if($age_limit=="0"){
+	$age_limit = 10;
+}else{
+	if($age_limit=="18"){
+		$age_limit = "19";
+	}else{
+		$age_limit = $age_limit;
+	}
+}
+		$order_count_query = "SELECT COUNT(*) FROM tbl_order_item WHERE product_code=:goods_code AND reg_date BETWEEN :start_dt AND :end_dt";
+		$stmt = $conn->prepare($order_count_query);
+		$params=array(
+			":goods_code"=>$goods_code,
+			":start_dt"=>$start_dt,
+			":end_dt"=>$end_dt
+		);
+		$stmt->execute($params);
+		$count_data=$stmt->fetch();
+		if($count_data[0]>$order_ea){
+			$order_ea=$count_data[0];
+		}
+	} else {
+		$img="/images/404.jpg";
+	}
+	
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+?>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title><?=$page_title?></title>
+<meta name="description" content="">
+<meta name="keywords" content="" />
+<link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
+<link rel="stylesheet" href="/assets/css/style.css?t=<?=date('YmdHis')?>">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/dg_style.css?t=<?=date('YmdHis')?>">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style type="text/css">
+@font-face {
+	font-family: 'GmarketSans';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+}
+
+.countdown{
+	background-color:#000000;
+	font-size:44px;
+	font-weight:bold;
+	border-radius:5px;
+	padding:0px 8px 0px 8px;
+	color:#FFFFFF;
+}
+
+.timedeal_price{
+	background-image:url('https://image.directg.net/f7PjRn2Md4');
+}
+.timedeal_price > *{
+	font-family:"GmarketSans";
+}
+</style>
+
+
+</head>
+<body class="dark-mode-active">
+<!-- App Header -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sub_header.html'); ?>
+<!-- * App Header -->
+
+<!-- App Capsule -->
+<div id="appCapsule" class="mt-2 full-height">
+	<div class="section inset">
+						<div class="mb-2 position-relative">
+							<img src="https://image.directg.net/O7PjnFN5nl" class="w-100">
+							<?php
+								if($event_ea-$order_ea <=50 ){
+							?>
+							<img src="https://image.directg.net/P7PaBshmEs" class="position-absolute top-0 end-0 m-1">
+							<?php
+								}
+							?>
+						</div>
+						<div id="countdown_banner" class="d-flex justify-content-between align-items-center text-nowrap my-2">
+							<div>
+								<span id="given_date"></span>
+							</div>
+							<div>
+								<img src="https://directg.net/images/common/age_<?=$age_limit?>.gif">
+							</div>
+						</div>
+
+						<a href="/game/game_page.html?product_code=<?=$goods_code?>">
+							<div class="flex-fill position-relative text-white">
+								<div>
+									<img src="<?=$img?>" class="w-100">
+								</div>
+								<div class="position-absolute w-100 text-center lh-2 bottom-0 bg-black opacity-75">
+									<span>게임정보 바로가기 <i class="fa fa-long-arrow-right"></i></span>
+								</div>
+							</div>
+						</a>
+						<div class="d-flex justify-content-between my-2 align-items-center">
+							<div class="align-self-center fw-bold"><?=$goods_name?></div>
+							<div><span class="badge badge-danger font-14 rounded-2 fw-bold">TIMEDEAL</span></div>
+						</div>
+						<?php
+							if($goods_info){
+						?>
+						<div class="card shadow-none rounded-0 my-1 p-1 text-white border fw-bold">
+							<?=$goods_info?>
+						</div>
+						<?php
+							}
+						?>
+
+						<div class="timedeal_price d-flex fst-italic py-3 my-3 text-nowrap">
+							<div class="fw-800 text-center align-self-center col-3 font-14">정상가<br><s><?=number_format($consumer_price)?></s>원</div>
+							<div class="fw-bold text-center align-self-center col-1"><i class="fa fa-long-arrow-right"></i></div>
+							<div class="fw-bold text-center align-self-center col-3 text-warning font-16">할인가<br><?=number_format($sale_price)?>원</div>
+							<div class="fw-800 text-center align-self-center col-5 text-danger fs-1 fst-normal"><?=$discount_rate?><span class="fst-italic">%off</span></div>
+						</div>
+						<div class="cart">
+							<button type="button" class="btn btn-danger btn_cart w-100 rounded-0 font-14" id="btn_cart" data-goodscode="<?=$goods_code?>" data-assetid="<?=$asset_id?>" data-prodtp="<?=$prod_tp?>">장바구니 담기</button>
+						</div>
+						<hr/>
+						<div class="card shadow-none rounded-0 my-1 p-1 text-white font-14">
+							<p>※ 유의사항</p>
+							<ul>
+								<li>기간 내 결제 후 제품 코드(키) 활성화(수신)까지 완료된 주문 건에 해당됩니다.</li>
+								<li>타임딜 상품은 가상계좌 결제수단을 지원하지 않습니다.</li>
+								<li>이벤트 기간 내 주문 금액의 합계로 적용되며, 이벤트 페이지에서 나의 누적 주문 금액과 참여 기회 횟수를 확인하실 수 있습니다.</li>
+								<li>해당 이벤트는 휴대폰 본인 인증된 계정 기준, 1인당 기간 내 최대 1회에 한하여 당첨됩니다.</li>
+								<li>미당첨 시에는 재참여가 가능하며, 당첨된 경우 추가 참여가 불가합니다.</li>
+								<li>포인트는 당첨 시 즉시 지급되며, [마이페이지 - 포인트] 메뉴에서 확인하실 수 있습니다.</li>
+								<li>당첨된 포인트는 다이렉트 게임즈에서 주문 결제 시 사용이 가능하며, 현금화는 불가합니다.</li>
+								<li>이벤트 기간, 적립 기준 및 금액은 사정에 따라 사전 공지 없이 변경될 수 있습니다.</li>
+								<li>부적절한 방법을 통한 참여 및 당첨은 모두 취소되며 법적인 처벌을 받을 수 있습니다.</li>
+							</ul>
+						</div>
+	</div>
+</div>
+<!-- * App Capsule -->
+
+<!-- App Bottom Menu -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/bottom_menu.html'); ?>
+<!-- * App Bottom Menu -->
+
+<!-- App Sidebar -->
+<? include_once($_SERVER["DOCUMENT_ROOT"].'/inc/sidebar.html'); ?>
+<!-- * App Sidebar -->
+
+<!-- ============== Js Files ==============  -->
+<!-- Bootstrap -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- ProgressBar js -->
+<script src="/assets/js/plugins/progressbar-js/progressbar.min.js"></script>
+
+<script src="/assets/js/lib/jquery-3.4.1.min.js"></script>
+
+<!-- Base Js File -->
+<script src="/assets/js/base.js"></script>
+
+
+<script type="text/javascript" src="/assets/js/jquery.countdownTimer.js"></script>
+
+<script type="text/javascript">
+jQuery.browser = {};
+(function () {
+	jQuery.browser.msie = false;
+	jQuery.browser.version = 0;
+	if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+		jQuery.browser.msie = true;
+		jQuery.browser.version = RegExp.$1;
+	}
+})();
+
+$(function(){
+	$('#given_date').countdowntimer({
+		regexpMatchFormat: "([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})",
+		regexpReplaceWith: "<span class='countdown'>$2</span> <span class='countdown'>$3</span> <span class='countdown'>$4</span>",
+		 startDate : "<?=date('Y-m-d H:i:s')?>",
+		 dateAndTime : "<?=$end_dt?>",
+		 size : "xl"
+	});
+});
+
+</script>
+
+</body>
+</html>

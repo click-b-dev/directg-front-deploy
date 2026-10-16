@@ -1,0 +1,485 @@
+<?php
+	if (!isset($conn)) {
+		$conn = new PDO($dsn,DB_USER,DB_PASSWORD);
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	}
+
+	if (!isset($promotion)) {
+		$promotion = new Promotion($conn);
+	}
+	$group_promotion=$promotion->getPromotionGroupList();
+
+	//헤더 배지 — 장바구니 수 + 장바구니·위시리스트 진행중 프로모션 보유 여부(빨간점). 쿼리는 클래스 내부 캐시로 요청당 1회
+	if(!isset($goods)){
+		$goods = new Goods($conn);
+	}
+	$header_badge = $goods->getHeaderBadge($_SESSION['member']['m_no']);
+?>
+<?
+	//배지 CSS는 dg_style.css 에 두지 않고 여기서 출력한다.
+	//모바일은 페이지마다 dg_style.css 를 직접 link(166개, 버전쿼리 제각각)해서 캐시 갱신을 강제할 방법이 없다.
+	//PHP 출력은 캐시되지 않으므로 이 방식이 확실하다. sub_header.html 에도 같은 블록이 있고, 먼저 렌더된 쪽만 출력한다.
+	//(로그인·장바구니·약관 등 15개 페이지는 sub_header 없이 sidebar 만 있으므로 이쪽에도 필요)
+	if(empty($badge_css_printed)){
+		$badge_css_printed = true;
+?>
+<style>
+/* 헤더/사이드바 배지 — 장바구니 갯수(circle.svg) + 프로모션 진행중 빨간점(reddot.svg) */
+.badge-wrap{ position:relative; display:inline-block; }
+/* 배지 교체 슬롯 — AJAX로 innerHTML만 갈아끼운다. display:contents 로 기존 배치/인접선택자에 영향 없음 */
+.badge-slot{ display:contents; }
+.badge-count{ display:inline-flex; justify-content:center; align-items:center; background:url('/assets/images/icon/circle.svg') no-repeat center / contain; font-size:11px; width:1rem; height:1rem;}
+/* 헤더 — 갯수는 장바구니 아이콘 우하단에 겹치고, 빨간점은 갯수의 우상단(갯수가 없으면 아이콘 우상단)
+   .headerButton 이 56px 높이라 라인박스 기준이 안 맞으므로, 아이콘 크기로 감싼 .badge-wrap 기준 절대배치 */
+.badge-reddot{ height: unset !important; }
+.appHeader .badge-wrap{ line-height:0; }
+.appHeader .badge-count{ position:absolute; right:-0.6875rem; bottom:0px; }
+.appHeader .badge-count + .badge-reddot{ position:absolute; right:-0.875rem; bottom:0.6875rem; }
+/* 사이드바는 버튼 배경색이 달라 흰 원 사용(글자색은 마크업에서 text-cinfo 등으로 지정) */
+.side-button .badge-count{ background-image:url('/assets/images/icon/circle_white.svg'); }
+.side-button .badge-reddot{ position:relative; vertical-align:top; top:-5px; left:-2px;}
+</style>
+<?
+	}
+?>
+<div class="modal fade panelbox panelbox-left" id="sidebarPanel" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-body p-0 border-0 mb-5 pb-2">
+				<div class="profileBox">
+					<div class="in d-flex">
+						<?if($_SESSION['member']['m_id']){?>
+						<div class="d-flex flex-column justify-content-center">
+							<div class=""><strong>[<?=$_SESSION['member']['name']?>]님</strong></div>
+							<!--
+							<div>
+								<span class="fs-6 text-white">
+						<?php
+							switch($_SESSION['member']['mem_level']){
+								case "1":
+									echo "일반회원";
+								break;
+								case "2":
+									echo "정회원";
+								break;
+								case "3":
+									echo "VIP회원";
+								break;
+								default:
+								break;
+							}
+						?>
+							</div>
+							-->
+						</div>
+						<?}else{?>
+						<a href="/member/login.html"><span class="text-white">로그인을 해주세요.</span></a>
+						<?}?>
+					</div>
+					<a href="#" class="close-sidebar-button" data-bs-dismiss="modal"><span class="material-icons">close</span></a>
+				</div>
+				<div class="section full side-button">
+					<div class="d-flex flex-column justify-content-around" style="height:6.5rem;">
+						<div class="d-flex justify-content-center text-center">
+				<?if($_SESSION['member']['m_id']){?>
+							<div class="col-6 icon icon-top">
+								<a href="/member/logout.php" class="btn btn-outline-login w-100"><img src="/assets/img/icon/logout-icon.svg"> 로그아웃</a>
+							</div>
+				<?} else {?>
+							<div class="col-6 icon icon-top">
+								<a href="/member/login.html" class="btn btn-outline-login w-100"><img src="/assets/img/icon/login-icon.svg"> 로그인</a>
+							</div>
+				<?}?>
+							<div class="col-6 icon">
+								<a href="/mypage/mypage_main.html" class="btn btn-cprimary w-100"><img src="/assets/images/icon/user-icon_white.svg"> 마이페이지</a>
+							</div>
+						</div>
+						<div class="d-flex justify-content-center text-center">
+							<div class="col-6 icon">
+								<a href="/mypage/mypage_wishlist.html" class="btn btn-outline-cdanger w-100 text-nowrap px-0"><img src="/assets/img/icon/wishlist-icon_y.svg">위시리스트<span class="badge-slot" data-badge="side_wish"><?if($header_badge['wish_promo']){?><div><img src="/assets/images/icon/reddot.svg" class="badge-reddot ms-05 me-0" alt="프로모션 진행중"></div><?}?></span></a>
+							</div>
+							<div class="col-6 icon">
+								<a href="/order/cart.html" class="btn btn-cinfo w-100 text-nowrap px-0"><img src="/assets/img/icon/basket-icon-white.svg">장바구니<span class="badge-slot" data-badge="side_cart"><?if(!empty($_SESSION['member']['m_no'])){?><span class="badge-count text-cinfo ms-05"><?=$header_badge['cart_cnt']?></span><?}?><?if($header_badge['cart_promo']){?><img src="/assets/images/icon/reddot.svg" class="badge-reddot me-0" alt="프로모션 진행중"><?}?></span></a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="listview text-white border-0">
+					<ul class="listview link-listview border-top-0 border-bottom-0">
+						<li class="">
+							<a href="/index.php" class="item">
+								<div class="in d-flex align-item-center">
+									<span class="font-16 text-white">홈</span>
+								</div>
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="listview text-white border-0">
+					<ul class="listview link-listview border-top-0 border-bottom-0">
+						<li class="">
+							<a href="/service/service.html" class="item">
+								<div class="in"><span class="font-16">서비스소개</span></div>
+							</a>
+						</li>
+					</ul>
+				</div>
+
+
+				<div class="listview text-white border-0">
+					<div class="accordion border-0" id="accordionExample3">
+						<div class="accordion-item border-0">
+							<h2 class="accordion-header border-0">
+								<button class="accordion-button collapsed font-16 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#accordion07" aria-expanded="false">
+									할인프로모션
+								</button>
+							</h2>
+							<div id="accordion07" class="accordion-collapse collapse border-0" data-bs-parent="#accordionExample3" style="">
+								<div class="accordion-body p-0">
+									<ul class="listview link-listview">
+										<li class="ps-1"><a href="/promotion/promotion_ing_thumb.html" class="item">할인진행중</a></li>
+										<li class="ps-1"><a href="/promotion/promotion_weekend.html" class="item">주말특가 프로모션</a></li>
+										<?if(date('Y-m-d H:i:s')>='2026-06-25 16:00:00' && date('Y-m-d H:i:s')<'2026-07-09 16:00:00'){?>
+										<li class="ps-1"><a href="/promotion/promotion_season.html" class="item">2026 여름 프로모션</a></li>
+										<?}?>
+										<?php
+											foreach($group_promotion as $group_data){
+										?>
+										<li class="ps-1"><a href="/game/group_thumb.html?idx=<?=$group_data['idx']?>" class="item"><?=$group_data['subject']?></a></li>
+										<?php
+											}
+										?>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--
+				<div class="listview text-white border-0">
+					<ul class="listview link-listview border-top-0 border-bottom-0">
+						<li class="">
+							<a href="/promotion/promotion_ing.html" class="item">
+								<div class="in"><span class="font-16">할인프로모션</span></div>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="listview text-white border-0">
+					<ul class="listview link-listview border-top-0 border-bottom-0">
+						<li class="">
+							<a href="/promotion/promotion_group.html" class="item">
+								<div class="in"><span class="font-16">가을 프로모션</span></div>
+							</a>
+						</li>
+					</ul>
+				</div>
+				-->
+				<div class="listview text-white border-0">
+					<ul class="listview link-listview border-top-0 border-bottom-0">
+						<li class="">
+							<a href="/event/event.html" class="item">
+								<div class="in"><span class="font-16">이벤트</span></div>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="listview text-white border-0">
+					<ul class="listview link-listview border-top-0 border-bottom-0">
+						<li class="">
+							<a href="/board/notice.html" class="item">
+								<div class="in"><span class="font-16">공지사항</span></div>
+							</a>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="listview text-white border-0">
+					<ul class="listview link-listview border-top-0 border-bottom-0">
+						<li class="border-0">
+							<a href="/game/game_thumb.html" class="item">
+								<div class="in"><span class="font-16">모든게임</span></div>
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="listview text-white border-0">
+					<ul class="listview link-listview border-top-0 border-bottom-0">
+						<li class="border-0">
+							<a href="/game/goods_thumb.html" class="item">
+								<div class="in"><span class="font-16">PS액세서리</span></div>
+							</a>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="listview text-white border-0">
+					<ul class="listview link-listview border-top-0 border-bottom-0">
+						<li class="border-0">
+							<a href="/game/holomodels_thumb.html" class="item">
+								<div class="in"><span class="font-16">홀로 모델</span></div>
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="listview text-white border-0">
+					<ul class="listview link-listview border-top-0 border-bottom-0">
+						<li class="border-0">
+							<a href="/game/game_thumb.html?is_preorder=Y" class="item">
+								<div class="in"><span class="font-16">예약구매</span></div>
+							</a>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="section full mt-0 mb-2">
+					<div class="accordion border-0" id="accordionExample2">
+						<div class="accordion-item border-0">
+							<h2 class="accordion-header border-0">
+								<button class="accordion-button collapsed font-16 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#accordion01" aria-expanded="false">
+									플랫폼별
+								</button>
+							</h2>
+							<div id="accordion01" class="accordion-collapse collapse border-0" data-bs-parent="#accordionExample2" style="">
+								<div class="accordion-body p-0">
+									<ul class="listview link-listview">
+										<li class="ps-1"><a href="/game/game_platform_thumb.html?platform=1" class="item">Steam</a></li>
+										<li class="ps-1"><a href="/game/game_platform_thumb.html?platform=34" class="item">Epic Games</a></li>
+										<li class="ps-1"><a href="/game/game_platform_thumb.html?platform=35" class="item">Rockstar Games</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="accordion-item">
+							<h2 class="accordion-header">
+								<button class="accordion-button collapsed font-16" type="button" data-bs-toggle="collapse" data-bs-target="#accordion02" aria-expanded="false">
+									장르별
+								</button>
+							</h2>
+							<div id="accordion02" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
+								<div class="accordion-body p-0">
+									<ul class="listview link-listview">
+										<li class="ps-1"><a href="/game/game_genre_thumb.html?genre_code=G0001" class="item">액션</a></li>
+										<li class="ps-1"><a href="/game/game_genre_thumb.html?genre_code=G0002" class="item">어드벤처</a></li>
+										<li class="ps-1"><a href="/game/game_genre_thumb.html?genre_code=G0003" class="item">RPG</a></li>
+										<li class="ps-1"><a href="/game/game_genre_thumb.html?genre_code=G0004" class="item">전략</a></li>
+										<li class="ps-1"><a href="/game/game_genre_thumb.html?genre_code=G0005" class="item">시뮬레이션</a></li>
+										<li class="ps-1"><a href="/game/game_genre_thumb.html?genre_code=G0006" class="item">스포츠</a></li>
+										<li class="ps-1"><a href="/game/game_genre_thumb.html?genre_code=G0010" class="item">레이싱</a></li>
+										<li class="ps-1"><a href="/game/game_genre_thumb.html?genre_code=G0007" class="item">캐주얼</a></li>
+										<li class="ps-1"><a href="/game/game_genre_thumb.html?genre_code=G0008" class="item">인디</a></li>
+										<li class="ps-1"><a href="/game/game_genre_thumb.html?genre_code=G0009" class="item">앞서 해보기</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="accordion-item">
+							<h2 class="accordion-header">
+								<button class="accordion-button collapsed font-16" type="button" data-bs-toggle="collapse" data-bs-target="#accordion03" aria-expanded="false">
+									퍼블리셔별
+								</button>
+							</h2>
+							<div id="accordion03" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
+								<div class="accordion-body p-0">
+									<ul class="listview link-listview">
+										<li class="ps-1"><a href="/game/publisher_2k_thumb.html" class="item" title="2K">2K</a></li>
+										<li class="ps-1"><a href="/game/publisher_sega_thumb.html" class="item" title="SEGA">SEGA</a></li>
+										<li class="ps-1"><a href="/game/publisher_capcom_thumb.html" class="item" title="CAPCOM">CAPCOM</a></li>
+										<li class="ps-1"><a href="/game/publisher_paradox_thumb.html" class="item" title="Paradox Interactive">Paradox Interactive</a></li>
+										<li class="ps-1"><a href="/game/publisher_playstation_thumb.html" class="item" title="PlayStation PC LLC">PlayStation PC LLC</a></li>
+										<li class="ps-1"><a href="/game/publisher_neowiz_thumb.html" class="item" title="NEOWIZ">NEOWIZ</a></li>
+										<li class="ps-1"><a href="/game/publisher_asw_thumb.html" class="item" title="Arc System Works">Arc System Works</a></li>
+										<li class="ps-1"><a href="/game/publisher_thq_thumb.html" class="item" title="THQ Nordic">THQ Nordic</a></li>
+										<li class="ps-1"><a href="/game/publisher_505_games_thumb.html" class="item" title="505 Games">505 Games</a></li>
+										<li class="ps-1"><a href="/game/publisher_focus_thumb.html" class="item" title="Focus Entertainment">Focus Entertainment</a></li>
+										<li class="ps-1"><a href="/game/publisher_hooded_horse_thumb.html" class="item" title="Hooded Horse">Hooded Horse</a></li>
+										<li class="ps-1"><a href="/game/publisher_clouded_leopard_thumb.html" class="item" title="Clouded Leopard Entertainment">Clouded Leopard Entertainment</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="accordion-item">
+							<h2 class="accordion-header">
+								<button class="accordion-button collapsed font-16" type="button" data-bs-toggle="collapse" data-bs-target="#accordion04" aria-expanded="false">
+									한국어지원
+								</button>
+							</h2>
+							<div id="accordion04" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
+								<div class="accordion-body p-0">
+									<ul class="listview link-listview">
+										<li class="ps-1"><a href="/game/game_thumb.html?interface_korean=Y" class="item">자막 한국어지원</a></li>
+										<li class="ps-1"><a href="/game/game_thumb.html?spoken_korean=Y" class="item">음성 한국어지원</a></li>
+										<li class="ps-1"><a href="/game/game_thumb.html?exclusive_korean=Y" class="item">독점 한국어지원</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="accordion-item">
+							<h2 class="accordion-header">
+								<button class="accordion-button collapsed font-16" type="button" data-bs-toggle="collapse" data-bs-target="#accordion05" aria-expanded="false">
+									이용안내
+								</button>
+							</h2>
+							<div id="accordion05" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
+								<div class="accordion-body p-0 border-0">
+									<ul class="listview link-listview border-top-0 border-bottom-1">
+										<!--
+										<li class="ps-1">
+											<a href="/service/guide.html" class="item">
+												<span class="font-16">다이렉트 게임즈</span>
+											</a>
+										</li>
+										-->
+										<li class="ps-1">
+											<a href="/service/guide_steam.html" class="item">
+												<span class="font-16">스팀</span>
+											</a>
+										</li>
+										<li class="ps-1">
+											<a href="/service/guide_epic.html" class="item">
+												<span class="font-16">에픽 게임즈</span>
+											</a>
+										</li>
+										<li class="ps-1">
+											<a href="/service/guide_rockstar.html" class="item">
+												<span class="font-16">락스타 게임즈</span>
+											</a>
+										</li>
+										<li class="ps-1">
+											<a href="https://xr-marketplace.com/ko/holomodels/play/ar" class="item">
+												<span class="font-16">홀로 모델</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="accordion-item">
+							<h2 class="accordion-header">
+								<button class="accordion-button collapsed font-16" type="button" data-bs-toggle="collapse" data-bs-target="#accordion06" aria-expanded="false">
+									고객지원
+								</button>
+							</h2>
+							<div id="accordion06" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
+								<div class="accordion-body p-0">
+									<ul class="listview link-listview border-top-0 border-bottom-0">
+										<li class="ps-1">
+											<a href="/board/faq.html" class="item">
+												<div class="in"><span class="font-16">자주묻는질문</span></div>
+											</a>
+										</li>
+										<li class="ps-1">
+											<a href="/mypage/mypage_qna_register.html" class="item">
+												<div class="in"><span class="font-16">문의하기</span></div>
+											</a>
+										</li>
+										<li class="ps-1">
+											<a href="/board/dataroom.html" class="item">
+												<div class="in"><span class="font-16">자료실</span></div>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!--
+				<ul class="listview link-listview border-top-0 border-bottom-0">
+					<li class="ps-0">
+						<div class="in">
+							<div class="listview-title font-16">플랫폼별</div>
+							<ul class="listview link-listview">
+								<li class="ps-1"><a href="/game/game_platform_list.html?platform=1" class="item">Steam</a></li>
+								<li class="ps-1"><a href="/game/game_platform_list.html?platform=34" class="item">Epic Games</a></li>
+								<li class="ps-1"><a href="/game/game_platform_list.html?platform=35" class="item">Rockstar Games</a></li>
+							</ul>
+						</div>
+					</li>
+					<li class="ps-0">
+						<div class="in">
+							<div class="listview-title font-16">장르별</div>
+							<ul class="listview link-listview">
+								<li class="ps-1"><a href="/game/game_genre_list.html?genre_code=G0001" class="item">액션</a></li>
+								<li class="ps-1"><a href="/game/game_genre_list.html?genre_code=G0002" class="item">어드벤처</a></li>
+								<li class="ps-1"><a href="/game/game_genre_list.html?genre_code=G0003" class="item">RPG</a></li>
+								<li class="ps-1"><a href="/game/game_genre_list.html?genre_code=G0004" class="item">전략</a></li>
+								<li class="ps-1"><a href="/game/game_genre_list.html?genre_code=G0005" class="item">시뮬레이션</a></li>
+								<li class="ps-1"><a href="/game/game_genre_list.html?genre_code=G0006" class="item">스포츠</a></li>
+								<li class="ps-1"><a href="/game/game_genre_list.html?genre_code=G0010" class="item">레이싱</a></li>
+								<li class="ps-1"><a href="/game/game_genre_list.html?genre_code=G0007" class="item">캐주얼</a></li>
+								<li class="ps-1"><a href="/game/game_genre_list.html?genre_code=G0008" class="item">인디</a></li>
+								<li class="ps-1"><a href="/game/game_genre_list.html?genre_code=G0009" class="item">앞서 해보기</a></li>
+							</ul>
+						</div>
+					</li>
+					<li class="ps-0">
+						<div class="in">
+							<div class="listview-title font-16">한국어지원</div>
+							<ul class="listview link-listview">
+								<li class="ps-1"><a href="/game/game_search.html?interface_korean=Y" class="item">자막 한국어지원</a></li>
+								<li class="ps-1"><a href="/game/game_search.html?spoken_korean=Y" class="item">음성 한국어지원</a></li>
+								<li class="ps-1"><a href="/game/game_search.html?exclusive_korean=Y" class="item">독점 한국어지원</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="listview text-white">
+					<ul class="listview link-listview border-top-0 border-bottom-0">
+						<li class="">
+							<a href="/game/game_category.html" class="item">
+								<div class="in"><span class="font-16">카테고리별</span></div>
+							</a>
+						</li>
+					</ul>
+				</div>
+				-->
+				
+			</div>
+			
+			<!--
+			<div class="sidebar-buttons">
+				<a href="/member/login.html" class="button" title="로그인">
+					<ion-icon name="person-outline" role="img" class="md hydrated"></ion-icon>
+				</a>
+				<a href="#" class="button">
+					<ion-icon name="archive-outline" role="img" class="md hydrated"></ion-icon>
+				</a>
+				<a href="#" class="button">
+					<ion-icon name="settings-outline" role="img" class="md hydrated"></ion-icon>
+				</a>
+				<?if($_SESSION['member']['m_id']){?>
+				<a href="/member/logout.php" class="button" title="로그아웃">
+					<ion-icon name="log-out-outline" role="img" class="md hydrated"></ion-icon>
+				</a>
+				<?}?>
+			</div>
+			-->
+		</div>
+	</div>
+</div>
+
+<script>
+//사이드바 배지 갱신 — 값만 받아서(cart_proc.php mode=header_badge) 이 파일이 직접 그린다.
+//마크업은 위 슬롯(data-badge="side_cart" / "side_wish")과 아래 코드가 짝을 이룬다.
+(window.headerBadgeDrawers = window.headerBadgeDrawers || []).push(function(badge){
+	var is_login = <?=!empty($_SESSION['member']['m_no'])?"true":"false"?>;
+
+	var cart_slot = document.querySelector('[data-badge="side_cart"]');
+	if(cart_slot){
+		cart_slot.innerHTML = (is_login ? '<span class="badge-count text-cinfo ms-05">' + badge.cart_cnt + '</span>' : '')
+			+ (badge.cart_promo ? '<img src="/assets/images/icon/reddot.svg" class="badge-reddot me-0" alt="프로모션 진행중">' : '');
+	}
+
+	var wish_slot = document.querySelector('[data-badge="side_wish"]');
+	if(wish_slot){
+		wish_slot.innerHTML = badge.wish_promo ? '<div><img src="/assets/images/icon/reddot.svg" class="badge-reddot ms-05 me-0" alt="프로모션 진행중"></div>' : '';
+	}
+});
+</script>

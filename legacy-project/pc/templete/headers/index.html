@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+<title>Headers · Bootstrap v5.3</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="../assets/dist/css/custom.css?t=<?=time()?>" rel="stylesheet">
+
+<style>
+html{
+	font-family: 'Noto Sans KR', sans-serif;
+	font-size:16px;
+}
+
+body{
+	font-family: 'Noto Sans KR', sans-serif;
+	background-color:#071125;
+}
+
+#topnav{
+	background-color: #101C36;
+}
+
+  .b-example-vr {
+	flex-shrink: 0;
+	width: 1.5rem;
+	height: 100vh;
+  }
+
+  .bi {
+	vertical-align: -.125em;
+	fill: currentColor;
+  }
+
+  .nav-scroller {
+	position: relative;
+	z-index: 2;
+	height: 2.75rem;
+	overflow-y: hidden;
+  }
+
+  .nav-scroller .nav {
+	display: flex;
+	flex-wrap: nowrap;
+	padding-bottom: 1rem;
+	margin-top: -1px;
+	overflow-x: auto;
+	text-align: center;
+	white-space: nowrap;
+	-webkit-overflow-scrolling: touch;
+  }
+
+  .btn-bd-primary {
+	--bd-violet-bg: #712cf9;
+	--bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+	--bs-btn-font-weight: 600;
+	--bs-btn-color: var(--bs-white);
+	--bs-btn-bg: var(--bd-violet-bg);
+	--bs-btn-border-color: var(--bd-violet-bg);
+	--bs-btn-hover-color: var(--bs-white);
+	--bs-btn-hover-bg: #6528e0;
+	--bs-btn-hover-border-color: #6528e0;
+	--bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+	--bs-btn-active-color: var(--bs-btn-hover-color);
+	--bs-btn-active-bg: #5a23c8;
+	--bs-btn-active-border-color: #5a23c8;
+  }
+
+  .bd-mode-toggle {
+	z-index: 1500;
+  }
+
+  .bd-mode-toggle .dropdown-menu .active .bi {
+	display: block !important;
+  }
+</style>
+
+
+<!-- Custom styles for this template -->
+<link href="headers.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container-fluid p-0" style="max-width:100%;height:80px;overflow:hidden">
+	<a href="/promotion/promotion_summer.html"><img src="/assets/images/banner/ezwelDG_PlanBr_2023Summer_1920x80.png" class="d-block w-100" alt="..."></a>
+</div>
+<header class="p-3 border-bottom border-secondary border-opacity-25">
+	<div class="container">
+		<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+			<a href="/" class="col-2 mb-2 mb-lg-0 text-white text-decoration-none">
+				<img src="https://directgames.co.kr/assets/images/H2_DG_logo_160x45.png">
+			</a>
+
+			<form class="col-6 px-2 " role="search">
+				<input type="search" class="form-control form-control-dark border-primary border-2 shadow-none rounded-pill" placeholder="게임명 검색" aria-label="Search">
+			</form>
+
+			<div class="col-4 text-end">
+				<div class="d-flex align-items-center justify-content-between px-4">
+					<!--
+					<div class="text-center">
+						<div class="dropdown">
+							<a class="text-reset" href="">
+								<div class="lh-1">
+									<div class="position-relative d-inline-block mb-2">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" class="bi bi-bell fs-4">
+											<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"></path>
+										</svg>
+										<span class="custom-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">1</span>
+									</div>
+									<p class="mb-0 d-none d-xl-block small">알림</p>
+								</div>
+							</a>
+						</div>
+					</div>
+					-->
+					<div class="ms-6 text-center">
+						<a class="text-reset" href="#">
+							<div class="lh-1">
+								<div class="mb-2">
+									<i class="fas fa-sign-in fs-4"></i>
+								</div>
+								<p class="mb-0 d-none d-xl-block small">로그인</p>
+							</div>
+						</a>
+					</div>
+					<div class="ms-6 text-center">
+						<a class="text-reset" href="/mypage/mypage_main.html">
+							<div class="lh-1">
+								<div class="mb-2">
+									<i class="fa-solid fa-user fs-4"></i>
+								</div>
+								<p class="mb-0 d-none d-xl-block small">마이페이지</p>
+							</div>
+						</a>
+					</div>
+					<div class="text-center ms-6">
+						<a class="text-reset" href="">
+							<div class="lh-1">
+								<div class="mb-2">
+									<i class="fa-solid fa-cart-shopping fs-4"></i>
+								</div>
+								<p class="mb-0 d-none d-xl-block small">장바구니</p>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="nav w-100 border-bottom border-secondary border-opacity-25">
+	<div class="container">
+		<ul class="nav d-flex flex-wrap justify-content-between align-items-center border border-black border-bottom-0">
+			<li class="nav-item flex-fill text-center border-black border-end py-1">
+				<a href="/service/service.html" class="nav-link fw-bold font-16 text-light">서비스소개</a>
+			</li>
+			<li class="nav-item flex-fill text-center border-black border-end py-1">
+				<div class="dropdown-center">
+					<a class="nav-link fw-bold font-16 text-light dropdown-toggle" type="button" id="topnav-promotion" role="button" data-bs-toggle="dropdown" aria-expanded="false">할인 프로모션</a>
+					<ul class="dropdown-menu" aria-labelledby="topnav-promotion">
+						<li><a href="/promotion/promotion_ing.html" class="dropdown-item">진행중인 프로모션</a></li>
+						<li><a href="/promotion/time_deal.html" class="dropdown-item">타임딜</a></li>
+					</ul>
+				</div>
+			</li>
+			<li class="nav-item flex-fill text-center border-black border-end py-1"><a href="/board/event.html" class="nav-link fw-bold font-16 text-light">이벤트</a></li>
+			<li class="nav-item flex-fill text-center border-black border-end py-1"><a href="/board/notice.html" class="nav-link fw-bold font-16 text-light">공지사항</a></li>
+			<li class="nav-item flex-fill text-center border-black border-end py-1">
+				<div class="dropdown-center">
+					<a class="nav-link fw-bold font-16 text-light dropdown-toggle" type="button" id="topnav-guide" role="button" data-bs-toggle="dropdown" aria-expanded="false">이용안내</a>
+					<ul class="dropdown-menu" aria-labelledby="topnav-guide">
+						<li><a href="/service/guide.html" class="dropdown-item">다이렉트 게임즈</a></li>
+						<li><a href="/service/guide_steam.html" class="dropdown-item">스팀</a></li>
+						<li><a href="/service/guide_epic.html" class="dropdown-item">에픽 게임즈</a></li>
+						<li><a href="/service/guide_rockstar.html" class="dropdown-item">락스타 게임즈</a></li>
+					</ul>
+				</div>
+			</li>
+			<li class="nav-item flex-fill text-center border-black border-top-0 border-bottom-0 border-start-0 py-1">
+				<a class="nav-link fw-bold font-16 text-light dropdown-toggle" type="button" id="topnav-support" role="button" data-bs-toggle="dropdown" aria-expanded="false">고객지원</a>
+				<ul class="dropdown-menu" aria-labelledby="topnav-support">
+					<li><a href="/board/faq.html" class="dropdown-item">자주묻는질문</a></li>
+					<li><a href="/board/qna.html" class="dropdown-item">문의하기</a></li>
+					<li><a href="/board/dataroom.html" class="dropdown-item">자료실</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+<nav id="topnav" class="navbar navbar-expand-lg navbar-dark border-bottom border-black" aria-label="Ninth navbar example">
+	<div class="container">
+		<div class="collapse navbar-collapse" id="navbarsExample07XL">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="#">모든게임</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Link</a>
+				 </li>
+				<li class="nav-item">
+					<a class="nav-link disabled" aria-disabled="true">Disabled</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" href="#">Action</a></li>
+						<li><a class="dropdown-item" href="#">Another action</a></li>
+						<li><a class="dropdown-item" href="#">Something else here</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

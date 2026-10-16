@@ -1,0 +1,25 @@
+<?php
+	$settle_no = filter_input(INPUT_GET, 'settle_no', FILTER_SANITIZE_STRING);
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<script>
+	function closeWindow() {
+		if (window.opener && !window.opener.closed) {
+			window.opener.location.href = '/order/order_end.html?settle_no=<?=$settle_no?>';
+		} else {
+			localStorage.setItem('toss_payment_complete', Date.now());
+		}
+		window.close();
+	}
+	
+	// 페이지 로드 후 자동으로 실행
+	closeWindow();
+	</script>
+</body>
+</html>

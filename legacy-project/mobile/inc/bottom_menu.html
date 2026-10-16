@@ -1,0 +1,60 @@
+<?
+	if(!$isApp){
+?>
+<div class="section full mt-0" id="appBottomMenu">
+	<div class="appBottomMenu border-top-0">
+	<!-- App Bottom Menu -->
+<!--
+	<a href="/index.php" class="item">
+		<div class="col">
+			<img src="/assets/images/icon/home_icon_white.svg">
+			<strong class="font-10 text-nowrap">홈</strong>
+		</div>
+	</a>
+-->
+	<a href="#" class="headerButton item" data-bs-toggle="modal" data-bs-target="#sidebarPanel">
+		<div class="col">
+			<img src="/assets/images/icon/menu_icon_white.svg">
+			<strong class="font-10 text-nowrap">메뉴</strong>
+		</div>
+	</a>
+
+	<a href="/promotion/promotion_ing_thumb.html" class="item">
+		<div class="col">
+			<img src="/assets/images/icon/discount_icon_white.svg">
+			<strong class="font-10 text-nowrap">할인진행중</strong>
+		</div>
+	</a>
+	<a href="/game/game_thumb.html" class="item">
+		<div class="col">
+			<img src="/assets/images/icon/allgames_icon_white.svg">
+			<strong class="font-10 text-nowrap">모든게임</strong>
+		</div>
+	</a>
+	<a href="/game/goods_thumb.html" class="item">
+		<div class="col">
+			<img src="/assets/images/icon/ps_icon_white.svg">
+			<strong class="font-10 text-nowrap">PS액세서리</strong>
+		</div>
+	</a>
+	<?if($_SESSION['member']['m_id']){?>
+	<a href="/mypage/mypage_main.html" class="item">
+		<div class="col">
+			<img src="/assets/images/icon/user-icon_white.svg">
+			<strong class="font-10 text-nowrap">마이페이지</strong>
+		</div>
+	</a>
+	<?}else{?>
+	<a href="/member/join_step1.html" class="item">
+		<div class="col">
+			<img src="/assets/images/icon/user-add_icon_white.svg">
+			<strong class="font-10 text-nowrap">회원가입</strong>
+		</div>
+	</a>
+	<?}?>
+</div>
+<!-- * App Bottom Menu -->
+</div>
+<?
+	}
+?>

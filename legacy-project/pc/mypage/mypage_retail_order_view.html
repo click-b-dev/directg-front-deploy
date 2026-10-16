@@ -1,0 +1,268 @@
+<?
+header("Content-Type:text/html; charset=utf-8"); 
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/lib.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/lib/login_check.php');
+
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+$settle_no = filter_input(INPUT_GET, 'settle_no', FILTER_SANITIZE_STRING);
+
+$page_title = "주문 내역";
+$aside_menu['retail_order'] = "text-primary fw-bold";
+
+$m_no='1023882';
+
+try{
+	$conn_dgkr = new PDO($dsn_dgkr,DGKR_USER,DGKR_PASSWORD);
+	$conn_dgkr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$mypage = new Mypage($conn_dgkr);
+
+	$data = $mypage->getRetailOrder($m_no,$settle_no);
+
+	if($data['step']=="8"||$data['step']=="9"){
+		$log_data = $mypage->getRetailOrderLog($settle_no);
+	}
+	
+	if($data['pg_provider']=="naverpay"){
+		$settlekind="네이버페이 ";
+		$naverpay_data = $mypage->getRetailNaverpayLog($settle_no);
+		
+		$product_name = $naverpay_data['productName'];
+		$card_auth_no = $naverpay_data['cardAuthNo'];
+	} else if ($data['pg_provider']=="kcp"){
+		$kcp_data = $mypage->getRetailKcpLog($settle_no);
+
+		$product_name = $data['goods_nm'];
+		$card_auth_no = $kcp_data['app_no'];
+	} else {
+		$product_name = $data['goods_nm'];
+	}
+
+}catch (PDOException $e){
+	echo 'Error!: '.$e->getMessage();
+	die();
+}
+
+
+?>
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title><?=$page_title?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="" name="description" />
+<meta content="H2interactive" name="author" />
+<!-- App favicon -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header_common.html');?>
+
+</head>
+<body>
+<div class="wrapper overflow-visible">
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/header.html');?>
+	<div class="container my-3 pb-5">
+		<main class="d-grid gap-3" style="grid-template-columns: 240px auto">
+			<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/aside_mypage.html');?>
+			<section id="content" class="content rounded-0">
+
+				<div class="col-12">
+					<table class="table table-bordered table-centered mb-0">
+						<tbody>
+						<tr>
+							<th class="text-center">주문번호</th>
+							<th class="text-center">상품코드</th>
+							<th class="text-center">상품명</th>
+							<th class="text-center">결제금액</th>
+							<?php
+								if($data['reserve_id']){
+							?>
+							<th class="text-center">키확인</th>
+							<?php
+								}
+							?>
+							<th class="text-center">주문상태</th>
+							<th class="text-center">비고</th>
+						</tr>
+						
+						<tr class="">
+							<td class="text-center"><?=$data['settle_no']?></td>
+							<td class="text-center"><?=$data['goods_code']?></td>
+							<td class="text-center"><?=$data['goods_nm']?></td>
+							<td class="text-center" style="white-space:nowrap;"><?=number_format($data['settleprice'])?>원</td>
+							<?php
+								if($data['reserve_id'] && ($data['step']=="2"||$data['step']=="3"||$data['step']=="4"||$data['step']=="5"||$data['step']=="6")){
+							?>
+							<td class="text-center">
+								<?php
+									if($data['is_lic_actv']=="1"){
+								?>
+										<button type="button" class="btn btn-info btn-sm btn_licence_view" data-reserveid="<?=$data['reserve_id']?>" data-assetid="<?=$data['asset_id']?>" data-settleno="<?=$settle_no?>">키확인</button>
+								<?php
+									} else {
+								?>
+										<button type="button" class="btn btn-success btn-sm btn_activate" data-reserveid="<?=$data['reserve_id']?>" data-assetid="<?=$data['asset_id']?>" data-settleno="<?=$settle_no?>">활성화</button>
+								<?php
+									}
+								?>
+							</td>
+							<?php
+								}
+							?>
+							<td class="text-center"><?=$statusText[$data['step']]?></td>
+							<td class="text-center">
+							<?php
+//												if($data['step']!="8"&&$data['step']!="9"&&$data['is_lic_actv']!="1"&&(date('Y-m-d')<date('Y-m-d', strtotime('+7 days', strtotime($data['ord_ymd']))))){
+								if($data['step']!="8"&&$data['step']!="9"&&$data['is_lic_actv']!="1"){
+							?>
+								<button type="button" class="btn btn-danger btn-sm btn_order_cancel" data-toggle="modal" data-target="#orderCancelModal" data-todo="주문취소요청" data-settleno="<?=$settle_no?>" data-actv="<?=$data['is_lic_actv']?>" data-status="<?=$data['step']?>">주문취소</button>
+							<?php
+								}
+							?>
+							</td>
+						</tr>
+						<tr>
+							<th class="text-center align-middle" rowspan="3">배송 정보</th>
+							<td colspan="<?=$data['reserve_id']?'5':'4'?>">
+								(<?=$data['zipcode']?>) <?=$data['address']?> <?=$data['address_detail']?> <?=$data['name']?>
+							</td>
+							<td class="text-center">
+								<? if($data['step']=="2"){?>
+								<button type="button" class="btn btn-warning btn_adddress_edit" data-toggle="modal" data-target="#addressModal" data-settleno="<?=$data['settle_no']?>" data-delivery="<?=$data['step']?>" data-mode="edit">주소수정</button>
+								<? }else if($data['step']=="4"||$data['step']=="5"){?>
+								CJ대한통운<br><?=$data['tracking_no']?><br>
+								<button type='button' class='btn btn-info btn-sm btn_delivery_search' data-trackingno="<?=$data['tracking_no']?>">배송조회</button>
+								<? }?>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="<?=$data['reserve_id']?'4':'3'?>">배송요청메세지 : <?=$data['message']?></td>
+							<td colspan="2">연락처) <?=$data['phone']?></td>
+						</tr>
+						<?php
+						if($data['reserve_id']){
+						?>
+						<tr>
+							<td colspan="<?=$data['reserve_id']?'6':'5'?>">
+								<span class="text-danger">※ 제품 코드(키) 수신 후에는 단순 변심으로 인한 주문 및 발송 철회 불가합니다.</span><br/>
+							</td>
+						</tr>
+						<?php
+						}
+						?>
+						<?php
+							if($data['step']=="8"||$data['step']=="9"){
+						?>
+							<tr>
+								<th>반송 정보</th>
+								<td colspan="<?=$data['reserve_id']?'6':'5'?>">
+									(<?=$log_data['zipcode']?>) <?=$log_data['address']?> <?=$log_data['address_detail']?> <?=$log_data['name']?> / <?=$log_data['phone']?>
+								</td>
+							</tr>
+						<?php
+							}
+						?>
+						</tbody>
+					</table>
+
+					<div class="card shadow-none rounded-0 my-3 p-3">
+						<p><strong>※ 디지털상품은 활성화(수신)되지 않은 제품 코드(키)에 한하여 구입 후 7일 이내에 주문취소 요청이 가능합니다.</strong></p>
+						<p><strong>※ 실물배송상품은 상품 수령일로부터 7일 이내에 교환/반품 요청이 가능합니다.</strong></p>
+						<p><strong>※ [특전제공] 상품은 개발사/퍼블리셔 정책에 따라 출시 후 예고 없이 특전지급이 중단될 수 있습니다.</strong></p>
+						<p><strong>※ 주문완료 후 가급적 빠른 시일 내에 제품 코드(키)를 활성화 하시고, 플랫폼에 등록해주시기 바랍니다.</strong></p>
+					</div>
+
+					<div class="row">
+						<div class="col-md-7 col_left">
+							<div class="card shadow-none rounded-0" id="order_info">
+								<div class="card-header text-white fw-bold bg-card">
+									주문 정보
+								</div>
+								<div class="card-body">
+									<table class="col-12" style="">
+										<? if($data['pg_provider']=="naverpay"){?>
+										<tr>
+											<th>결제번호</td>
+											<td><?=$naverpay_data["paymentId"]?></td>
+										</tr>
+										<?}?>
+										<tr>
+											<th class="col-3">주문명</td>
+											<td class="col-9"><?=$product_name?></td>
+										</tr>
+										<tr>
+											<th>결제수단</td>
+											<td><?=$settlekind?></td>
+										</tr>
+										<tr>
+											<th>결제금액</td>
+											<td><?=number_format($data['settleprice'])?> 원</td>
+										</tr>
+										<tr>
+											<th>결제일자</td>
+											<td><?=$data['regdt']?></td>
+										</tr>
+										<? if($data['settlekind']=="BANK" && $data['pg_provider']=="kcp"){?>
+										<tr>
+											<th>은행명</td>
+											<td><?=$kcp_data["bank_name"]?></td>
+										</tr>
+										<tr>
+											<th>현금영수증 거래번호</td>
+											<td><?=$kcp_data["cash_no"]?></td>
+										</tr>
+										<tr>
+											<th>현금영수증 승인번호</td>
+											<td><?=$kcp_data["cash_authno"]?></td>
+										</tr>
+										<?}?>
+										<? if($data['settlekind']=="CARD"){?>
+										<tr>
+											<th>카드승인번호</td>
+											<td><?=$card_auth_no?></td>
+										</tr>
+										<?}?>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-5">
+							<div class="card shadow-none rounded-0" id="discount_info">
+								<div class="card-header text-white fw-bold bg-card">
+									할인 정보
+								</div>
+								<div class="card-body">
+									<dl>
+									<? if($data['emoney']>0){?>
+										<dt>포인트할인</dt>
+										<dd><?=number_format($data['emoney'])?> 원</dd>
+										<?}?>
+										<?if($data['coupon']>0){?>
+										<dt>쿠폰할인</dt>
+										<dd><?=number_format($data['coupon'])?> 원</dd>
+										<?}?>
+										<?if($data['cash']>0){?>
+										<dt>캐시할인</dt>
+										<dd><?=number_format($data['cash'])?> 원</dd>
+										<?}?>
+									</dl>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer.html');?>
+</div>
+<!-- END wrapper -->
+
+<!-- bundle -->
+
+<? include_once($_SERVER['DOCUMENT_ROOT'].'/inc/footer_common.html');?>
+
+</body>
+</html>

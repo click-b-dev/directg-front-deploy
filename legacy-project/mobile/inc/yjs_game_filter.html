@@ -1,0 +1,264 @@
+	<div class="section full">
+		<div class="wide-block pt-1 pb-1 px-2 d-flex justify-content-between" id="search_top">
+			<div class="d-flex align-items-center font-12 overflow-auto flex-nowrap" id="search_label">
+				<?php
+					foreach($search_label as $search_label2){
+						foreach($search_label2 as $key=>$value){
+							switch($value){
+								case "G0001":
+									$label_text="액션";
+								break;
+								case "G0002":
+									$label_text="어드벤처";
+								break;
+								case "G0003":
+									$label_text="RPG";
+								break;
+								case "G0004":
+									$label_text="전략";
+								break;
+								case "G0005":
+									$label_text="시뮬레이션";
+								break;
+								case "G0006":
+									$label_text="스포츠";
+								break;
+								case "G0007":
+									$label_text="캐주얼";
+								break;
+								case "G0010":
+									$label_text="레이싱";
+								break;
+								case "G0008":
+									$label_text="인디";
+								break;
+								case "G0009":
+									$label_text="앞서 해보기";
+								break;
+								default :
+									$label_text=$value;
+								break;
+							}
+				?>
+						<span class="search-label rounded-2 ms-1 flex-shrink-0"> <?=$label_text?> <img src="/assets/images/icon/cancel.svg" class="fs-1" data-label-key="<?=$key?>"></span>
+				<?php
+						}
+					}
+				?>
+			</div>
+			
+			<div class="d-flex align-items-center font-12 text-nowrap ms-1">
+				<button class="btn btn-outline-clight text-dark option_btn fs-6" data-bs-toggle="offcanvas" href="#search_option" role="button" aria-controls="search_option">옵션 검색 <img src="/assets/images/icon/gear.svg" style="margin-left:0.25rem;"></button>
+			</div>
+
+
+			<div class="offcanvas offcanvas-bottom" tabindex="-1" id="search_option" aria-labelledby="offcanvasSearchLabel" data-bs-backdrop="true">
+				<div class="offcanvas-header justify-content-center">
+					<h5 class="offcanvas-title fw-500" id="offcanvasSearchLabel">옵션 검색</h5>
+					<button type="button" class="btn-close position-absolute end-0 me-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+				</div>
+				<form method="get" action="<?=$_SERVER['PHP_SELF']?>" class="d-flex flex-column mb-0 overflow-hidden" style="flex: 1;">
+				<?php
+					if($idx){
+				?>
+					<input type="hidden" name="idx" id="idx" value="<?=$idx?>">
+				<?php
+					}
+				?>
+					<div class="offcanvas-body pt-2">
+						<div class="mb-30">
+							<div class="text-secondary fs-13">검색필터</div>
+							<div class="">
+								<input type="checkbox" class="btn-check" id="is_preorder" name="is_preorder" value="Y" <?=$checked['is_preorder'][$is_preorder]?>>
+								<label class="btn rounded-5 my-1" for="is_preorder">예약구매</label>
+								<input type="checkbox" class="btn-check" id="is_bonus" name="is_bonus" value="Y" <?=$checked['is_bonus'][$is_bonus]?>>
+								<label class="btn rounded-5 my-1" for="is_bonus">특전</label>
+								<input type="checkbox" class="btn-check is_promotion <?=$aside['promotion']!="false"?'':'d-none'?>" id="is_promotion" name="is_promotion" value="Y" <?=$checked['is_promotion'][$is_promotion]?>>
+								<label class="btn rounded-5 my-1 <?=$aside['promotion']!="false"?'':'d-none'?>" for="is_promotion">프로모션</label>
+								<input type="checkbox" class="btn-check is_soldout" id="is_soldout" name="is_soldout" value="Y" <?=$checked['is_soldout'][$is_soldout]?>>
+								<label class="btn rounded-5 my-1" for="is_soldout">품절상품 제외</label>
+							</div>
+						</div>
+
+						<div class="mb-30 <?=$aside['product_type']!="accessories"?'':'d-none'?>">
+							<div class="text-secondary fs-13 fw-500">상품유형</div>
+							<div class="">
+								<input type="checkbox" class="btn-check" id="game_type_basic" name="game_type_basic" value="basic" <?=$checked['game_type']['basic']?>>
+								<label class="btn rounded-5 my-1" for="game_type_basic">기본게임</label>
+								<input type="checkbox" class="btn-check" id="game_type_edition" name="game_type_edition" value="edition" <?=$checked['game_type']['edition']?>>
+								<label class="btn rounded-5 my-1" for="game_type_edition">에디션</label>
+								<input type="checkbox" class="btn-check" id="game_type_dlc" name="game_type_dlc" value="dlc" <?=$checked['game_type']['dlc']?>>
+								<label class="btn rounded-5 my-1" for="game_type_dlc">DLC</label>
+								<input type="checkbox" class="btn-check" id="game_type_music" name="game_type_music" value="music" <?=$checked['game_type']['music']?>>
+								<label class="btn rounded-5 my-1" for="game_type_music">사운드트랙</label>
+								<input type="checkbox" class="btn-check" id="game_type_bundle" name="game_type_bundle" value="bundle" <?=$checked['game_type']['bundle']?>>
+								<label class="btn rounded-5 my-1" for="game_type_bundle">번들</label>
+							</div>
+						</div>
+
+						<div class="mb-30 <?=$aside['platform']!="false"?'':'d-none'?>">
+							<div class="text-secondary fs-13 fw-500">플랫폼</div>
+							<div class="">
+								<input type="hidden" id="platform" name="platform" value="<?=$platform?>">
+								<input type="checkbox" class="btn-check" id="platform_1" name="platform_1" value="1" <?=$checked['platform']['1']?>>
+								<label class="btn rounded-5 my-1" for="platform_1">Steam</label>
+								<input type="checkbox" class="btn-check" id="platform_34" name="platform_34" value="34" <?=$checked['platform']['34']?>>
+								<label class="btn rounded-5 my-1" for="platform_34">Epic Games</label>
+								<input type="checkbox" class="btn-check" id="platform_35" name="platform_35" value="35" <?=$checked['platform']['35']?>>
+								<label class="btn rounded-5 my-1" for="platform_35">Rockstar Games</label>
+							</div>
+						</div>
+
+						<div class="mb-30 <?=$aside['korean']!="false"?'':'d-none'?>">
+							<div class="text-secondary fs-13 fw-500">한국어지원</div>
+							<div class="">
+								<input type="checkbox" class="btn-check" id="interface_korean" name="interface_korean" value="Y" <?=$checked['interface_korean'][$interface_korean]?>>
+								<label class="btn rounded-5 my-1" for="interface_korean">자막 한국어지원</label>
+								<input type="checkbox" class="btn-check" id="spoken_korean" name="spoken_korean" value="Y" <?=$checked['spoken_korean'][$spoken_korean]?>>
+								<label class="btn rounded-5 my-1" for="spoken_korean">음성 한국어지원</label>
+								<input type="checkbox" class="btn-check" id="exclusive_korean" name="exclusive_korean" value="Y" <?=$checked['exclusive_korean'][$exclusive_korean]?>>
+								<label class="btn rounded-5 my-1" for="exclusive_korean">독점 한국어지원</label>
+							</div>
+						</div>
+
+						<div class="mb-30 <?=$aside['genre']!="false"?'':'d-none'?>">
+							<div class="text-secondary fs-13 fw-500">장르</div>
+							<div class="">
+								<input type="hidden" id="genre_code" name="genre_code" value="<?=$genre_code?>">
+								<input type="checkbox" class="btn-check" id="genre_code_1" name="genre_code_1" value="G0001" <?=$checked['genre_code']['G0001']?>>
+								<label class="btn rounded-5 my-1" for="genre_code_1">액션</label>
+								<input type="checkbox" class="btn-check" id="genre_code_2" name="genre_code_2" value="G0002" <?=$checked['genre_code']['G0002']?>>
+								<label class="btn rounded-5 my-1" for="genre_code_2">어드벤처</label>
+								<input type="checkbox" class="btn-check" id="genre_code_3" name="genre_code_3" value="G0003" <?=$checked['genre_code']['G0003']?>>
+								<label class="btn rounded-5 my-1" for="genre_code_3">RPG</label>
+								<input type="checkbox" class="btn-check" id="genre_code_4" name="genre_code_4" value="G0004" <?=$checked['genre_code']['G0004']?>>
+								<label class="btn rounded-5 my-1" for="genre_code_4">전략</label>
+								<input type="checkbox" class="btn-check" id="genre_code_5" name="genre_code_5" value="G0005" <?=$checked['genre_code']['G0005']?>>
+								<label class="btn rounded-5 my-1" for="genre_code_5">시뮬레이션</label>
+								<input type="checkbox" class="btn-check" id="genre_code_6" name="genre_code_6" value="G0006" <?=$checked['genre_code']['G0006']?>>
+								<label class="btn rounded-5 my-1" for="genre_code_6">스포츠</label>
+								<input type="checkbox" class="btn-check" id="genre_code_7" name="genre_code_7" value="G0007" <?=$checked['genre_code']['G0007']?>>
+								<label class="btn rounded-5 my-1" for="genre_code_7">캐주얼</label>
+								<input type="checkbox" class="btn-check" id="genre_code_10" name="genre_code_10" value="G0010" <?=$checked['genre_code']['G0010']?>>
+								<label class="btn rounded-5 my-1" for="genre_code_10">레이싱</label>
+								<input type="checkbox" class="btn-check" id="genre_code_8" name="genre_code_8" value="G0008" <?=$checked['genre_code']['G0008']?>>
+								<label class="btn rounded-5 my-1" for="genre_code_8">인디</label>
+								<input type="checkbox" class="btn-check" id="genre_code_9" name="genre_code_9" value="G0009" <?=$checked['genre_code']['G0009']?>>
+								<label class="btn rounded-5 my-1" for="genre_code_9">앞서 해보기</label>
+							</div>
+						</div>
+						
+						<div class="mb-3 <?=$aside['cost']!="false"?'':'d-none'?>">
+							<div class="text-secondary fs-13 fw-500">가격</div>
+							<div class="d-flex align-items-center gap-2">
+								<div class="position-relative">
+									<input type="number" class="form-control pe-5" name="min_price" id="min_price" value="<?=$min_price?>">
+									<span class="price_addon">원</span>
+								</div>
+								<span class="px-1 text-white">-</span>
+								<div class="position-relative">
+									<input type="number" class="form-control pe-5" name="max_price" id="max_price" value="<?=$max_price?>">
+									<span class="price_addon">원</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="offcanvas-tail d-flex pb-2 border-top border-light">
+						<div class="me-1">
+							<button type="button" class="btn btn-reset flex-column text-dark btn-outline-clight" id="option_reset" name="option_reset">
+								<img src="/assets/images/icon/rotate.svg">
+								<span class="fs-6 text-nowrap">초기화</span>
+							</button>
+						</div>
+						<div class="ms-1 w-100">
+							<button type="submit" class="btn btn-cprimary form-control fs-4 border-0">검색</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+
+		<div class="wide-block pe-0">
+			<div class="d-flex justify-content-between align-items-center font-12">
+				<div class="d-flex justify-content-between">
+					<span class="fs-6">총: <?=number_format($goods_list->total_results)?> 개</span>
+				</div>
+				<div class="d-flex">
+					<div class="d-flex align-self-center me-1" data-bs-toggle="offcanvas" href="#sort_option" role="button" aria-controls="sort_option">
+						<span class="fs-6 pe-none">정렬</span>
+						<img src="/assets/images/icon/sort_icon.svg" class="ms-1 pe-none" style="width:1rem;">
+					</div>
+					<div class="d-flex p-075r border-start border-light <?=$page_type=="list"?"bg-clight":""?>">
+						<a href="<?=$page_name?>_list.html?<?=$_SERVER['QUERY_STRING']?>"><img src="/assets/images/icon/list.svg" class="<?=$page_type=="list"?"svg-on":"opacity-50"?>" style="width:1rem;"></a>
+					</div>
+					<div class="d-flex p-075r border-start border-light <?=$page_type=="thumb"?"bg-clight":""?>">
+						<a href="<?=$page_name?>_thumb.html?<?=$_SERVER['QUERY_STRING']?>"><img src="/assets/images/icon/thumb.svg" class="<?=$page_type=="thumb"?"svg-on":"opacity-50"?>" style="width:1rem;"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="offcanvas offcanvas-bottom" tabindex="-1" id="sort_option" aria-labelledby="offcanvasSortLabel">
+			<div class="offcanvas-header justify-content-center">
+				<h5 class="offcanvas-title" id="offcanvasSortLabel">정렬</h5>
+				<button type="button" class="btn-close position-absolute end-0 me-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<form method="get" action="<?=$_SERVER['PHP_SELF']?>" class="d-flex flex-column mb-0 overflow-hidden" style="flex: 1;">
+				<div class="offcanvas-body pt-2">
+					<span class="text-white">
+						검색필터
+					</span>
+					<div class="mt-2">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="sort" id="sort_1" value="release">
+							<label class="form-check-label w-100 bg-clight rounded-3" for="sort_1">
+								출시일순
+							</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="sort" id="sort_2" value="name">
+							<label class="form-check-label w-100 bg-clight rounded-3" for="sort_2">
+								가나다순
+							</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="sort" id="sort_3" value="name_en">
+							<label class="form-check-label w-100 bg-clight rounded-3" for="sort_3">
+								ABC순
+							</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="sort" id="sort_4" value="pricedown">
+							<label class="form-check-label w-100 bg-clight rounded-3" for="sort_4">
+								낮은가격순
+							</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="sort" id="sort_5" value="priceup">
+							<label class="form-check-label w-100 bg-clight rounded-3" for="sort_5">
+								높은가격순
+							</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="sort" id="sort_6" value="discount">
+							<label class="form-check-label w-100 bg-clight rounded-3" for="sort_6">
+								높은할인율순
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="offcanvas-tail d-flex pb-2 border-top border-light">
+					<div class="me-1">
+						<button type="button" class="btn btn-reset flex-column text-dark btn-outline-clight" id="sort_reset" name="sort_reset">
+							<img src="/assets/images/icon/rotate.svg">
+							<span class="fs-6 text-nowrap">초기화</span>
+						</button>
+					</div>
+					<div class="ms-1 w-100">
+						<button type="submit" class="btn btn-cprimary form-control fs-4 border-0">검색</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
