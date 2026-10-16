@@ -45,6 +45,18 @@
 - **검증 게이트**: 단위 구현 완료 시 parity 보고서를 제시하고 정지한다. `docs/MIGRATION-MAP.md`의 ✅(검증완료)는 **개발자가 legacy와 대조·승인한 뒤에만** 기록하며, 승인 없이 다음 단위를 착수하지 않는다.
 - 이관 진행 상태(legacy 화면 ↔ 타겟 라우트 매핑, 완료/검증 여부)는 `docs/MIGRATION-MAP.md`에서 추적한다. 착수·완료 시 갱신한다.
 
+## Renewal (신규 리뉴얼 어드민)
+
+legacy 동작 동일성 이관과 별개로, Figma 기반 리뉴얼 어드민을 `apps/directg-admin` 안에 **별도 경로로 격리해서** 추가한다. (Figma 파일: `다이렉트 게임즈`, 페이지 `[AD] design`, fileKey `DxqbeoDNTxs5WBpqb25APg`)
+
+- 라우트는 `/renewal/*` 접두사 아래에만 추가한다 (`src/routes/renewal/`).
+- 리뉴얼 UI 코드는 `src/renewal/` 안에만 둔다. 기존 `screens`/`widgets`/`features`와 `layout-shell`은 수정하지 않는다.
+- 기존 코드에서 `src/renewal/`을 import하지 않는다. 리뉴얼에서 기존 `entities`/`shared/api`(API 호출·타입)를 가져다 쓰는 것은 허용한다.
+- 리뉴얼 전용 레이아웃(SNB/GNB)과 스타일/토큰은 `src/renewal/` 안에 둔다. 공유 패키지(`packages/*`)는 리뉴얼 때문에 변경하지 않는다.
+- `src/renewal/**`에 한해 "UI/UX 개선은 범위 밖" 규칙의 예외로, Figma 디자인이 기준이다. 그 외 영역에는 위 Migration 규칙이 그대로 적용된다.
+- 리뉴얼 화면은 MIGRATION-MAP ✅(parity 검증) 대상이 아니다. Figma 프레임 ↔ 화면 매핑은 `docs/renewal/`에 기록한다.
+- 리뉴얼 작업은 `stage`에서 딴 별도 브랜치에서 진행한다. `routeTree.gen.ts` 충돌은 병합 시 재생성으로 해결한다.
+
 ## Commands
 
 ```bash
