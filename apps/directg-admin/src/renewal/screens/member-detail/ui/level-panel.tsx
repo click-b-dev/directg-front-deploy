@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { MEMBER_LEVEL_LABEL, type MemberLevelHistoryItem } from "@entities/member";
+import type { MemberLevelHistoryItem } from "@entities/member";
+import { MEMBER_LEVEL_LABELS } from "@/renewal/entities/member-level";
 import { DataTable, Tag, TableFooter, type DataTableColumn } from "@/renewal/shared/ui";
 import { formatPrice } from "../model/detail";
 import {
@@ -13,7 +14,7 @@ import {
 type LevelPanelProps = { history: MemberLevelHistoryItem[]; email: string };
 
 const levelLabel = (level: number | undefined) =>
-  level === undefined ? "-" : (MEMBER_LEVEL_LABEL[level] ?? "-");
+  level === undefined ? "-" : (MEMBER_LEVEL_LABELS[level] ?? "-");
 
 export const LevelPanel = ({ history, email }: LevelPanelProps) => {
   const [page, setPage] = useState(1);

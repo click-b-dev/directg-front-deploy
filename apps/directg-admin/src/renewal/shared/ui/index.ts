@@ -3,6 +3,7 @@ export type { ButtonProps } from "./button";
 export { TextInput } from "./text-input";
 export { DateInput } from "./date-input";
 export { Select } from "./select";
+export type { SelectOption } from "./select";
 export { RadioGroup } from "./radio-group";
 export type { RadioOption } from "./radio-group";
 export { Chip } from "./chip";

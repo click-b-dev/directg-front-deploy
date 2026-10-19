@@ -18,13 +18,13 @@
 | 4 | 기간 자동 선택 (오늘/7일/14일) | 폼 값만 채움 | — |
 | 5 | 이메일 인증 (Radio) | 인증완료/미인증 | `is_auth` (Y/N) |
 | 6 | 장기 미접속 (Dropdown) | 30/90/180일, 1년 | `old_login` (일수) |
-| 7 | 이메일 수동 인증 (Btn) | 미인증 행에 비활성 버튼 | **API 없음** |
+| 7 | 이메일 수동 인증 (Btn) | 미인증(`status` 5) 행에만 노출, 기존 `apply` API 연결 | `POST /admin/member/apply` — [상세](AD-Member-Detail-EmailAuth.md) |
 | 8 | 상세 (Btn) | legacy `/member/member_view`로 이동(임시) | — |
 
 ## 백엔드/기획 확인 필요
 
-1. **목록 응답에 이메일 인증 여부 없음** — `MemberListItem`에 `is_auth`가 없어 "이메일 인증" 열은 값이 없으면 `-`로 표시된다. 목록 응답에 `is_auth("Y"|"N")` 추가 필요.
-2. **이메일 수동 인증 API 없음** — 기획 7번(미인증 → 인증으로 변경). 기존 `/admin/member/auth-reset`은 반대 동작(`is_auth=N`)이다. 신규 계약 필요. 버튼은 비활성 상태.
+1. **이메일 인증 상태·수동 승인** — legacy는 `status`(5=미인증, 0=인증완료)로 표현하고, 수동 승인은 기존 `apply` API다. 목록 응답에 `status`가 없어 현재는 임시 조회(`/admin/member/status`)를 쓴다. 자세한 내용과 확인 사항은 [AD-Member-Detail-EmailAuth.md](AD-Member-Detail-EmailAuth.md).
+2. **이메일 인증 필터** — `status` 기준 파라미터가 없어 임시로 `is_auth`로 보낸다(mock에서만 일치).
 3. **페이지당 개수(20개/…)** — 현재 API는 페이지 크기 파라미터가 없다(고정 20). 드롭다운은 비활성.
 4. **회원 등급 목록** — 기획은 "회원 등급 설정(AD-Membership-01)에서 운영자가 정의한 등급"을 제공. 현재는 고정 3등급(`MEMBER_LEVEL_LABEL`).
 5. **휴대폰 번호 검색** — 기획은 "뒤 4자리"로 검색. 서버 `hp` 검색 방식(LIKE 위치) 확인 필요.

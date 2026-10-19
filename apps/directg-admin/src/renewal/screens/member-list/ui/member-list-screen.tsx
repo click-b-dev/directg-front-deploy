@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useMemberList, type MemberListItem, type MemberListSearch } from "@entities/member";
 import {
-  MEMBER_LEVEL_LABEL,
-  useMemberList,
-  type MemberListItem,
-  type MemberListSearch,
-} from "@entities/member";
+  isEmailVerified,
+  useApproveMember,
+  useMemberStatuses,
+  type MemberStatus,
+} from "@/renewal/entities/member-approval";
+import { MEMBER_LEVEL_LABELS, MEMBER_LEVEL_OPTIONS } from "@/renewal/entities/member-level";
 import iconOpenInNew from "@/renewal/assets/icon-open-in-new.svg";
 import {
   Button,
@@ -45,7 +47,17 @@ type MemberRow = MemberListItem & { is_auth?: "Y" | "N" };
 const formatMinutes = (value: string) => value.slice(0, 16);
 
 // Figma `table`: 이름 열만 남는 폭을 차지하고 나머지는 고정 너비다.
-const columns: DataTableColumn<MemberRow>[] = [
+type ColumnContext = {
+  statuses: Record<string, MemberStatus> | undefined;
+  approving: boolean;
+  onApprove: (m_no: number) => void;
+};
+
+const getColumns = ({
+  statuses,
+  approving,
+  onApprove,
+}: ColumnContext): DataTableColumn<MemberRow>[] => [
   {
     key: "name",
     header: "회원 이름 (닉네임)",
@@ -69,7 +81,7 @@ const columns: DataTableColumn<MemberRow>[] = [
     key: "level",
     header: "회원 등급",
     width: "rn:w-140",
-    cell: (member) => MEMBER_LEVEL_LABEL[member.mem_level] ?? "",
+    cell: (member) => MEMBER_LEVEL_LABELS[member.mem_level] ?? "",
   },
   {
     key: "reg",
@@ -87,20 +99,28 @@ const columns: DataTableColumn<MemberRow>[] = [
     key: "auth",
     header: "이메일 인증",
     width: "rn:w-240",
-    cell: (member) => (
-      <span className="rn:inline-flex rn:items-center rn:gap-8">
-        {member.is_auth === "Y" && <Tag tone="success">인증완료</Tag>}
-        {member.is_auth === "N" && (
-          <>
-            <Tag tone="error">미인증</Tag>
-            <Button variant="outline" size="S" disabled title="이메일 수동 인증 API 연동 전">
+    cell: (member) => {
+      const status = statuses?.[String(member.m_no)];
+      if (status === undefined) return "-";
+      return (
+        <span className="rn:inline-flex rn:items-center rn:gap-8">
+          <Tag tone={isEmailVerified(status) ? "success" : "error"}>
+            {isEmailVerified(status) ? "인증완료" : "미인증"}
+          </Tag>
+          {/* 기획: 미인증일 때만 수동승인 노출(상세 화면과 같은 기준·같은 API). */}
+          {!isEmailVerified(status) && (
+            <Button
+              variant="outline"
+              size="S"
+              disabled={approving}
+              onClick={() => onApprove(member.m_no)}
+            >
               수동승인
             </Button>
-          </>
-        )}
-        {member.is_auth === undefined && "-"}
-      </span>
-    ),
+          )}
+        </span>
+      );
+    },
   },
   {
     key: "manage",
@@ -143,6 +163,13 @@ export const MemberListScreen = ({ search }: MemberListScreenProps) => {
   };
 
   const rows = (data?.items ?? []) as MemberRow[];
+  const statuses = useMemberStatuses(rows.map((member) => member.m_no));
+  const approveMember = useApproveMember();
+  const columns = getColumns({
+    statuses: statuses.data,
+    approving: approveMember.isPending,
+    onApprove: (m_no) => approveMember.mutate(m_no),
+  });
   const pagination = data?.pagination;
 
   return (
@@ -157,15 +184,9 @@ export const MemberListScreen = ({ search }: MemberListScreenProps) => {
                   aria-label="검색 대상"
                   rootClassName="rn:w-140"
                   value={form.searchType}
-                  onChange={(event) => patch({ searchType: event.target.value })}
-                >
-                  <option value="">선택</option>
-                  {SEARCH_TYPE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </Select>
+                  options={SEARCH_TYPE_OPTIONS}
+                  onValueChange={(next) => patch({ searchType: next })}
+                />
                 <TextInput
                   aria-label="검색어"
                   className="rn:w-280"
@@ -188,30 +209,18 @@ export const MemberListScreen = ({ search }: MemberListScreenProps) => {
                   aria-label="회원 등급"
                   rootClassName="rn:w-280"
                   value={form.level}
-                  onChange={(event) => patch({ level: event.target.value })}
-                >
-                  <option value="">선택</option>
-                  {Object.entries(MEMBER_LEVEL_LABEL).map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </Select>
+                  options={MEMBER_LEVEL_OPTIONS}
+                  onValueChange={(next) => patch({ level: next })}
+                />
               </FormField>
               <FormField label="장기 미접속">
                 <Select
                   aria-label="장기 미접속"
                   rootClassName="rn:w-280"
                   value={form.oldLogin}
-                  onChange={(event) => patch({ oldLogin: event.target.value })}
-                >
-                  <option value="">선택</option>
-                  {OLD_LOGIN_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </Select>
+                  options={OLD_LOGIN_OPTIONS}
+                  onValueChange={(next) => patch({ oldLogin: next })}
+                />
               </FormField>
             </FormRow>
             <FormRow>
@@ -220,14 +229,9 @@ export const MemberListScreen = ({ search }: MemberListScreenProps) => {
                   aria-label="기간 기준"
                   rootClassName="rn:w-140"
                   value={form.dateType}
-                  onChange={(event) => patch({ dateType: event.target.value as DateType })}
-                >
-                  {DATE_TYPE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </Select>
+                  options={DATE_TYPE_OPTIONS}
+                  onValueChange={(next) => patch({ dateType: next as DateType })}
+                />
                 <DateInput
                   aria-label="시작일"
                   className="rn:w-160"
@@ -300,9 +304,15 @@ export const MemberListScreen = ({ search }: MemberListScreenProps) => {
           )}
           <div className="rn:flex rn:flex-1 rn:justify-end">
             {/* 페이지당 개수: 현재 API는 per_page 파라미터를 받지 않아 고정(20)이다. */}
-            <Select aria-label="페이지당 개수" compact rootClassName="rn:w-100" value="20" disabled>
-              <option value="20">20개</option>
-            </Select>
+            <Select
+              aria-label="페이지당 개수"
+              compact
+              rootClassName="rn:w-100"
+              value="20"
+              options={[{ value: "20", label: "20개" }]}
+              onValueChange={() => undefined}
+              disabled
+            />
           </div>
         </div>
       </Card>

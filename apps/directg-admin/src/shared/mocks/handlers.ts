@@ -37,6 +37,7 @@ import { memberDashboardHandlers } from "./handlers/member-dashboard";
 import { memberHandlers } from "./handlers/member";
 import { memberReviewHandlers } from "@/renewal/mocks/member-review";
 import { memberLockHandlers } from "@/renewal/mocks/member-lock";
+import { memberApprovalHandlers } from "@/renewal/mocks/member-approval";
 import { orderHandlers } from "./handlers/order";
 import { orderDashboardHandlers } from "./handlers/order-dashboard";
 import { chinaHandlers } from "./handlers/china";
@@ -81,6 +82,8 @@ export const handlers: RequestHandler[] = [
   ...eventHandlers,
   ...promotionHandlers,
   ...memberDashboardHandlers,
+  // 리뉴얼 가입 승인 mock은 legacy apply mock보다 먼저 와야 한다.
+  ...memberApprovalHandlers,
   ...memberHandlers,
   ...memberReviewHandlers,
   ...memberLockHandlers,

@@ -32,10 +32,10 @@ export const TableFooter = ({
         compact
         rootClassName="rn:w-100"
         value={String(pageSize)}
+        options={[{ value: String(pageSize), label: `${pageSize}개` }]}
+        onValueChange={() => undefined}
         disabled
-      >
-        <option value={String(pageSize)}>{pageSize}개</option>
-      </Select>
+      />
     </div>
   </div>
 );

@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
-  MEMBER_LEVEL_LABEL,
   SNS_TYPE_BADGE,
   useLeaveMember,
   useMemberView,
   type MemberViewInfo,
 } from "@entities/member";
+import {
+  isEmailVerified,
+  useApproveMember,
+  useMemberStatuses,
+} from "@/renewal/entities/member-approval";
 import { useMemberLock, useSetMemberLock } from "@/renewal/entities/member-lock";
+import { MEMBER_LEVEL_LABELS } from "@/renewal/entities/member-level";
 import iconBack from "@/renewal/assets/icon-back.svg";
 import iconArrowRight from "@/renewal/assets/icon-arrow-right.svg";
 import {
@@ -46,6 +51,8 @@ export const MemberDetailScreen = ({ m_no }: MemberDetailScreenProps) => {
   const [lockOpen, setLockOpen] = useState(false);
   const lock = useMemberLock(m_no);
   const setLock = useSetMemberLock(m_no);
+  const statuses = useMemberStatuses(Number(m_no) ? [Number(m_no)] : []);
+  const approveMember = useApproveMember();
 
   if (!data) {
     return (
@@ -62,6 +69,7 @@ export const MemberDetailScreen = ({ m_no }: MemberDetailScreenProps) => {
   }
 
   const { member, order_stats: stats } = data;
+  const memberStatus = statuses.data?.[String(member.m_no)];
 
   // legacy member_proc.php mode=leave — 성공하면 목록으로 돌아간다.
   const handleLeave = () => {
@@ -82,7 +90,7 @@ export const MemberDetailScreen = ({ m_no }: MemberDetailScreenProps) => {
             <img src={iconBack} alt="" width={24} height={24} />
           </Link>
           <p className="rn:text-body1 rn:font-semibold rn:text-ink">{member.name}</p>
-          <Tag tone="info">{MEMBER_LEVEL_LABEL[member.mem_level] ?? ""}</Tag>
+          <Tag tone="info">{MEMBER_LEVEL_LABELS[member.mem_level] ?? ""}</Tag>
           <div className="rn:flex rn:flex-1 rn:items-center rn:justify-end rn:gap-8">
             <Button tone="inverse" variant="outline" size="S">
               APP 알림 발송
@@ -154,7 +162,25 @@ export const MemberDetailScreen = ({ m_no }: MemberDetailScreenProps) => {
                 {member.is_auth === "Y" ? "인증완료" : "미인증"}
               </Tag>
             </FormField>
-            <FormField label="이메일">{member.email}</FormField>
+            <FormField label="이메일">
+              {member.email}
+              {memberStatus !== undefined && (
+                <Tag tone={isEmailVerified(memberStatus) ? "success" : "error"}>
+                  {isEmailVerified(memberStatus) ? "인증완료" : "미인증"}
+                </Tag>
+              )}
+              {/* 기획: 미인증일 때만 노출. 누르면 사용자가 직접 인증하지 않아도 인증완료로 바뀐다. */}
+              {memberStatus !== undefined && !isEmailVerified(memberStatus) && (
+                <Button
+                  variant="outline"
+                  size="S"
+                  disabled={approveMember.isPending}
+                  onClick={() => approveMember.mutate(member.m_no)}
+                >
+                  수동승인
+                </Button>
+              )}
+            </FormField>
           </FormRow>
           <FormRow>
             <FormField label="소셜 연동">{snsLabel(member)}</FormField>
