@@ -35,7 +35,7 @@ const getMinTableWidth = <T,>(columns: DataTableColumn<T>[]) =>
 // Figma `table`: TH h40(page 배경, radius 8, 가운데 정렬) · TD h56(아래 테두리) · 셀 px12 · body3
 const TH =
   "rn:h-40 rn:bg-page rn:px-12 rn:text-center rn:whitespace-nowrap rn:text-body3 rn:font-medium rn:text-ink-2 rn:first:rounded-l-8 rn:last:rounded-r-8";
-const TD = "rn:border-b rn:border-solid rn:border-line rn:px-12 rn:text-body3 rn:text-ink";
+const TD = "rn:border-b rn:border-solid rn:border-line rn:px-12 rn:text-body3";
 
 export const DataTable = <T,>({
   columns,
@@ -45,7 +45,10 @@ export const DataTable = <T,>({
   rowHeight = "rn:h-56",
 }: DataTableProps<T>) => (
   <div className="rn:w-full rn:overflow-x-auto">
-    <table className="rn:w-full rn:table-fixed" style={{ minWidth: getMinTableWidth(columns) }}>
+    <table
+      className="rn:w-full rn:table-fixed rn:text-ink"
+      style={{ minWidth: getMinTableWidth(columns) }}
+    >
       <colgroup>
         {columns.map((column) => (
           <col key={column.key} className={column.width} />

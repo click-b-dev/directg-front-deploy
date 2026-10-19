@@ -79,8 +79,8 @@ const SideNav = () => {
             <p className="rn:text-detail rn:font-medium rn:text-ink-2">{group.label}</p>
             <ul className="rn:flex rn:flex-col rn:gap-4">
               {group.items.map((item) => {
-                const prefix = item.activePrefix ?? item.to;
-                const active = prefix !== undefined && pathname.startsWith(prefix);
+                const prefixes = item.activePrefixes ?? (item.to ? [item.to] : []);
+                const active = prefixes.some((prefix) => pathname.startsWith(prefix));
                 const className = cx(
                   "rn:flex rn:h-36 rn:items-center rn:rounded-8 rn:text-body2",
                   active ? "rn:font-semibold rn:text-brand" : "rn:font-regular rn:text-ink",

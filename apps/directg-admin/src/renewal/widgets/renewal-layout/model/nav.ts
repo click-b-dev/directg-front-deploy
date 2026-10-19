@@ -1,9 +1,9 @@
 // Figma `회원_회원내역` GNB(Tab) / SNB. `to`가 없는 항목은 아직 리뉴얼 라우트가 없는 메뉴다.
 export type NavItem = {
   label: string;
-  to?: "/renewal/member/list";
+  to?: "/renewal/member/list" | "/renewal/member/grade";
   /** 이 접두사로 시작하는 경로에서도 활성으로 표시한다(상세 화면 등). */
-  activePrefix?: string;
+  activePrefixes?: string[];
 };
 
 export const TOP_MENU: NavItem[] = [
@@ -29,8 +29,12 @@ export const SIDE_MENU: SideMenuGroup[] = [
   {
     label: "회원",
     items: [
-      { label: "회원 내역", to: "/renewal/member/list", activePrefix: "/renewal/member" },
-      { label: "회원 등급 설정" },
+      {
+        label: "회원 내역",
+        to: "/renewal/member/list",
+        activePrefixes: ["/renewal/member/list", "/renewal/member/detail"],
+      },
+      { label: "회원 등급 설정", to: "/renewal/member/grade" },
     ],
   },
 ];

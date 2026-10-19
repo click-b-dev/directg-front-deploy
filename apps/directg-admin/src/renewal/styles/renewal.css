@@ -56,6 +56,8 @@
   --color-error-bg: #fff1f2; /* Color/bg/error */
   --color-success: #56c573; /* Color/text/success */
   --color-success-bg: #edf9f0; /* Color/bg/success */
+  --color-warning: #cfa909; /* Color/text/warning */
+  --color-warning-bg: #fffae6; /* Color/bg/warning */
   --color-ink: #0b1016; /* Color/text/primary, Color/border/inverse */
   --color-ink-2: #69778d; /* Color/text/secondary, Color/icon/secondary */
   --color-ink-3: #aeb8c5; /* Color/text/tertiary */

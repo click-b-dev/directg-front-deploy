@@ -18,6 +18,8 @@ export type ButtonProps = ComponentProps<typeof BaseButton> & {
   rightIcon?: ReactNode;
   /** 아이콘만 있는 정사각 버튼(S=38) */
   iconOnly?: boolean;
+  /** 글자 굵기. 기본은 primary/error=SemiBold, inverse=Medium(Figma 기본값). 인스턴스가 덮어쓴 경우에만 지정 */
+  weight?: "medium" | "semibold";
 };
 
 const SIZE: Record<Size, string> = {
@@ -43,20 +45,23 @@ const SHAPE: Record<Shape, string> = {
 // primary = SemiBold, inverse = Medium
 const TONE: Record<Tone, Record<Variant, string>> = {
   primary: {
-    filled: "rn:border-primary rn:bg-primary rn:font-semibold rn:text-surface",
-    outline: "rn:border-primary rn:bg-surface rn:font-semibold rn:text-brand",
+    filled: "rn:border-primary rn:bg-primary  rn:text-surface",
+    outline: "rn:border-primary rn:bg-surface  rn:text-brand",
   },
   error: {
-    filled: "rn:border-error rn:bg-error rn:font-semibold rn:text-surface",
-    outline: "rn:border-error rn:bg-surface rn:font-semibold rn:text-error",
+    filled: "rn:border-error rn:bg-error  rn:text-surface",
+    outline: "rn:border-error rn:bg-surface  rn:text-error",
   },
   inverse: {
-    filled: "rn:border-inverse rn:bg-inverse rn:font-medium rn:text-surface",
-    outline: "rn:border-line rn:bg-surface rn:font-medium rn:text-ink",
+    filled: "rn:border-inverse rn:bg-inverse  rn:text-surface",
+    outline: "rn:border-line rn:bg-surface  rn:text-ink",
   },
 };
 
-type StyleOptions = Pick<ButtonProps, "tone" | "variant" | "size" | "shape" | "iconOnly">;
+type StyleOptions = Pick<
+  ButtonProps,
+  "tone" | "variant" | "size" | "shape" | "iconOnly" | "weight"
+>;
 
 // 버튼 모양 클래스 — 다른 헤드리스 트리거(Menu 등)에도 같은 모양을 입히기 위해 분리했다.
 export const getButtonClassName = ({
@@ -65,12 +70,16 @@ export const getButtonClassName = ({
   size = "M",
   shape = "rectangle",
   iconOnly = false,
+  weight,
 }: StyleOptions) =>
   cx(
     "rn:inline-flex rn:items-center rn:justify-center rn:gap-4 rn:border rn:border-solid rn:whitespace-nowrap",
     iconOnly ? ICON_ONLY[size] : cx(SIZE[size], "rn:px-12"),
     SHAPE[shape],
     TONE[tone][variant],
+    (weight ?? (tone === "inverse" ? "medium" : "semibold")) === "medium"
+      ? "rn:font-medium"
+      : "rn:font-semibold",
     "rn:disabled:border-line rn:disabled:bg-page rn:disabled:text-line",
   );
 
@@ -85,12 +94,13 @@ export const Button = ({
   leftIcon,
   rightIcon,
   iconOnly = false,
+  weight,
   className,
   children,
   ...props
 }: ButtonProps) => (
   <BaseButton
-    className={cx(getButtonClassName({ tone, variant, size, shape, iconOnly }), className)}
+    className={cx(getButtonClassName({ tone, variant, size, shape, iconOnly, weight }), className)}
     {...props}
   >
     {leftIcon}
