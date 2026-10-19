@@ -35,6 +35,8 @@ import { eventHandlers } from "./handlers/event";
 import { promotionHandlers } from "./handlers/promotion";
 import { memberDashboardHandlers } from "./handlers/member-dashboard";
 import { memberHandlers } from "./handlers/member";
+import { memberReviewHandlers } from "@/renewal/mocks/member-review";
+import { memberLockHandlers } from "@/renewal/mocks/member-lock";
 import { orderHandlers } from "./handlers/order";
 import { orderDashboardHandlers } from "./handlers/order-dashboard";
 import { chinaHandlers } from "./handlers/china";
@@ -80,6 +82,8 @@ export const handlers: RequestHandler[] = [
   ...promotionHandlers,
   ...memberDashboardHandlers,
   ...memberHandlers,
+  ...memberReviewHandlers,
+  ...memberLockHandlers,
   ...orderHandlers,
   ...orderDashboardHandlers,
   ...chinaHandlers,

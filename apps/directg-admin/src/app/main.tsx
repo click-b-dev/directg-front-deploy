@@ -15,7 +15,8 @@ const root = document.getElementById("root");
 if (!root) throw new Error("Root element not found");
 
 async function enableMocking() {
-  if (!import.meta.env.DEV) return;
+  // 개발 서버, 또는 백엔드 API 준비 전 stage 확인용으로 VITE_ENABLE_MOCKS=true일 때만 mock을 켠다(운영 금지).
+  if (!import.meta.env.DEV && import.meta.env.VITE_ENABLE_MOCKS !== "true") return;
   const { worker } = await import("@shared/mocks/browser");
   await worker.start({ onUnhandledRequest: "bypass" });
 }

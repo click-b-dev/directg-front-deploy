@@ -1,0 +1,142 @@
+/*
+ * 리뉴얼 어드민(/renewal/*) 전용 스타일.
+ *
+ * - legacy Hyper/Bootstrap CSS(index.html에서 전역 로드)와 충돌하지 않도록 Tailwind 유틸리티에
+ *   `rn` 접두사를 쓴다 (예: `rn:flex`, `rn:bg-surface`). preflight(전역 reset)는 로드하지 않는다.
+ * - 토큰 값은 Figma 컴포넌트 파일(`Admin` 섹션, node 29489:3300)의 변수(get_variable_defs)다.
+ *   주석의 이름이 Figma 변수명이다. (design context가 내놓는 fallback 색은 실제 값과 달라 사용하지 않는다)
+ */
+@import "tailwindcss/utilities.css" source(none);
+@source "../";
+
+@theme prefix(rn) static {
+  --spacing: 1px; /* spacing/N → rn:p-12 = 12px */
+
+  --font-sans: Pretendard, "Noto Sans KR", sans-serif; /* font/family/KR */
+  --font-weight-regular: 400; /* font/weight/R */
+  --font-weight-medium: 500; /* font/weight/M */
+  --font-weight-semibold: 600; /* font/weight/SB */
+  --font-weight-bold: 700; /* font/weight/B */
+
+  --text-btn2: 16px; /* font/size/Button/btn2 */
+  --text-btn2--line-height: 1.4;
+  --text-btn3: 14px; /* font/size/Button/Btn3 */
+  --text-btn3--line-height: 1.4;
+  --text-body1: 18px; /* font/size/Body/body1 */
+  --text-body1--line-height: 1.4;
+  --text-body2: 16px; /* font/size/Body/body2 */
+  --text-body2--line-height: 1.4;
+  --text-body3: 14px; /* font/size/Body/body3 */
+  --text-body3--line-height: 1.4;
+  --text-title3: 20px; /* font/size/Title/T3 */
+  --text-title3--line-height: 1.4;
+  --text-detail: 12px; /* font/size/Detail/detail */
+  --text-detail--line-height: 1.4;
+
+  --radius-0: 0;
+  --radius-4: 4px; /* radius/4 */
+  --radius-8: 8px; /* radius/8 */
+  --radius-12: 12px; /* radius/12 */
+  --radius-16: 16px; /* radius/16 */
+  --radius-40: 40px; /* radius/40 */
+  --radius-circle: 9999px; /* radius/circle */
+
+  --shadow-card: 0 2px 16px 0 rgba(0, 0, 0, 0.04); /* 카드(con-wrap) 그림자 */
+  --shadow-float: 0 2px 6px 0 rgba(0, 0, 0, 0.12); /* 드롭다운/툴팁 그림자 */
+
+  --color-surface: #ffffff; /* Color/bg/surface */
+  --color-page: #f5f7fa; /* Color/bg/bg, Color/bg/disabled */
+  --color-sub: #e7ebf0; /* Color/bg/sub, Color/icon/sub */
+  --color-inverse: #111820; /* Color/bg/inverse */
+  --color-primary: #0c7ced; /* Color/bg/action/primary, Color/border/action/primary */
+  --color-primary-hover: #8dceff; /* Color/bg/action/primary-hover */
+  --color-brand: #0868d1; /* Color/text/brand, Color/text/action/primary, Color/border/brand */
+  --color-info: #eef7ff; /* Color/bg/info */
+  --color-error: #fa6672; /* Color/bg/action/error, Color/text/error */
+  --color-error-bg: #fff1f2; /* Color/bg/error */
+  --color-success: #56c573; /* Color/text/success */
+  --color-success-bg: #edf9f0; /* Color/bg/success */
+  --color-ink: #0b1016; /* Color/text/primary, Color/border/inverse */
+  --color-ink-2: #69778d; /* Color/text/secondary, Color/icon/secondary */
+  --color-ink-3: #aeb8c5; /* Color/text/tertiary */
+  --color-icon-3: #8b98aa; /* Color/icon/tertiary */
+  --color-line: #cfd6df; /* Color/border/primary, Color/border/disabled, Color/text/disabled */
+  --color-line-2: #8b98aa; /* Color/border/secondary */
+  --color-dim: rgba(0, 0, 0, 0.4); /* 모달 딤(Background) */
+}
+
+/*
+ * 리뉴얼 루트 — legacy 전역 스타일(Bootstrap reboot 등)이 새어 들어오는 것을 막는 최소 reset.
+ * 모든 규칙을 :where()로 감싸 우선순위를 0으로 둔다 — 그래야 rn: 유틸리티가 항상 이긴다.
+ * (Tailwind preflight를 쓰지 않으므로 필요한 부분만 직접 둔다.)
+ */
+:where(.rn-root) {
+  min-height: 100vh;
+  background: var(--rn-color-page);
+  color: var(--rn-color-ink);
+  font-family: var(--rn-font-sans);
+  font-size: 16px;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+
+:where(.rn-root, .rn-root *, .rn-root *::before, .rn-root *::after) {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0 solid;
+}
+
+:where(.rn-root) :where(button, input, select, textarea) {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+:where(.rn-root) button {
+  background: none;
+  cursor: pointer;
+}
+
+:where(.rn-root) button:disabled {
+  cursor: not-allowed;
+}
+
+:where(.rn-root) :where(ul, ol) {
+  list-style: none;
+}
+
+/*
+ * legacy Bootstrap은 `p { margin-bottom: 1rem }`, `h1~h6 { margin-bottom: .5rem }`처럼 요소 선택자(0,0,1)로
+ * 여백을 준다. 위의 전체 reset은 (0,0,0)이라 져서, 요소 선택자로 같은 우선순위를 맞춘다
+ * (리뉴얼 CSS가 나중에 로드되므로 동률이면 이긴다). 여백이 필요하면 rn:m-*, rn:gap-*로 준다.
+ */
+:where(.rn-root) p,
+:where(.rn-root) h1,
+:where(.rn-root) h2,
+:where(.rn-root) h3,
+:where(.rn-root) h4,
+:where(.rn-root) h5,
+:where(.rn-root) h6,
+:where(.rn-root) ul,
+:where(.rn-root) ol,
+:where(.rn-root) dl,
+:where(.rn-root) dd,
+:where(.rn-root) figure,
+:where(.rn-root) blockquote {
+  margin: 0;
+}
+
+:where(.rn-root) :where(ul, ol) {
+  padding: 0;
+}
+
+:where(.rn-root) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:where(.rn-root) table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
