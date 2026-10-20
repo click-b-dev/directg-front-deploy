@@ -20,5 +20,5 @@ const windowEnv = readWindowEnv();
 export const env: RuntimeEnv = {
   appName: windowEnv.appName ?? "click-b",
   appPreset: windowEnv.appPreset ?? PROJECT_PRESET,
-  apiBaseUrl: windowEnv.apiBaseUrl ?? "/api",
+  apiBaseUrl: windowEnv.apiBaseUrl ?? import.meta.env.VITE_API_BASE_URL ?? "/api",
 };

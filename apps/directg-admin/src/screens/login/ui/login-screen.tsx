@@ -1,16 +1,14 @@
 import { SubmitEventHandler, useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { adminLogin } from "@entities/admin-auth";
+import {
+  adminLogin,
+  LOGIN_FALLBACK_MESSAGE,
+  toLoginErrorMessage,
+  toSessionRole,
+} from "@entities/admin-auth";
 import { useAuthSession } from "@shared/lib/auth/provider";
 
 // legacy: pc/_Admin_/index.html + login_ps.php (docs/migration/admin/auth/login.md)
-
-// 로그인 실패 error_code → 사용자 메시지 (사용자 승인된 legacy divergence).
-// 문구는 legacy AdminMember::adminLogin의 error_msg 도메인 텍스트를 그대로 사용(선행 공백만 정리).
-const LOGIN_ERROR_MESSAGES: Record<string, string> = {
-  NO_AUTH_CONFIRM: "미승인된 회원입니다.",
-  NOT_FOUND: "존재하지 않는 회원입니다.",
-};
 
 export const LoginScreen = () => {
   const navigate = useNavigate();
@@ -32,34 +30,31 @@ export const LoginScreen = () => {
 
     let result;
     try {
-      result = await adminLogin({ admin_id: adminId, admin_pwd: adminPwd });
-    } catch (error) {
-      // legacy: PDOException 시 "Error!: <메시지>" 출력
-      setErrorText(`Error!: ${error instanceof Error ? error.message : String(error)}`);
+      result = await adminLogin({ loginId: adminId, password: adminPwd });
+    } catch {
+      // 네트워크/5xx 등 envelope 없는 에러 — 내부 메시지는 노출하지 않는다
+      setErrorText(LOGIN_FALLBACK_MESSAGE);
       return;
     }
 
-    if (result.error_code !== "OK" || !result.data) {
-      // 실패 UI: error_code를 사용자 메시지로 매핑(사용자 승인된 legacy divergence).
-      // 문구는 legacy AdminMember::adminLogin의 error_msg 도메인 텍스트(docs/migration/admin/auth/login.md).
-      // 매핑에 없는 코드는 응답 error_msg → 코드 원문 순으로 폴백.
-      setErrorText(
-        LOGIN_ERROR_MESSAGES[result.error_code] ?? result.error_msg ?? result.error_code,
-      );
+    // 401/403: 서버 code를 프론트 메시지로 변환해 표시
+    if (!result.success || !result.content) {
+      setErrorText(toLoginErrorMessage(result.code));
       return;
     }
 
+    const sessionRole = toSessionRole(result.content.role);
     setSession({
-      accessToken: result.data.accessToken,
+      accessToken: result.content.accessToken,
       user: {
-        id: result.data.admin_id,
-        name: result.data.admin_name,
-        role: result.data.admin_level,
+        id: result.content.loginId,
+        name: result.content.name,
+        role: sessionRole,
       },
     });
 
     // legacy login_ps.php:27 — admin_level=="1"(상품뷰어)은 상품 목록, 그 외 대시보드
-    if (result.data.admin_level === "1") {
+    if (sessionRole === "1") {
       navigate({
         to: "/goods/title_list",
         search: {

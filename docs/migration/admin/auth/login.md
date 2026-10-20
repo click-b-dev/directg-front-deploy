@@ -38,31 +38,32 @@
   3. 그 외 → `{error_code: "OK", error_msg: "성공", data}` + `adminUpdate` (`update tbl_admin set ip=:ip, login_date=now()`)
 - ⚠️ **legacy 특성(그대로 이관)**: 행이 없으면 `fetch()`가 `false`라 1번 분기가 먼저 걸린다. 따라서 **미존재 계정·비밀번호 오답 모두 `NO_AUTH_CONFIRM`**이 반환되고, `NOT_FOUND`는 사실상 도달 불가.
 
-## API 계약 (백엔드 전달)
+## API 계약 (실서버 swagger 연동 — 2026-10-20)
 
-### `POST /admin/auth/login`
+> 출처: `https://directg-api.clickb.co.kr/swagger-ui/index.html` (`/v3/api-docs`). 아래가 현행 계약이며, 이전 legacy envelope(`error_code`/`admin_level`) 초안은 폐기했다.
 
-요청:
+### `POST /api/v0/admin/login`
 
-```json
-{ "admin_id": "string(email)", "admin_pwd": "string" }
-```
+요청: `{ "loginId": "string", "password": "string" }`
 
-응답 200 (성공/실패 모두 200, legacy envelope 유지):
+응답 200: `{ "success": true, "code": "...", "message": "...", "content": { "accessToken", "loginId", "name", "role" } }`
 
-```json
-{ "error_code": "OK", "error_msg": "성공",
-  "data": { "admin_id": "...", "admin_name": "...", "admin_level": "99", "accessToken": "..." } }
-```
+- `role`: `MEMBER | ADMIN | SUPER_ADMIN | PUBLISHER | CODE`
+- 실패: HTTP 401 `{code:"UNAUTHORIZED", success:false, content:null}` / 403 `{code:"FORBIDDEN", ...}`.
+- **에러 노출**: 화면은 서버 `message`/`code` 원문을 노출하지 않고 `code`→프론트 메시지로 변환한다 (`entities/admin-auth/lib/login-error-message.ts`).
+  - `UNAUTHORIZED` → "아이디 또는 비밀번호가 올바르지 않습니다."
+  - `FORBIDDEN` → "접근 권한이 없는 계정입니다."
+  - 그 외 code·네트워크/5xx → "로그인에 실패했습니다. 잠시 후 다시 시도해 주세요."
+- 인증: 이후 요청은 `Authorization` 헤더에 JWT(`Bearer`, api-client auth hooks).
+- base URL: `VITE_API_BASE_URL`(예: `https://directg-api.clickb.co.kr/api`), 미설정 시 same-origin `/api`.
 
-```json
-{ "error_code": "NO_AUTH_CONFIRM", "error_msg": " 미승인된 회원입니다." }
-```
+### legacy `admin_level` ↔ `role` 매핑 (임시)
 
-- `error_code`: `OK` | `NO_AUTH_CONFIRM` | `NOT_FOUND` (문자열 원문 유지. `NOT_FOUND`는 legacy상 도달 불가 — 동일 분기 순서를 유지할 것)
-- `admin_level`: 문자열 (`"1"` 상품뷰어 / `"99"` 슈퍼 / 그 외 일반). 프론트 분기가 문자열 비교이므로 숫자로 바꾸지 말 것.
-- **백엔드 책임**: ① `tbl_admin`(dgkr) 조회와 위 분기 순서 재현 ② 성공 시 `ip`, `login_date` 갱신(`adminUpdate` 상당) ③ MySQL `PASSWORD()` 해시 검증 대체(마이그레이션 전략은 백엔드 결정) ④ `accessToken` 발급(legacy PHP 세션의 대체 — 방식은 백엔드 결정, 프론트는 Bearer 전제)
-- 서버측 권한 강제 없음이 legacy 현행(로그인 여부만 검사). RBAC 강화는 별도 결정 사항.
+기존 화면 가드(`use-super-admin`="99", `use-product-viewer`="1")는 legacy 문자열 비교이므로 로그인 시 `toSessionRole`로 변환한다: `SUPER_ADMIN`→`"99"`, 그 외는 role 원문. **상품뷰어(`"1"`)에 대응하는 role은 미확정 — 백엔드 확인 필요.**
+
+### 미등록
+
+- 로그아웃 엔드포인트는 swagger에 없음 → 기존 mock(`/admin/auth/logout`) 유지, 로컬 세션은 항상 파기.
 
 ## 타겟 매핑
 
