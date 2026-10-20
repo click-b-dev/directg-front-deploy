@@ -9,16 +9,17 @@ type Size = "S" | "M" | "L";
 
 export type TextInputProps = Omit<ComponentProps<typeof Input>, "size"> & { size?: Size };
 
+// L(50)은 로그인 등 큰 입력용이라 글자도 18이다.
 const SIZE: Record<Size, string> = {
-  S: "rn:h-38",
-  M: "rn:h-44",
-  L: "rn:h-50",
+  S: "rn:h-38 rn:text-body2",
+  M: "rn:h-44 rn:text-body2",
+  L: "rn:h-50 rn:text-body1",
 };
 
 export const TextInput = ({ size = "S", className, ...props }: TextInputProps) => (
   <Input
     className={cx(
-      "rn:rounded-8 rn:border rn:border-solid rn:border-line rn:bg-surface rn:px-12 rn:py-6 rn:text-body2 rn:text-ink rn:outline-none",
+      "rn:rounded-8 rn:border rn:border-solid rn:border-line rn:bg-surface rn:px-12 rn:py-6 rn:text-ink rn:outline-none",
       "rn:placeholder:text-ink-3 rn:focus:border-line-2 rn:data-[invalid]:border-error",
       "rn:read-only:bg-page rn:disabled:bg-page rn:disabled:text-line",
       SIZE[size],

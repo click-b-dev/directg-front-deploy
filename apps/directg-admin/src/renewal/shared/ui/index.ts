@@ -22,3 +22,4 @@ export { Modal, ConfirmModal } from "./modal";
 export { DataTable } from "./data-table";
 export type { DataTableColumn } from "./data-table";
 export { TableFooter } from "./table-footer";
+export { PasswordInput } from "./password-input";
