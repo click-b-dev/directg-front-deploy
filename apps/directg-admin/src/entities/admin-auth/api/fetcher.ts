@@ -12,9 +12,10 @@ export const adminLogin = async (payload: AdminLoginRequest): Promise<AdminLogin
   try {
     return await apiClient.post<AdminLoginResponse>("/v0/admin/login", payload);
   } catch (error) {
-    const response = (error as { response?: Response } | null)?.response;
+    // ky 2.x는 HTTPError 생성 시 본문을 이미 소비해 error.data에 담는다(response.json() 불가).
+    const { response, data } = (error ?? {}) as { response?: Response; data?: unknown };
     if (response && (response.status === 401 || response.status === 403)) {
-      const body = (await response.json().catch(() => null)) as AdminLoginResponse | null;
+      const body = (data ?? (await response.json().catch(() => null))) as AdminLoginResponse | null;
       if (body && body.success === false) return body;
     }
     throw error;
