@@ -2,7 +2,8 @@ import { useState } from "react";
 import iconOpenInNew from "@/renewal/assets/icon-open-in-new.svg";
 import { useMemberReviews, type MemberReviewItem } from "@/renewal/entities/member-review";
 import { DataTable, TableFooter, Tag, type DataTableColumn } from "@/renewal/shared/ui";
-import { REVIEW_PAGE_SIZE, splitReviewTags } from "../model/review";
+import { PAGE_SIZE_OPTIONS, DEFAULT_PAGE_SIZE } from "@/renewal/shared/lib/pagination";
+import { splitReviewTags } from "../model/review";
 
 type ReviewsPanelProps = { m_no: string };
 
@@ -89,7 +90,8 @@ const columns: DataTableColumn<MemberReviewItem>[] = [
 
 export const ReviewsPanel = ({ m_no }: ReviewsPanelProps) => {
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError } = useMemberReviews(m_no, page);
+  const [perPage, setPerPage] = useState(DEFAULT_PAGE_SIZE);
+  const { data, isLoading, isError } = useMemberReviews(m_no, page, perPage);
 
   const pagination = data?.pagination;
 
@@ -109,11 +111,17 @@ export const ReviewsPanel = ({ m_no }: ReviewsPanelProps) => {
         }
       />
       <TableFooter
-        page={pagination?.current_page ?? 1}
-        totalPages={pagination?.total_pages ?? 1}
-        pageSize={REVIEW_PAGE_SIZE}
-        totalResults={pagination?.total_results ?? 0}
+        // 현재 페이지는 화면 상태(page)가 기준이다(응답의 current_page는 로딩 중 이전 값일 수 있다).
+        page={page}
+        totalPages={pagination?.total_pages ?? page}
+        pageSize={perPage}
+        totalResults={pagination?.total_results ?? page * perPage}
         onPageChange={setPage}
+        pageSizeOptions={PAGE_SIZE_OPTIONS}
+        onPageSizeChange={(size) => {
+          setPerPage(size);
+          setPage(1);
+        }}
       />
     </>
   );

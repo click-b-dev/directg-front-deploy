@@ -1,4 +1,5 @@
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
+import { generatedMembers, memberViewExtras } from "../db/member-seed";
 import { env } from "@shared/config/env";
 import type {
   MemberListItem,
@@ -163,6 +164,9 @@ const members: MemberRow[] = [
     is_auth: "Y",
   },
 ];
+
+// 기존 8명 + 생성 42명 = 50명(앞 20명은 전체 필드 계정). 자세한 내용은 db/member-seed.ts
+members.push(...generatedMembers);
 
 const daysSince = (dateStr: string) => {
   const diff = Date.now() - new Date(dateStr.replace(" ", "T")).getTime();
@@ -593,24 +597,51 @@ const mailLogs: DirectSendMailLogItem[] = [
   },
 ];
 
+// 생성 회원은 포인트/주문/등급 변동 이력을 회원별로 다르게 돌려준다(기존 8명은 고정 응답).
+const buildViewWithSeed = (mNo: string): MemberViewResponse => {
+  const view = buildView(mNo);
+  const extras = memberViewExtras(view.member.m_no);
+  if (!extras) return view;
+  return {
+    ...view,
+    member: { ...view.member, point: extras.point },
+    level_history: extras.level_history,
+    level_history_total: extras.level_history.length,
+    order_stats: extras.order_stats,
+    orders: extras.orders,
+  };
+};
+
 export const memberHandlers = [
-  http.get(api("/admin/member/list"), ({ request }) => {
+  http.get(api("/admin/member/list"), async ({ request }) => {
     const url = new URL(request.url);
     const page = Math.max(1, Number.parseInt(url.searchParams.get("page") || "1", 10) || 1);
+    // 실제 서버처럼 per_page(1~100)를 받는다. 없으면 legacy 기본값(30).
+    const perPage = Math.min(
+      100,
+      Math.max(1, Number.parseInt(url.searchParams.get("per_page") || "", 10) || PER_PAGE),
+    );
     const filtered = sortRows(applyFilters(members, url), url);
     const totalResults = filtered.length;
-    const totalPages = Math.max(1, Math.ceil(totalResults / PER_PAGE));
-    const start = (page - 1) * PER_PAGE;
+    const totalPages = Math.max(1, Math.ceil(totalResults / perPage));
+    const start = (page - 1) * perPage;
+    await delay(250); // 네트워크 지연 — 로딩 상태 확인용
     return HttpResponse.json({
-      items: filtered.slice(start, start + PER_PAGE),
-      pagination: { current_page: page, total_results: totalResults, total_pages: totalPages },
+      // 범위를 벗어난 page는 서버처럼 빈 목록을 돌려준다.
+      items: filtered.slice(start, start + perPage),
+      pagination: {
+        current_page: page,
+        total_results: totalResults,
+        total_pages: totalPages,
+        per_page: perPage,
+      },
       total_all: members.length,
     });
   }),
 
   http.get(api("/admin/member/view"), ({ request }) => {
     const url = new URL(request.url);
-    return HttpResponse.json(buildView(url.searchParams.get("m_no") ?? ""));
+    return HttpResponse.json(buildViewWithSeed(url.searchParams.get("m_no") ?? ""));
   }),
 
   http.get(api("/admin/member/ready"), ({ request }) => {

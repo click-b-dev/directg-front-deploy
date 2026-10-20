@@ -25,7 +25,7 @@
 
 1. **이메일 인증 상태·수동 승인** — legacy는 `status`(5=미인증, 0=인증완료)로 표현하고, 수동 승인은 기존 `apply` API다. 목록 응답에 `status`가 없어 현재는 임시 조회(`/admin/member/status`)를 쓴다. 자세한 내용과 확인 사항은 [AD-Member-Detail-EmailAuth.md](AD-Member-Detail-EmailAuth.md).
 2. **이메일 인증 필터** — `status` 기준 파라미터가 없어 임시로 `is_auth`로 보낸다(mock에서만 일치).
-3. **페이지당 개수(20개/…)** — 현재 API는 페이지 크기 파라미터가 없다(고정 20). 드롭다운은 비활성.
+3. **페이지당 개수** — `GET /admin/member/list`에 `per_page`(20/50/100, 최대 100)를 추가한다(legacy는 30 고정). 응답 `pagination`은 `current_page`, `total_results`, `total_pages`, `per_page`. 페이지 번호 이동·마지막 페이지 이동·총 페이지 수 표시가 필요한 화면이라 커서가 아니라 `page + per_page` 방식이다. 범위를 벗어난 `page`는 빈 목록을 돌려준다. mock도 같은 방식으로 동작하며 250ms 지연을 둔다.
 4. **회원 등급 목록** — 기획은 "회원 등급 설정(AD-Membership-01)에서 운영자가 정의한 등급"을 제공. 현재는 고정 3등급(`MEMBER_LEVEL_LABEL`).
 5. **휴대폰 번호 검색** — 기획은 "뒤 4자리"로 검색. 서버 `hp` 검색 방식(LIKE 위치) 확인 필요.
 6. **기간 기본값** — 기획: 시작일=이번달 1일, 종료일=오늘. 폼에는 기본값을 채우지만, 첫 진입(쿼리 없음)에는 기간 필터를 적용하지 않는다(적용하면 기존 mock 데이터가 모두 제외됨). 조회 버튼을 누르면 적용된다. 기획 의도 확인 필요.

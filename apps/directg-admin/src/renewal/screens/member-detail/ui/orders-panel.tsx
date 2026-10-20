@@ -3,24 +3,21 @@ import { Link } from "@tanstack/react-router";
 import type { MemberOrderItem } from "@entities/member";
 import iconOpenInNew from "@/renewal/assets/icon-open-in-new.svg";
 import { Chip, DataTable, TableFooter, type DataTableColumn } from "@/renewal/shared/ui";
-import {
-  ORDER_FILTERS,
-  ORDER_PAGE_SIZE,
-  filterOrders,
-  formatPrice,
-  type OrderFilter,
-} from "../model/detail";
+import { PAGE_SIZE_OPTIONS, DEFAULT_PAGE_SIZE } from "@/renewal/shared/lib/pagination";
+import { ORDER_FILTERS, filterOrders, formatPrice, type OrderFilter } from "../model/detail";
 
 type OrdersPanelProps = { orders: MemberOrderItem[]; email: string };
 
 export const OrdersPanel = ({ orders, email }: OrdersPanelProps) => {
   const [filter, setFilter] = useState<OrderFilter>("all");
   const [page, setPage] = useState(1);
+  // 주문 내역은 회원 상세 응답에 한 번에 오므로 개수 변경은 클라이언트에서 나눈다.
+  const [perPage, setPerPage] = useState(DEFAULT_PAGE_SIZE);
 
   const filtered = filterOrders(orders, filter);
-  const totalPages = Math.max(1, Math.ceil(filtered.length / ORDER_PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const currentPage = Math.min(page, totalPages);
-  const rows = filtered.slice((currentPage - 1) * ORDER_PAGE_SIZE, currentPage * ORDER_PAGE_SIZE);
+  const rows = filtered.slice((currentPage - 1) * perPage, currentPage * perPage);
 
   const columns: DataTableColumn<MemberOrderItem>[] = [
     { key: "order_date", header: "주문일", width: "rn:w-180", cell: (order) => order.order_date },
@@ -76,9 +73,14 @@ export const OrdersPanel = ({ orders, email }: OrdersPanelProps) => {
       <TableFooter
         page={currentPage}
         totalPages={totalPages}
-        pageSize={ORDER_PAGE_SIZE}
+        pageSize={perPage}
         totalResults={filtered.length}
         onPageChange={setPage}
+        pageSizeOptions={PAGE_SIZE_OPTIONS}
+        onPageSizeChange={(size) => {
+          setPerPage(size);
+          setPage(1);
+        }}
       />
     </>
   );

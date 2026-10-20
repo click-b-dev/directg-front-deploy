@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type { MemberListSearch } from "@entities/member";
+import type { MemberListQuery } from "@/renewal/entities/member-list";
+import { parsePageSize } from "@/renewal/shared/lib/pagination";
 import { EMPTY_SEARCH, MemberListScreen } from "@/renewal/screens/member-list";
 
 // Figma AD-Member-List-01 (회원 내역) → /renewal/member/list
@@ -11,8 +12,9 @@ const MemberListRoute = () => {
 };
 
 export const Route = createFileRoute("/renewal/member/list")({
-  validateSearch: (search: Record<string, unknown>): Partial<MemberListSearch> => ({
+  validateSearch: (search: Record<string, unknown>): Partial<MemberListQuery> => ({
     page: Number(search.page) || 1,
+    per_page: parsePageSize(search.per_page),
     search_type: str(search.search_type),
     search_value: str(search.search_value),
     member_level: Number(search.member_level) || 0,

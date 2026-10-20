@@ -1,5 +1,5 @@
 import { Button, FormField, FormRow, FormTable, Modal } from "@/renewal/shared/ui";
-import type { AccountMergeDetail, MergedAccount } from "../model/merge";
+import type { AccountMergeDetail, MergedAccount } from "@/renewal/entities/member-profile";
 
 const text = (value: string | number | undefined, suffix = "") =>
   value === undefined || value === ""

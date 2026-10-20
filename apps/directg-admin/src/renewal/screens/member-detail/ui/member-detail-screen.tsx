@@ -12,6 +12,7 @@ import {
   useMemberStatuses,
 } from "@/renewal/entities/member-approval";
 import { useMemberLock, useSetMemberLock } from "@/renewal/entities/member-lock";
+import { useMemberProfile } from "@/renewal/entities/member-profile";
 import { MEMBER_LEVEL_LABELS } from "@/renewal/entities/member-level";
 import iconBack from "@/renewal/assets/icon-back.svg";
 import iconArrowRight from "@/renewal/assets/icon-arrow-right.svg";
@@ -39,6 +40,13 @@ import { ReviewsPanel } from "./reviews-panel";
 const snsLabel = (member: MemberViewInfo) =>
   SNS_TYPE_BADGE[member.sns_type.toLowerCase()]?.label ?? "-";
 
+// 기획: 정책 동의 3항목(이용약관 / 개인정보 수집 및 이용 / 혜택 안내 및 마케팅 제공)
+const POLICY_LABELS = [
+  { key: "terms", label: "이용약관" },
+  { key: "privacy", label: "개인정보 수집 및 이용" },
+  { key: "marketing", label: "혜택 안내 및 마케팅 제공" },
+] as const;
+
 type MemberDetailScreenProps = { m_no: string };
 
 export const MemberDetailScreen = ({ m_no }: MemberDetailScreenProps) => {
@@ -53,6 +61,8 @@ export const MemberDetailScreen = ({ m_no }: MemberDetailScreenProps) => {
   const setLock = useSetMemberLock(m_no);
   const statuses = useMemberStatuses(Number(m_no) ? [Number(m_no)] : []);
   const approveMember = useApproveMember();
+  const profileQuery = useMemberProfile(m_no);
+  const profile = profileQuery.data;
 
   if (!data) {
     return (
@@ -153,24 +163,26 @@ export const MemberDetailScreen = ({ m_no }: MemberDetailScreenProps) => {
           </FormRow>
           <FormRow>
             <FormField label="생년월일">{formatBirthDay(member.birth_day)}</FormField>
-            <FormField label="성별">-</FormField>
+            <FormField label="성별">{profile?.gender ?? "-"}</FormField>
           </FormRow>
           <FormRow>
             <FormField label="휴대폰 번호">
-              {member.hp}
-              <Tag tone={member.is_auth === "Y" ? "success" : "error"}>
-                {member.is_auth === "Y" ? "인증완료" : "미인증"}
-              </Tag>
+              {member.hp || "-"}
+              {member.hp && (
+                <Tag tone={member.is_auth === "Y" ? "success" : "error"}>
+                  {member.is_auth === "Y" ? "인증완료" : "미인증"}
+                </Tag>
+              )}
             </FormField>
             <FormField label="이메일">
-              {member.email}
-              {memberStatus !== undefined && (
+              {member.email || "-"}
+              {member.email && memberStatus !== undefined && (
                 <Tag tone={isEmailVerified(memberStatus) ? "success" : "error"}>
                   {isEmailVerified(memberStatus) ? "인증완료" : "미인증"}
                 </Tag>
               )}
               {/* 기획: 미인증일 때만 노출. 누르면 사용자가 직접 인증하지 않아도 인증완료로 바뀐다. */}
-              {memberStatus !== undefined && !isEmailVerified(memberStatus) && (
+              {member.email && memberStatus !== undefined && !isEmailVerified(memberStatus) && (
                 <Button
                   variant="outline"
                   size="S"
@@ -183,25 +195,54 @@ export const MemberDetailScreen = ({ m_no }: MemberDetailScreenProps) => {
             </FormField>
           </FormRow>
           <FormRow>
-            <FormField label="소셜 연동">{snsLabel(member)}</FormField>
-            <FormField label="Steam 연동">-</FormField>
+            <FormField label="소셜 연동">
+              {profile && profile.socials.length > 0
+                ? profile.socials.join(", ")
+                : snsLabel(member)}
+            </FormField>
+            <FormField label="Steam 연동">
+              {profile?.steam_linked == null ? "-" : profile.steam_linked ? "연동완료" : "미연동"}
+            </FormField>
           </FormRow>
           <FormRow>
             <FormField label="최근 접속일">{member.log_date}</FormField>
             <FormField label="계정 통합">
-              -
-              <button
-                type="button"
-                onClick={() => setMergeOpen(true)}
-                className="rn:inline-flex rn:items-center rn:gap-2 rn:rounded-circle rn:text-body3 rn:font-medium rn:text-ink-2"
-              >
-                계정 통합 상세
-                <img src={iconArrowRight} alt="" width={20} height={20} />
-              </button>
+              {profile?.merge ? profile.merge.merged_at : "-"}
+              {profile?.merge && (
+                <button
+                  type="button"
+                  onClick={() => setMergeOpen(true)}
+                  className="rn:inline-flex rn:items-center rn:gap-2 rn:rounded-circle rn:text-body3 rn:font-medium rn:text-ink-2"
+                >
+                  계정 통합 상세
+                  <img src={iconArrowRight} alt="" width={20} height={20} />
+                </button>
+              )}
             </FormField>
           </FormRow>
           <FormRow>
-            <FormField label="정책 동의">-</FormField>
+            <FormField label="정책 동의">
+              {profile?.policies ? (
+                <span className="rn:flex rn:items-center rn:gap-24">
+                  {POLICY_LABELS.map((policy) => (
+                    <span key={policy.key} className="rn:inline-flex rn:items-center rn:gap-4">
+                      <span className="rn:font-regular rn:text-ink-2">{policy.label}</span>
+                      <span
+                        className={
+                          profile.policies![policy.key]
+                            ? "rn:font-medium"
+                            : "rn:font-medium rn:text-error"
+                        }
+                      >
+                        {profile.policies![policy.key] ? "동의" : "미동의"}
+                      </span>
+                    </span>
+                  ))}
+                </span>
+              ) : (
+                "-"
+              )}
+            </FormField>
           </FormRow>
         </FormTable>
       </Card>
@@ -232,8 +273,11 @@ export const MemberDetailScreen = ({ m_no }: MemberDetailScreenProps) => {
         pending={setLock.isPending}
         onConfirm={() => setLock.mutate(true, { onSuccess: () => setLockOpen(false) })}
       />
-      {/* 계정 통합 API가 없어 상세 데이터는 비어 있다(AccountMergeDetail 계약 참조). */}
-      <AccountMergeModal open={mergeOpen} onOpenChange={setMergeOpen} />
+      <AccountMergeModal
+        open={mergeOpen}
+        onOpenChange={setMergeOpen}
+        detail={profile?.merge?.detail}
+      />
     </div>
   );
 };

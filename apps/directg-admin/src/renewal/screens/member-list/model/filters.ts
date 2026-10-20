@@ -1,6 +1,6 @@
 import type { MemberListSearch } from "@entities/member";
-
-export const PAGE_SIZE = 20;
+import type { MemberListQuery } from "@/renewal/entities/member-list";
+import { DEFAULT_PAGE_SIZE } from "@/renewal/shared/lib/pagination";
 
 export type DateType = "reg" | "log";
 
@@ -98,8 +98,9 @@ export const toSearch = (form: FilterForm): MemberListSearch => ({
   dir: "",
 });
 
-export const EMPTY_SEARCH: MemberListSearch = {
+export const EMPTY_SEARCH: MemberListQuery = {
   page: 1,
+  per_page: DEFAULT_PAGE_SIZE,
   search_type: "",
   search_value: "",
   member_level: 0,

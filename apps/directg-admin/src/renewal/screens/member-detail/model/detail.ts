@@ -1,7 +1,5 @@
 import type { MemberOrderItem } from "@entities/member";
 
-export const ORDER_PAGE_SIZE = 20;
-
 // Figma 탭(Tab/Line). 혜택 내역은 열 정의가 확정되지 않아 비활성이다.
 export type DetailTab = "orders" | "level" | "benefit" | "review";
 
@@ -20,8 +18,8 @@ export const ORDER_FILTERS: Array<{ value: OrderFilter; label: string }> = [
   { value: "cancel", label: "주문취소" },
 ];
 
-// legacy getOrderStatus: 2=주문완료, 8=취소요청, 9=취소완료 (status 코드는 entities/member mock 기준)
-const DONE_STATUS = new Set([2]);
+// legacy getOrderStatus: 2~6=주문완료(주문완료·배송준비·배송중·배송완료·구매확정), 8=취소요청, 9=취소완료
+const DONE_STATUS = new Set([2, 3, 4, 5, 6]);
 const CANCEL_STATUS = new Set([8, 9]);
 
 export const filterOrders = (orders: MemberOrderItem[], filter: OrderFilter) => {

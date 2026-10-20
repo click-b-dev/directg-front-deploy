@@ -1,7 +1,5 @@
 import type { MemberLevelHistoryItem } from "@entities/member";
 
-export const LEVEL_PAGE_SIZE = 20;
-
 export type LevelChange = "up" | "down" | "same";
 
 export type LevelHistoryRow = {

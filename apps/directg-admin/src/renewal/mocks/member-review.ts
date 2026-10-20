@@ -1,9 +1,10 @@
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import { env } from "@shared/config/env";
+import { isFullFieldMember } from "@shared/mocks/db/member-seed";
 import type { MemberReviewItem } from "@/renewal/entities/member-review";
 
 // 리뉴얼 회원 상세 > 리뷰 내역용 mock. Figma 디자인의 예시 행을 포함한다.
-const PER_PAGE = 20;
+const DEFAULT_PER_PAGE = 20;
 
 const reviews: MemberReviewItem[] = [
   {
@@ -42,17 +43,34 @@ const reviews: MemberReviewItem[] = [
   },
 ];
 
+// 전체 필드 계정(앞 20명)만 리뷰가 있다. 첫 번째 계정(100300)은 25건으로 페이지네이션(20개)을 확인한다.
+const reviewsFor = (m_no: number): MemberReviewItem[] => {
+  if (!isFullFieldMember(m_no)) return [];
+  if (m_no !== 100300) return reviews;
+  return Array.from({ length: 25 }, (_, k) => ({
+    ...reviews[k % reviews.length],
+    review_id: `RV${String(100 + 25 - k).padStart(6, "0")}`,
+  }));
+};
+
 export const memberReviewHandlers = [
-  http.get(`${env.apiBaseUrl}/admin/member/reviews`, ({ request }) => {
+  http.get(`${env.apiBaseUrl}/admin/member/reviews`, async ({ request }) => {
     const url = new URL(request.url);
+    const list = reviewsFor(Number(url.searchParams.get("m_no")));
     const page = Math.max(1, Number.parseInt(url.searchParams.get("page") ?? "1", 10) || 1);
-    const start = (page - 1) * PER_PAGE;
+    const perPage = Math.min(
+      100,
+      Math.max(1, Number.parseInt(url.searchParams.get("per_page") ?? "", 10) || DEFAULT_PER_PAGE),
+    );
+    const start = (page - 1) * perPage;
+    await delay(200);
     return HttpResponse.json({
-      items: reviews.slice(start, start + PER_PAGE),
+      items: list.slice(start, start + perPage),
       pagination: {
         current_page: page,
-        total_results: reviews.length,
-        total_pages: Math.max(1, Math.ceil(reviews.length / PER_PAGE)),
+        total_results: list.length,
+        per_page: perPage,
+        total_pages: Math.max(1, Math.ceil(list.length / perPage)),
       },
     });
   }),

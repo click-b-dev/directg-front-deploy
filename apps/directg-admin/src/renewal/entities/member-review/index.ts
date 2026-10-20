@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { apiClient } from "@shared/api/client";
 
 // 회원 상세 > 리뷰 내역 (Figma 회원_회원내역_상세_리뷰내역, 기획 AD-Member-Detail-04)
@@ -26,13 +26,14 @@ export type MemberReviewListResponse = {
   pagination: { current_page: number; total_results: number; total_pages: number };
 };
 
-export const fetchMemberReviews = (m_no: string, page: number) =>
+export const fetchMemberReviews = (m_no: string, page: number, perPage: number) =>
   apiClient.get<MemberReviewListResponse>("/admin/member/reviews", {
-    searchParams: { m_no, page: String(page) },
+    searchParams: { m_no, page: String(page), per_page: String(perPage) },
   });
 
-export const useMemberReviews = (m_no: string, page: number) =>
+export const useMemberReviews = (m_no: string, page: number, perPage: number) =>
   useQuery({
-    queryKey: ["admin", "member", "reviews", m_no, page] as const,
-    queryFn: () => fetchMemberReviews(m_no, page),
+    queryKey: ["admin", "member", "reviews", m_no, page, perPage] as const,
+    queryFn: () => fetchMemberReviews(m_no, page, perPage),
+    placeholderData: keepPreviousData,
   });

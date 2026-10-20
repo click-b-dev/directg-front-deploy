@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useMemberList, type MemberListItem, type MemberListSearch } from "@entities/member";
+import type { MemberListItem } from "@entities/member";
+import { useMemberListPaged, type MemberListQuery } from "@/renewal/entities/member-list";
+import { PAGE_SIZE_OPTIONS } from "@/renewal/shared/lib/pagination";
 import {
   isEmailVerified,
   useApproveMember,
@@ -20,9 +22,9 @@ import {
   FormField,
   FormRow,
   FormTable,
-  Pagination,
   RadioGroup,
   Select,
+  TableFooter,
   Tag,
   TextInput,
 } from "@/renewal/shared/ui";
@@ -31,7 +33,6 @@ import {
   EMPTY_SEARCH,
   IS_AUTH_OPTIONS,
   OLD_LOGIN_OPTIONS,
-  PAGE_SIZE,
   QUICK_PERIODS,
   SEARCH_TYPE_OPTIONS,
   fromSearch,
@@ -139,27 +140,27 @@ const getColumns = ({
   },
 ];
 
-type MemberListScreenProps = { search: MemberListSearch };
+type MemberListScreenProps = { search: MemberListQuery };
 
 export const MemberListScreen = ({ search }: MemberListScreenProps) => {
   const navigate = useNavigate();
   const [form, setForm] = useState<FilterForm>(() => fromSearch(search));
-  const { data, isLoading, isError } = useMemberList(search);
+  const { data, isLoading, isError } = useMemberListPaged(search);
 
   const patch = (next: Partial<FilterForm>) => setForm((prev) => ({ ...prev, ...next }));
 
-  const goTo = (next: MemberListSearch) => {
+  const goTo = (next: MemberListQuery) => {
     void navigate({ to: "/renewal/member/list", search: next });
   };
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
-    goTo(toSearch(form));
+    goTo({ ...toSearch(form), per_page: search.per_page });
   };
 
   const handleReset = () => {
     setForm(fromSearch(EMPTY_SEARCH));
-    goTo(EMPTY_SEARCH);
+    goTo({ ...EMPTY_SEARCH, per_page: search.per_page });
   };
 
   const rows = (data?.items ?? []) as MemberRow[];
@@ -189,7 +190,7 @@ export const MemberListScreen = ({ search }: MemberListScreenProps) => {
                 />
                 <TextInput
                   aria-label="검색어"
-                  className="rn:w-280"
+                  className="rn:min-w-0 rn:flex-1"
                   value={form.searchValue}
                   onChange={(event) => patch({ searchValue: event.target.value })}
                 />
@@ -291,30 +292,17 @@ export const MemberListScreen = ({ search }: MemberListScreenProps) => {
           }
         />
 
-        <div className="rn:flex rn:items-center">
-          <div className="rn:flex-1" />
-          {pagination && pagination.total_pages > 0 && (
-            <Pagination
-              page={pagination.current_page}
-              totalPages={pagination.total_pages}
-              pageSize={PAGE_SIZE}
-              totalResults={pagination.total_results}
-              onPageChange={(page) => goTo({ ...search, page })}
-            />
-          )}
-          <div className="rn:flex rn:flex-1 rn:justify-end">
-            {/* 페이지당 개수: 현재 API는 per_page 파라미터를 받지 않아 고정(20)이다. */}
-            <Select
-              aria-label="페이지당 개수"
-              compact
-              rootClassName="rn:w-100"
-              value="20"
-              options={[{ value: "20", label: "20개" }]}
-              onValueChange={() => undefined}
-              disabled
-            />
-          </div>
-        </div>
+        <TableFooter
+          // 현재 페이지는 주소(search.page)가 기준이다. 서버 응답의 current_page는 페이지를 넘기는 동안
+          // 이전 목록(keepPreviousData)의 값이라, 그것을 쓰면 방금 누른 페이지가 1로 되돌아간다.
+          page={search.page}
+          totalPages={pagination?.total_pages ?? search.page}
+          pageSize={search.per_page}
+          totalResults={pagination?.total_results ?? search.page * search.per_page}
+          onPageChange={(page) => goTo({ ...search, page })}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
+          onPageSizeChange={(per_page) => goTo({ ...search, per_page, page: 1 })}
+        />
       </Card>
     </div>
   );

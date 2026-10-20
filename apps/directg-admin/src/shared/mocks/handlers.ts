@@ -39,6 +39,7 @@ import { memberReviewHandlers } from "@/renewal/mocks/member-review";
 import { memberLockHandlers } from "@/renewal/mocks/member-lock";
 import { memberApprovalHandlers } from "@/renewal/mocks/member-approval";
 import { memberGradeHandlers } from "@/renewal/mocks/member-grade";
+import { memberProfileHandlers } from "@/renewal/mocks/member-profile";
 import { orderHandlers } from "./handlers/order";
 import { orderDashboardHandlers } from "./handlers/order-dashboard";
 import { chinaHandlers } from "./handlers/china";
@@ -89,6 +90,7 @@ export const handlers: RequestHandler[] = [
   ...memberReviewHandlers,
   ...memberLockHandlers,
   ...memberGradeHandlers,
+  ...memberProfileHandlers,
   ...orderHandlers,
   ...orderDashboardHandlers,
   ...chinaHandlers,

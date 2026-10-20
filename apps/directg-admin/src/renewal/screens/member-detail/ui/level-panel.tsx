@@ -2,14 +2,9 @@ import { useState } from "react";
 import type { MemberLevelHistoryItem } from "@entities/member";
 import { MEMBER_LEVEL_LABELS } from "@/renewal/entities/member-level";
 import { DataTable, Tag, TableFooter, type DataTableColumn } from "@/renewal/shared/ui";
+import { PAGE_SIZE_OPTIONS, DEFAULT_PAGE_SIZE } from "@/renewal/shared/lib/pagination";
 import { formatPrice } from "../model/detail";
-import {
-  CHANGE_LABEL,
-  CHANGE_TONE,
-  LEVEL_PAGE_SIZE,
-  toLevelRows,
-  type LevelHistoryRow,
-} from "../model/level";
+import { CHANGE_LABEL, CHANGE_TONE, toLevelRows, type LevelHistoryRow } from "../model/level";
 
 type LevelPanelProps = { history: MemberLevelHistoryItem[]; email: string };
 
@@ -18,11 +13,12 @@ const levelLabel = (level: number | undefined) =>
 
 export const LevelPanel = ({ history, email }: LevelPanelProps) => {
   const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(DEFAULT_PAGE_SIZE);
 
   const all = toLevelRows(history);
-  const totalPages = Math.max(1, Math.ceil(all.length / LEVEL_PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(all.length / perPage));
   const currentPage = Math.min(page, totalPages);
-  const rows = all.slice((currentPage - 1) * LEVEL_PAGE_SIZE, currentPage * LEVEL_PAGE_SIZE);
+  const rows = all.slice((currentPage - 1) * perPage, currentPage * perPage);
 
   const columns: DataTableColumn<LevelHistoryRow>[] = [
     { key: "calculatedAt", header: "산정일", width: "rn:w-200", cell: (row) => row.calculatedAt },
@@ -64,9 +60,14 @@ export const LevelPanel = ({ history, email }: LevelPanelProps) => {
       <TableFooter
         page={currentPage}
         totalPages={totalPages}
-        pageSize={LEVEL_PAGE_SIZE}
+        pageSize={perPage}
         totalResults={all.length}
         onPageChange={setPage}
+        pageSizeOptions={PAGE_SIZE_OPTIONS}
+        onPageSizeChange={(size) => {
+          setPerPage(size);
+          setPage(1);
+        }}
       />
     </>
   );
