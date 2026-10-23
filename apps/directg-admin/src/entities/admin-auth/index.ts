@@ -6,5 +6,4 @@ export type {
   AdminLoginResponse,
   AdminLogoutResponse,
   AdminRole,
-  AppResponse,
 } from "./model/types";

@@ -48,13 +48,6 @@ const ASSETS: AssetListItem[] = [
   },
 ];
 
-const codes = {
-  publisher: PUBLISHER,
-  product_type: PRODUCT_TYPE,
-  asset_type: ASSET_TYPE,
-  platform: PLATFORM,
-};
-
 // legacy runReserveList content + settle_no/m_no 매핑(링크용).
 const RESERVES = [
   {
@@ -134,26 +127,6 @@ const DOWNLOADS = [
   },
 ];
 
-// legacy runAssetCodeList content(그룹별, id=그룹4자리+시퀀스).
-const CODE_GROUP_ROWS: Record<string, { id: string; name: string }[]> = {
-  PDTP: [
-    { id: "PDTP0001", name: "Game" },
-    { id: "PDTP0002", name: "DLC" },
-  ],
-  ASTP: [
-    { id: "ASTP0001", name: "Key" },
-    { id: "ASTP0002", name: "Keyless" },
-  ],
-  PLFM: [
-    { id: "PLFM0001", name: "Steam" },
-    { id: "PLFM0002", name: "Switch" },
-  ],
-  PUBL: [
-    { id: "PUBL0001", name: "Bandai Namco" },
-    { id: "PUBL0002", name: "Capcom" },
-  ],
-};
-
 // legacy runAssetItemListFilter content(키). 미예약/예약(취소 가능)/활성 혼합.
 const ASSET_ITEMS = [
   {
@@ -198,31 +171,6 @@ const ASSET_ITEMS = [
 ];
 
 export const assetHandlers = [
-  http.get(api("/admin/goods/asset"), ({ request }) => {
-    const url = new URL(request.url);
-    const page = Number(url.searchParams.get("page")) || 1;
-    const searchID = url.searchParams.get("searchID") ?? "";
-    const searchValue = url.searchParams.get("searchValue") ?? "";
-
-    // searchID 우선(단건 상세). 없으면 이름 부분일치 목록.
-    let filtered = ASSETS;
-    if (searchID) {
-      filtered = ASSETS.filter((a) => a.id === searchID);
-    } else if (searchValue) {
-      filtered = ASSETS.filter((a) => a.title.includes(searchValue));
-    }
-
-    const totalElements = filtered.length;
-    const totalPages = Math.max(
-      searchID ? (totalElements > 0 ? 1 : 0) : 1,
-      Math.ceil(totalElements / PER_PAGE),
-    );
-    const content = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
-
-    return HttpResponse.json({ content, totalElements, totalPages, codes });
-  }),
-  // 등록/수정 폼 드롭다운 코드 4종.
-  http.get(api("/admin/goods/asset/codes"), () => HttpResponse.json(codes)),
   // Asset 수정 진입 프리필(실시간 API 상세 + code_id 역매핑). 미존재 시 found=false.
   http.get(api("/admin/goods/asset/detail"), ({ request }) => {
     const url = new URL(request.url);
@@ -276,14 +224,6 @@ export const assetHandlers = [
     }
     return HttpResponse.json({ id: body.asset_id });
   }),
-  // Asset 등록: mock은 성공 응답(신규 id). 실제 등록·중복검증은 백엔드.
-  http.post(api("/admin/goods/asset/register"), async ({ request }) => {
-    const body = (await request.json()) as { asset_name?: string };
-    if (!body.asset_name) {
-      return HttpResponse.json({ message: "필수값 누락" });
-    }
-    return HttpResponse.json({ id: "A9999" });
-  }),
   // delete/keys/inventory: mock은 정적 — 성공 응답만(실제 Asset API 변경은 백엔드).
   http.post(api("/admin/goods/asset/delete"), () => HttpResponse.json({ message: "삭제 완료" })),
   http.post(api("/admin/goods/asset/keys"), async ({ request }) => {
@@ -334,25 +274,4 @@ export const assetHandlers = [
   http.post(api("/admin/goods/asset/downloads/finish"), () =>
     HttpResponse.json({ id: "1", count: 10 }),
   ),
-  // Asset Code 그룹별 목록(PDTP/ASTP/PLFM/PUBL).
-  http.get(api("/admin/goods/asset/code-list"), ({ request }) => {
-    const url = new URL(request.url);
-    const groupId = url.searchParams.get("group_id") ?? "";
-    const valid = ["PDTP", "ASTP", "PLFM", "PUBL"];
-    if (!valid.includes(groupId)) {
-      return HttpResponse.json({ content: [] });
-    }
-    return HttpResponse.json({ content: CODE_GROUP_ROWS[groupId] ?? [] });
-  }),
-  // 코드 등록: mock은 성공 응답(신규 코드 id). 실제 등록·화이트리스트는 백엔드.
-  http.post(api("/admin/goods/asset/code-register"), async ({ request }) => {
-    const body = (await request.json()) as { group_id?: string; name?: string };
-    if (!body.group_id || !body.name) {
-      return HttpResponse.json({ message: "코드 그룹/이름 누락" });
-    }
-    return HttpResponse.json({ id: `${body.group_id}9999` });
-  }),
-  // 코드 수정/삭제: mock은 성공 응답.
-  http.post(api("/admin/goods/asset/code-modify"), () => HttpResponse.json({ id: "1" })),
-  http.post(api("/admin/goods/asset/code-delete"), () => HttpResponse.json({ id: "1" })),
 ];

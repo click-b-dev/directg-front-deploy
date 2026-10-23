@@ -5,13 +5,14 @@ import {
   fetchAssetDownloadList,
   registerAssetDownload,
   finishAssetDownload,
-  fetchAssetCodeGroup,
+  fetchCodeGroups,
+  toAssetCodeGroupResponse,
+  toAssetCodes,
   registerAssetCode,
   modifyAssetCode,
   deleteAssetCode,
   fetchAssetItemList,
   cancelAssetReserve,
-  fetchAssetCodes,
   fetchAssetDetail,
   modifyAsset,
   createAsset,
@@ -30,6 +31,11 @@ import type {
 } from "../model/types";
 
 const ASSET_KEY = ["admin", "goods", "asset"] as const;
+
+// GET /api/codes 전체 응답을 한 키로 공유(목록 필터·등록·수정·코드 화면). 코드는 거의 안 바뀌므로 5분 캐시,
+// 코드 등록/수정/삭제 시에만 invalidate.
+const CODES_KEY = ["admin", "codes"] as const;
+const CODES_STALE_MS = 5 * 60 * 1000;
 
 const assetListQueryKey = (query: AssetSearch) => [...ASSET_KEY, "list", query] as const;
 
@@ -72,20 +78,23 @@ export const useFinishAssetDownload = () => {
   });
 };
 
-const assetCodeGroupQueryKey = (groupId: string) => [...ASSET_KEY, "code-group", groupId] as const;
-
 export const useAssetCodeGroup = (groupId: string) =>
   useQuery({
-    queryKey: assetCodeGroupQueryKey(groupId),
-    queryFn: () => fetchAssetCodeGroup(groupId),
+    queryKey: CODES_KEY,
+    queryFn: fetchCodeGroups,
+    staleTime: CODES_STALE_MS,
+    select: (groups) => toAssetCodeGroupResponse(groups, groupId),
   });
 
 // 코드 등록 — 성공(id)/실패(message)는 호출부에서 분기(legacy msg).
-export const useRegisterAssetCode = () =>
-  useMutation({
+export const useRegisterAssetCode = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: ({ group_id, name }: { group_id: string; name: string }) =>
       registerAssetCode(group_id, name),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: CODES_KEY }),
   });
+};
 
 // 코드 수정 — 성공(id) 시 그룹 목록 invalidate.
 export const useModifyAssetCode = () => {
@@ -93,7 +102,7 @@ export const useModifyAssetCode = () => {
   return useMutation({
     mutationFn: ({ code_id, name }: { code_id: string; name: string }) =>
       modifyAssetCode(code_id, name),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ASSET_KEY }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: CODES_KEY }),
   });
 };
 
@@ -102,15 +111,17 @@ export const useDeleteAssetCode = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (code_id: string) => deleteAssetCode(code_id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ASSET_KEY }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: CODES_KEY }),
   });
 };
 
 // 등록/수정 폼 드롭다운 코드 4종.
 export const useAssetCodes = () =>
   useQuery({
-    queryKey: [...ASSET_KEY, "codes"] as const,
-    queryFn: fetchAssetCodes,
+    queryKey: CODES_KEY,
+    queryFn: fetchCodeGroups,
+    staleTime: CODES_STALE_MS,
+    select: toAssetCodes,
   });
 
 // Asset 등록 — 성공(id)/실패(message)는 호출부에서 분기.

@@ -40,7 +40,6 @@ export type AssetListResponse = {
   content: AssetListItem[];
   totalElements: number;
   totalPages: number;
-  codes: AssetCodes;
 };
 
 // assets_delete → message(하위 Item 존재 시 거부 메시지).
@@ -208,3 +207,29 @@ export type AssetItemListResponse = {
 
 // asset_reserve_cancel → 성공 id, 실패 message.
 export type AssetReserveCancelResponse = { id?: string; message?: string };
+
+// ── swagger DTO (https://directg-classic-api.clickb.co.kr) — fetcher에서 위 화면용 타입으로 변환 ──
+export type AssetItemDto = {
+  id: number;
+  title: string;
+  productType: string;
+  assetType: string;
+  platform: string;
+  publisher: string;
+  regDt: string;
+  isRegistered: boolean;
+};
+
+export type AssetPageDto = {
+  content: AssetItemDto[];
+  totalElements: number;
+  totalPages: number;
+};
+
+export type AssetCreateDto = { id: number };
+
+export type CodeItemDto = { id: string; groupId: string; subId: number; name: string };
+export type CodeGroupDto = { groupId: string; groupName: string; codes: CodeItemDto[] };
+export type CodeListDto = { groups: CodeGroupDto[] };
+export type CodeCreateDto = { id: string };
+export type CodeMessageDto = { id: string; message: string };

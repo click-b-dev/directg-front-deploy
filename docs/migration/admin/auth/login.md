@@ -38,11 +38,11 @@
   3. 그 외 → `{error_code: "OK", error_msg: "성공", data}` + `adminUpdate` (`update tbl_admin set ip=:ip, login_date=now()`)
 - ⚠️ **legacy 특성(그대로 이관)**: 행이 없으면 `fetch()`가 `false`라 1번 분기가 먼저 걸린다. 따라서 **미존재 계정·비밀번호 오답 모두 `NO_AUTH_CONFIRM`**이 반환되고, `NOT_FOUND`는 사실상 도달 불가.
 
-## API 계약 (실서버 swagger 연동 — 2026-10-20)
+## API 계약 (실서버 swagger 연동 — 2026-10-23)
 
-> 출처: `https://directg-api.clickb.co.kr/swagger-ui/index.html` (`/v3/api-docs`). 아래가 현행 계약이며, 이전 legacy envelope(`error_code`/`admin_level`) 초안은 폐기했다.
+> 출처: `https://directg-classic-api.clickb.co.kr/swagger-ui/index.html` (`/v3/api-docs`). 아래가 현행 계약이며, 이전 legacy envelope(`error_code`/`admin_level`) 초안은 폐기했다.
 
-### `POST /api/v0/admin/login`
+### `POST /api/admin/login`
 
 요청: `{ "loginId": "string", "password": "string" }`
 
@@ -54,8 +54,8 @@
   - `UNAUTHORIZED` → "아이디 또는 비밀번호가 올바르지 않습니다."
   - `FORBIDDEN` → "접근 권한이 없는 계정입니다."
   - 그 외 code·네트워크/5xx → "로그인에 실패했습니다. 잠시 후 다시 시도해 주세요."
-- 인증: 이후 요청은 `Authorization` 헤더에 JWT(`Bearer`, api-client auth hooks).
-- base URL: `VITE_API_BASE_URL`(예: `https://directg-api.clickb.co.kr/api`), 미설정 시 same-origin `/api`.
+- 인증: 이후 요청은 `shared/api/client.ts`의 auth hooks가 `Authorization: Bearer <JWT>`를 붙인다. 토큰 갱신 API는 없으므로 401(로그인 제외) 시 세션 파기 후 `/login`으로 이동.
+- base URL: `VITE_API_BASE_URL`(예: `https://directg-classic-api.clickb.co.kr/api`), 미설정 시 same-origin `/api`.
 
 ### legacy `admin_level` ↔ `role` 매핑 (임시)
 

@@ -10,14 +10,13 @@ import type {
 // 호출측이 분기할 수 있게 본문을 그대로 반환한다. envelope이 아닌 에러(네트워크/5xx 등)는 rethrow.
 export const adminLogin = async (payload: AdminLoginRequest): Promise<AdminLoginResponse> => {
   try {
-    return await apiClient.post<AdminLoginResponse>("/v0/admin/login", payload);
+    return await apiClient.post<AdminLoginResponse>("/admin/login", payload);
   } catch (error) {
-    // ky 2.x는 HTTPError 생성 시 본문을 이미 소비해 error.data에 담는다(response.json() 불가).
-    const { response, data } = (error ?? {}) as { response?: Response; data?: unknown };
-    if (response && (response.status === 401 || response.status === 403)) {
-      const body = (data ?? (await response.json().catch(() => null))) as AdminLoginResponse | null;
-      if (body && body.success === false) return body;
-    }
+    // ky v2: 에러 시 본문이 error.data에 담긴다(response.json() 사용 불가).
+    const httpError = error as { response?: Response; data?: unknown } | null;
+    const status = httpError?.response?.status;
+    const body = httpError?.data as AdminLoginResponse | null | undefined;
+    if ((status === 401 || status === 403) && body && body.success === false) return body;
     throw error;
   }
 };

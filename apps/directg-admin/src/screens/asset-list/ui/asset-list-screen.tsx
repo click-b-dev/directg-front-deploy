@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  useAssetCodes,
   useAssetList,
   useDeleteAsset,
   useRegisterAssetInventory,
@@ -48,6 +49,7 @@ export const AssetListScreen = (search: AssetSearchProps) => {
   }, []);
 
   const { data } = useAssetList(search);
+  const { data: codes } = useAssetCodes();
   const deleteMutation = useDeleteAsset();
   const inventoryMutation = useRegisterAssetInventory();
   const keysMutation = useRegisterAssetKeys();
@@ -59,7 +61,6 @@ export const AssetListScreen = (search: AssetSearchProps) => {
   const content = data?.content ?? [];
   const totalElements = data?.totalElements ?? 0;
   const totalPages = data?.totalPages ?? 0;
-  const codes = data?.codes;
 
   const openKeyModal = (asset: AssetListItem) => {
     setModalAsset({ id: asset.id, title: asset.title });

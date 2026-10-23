@@ -1,11 +1,13 @@
 # Asset Code 현황 (Asset 서버 관리 API)
 
 ## 원본
+
 - 파일: `pc/_Admin_/goods/asset/asset_code_list.php` + `asset_ps.php`(asset_code_list/asset_code_modify/asset_code_delete)
 - 참조: [asset-list](asset-list.md)(#160, 모달 패턴)
 - 도메인: `Asset::runAssetCodeList/runAssetCodeModify/runAssetCodeDelete`
 
 ## 화면·플로우
+
 - 진입 URL: `/goods/asset/asset_code_list` (파라미터 없음 — 그룹 탭은 클라이언트 상태)
 - breadcrumb: 홈 / 재고 / Asset 관리 / **Asset Code 현황**, page title 동일
 - 안내 `alert alert-secondary`: 실시간 코드 그룹별 현황·그룹 탭 선택.
@@ -19,10 +21,12 @@
   - **삭제**: confirm(`코드 [{code}] {name} 을(를) 삭제하시겠습니까?`) → mode=asset_code_delete{code_id} → 성공(id) `alert("코드 삭제 완료")`+재조회 / 실패 `alert(message)`
 
 ## 데이터 (legacy)
+
 - `runAssetCodeList($group_id)`: 외부 API. group_id는 **PDTP/ASTP/PLFM/PUBL만 허용**(그 외 빈 content). content 각 항목 `id, groupId?, subId?, name`.
 - `runAssetCodeModify($code_id, $name)`: 이름만 변경 → id/message. `runAssetCodeDelete($code_id)`: → id/message.
 
 ## API 계약 (백엔드 전달)
+
 - `GET /admin/goods/asset/code-list` — 그룹별 코드 목록(페이징 없음)
   - 쿼리: `group_id`(PDTP|ASTP|PLFM|PUBL)
   - 응답: `{ "content": [{ "id": "string", "groupId": "string", "subId": "string", "name": "string" }] }` (groupId/subId 없으면 프론트가 id[0:4]/id[4:]로 파생)
@@ -32,13 +36,22 @@
 - 에러: legacy `msg()`/PDOException.
 
 ## 타겟 매핑
+
 - 라우트: `routes/goods/asset/asset_code_list.tsx`(파라미터 없음)
 - screens: `screens/asset-code-list` / entities: `entities/asset` 확장(code-group list/modify/delete)
 - mock: `shared/mocks/handlers/asset.ts` 확장(code-list GET, code-modify/code-delete POST)
 - 재사용: 그룹 탭·현재 그룹은 React state(기본 PDTP). 수정 모달은 React 제어(#160 선례)·eng span 유지. 페이징 없음
 
 ## Parity 체크리스트
+
 - [ ] 4탭(PDTP 기본)·탭 전환 재조회·현재 그룹 표시·총 건수
 - [ ] 6컬럼(번호 index+1·코드/그룹/시퀀스 eng·groupId/subId 파생)·빈목록 colspan=6
 - [ ] 수정 모달(이름 required·성공 닫기+재조회+alert/실패 alert)
 - [ ] 삭제(confirm 문구·성공 재조회+alert/실패 alert)
+
+## 실서버 연동 (swagger — 2026-10-23)
+
+- `GET /api/codes` (ADMIN) — 전체 코드를 `groups:[{groupId,groupName,codes:[{id,groupId,subId(int),name}]}]`로 반환. 화면은 선택한 group의 `codes`만 사용.
+- `PUT /api/codes/{codeId}` body `{name(≤64)}` / `DELETE /api/codes/{codeId}` — 응답 `content:{id,message}`. 오류: 400·403·404, 삭제 시 409(`CONFLICT`).
+- 오류 문구는 `code`→프론트 변환. ⚠️ 삭제 409의 의미(사용 중 코드 등)는 백엔드 확인 필요 — 현재 "이미 존재하거나 사용 중인 항목입니다."로 표시.
+- 에러 문구(`entities/asset/lib/error-messages.ts`): 수정 400→"코드명을 확인해 주세요. (64자 이내)"·403→권한 없음·404→"수정할 코드를 찾을 수 없습니다." / 삭제 403·404·409→"삭제할 수 없는 코드입니다. 사용 중인 코드인지 확인해 주세요." (409 의미 백엔드 확인 필요).

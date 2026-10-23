@@ -1,4 +1,13 @@
 import { apiClient } from "@shared/api/client";
+import { toApiErrorMessage, unwrapEnvelope, type AppResponse } from "@shared/api/envelope";
+import {
+  ASSET_CREATE_ERRORS,
+  ASSET_LIST_ERRORS,
+  CODE_CREATE_ERRORS,
+  CODE_DELETE_ERRORS,
+  CODE_LIST_ERRORS,
+  CODE_UPDATE_ERRORS,
+} from "../lib/error-messages";
 import type {
   AssetSearch,
   AssetListResponse,
@@ -22,25 +31,43 @@ import type {
   AssetItemSearch,
   AssetItemListResponse,
   AssetReserveCancelResponse,
+  AssetPageDto,
+  AssetCreateDto,
+  CodeGroupDto,
+  CodeListDto,
+  CodeCreateDto,
+  CodeMessageDto,
 } from "../model/types";
 
-// legacy asset_ps.php asset_list/asset_search — searchID 있으면 단건 상세, else 목록(30/page).
-// 실시간 Asset 서버 API + is_registered(로컬 존재)·코드목록 4종은 백엔드.
-export const fetchAssetList = (query: AssetSearch) => {
+// swagger GET /api/admin/assets — page/assetId/name/*Cd 필터, 30/page. (필터 드롭다운 코드는 useAssetCodes)
+export const fetchAssetList = async (query: AssetSearch): Promise<AssetListResponse> => {
   const searchParams: Record<string, string> = {};
-  const set = (key: keyof AssetSearch, value: string | number | undefined) => {
+  const set = (key: string, value: string | number | undefined) => {
     if (value !== undefined && value !== "") {
       searchParams[key] = String(value);
     }
   };
   set("page", query.page);
-  set("searchValue", query.searchValue);
-  set("searchID", query.searchID);
+  set("name", query.searchValue);
+  set("assetId", query.searchID);
   set("publisherCd", query.publisherCd);
   set("productTypeCd", query.productTypeCd);
   set("assetTypeCd", query.assetTypeCd);
   set("platformCd", query.platformCd);
-  return apiClient.get<AssetListResponse>("/admin/goods/asset", { searchParams });
+
+  const page = await unwrapEnvelope(
+    apiClient.get<AppResponse<AssetPageDto>>("/admin/assets", { searchParams }),
+    ASSET_LIST_ERRORS,
+  );
+  return {
+    content: page.content.map(({ isRegistered, id, ...rest }) => ({
+      ...rest,
+      id: String(id),
+      is_registered: isRegistered,
+    })),
+    totalElements: page.totalElements,
+    totalPages: page.totalPages,
+  };
 };
 
 // legacy assets_reserve_list — 예약현황(owner M/ 보정·po→settle_no/m_no 매핑은 백엔드, 30/page).
@@ -78,29 +105,90 @@ export const registerAssetDownload = (payload: AssetDownloadRegisterRequest) =>
 export const finishAssetDownload = (po: string) =>
   apiClient.post<AssetDownloadFinishResponse>("/admin/goods/asset/downloads/finish", { po });
 
-// legacy asset_code_list — 그룹별 코드 목록(PDTP/ASTP/PLFM/PUBL, 페이징 없음).
-export const fetchAssetCodeGroup = (group_id: string) =>
-  apiClient.get<AssetCodeGroupResponse>("/admin/goods/asset/code-list", {
-    searchParams: { group_id },
-  });
+// swagger GET /api/codes — 전체 코드를 groupId별로 그룹핑해 내려준다(PDTP/ASTP/PLFM/PUBL).
+export const fetchCodeGroups = async () =>
+  (await unwrapEnvelope(apiClient.get<AppResponse<CodeListDto>>("/codes"), CODE_LIST_ERRORS))
+    .groups;
 
-// legacy asset_code_register — runAssetCodeRegister(group_id, name) → 성공 id, 실패 message.
+// 변경 API 결과를 legacy 화면 계약({id} 성공 / {message} 실패)으로 변환. 메시지는 code→프론트 문구.
+const toMutationResult = async (run: () => Promise<string>): Promise<AssetCodeMutationResponse> => {
+  try {
+    return { id: await run() };
+  } catch (error) {
+    return { message: toApiErrorMessage(error) };
+  }
+};
+
+// legacy asset_code_list — 그룹별 코드 목록(페이징 없음).
+export const toAssetCodeGroupResponse = (
+  groups: CodeGroupDto[],
+  group_id: string,
+): AssetCodeGroupResponse => ({
+  content: (groups.find((g) => g.groupId === group_id)?.codes ?? []).map((c) => ({
+    id: c.id,
+    groupId: c.groupId,
+    subId: String(c.subId),
+    name: c.name,
+  })),
+});
+
+export const fetchAssetCodeGroup = async (group_id: string) =>
+  toAssetCodeGroupResponse(await fetchCodeGroups(), group_id);
+
+// swagger POST /api/codes {groupId, name}
 export const registerAssetCode = (group_id: string, name: string) =>
-  apiClient.post<AssetCodeMutationResponse>("/admin/goods/asset/code-register", {
-    group_id,
-    name,
-  });
+  toMutationResult(
+    async () =>
+      (
+        await unwrapEnvelope(
+          apiClient.post<AppResponse<CodeCreateDto>>("/codes", { groupId: group_id, name }),
+          CODE_CREATE_ERRORS,
+        )
+      ).id,
+  );
 
-// legacy asset_code_modify — 코드명만 변경 → 성공 id, 실패 message.
+// swagger PUT /api/codes/{codeId} {name} — 코드명만 변경
 export const modifyAssetCode = (code_id: string, name: string) =>
-  apiClient.post<AssetCodeMutationResponse>("/admin/goods/asset/code-modify", { code_id, name });
+  toMutationResult(
+    async () =>
+      (
+        await unwrapEnvelope(
+          apiClient.put<AppResponse<CodeMessageDto>>(`/codes/${encodeURIComponent(code_id)}`, {
+            name,
+          }),
+          CODE_UPDATE_ERRORS,
+        )
+      ).id,
+  );
 
-// legacy asset_code_delete — 코드 삭제 → 성공 id, 실패 message.
+// swagger DELETE /api/codes/{codeId}
 export const deleteAssetCode = (code_id: string) =>
-  apiClient.post<AssetCodeMutationResponse>("/admin/goods/asset/code-delete", { code_id });
+  toMutationResult(
+    async () =>
+      (
+        await unwrapEnvelope(
+          apiClient.del<AppResponse<CodeMessageDto>>(`/codes/${encodeURIComponent(code_id)}`),
+          CODE_DELETE_ERRORS,
+        )
+      ).id,
+  );
 
-// legacy getAssetCodeList 4종(등록/수정 폼 드롭다운).
-export const fetchAssetCodes = () => apiClient.get<AssetCodes>("/admin/goods/asset/codes");
+// 등록/수정/목록 필터 드롭다운 코드 4종 — 코드 그룹에서 groupId로 추출.
+export const toAssetCodes = (groups: CodeGroupDto[]): AssetCodes => {
+  const pick = (groupId: string) =>
+    (groups.find((g) => g.groupId === groupId)?.codes ?? []).map((c) => ({
+      code_id: c.id,
+      name: c.name,
+    }));
+  return {
+    publisher: pick("PUBL"),
+    product_type: pick("PDTP"),
+    asset_type: pick("ASTP"),
+    platform: pick("PLFM"),
+  };
+};
+
+export const fetchAssetCodes = async () => toAssetCodes(await fetchCodeGroups());
 
 // legacy asset_item_list — Asset 키 목록 + 컨텍스트 헤더(size 100 고정).
 export const fetchAssetItemList = (query: AssetItemSearch) =>
@@ -120,9 +208,19 @@ export const fetchAssetDetail = (asset_id: string) =>
 export const modifyAsset = (payload: AssetModifyRequest) =>
   apiClient.post<AssetModifyResponse>("/admin/goods/asset/modify", payload);
 
-// legacy asset_register — runAssetRegister → 성공 시 id, 실패 시 message.
-export const createAsset = (payload: AssetCreateRequest) =>
-  apiClient.post<AssetCreateResponse>("/admin/goods/asset/register", payload);
+// swagger POST /api/admin/assets — asset_name → title. 성공 시 id, 실패 시 message.
+export const createAsset = async (payload: AssetCreateRequest): Promise<AssetCreateResponse> => {
+  try {
+    const { asset_name, ...rest } = payload;
+    const created = await unwrapEnvelope(
+      apiClient.post<AppResponse<AssetCreateDto>>("/admin/assets", { title: asset_name, ...rest }),
+      ASSET_CREATE_ERRORS,
+    );
+    return { id: String(created.id) };
+  } catch (error) {
+    return { message: toApiErrorMessage(error) };
+  }
+};
 
 // legacy assets_delete — 하위 Item 존재 시 거부 메시지.
 export const deleteAsset = (asset_id: string) =>

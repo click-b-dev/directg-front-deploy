@@ -1,12 +1,14 @@
 # Asset 현황 (Asset 서버 관리 API)
 
 ## 원본
+
 - 파일: `pc/_Admin_/goods/asset/asset_list.php` (라이브) + `asset_ps.php`(asset_list/asset_search/assets_delete/asset_inventory_qty/asset_item_register)
 - 참조: `../legacy-project/docs/STOCK-MANAGEMENT.md`(부록 B/E), `docs/legacy-admin/21-goods-stock-integration.md`
 - 도메인: `Asset::runAssetList/runAssetDetail/runAssetDelete/runAssetItemRegister`, `Admin::getAssetCodeList/getAssetInfo/getAssetCodeInfo`
 - **영역**: 사이드바 "Asset 서버 관리(API)" 그룹 1번째. **실시간 Asset 서버 API 데이터**(동기화 DB 아님).
 
 ## 화면·플로우
+
 - 진입 URL: `/goods/asset/asset_list` — GET `page`, `searchValue`(Asset 이름), `searchID`(Asset ID·이름보다 우선), `publisherCd`, `productTypeCd`, `assetTypeCd`, `platformCd`
 - 세션/권한: `lib/lib.php` 가드. topbar `stock`, sidebar_stock. mutation은 `$_SESSION['admin']` 필요(백엔드).
 - breadcrumb: 홈 / 재고 / Asset 관리 / **Asset 현황**, page title 동일
@@ -19,6 +21,7 @@
 - 데이터 로딩: `$(ready)` → `getAssetList(...)` AJAX(POST asset_ps.php). searchID>0이면 mode=`asset_search`(단건 상세) else `asset_list`. 검색 제출 시 page=1 리셋.
 
 ## 액션(AJAX, asset_ps.php)
+
 - **목록**: `asset_list`(runAssetList → content[]·totalElements·totalPages, 각 행 `is_registered`=getAssetInfo 존재여부) / `asset_search`(runAssetDetail 단건, 유효 id면 1건 else 0건)
 - **Asset 수정**: `location.href=asset_modify.php?asset_id=`(별도 화면·미이관→링크만)
 - **키 사용현황**: `location.href=asset_item_list.php?asset_id=`(별도 화면·미이관→링크만)
@@ -27,12 +30,14 @@
 - **기초정보 등록**: mode=`asset_inventory_qty`{asset_id, reg_date} → tbl_asset upsert(재고 미러 기초행) → reload
 
 ## 데이터 (legacy)
+
 - `runAssetList($page,$size,$title,$productTypeCd,$assetTypeCd,$platformCd,$publisherCd)`: 외부 API. content 각 항목 `id,title,productType,assetType,platform,publisher,regDt`. `is_registered`는 `getAssetInfo(id)` 로컬 존재여부(PHP 후처리 추가).
 - `runAssetDetail($asset_id)`: 단건 상세(searchID 검색). 이름 필드 `title`(name 폴백).
 - size **30**. 코드 목록 4종 `getAssetCodeList('PUBL'|'PLFM'|'PDTP'|'ASTP')`(페이지 렌더 시 서버 조회).
 - 삭제 `runAssetDelete`(하위 Item 존재 시 거부 message), 키등록 `runAssetItemRegister`→count, 기초정보 `asset_inventory_qty`→tbl_asset upsert(코드→이름 변환).
 
 ## API 계약 (백엔드 전달)
+
 - `GET /admin/goods/asset` — Asset 실시간 목록(+검색·코드)
   - 쿼리: `page`, `searchValue`, `searchID`, `publisherCd`, `productTypeCd`, `assetTypeCd`, `platformCd`
   - **백엔드**: `searchID` 있으면 단건 상세(runAssetDetail, 유효 id면 1건/else 0건) else runAssetList(30/page). 각 content에 `is_registered`(로컬 tbl_asset 존재여부). 코드→이름 변환은 API 서버 파라미터 규약 준수. 관리자 세션.
@@ -40,17 +45,25 @@
     ```jsonc
     {
       "content": [
-        { "id": "string", "title": "string", "productType": "string", "assetType": "string",
-          "platform": "string", "publisher": "string", "is_registered": false, "regDt": "string" }
+        {
+          "id": "string",
+          "title": "string",
+          "productType": "string",
+          "assetType": "string",
+          "platform": "string",
+          "publisher": "string",
+          "is_registered": false,
+          "regDt": "string",
+        },
       ],
       "totalElements": 0,
       "totalPages": 0,
       "codes": {
-        "publisher": [{ "code_id": "string", "name": "string" }],   // 'PUBL'
+        "publisher": [{ "code_id": "string", "name": "string" }], // 'PUBL'
         "product_type": [{ "code_id": "string", "name": "string" }], // 'PDTP'
-        "asset_type": [{ "code_id": "string", "name": "string" }],   // 'ASTP'
-        "platform": [{ "code_id": "string", "name": "string" }]      // 'PLFM'
-      }
+        "asset_type": [{ "code_id": "string", "name": "string" }], // 'ASTP'
+        "platform": [{ "code_id": "string", "name": "string" }], // 'PLFM'
+      },
     }
     ```
 - `POST /admin/goods/asset/delete` — body `{asset_id}` → `{ "message": "string" }`(하위 Item 존재 시 거부 메시지). 관리자 세션 강제.
@@ -59,6 +72,7 @@
 - 에러: legacy는 `msg()`/`alert`/PDOException. 프론트 표준 처리.
 
 ## 타겟 매핑
+
 - 라우트: `routes/goods/asset/asset_list.tsx`(search 7종)
 - screens: `screens/asset-list`(신규, #16 title-list와 다름) / entities: `entities/asset`(신규 슬라이스 — Asset 서버관리 6화면 공유, 이번엔 list+delete+keys+inventory)
 - mock: `shared/mocks/handlers/asset.ts`(+등록). delete/keys/inventory는 성공/무동작(정적)
@@ -66,7 +80,15 @@
 - eng/num span 클래스 유지·헤더 인라인 width·2줄 헤더 그대로
 
 ## Parity 체크리스트
+
 - [ ] 검색필터 6종(searchID 우선 안내)·코드 드롭다운 4종·선택 유지·제출 page=1
 - [ ] 11컬럼·eng span·is_registered 분기(등록완료/기초정보등록)·2줄 헤더
 - [ ] 삭제(confirm→alert→reload)·키등록 모달(count alert·모달 유지·textarea 초기화)·기초정보등록(reload)
 - [ ] Pagination(30/page·URL)·Asset 수정/키사용현황 링크·엣지(빈 목록·searchID 0건)
+
+## 실서버 연동 (swagger — 2026-10-23)
+
+- `GET /api/admin/assets` (ADMIN) — 쿼리: `page`(1)·`size`(30)·`assetId`·`name`·`productTypeCd`·`assetTypeCd`·`platformCd`·`publisherCd`. 응답 `content`: `{content:[{id(int64),title,productType,assetType,platform,publisher,regDt,isRegistered}], totalElements, totalPages}`.
+- 프론트 변환: `searchID→assetId`, `searchValue→name`, `id→string`, `isRegistered→is_registered`. 필터 드롭다운 `codes`는 `GET /api/codes`에서 조립(별도 필드 없음).
+- **미등록(여전히 mock)**: 삭제·기초정보 등록·키 등록(`/admin/goods/asset/{delete,inventory,keys}`) — swagger에 없음.
+- 에러 문구: 400(`BAD_REQUEST`)→"검색 조건을 확인해 주세요.", 401은 세션 파기 후 `/login`. API별 문구는 `entities/asset/lib/error-messages.ts`.

@@ -1,4 +1,4 @@
-// swagger: POST /api/v0/admin/login (https://directg-api.clickb.co.kr/swagger-ui/index.html)
+// swagger: POST /api/admin/login (https://directg-classic-api.clickb.co.kr/swagger-ui/index.html)
 export type AdminRole = "MEMBER" | "ADMIN" | "SUPER_ADMIN" | "PUBLISHER" | "CODE";
 
 export type AdminLoginRequest = {
@@ -13,13 +13,7 @@ export type AdminLoginContent = {
   role: AdminRole;
 };
 
-// 서버 공통 envelope. 실패(401/403)는 success=false, content=null.
-export type AppResponse<T> = {
-  success: boolean;
-  code: string;
-  message: string;
-  content: T | null;
-};
+import type { AppResponse } from "@shared/api/envelope";
 
 export type AdminLoginResponse = AppResponse<AdminLoginContent>;
 

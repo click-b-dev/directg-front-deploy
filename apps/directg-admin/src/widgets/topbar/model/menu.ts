@@ -7,6 +7,8 @@ export type TopMenuItem = {
   label: string;
   href: string;
   match: string;
+  /** match 외에 같은 메뉴로 취급할 접두(재고 사이드바 area와 동일). */
+  alsoMatch?: readonly string[];
   icon: string;
 };
 
@@ -31,6 +33,8 @@ export const TOP_MENU_ITEMS: readonly TopMenuItem[] = [
     label: "재고",
     href: "/goods/stock/dashboard_stock",
     match: "/goods/stock",
+    // 사이드바 stock area(/goods/stock·/goods/asset)와 동일 — Asset 서버 관리 화면도 재고 탭 활성.
+    alsoMatch: ["/goods/asset"],
     icon: "mdi mdi-warehouse",
   },
   {
@@ -110,10 +114,12 @@ export const resolveActiveKey = (
   let bestKey: string | null = null;
   let bestLen = -1;
   for (const item of items) {
-    const matched = pathname === item.match || pathname.startsWith(`${item.match}/`);
-    if (matched && item.match.length > bestLen) {
-      bestKey = item.key;
-      bestLen = item.match.length;
+    for (const prefix of [item.match, ...(item.alsoMatch ?? [])]) {
+      const matched = pathname === prefix || pathname.startsWith(`${prefix}/`);
+      if (matched && prefix.length > bestLen) {
+        bestKey = item.key;
+        bestLen = prefix.length;
+      }
     }
   }
   return bestKey;
